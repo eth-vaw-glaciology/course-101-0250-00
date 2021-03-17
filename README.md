@@ -4,7 +4,7 @@
 
 Welcome to ETH course 101-0250-00 ✨ First edition - Autumn 2021
 
-Some intro words here
+This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.
 
 ## Staff
 
