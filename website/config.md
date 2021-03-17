@@ -5,13 +5,13 @@ The website_* must be defined for the RSS to work
 -->
 @def website_title = "Julia GPU course"
 @def website_descr = "Website for the Julia GPU course material"
-@def website_url   = "https://eth-vaw-glaciology.github.io/course-101-0250-00/website"
+@def website_url   = "https://eth-vaw-glaciology.github.io/course-101-0250-00"
 
 @def author = "ETHZ - VAW-GL"
 
 @def mintoclevel = 2
 
-@def prepath = "course-101-0250-00/website"
+@def prepath = "course-101-0250-00"
 <!--
 Add here files or directories that should be ignored by Franklin, otherwise
 these files might be copied and, if markdown, processed by Franklin which
