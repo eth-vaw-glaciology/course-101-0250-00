@@ -3,24 +3,24 @@
   <title><![CDATA[Julia GPU course]]></title>
   <description><![CDATA[Website for the Julia GPU course material
 ]]></description>
-  <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/website/</link>
-  <atom:link href="https://eth-vaw-glaciology.github.io/course-101-0250-00/website/tag/syntax/feed.xml" rel="self" type="application/rss+xml" />
+  <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/</link>
+  <atom:link href="https://eth-vaw-glaciology.github.io/course-101-0250-00/tag/syntax/feed.xml" rel="self" type="application/rss+xml" />
   <item>
     <title><![CDATA[About]]></title>
-    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu2/</link>
+    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/</link>
     <description><![CDATA[A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.
-<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu2/">Read more</a>]]></description>
+<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/">Read more</a>]]></description>
     
-    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu2/</guid>
+    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/</guid>
     <pubDate>Tue, 2 Mar 2021 00:00:00 UT</pubDate>
   </item>
   <item>
     <title><![CDATA[Course 1]]></title>
-    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu1/</link>
+    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu1/</link>
     <description><![CDATA[A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.
-<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu1/">Read more</a>]]></description>
+<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/menu1/">Read more</a>]]></description>
     
-    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/website/menu1/</guid>
+    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu1/</guid>
     <pubDate>Tue, 2 Mar 2021 00:00:00 UT</pubDate>
   </item>
 </channel>
