@@ -1,4 +1,4 @@
-## 101-0250-00: Solving partial differential equations in parallel on GPUs with Julia
+## 101-0250-00: Solving partial differential equations in parallel on GPUs
 
 👉 [**Go to course website**](https://eth-vaw-glaciology.github.io/eth-julia-gpu-HS2021-web/)
 
