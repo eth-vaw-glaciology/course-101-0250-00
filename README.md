@@ -2,7 +2,7 @@
 
 👉 [**Go to course website**](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 
-Welcome to ETH course 101-0250-00 first's edition in Autumn 2021!
+Welcome to ETH course 101-0250-00 ✨ First edition - Autumn 2021
 
 Some intro words here
 
