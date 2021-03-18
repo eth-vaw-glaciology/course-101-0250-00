@@ -7,5 +7,10 @@ Welcome to ETH course 101-0250-00 ✨ First edition - Autumn 2021
 This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.
 
 ## Staff
+The course staff is composed of:
+- Ludovic Räss _ETHZ - VAW-GL_
+- Mauro Werder _ETHZ - VAW-GL_
+- Samuel Omlin _CSCS_
 
 ## Organisation
+
