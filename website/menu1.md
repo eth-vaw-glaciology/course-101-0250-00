@@ -1,31 +1,51 @@
-+++
-title = "Course 1"
-hascode = true
-date = Date(2021, 3, 02)
-rss = "A short description of the page which would serve as **blurb** in a `RSS` feed."
-+++
+@def title = "Solving PDEs in parallel on GPUs with Julia"
 @def tags = ["syntax", "code"]
 
 # Course 1
 
-\toc
+\tableofcontents <!-- you can use \toc as well -->
 
-## Live evaluation of code blocks
+This section is meant as a refresher if you're new to Franklin.
+Have a look at both how the website renders and the corresponding markdown (`index.md`).
+Modify at will to get a feeling for how things work!
 
-If you would like to show code as well as what the code outputs, you only need to specify where the script corresponding to the code block will be saved.
+Ps: if you want to modify the header or footer or the general look of the website, adjust the files in
+* `src/_css/` and
+* `src/_html_parts/`.
 
-Indeed, what happens is that the code block gets saved as a script which then gets executed.
-This also allows for that block to not be re-executed every time you change something _else_ on the page.
+## The base with Markdown
 
-Here's a simple example (change values in `a` to see the results being live updated):
+The [standard markdown syntax](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) can be used such as titles using `#`, lists:
 
-```julia:./exdot.jl
-using LinearAlgebra
-a = [1, 2, 3, 3, 4, 5, 2, 2]
-@show dot(a, a)
-println(dot(a, a))
+* element with **bold**
+* element with _emph_
+
+or code-blocks `inline` or with highlighting (note the `@def hascode = true` in the source to allow [highlight.js](https://highlightjs.org/) to do its job):
+
+```julia
+abstract type Point end
+struct PointR2{T<:Real} <: Point
+    x::T
+    y::T
+end
+struct PointR3{T<:Real} <: Point
+    x::T
+    y::T
+    z::T
+end
+function len(p::T) where T<:Point
+  sqrt(sum(getfield(p, η)^2 for η ∈ fieldnames(T)))
+end
 ```
 
-You can now show what this would look like:
+You can also quote stuff
 
-\output{./exdot.jl}
+> You must have chaos within you to ...
+
+or have tables:
+
+| English         | Mandarin   |
+| --------------- | ---------- |
+| winnie the pooh | 维尼熊      |
+
+Note that you may have to do a bit of CSS-styling to get these elements to look the way you want them (the same holds for the whole page in fact).

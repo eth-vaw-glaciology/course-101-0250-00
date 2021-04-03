@@ -1,59 +1,31 @@
 +++
-title = "About"
+title = "Course 2"
 hascode = true
-date = Date(2021, 3, 02)
+date = Date(2021, 4, 03)
 rss = "A short description of the page which would serve as **blurb** in a `RSS` feed."
 +++
 @def tags = ["syntax", "code"]
 
-# About
+# Course 1
 
 \toc
 
-## More markdown support
+## Live evaluation of code blocks
 
-The Julia Markdown parser in Julia's stdlib is not exactly complete and Franklin strives to bring useful extensions that are either defined in standard specs such as Common Mark or that just seem like useful extensions.
+If you would like to show code as well as what the code outputs, you only need to specify where the script corresponding to the code block will be saved.
 
-* indirect references for instance [like so]
+Indeed, what happens is that the code block gets saved as a script which then gets executed.
+This also allows for that block to not be re-executed every time you change something _else_ on the page.
 
-[like so]: http://existentialcomics.com/
+Here's a simple example (change values in `a` to see the results being live updated):
 
-or also for images
-
-![][some image]
-
-some people find that useful as it allows referring multiple times to the same link for instance.
-
-[some image]: https://upload.wikimedia.org/wikipedia/commons/9/90/Krul.svg
-
-* un-qualified code blocks are allowed and are julia by default, indented code blocks are not supported by default (and there support will disappear completely in later version)
-
-```
-a = 1
-b = a+1
+```julia:./exdot.jl
+using LinearAlgebra
+a = [1, 2, 3, 3, 4, 5, 2, 2]
+@show dot(a, a)
+println(dot(a, a))
 ```
 
-you can specify the default language with `@def lang = "julia"`.
-If you actually want a "plain" code block, qualify it as `plaintext` like
+You can now show what this would look like:
 
-```plaintext
-so this is plain-text stuff.
-```
-
-## A bit more highlighting
-
-Extension of highlighting for `pkg` an `shell` mode in Julia:
-
-```julia-repl
-(v1.4) pkg> add Franklin
-shell> blah
-julia> 1+1
-(Sandbox) pkg> resolve
-```
-
-you can tune the colouring in the CSS etc via the following classes:
-
-* `.hljs-meta` (for `julia>`)
-* `.hljs-metas` (for `shell>`)
-* `.hljs-metap` (for `...pkg>`)
-
+\output{./exdot.jl}

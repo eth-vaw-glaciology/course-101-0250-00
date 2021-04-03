@@ -3,49 +3,30 @@
 
 # Solving PDEs in parallel on GPUs with Julia
 
+**This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.**
+
 \tableofcontents <!-- you can use \toc as well -->
 
-This section is meant as a refresher if you're new to Franklin.
-Have a look at both how the website renders and the corresponding markdown (`index.md`).
-Modify at will to get a feeling for how things work!
+## Objective
+When quantitative assessment of physical processes governing natural and engineered systems relies on numerically solving differential equations, fast and accurate solutions require performant algorithms leveraging parallel hardware. The goal of this course is to offer a practical approach to solve systems of differential equations in parallel on GPUs using the Julia language. Julia combines high-level language conciseness to low-level language performance which enables efficient code development. 
 
-Ps: if you want to modify the header or footer or the general look of the website, adjust the files in
-* `src/_css/` and
-* `src/_html_parts/`.
+The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum. In a final project you will solve a solid mechanics or fluid dynamics problem of your interest, such as the shallow water equation, the shallow ice equation, acoustic wave propagation, nonlinear diffusion, viscous flow, elastic deformation, viscous or elastic poromechanics, frictional heating, and more. Your Julia GPU application will be hosted on a git-platform and implement modern software development practices.
 
-## The base with Markdown
+## Content
+Part 1 - Discovering a modern parallel computing ecosystem
+- Learn the basics of the Julia language;
+- Learn about the diffusion process and how to solve it;
+- Understand the practical challenges of parallel and distributed computing: (multi-)GPUs, multi-core CPUs;
+- Learn about software development tools: git, version control, continuous integration (CI), unit tests.
 
-The [standard markdown syntax](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) can be used such as titles using `#`, lists:
+Part 2 - Developing your own parallel algorithms
+- Implement wave propagation (or more advanced physics);
+- Apply spatial and temporal discretisation (finite-differences, various time-stepper);
+- Implement efficient iterative algorithms;
+- Implement shared (on CPU and GPU) and, if time allows, distributed memory parallelisation (multi-GPUs/CPUs);
+- Learn about main simulation performance limiters.
 
-* element with **bold**
-* element with _emph_
+Part 3 - Personal final projects
+- Apply your new skills in your personal project;
+- Implement advanced physical processes (solid and fluid dynamic - elastic and viscous solutions).
 
-or code-blocks `inline` or with highlighting (note the `@def hascode = true` in the source to allow [highlight.js](https://highlightjs.org/) to do its job):
-
-```julia
-abstract type Point end
-struct PointR2{T<:Real} <: Point
-    x::T
-    y::T
-end
-struct PointR3{T<:Real} <: Point
-    x::T
-    y::T
-    z::T
-end
-function len(p::T) where T<:Point
-  sqrt(sum(getfield(p, η)^2 for η ∈ fieldnames(T)))
-end
-```
-
-You can also quote stuff
-
-> You must have chaos within you to ...
-
-or have tables:
-
-| English         | Mandarin   |
-| --------------- | ---------- |
-| winnie the pooh | 维尼熊      |
-
-Note that you may have to do a bit of CSS-styling to get these elements to look the way you want them (the same holds for the whole page in fact).
