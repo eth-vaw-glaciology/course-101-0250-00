@@ -8,9 +8,9 @@ This course aims to cover state-of-the-art methods in modern parallel Graphical 
 
 ## Staff
 The course staff is composed of:
-- Ludovic Räss _ETHZ - VAW-GL_
-- Mauro Werder _ETHZ - VAW-GL_
-- Samuel Omlin _ETHZ - CSCS_
+- Ludovic Räss  _ETHZ - VAW-GL_
+- Mauro Werder  _ETHZ - VAW-GL_
+- Samuel Omlin  _ETHZ - CSCS_
 
 ## Organisation
 
