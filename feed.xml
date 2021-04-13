@@ -1,27 +1,61 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-<channel>
-  <title><![CDATA[Solving partial differential equations in parallel on GPUs]]></title>
-  <description><![CDATA[Website for the Julia GPU course
-]]></description>
-  <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/</link>
-  <atom:link href="https://eth-vaw-glaciology.github.io/course-101-0250-00/feed.xml" rel="self" type="application/rss+xml" />
-  <item>
-    <title><![CDATA[Course 2]]></title>
-    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/</link>
-    <description><![CDATA[A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.
-<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/">Read more</a>]]></description>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:media="http://search.yahoo.com/mrss/"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:georss="http://www.georss.org/georss">
+
+  <channel>
+    <title>
+      <![CDATA[  Solving partial differential equations in parallel on GPUs  ]]>
+    </title>
+    <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/ </link>
+    <description>
+      <![CDATA[  Website for the Julia GPU course  ]]>
+    </description>
+    <atom:link
+      href="https://eth-vaw-glaciology.github.io/course-101-0250-00/feed.xml"
+      rel="self"
+      type="application/rss+xml" />
+
+
+<item>
+  <title>
+    <![CDATA[  Course 2  ]]>
+  </title>
+  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/index.html </link>
+  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/index.html </guid>
+  <description>
+    <![CDATA[  A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.  ]]>
+  </description>  
     
-    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/menu2/</guid>
-    <pubDate>Sat, 3 Apr 2021 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title><![CDATA[About]]></title>
-    <link>https://eth-vaw-glaciology.github.io/course-101-0250-00/about/</link>
-    <description><![CDATA[A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.
-<br><a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/about/">Read more</a>]]></description>
+  <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>ETHZ - VAW-GL</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  About  ]]>
+  </title>
+  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/about/index.html </link>
+  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/about/index.html </guid>
+  <description>
+    <![CDATA[  A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.  ]]>
+  </description>  
     
-    <guid>https://eth-vaw-glaciology.github.io/course-101-0250-00/about/</guid>
-    <pubDate>Sat, 3 Apr 2021 00:00:00 UT</pubDate>
-  </item>
-</channel>
-</rss>
+  <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>ETHZ - VAW-GL</atom:name>
+  </atom:author>
+        
+</item>
+</channel></rss>
