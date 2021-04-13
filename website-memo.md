@@ -4,6 +4,21 @@ This document lists the basic on how to edit the course website accessible at ht
 🚧 More to come soon.
 
 
+## Franklin static website
+
+To test the website locally (or after making the a pull from Git):
+```julia-repl
+julia> using Franklin
+
+julia> using NodeJS
+
+julia> serve(clear=true)
+```
+> Note the first time you are using `NodeJS`, you need to execute:
+```julia-repl
+julia> run(`sudo $(npm_cmd()) install highlight.js`)
+```
+
 ## Misc
 
 ### HTML color-picker
