@@ -42,10 +42,48 @@
 
 <item>
   <title>
-    <![CDATA[  About  ]]>
+    <![CDATA[  Logistics  ]]>
   </title>
-  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/about/index.html </link>
-  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/about/index.html </guid>
+  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/logistics/index.html </link>
+  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/logistics/index.html </guid>
+  <description>
+    <![CDATA[  A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.  ]]>
+  </description>  
+    
+  <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>ETHZ - VAW-GL</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Extras  ]]>
+  </title>
+  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/extras/index.html </link>
+  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/extras/index.html </guid>
+  <description>
+    <![CDATA[  A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.  ]]>
+  </description>  
+    
+  <pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>  
+  
+  
+  <atom:author>
+    <atom:name>ETHZ - VAW-GL</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Software install  ]]>
+  </title>
+  <link> https://eth-vaw-glaciology.github.io/course-101-0250-00/software_install/index.html </link>
+  <guid> https://eth-vaw-glaciology.github.io/course-101-0250-00/software_install/index.html </guid>
   <description>
     <![CDATA[  A short description of the page which would serve as <strong>blurb</strong> in a <code>RSS</code> feed.  ]]>
   </description>  
