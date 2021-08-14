@@ -6,7 +6,7 @@ rss = "A short description of the page which would serve as **blurb** in a `RSS`
 +++
 @def tags = ["syntax", "code"]
 
-# Course 1
+# Course 2
 
 \toc
 

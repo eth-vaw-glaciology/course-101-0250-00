@@ -13,20 +13,24 @@ When quantitative assessment of physical processes governing natural and enginee
 The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum. In a final project you will solve a solid mechanics or fluid dynamics problem of your interest, such as the shallow water equation, the shallow ice equation, acoustic wave propagation, nonlinear diffusion, viscous flow, elastic deformation, viscous or elastic poromechanics, frictional heating, and more. Your Julia GPU application will be hosted on a git-platform and implement modern software development practices.
 
 ## Content
-Part 1 - Discovering a modern parallel computing ecosystem
+**Part 1** - Discovering a modern parallel computing ecosystem
 - Learn the basics of the Julia language;
 - Learn about the diffusion process and how to solve it;
 - Understand the practical challenges of parallel and distributed computing: (multi-)GPUs, multi-core CPUs;
 - Learn about software development tools: git, version control, continuous integration (CI), unit tests.
 
-Part 2 - Developing your own parallel algorithms
+**Part 2** - Developing your own parallel algorithms
 - Implement wave propagation (or more advanced physics);
 - Apply spatial and temporal discretisation (finite-differences, various time-stepper);
 - Implement efficient iterative algorithms;
 - Implement shared (on CPU and GPU) and, if time allows, distributed memory parallelisation (multi-GPUs/CPUs);
 - Learn about main simulation performance limiters.
 
-Part 3 - Personal final projects
+**Part 3** - Personal final projects
 - Apply your new skills in your personal project;
 - Implement advanced physical processes (solid and fluid dynamic - elastic and viscous solutions).
 
+## Assessment
+Enrolled ETHZ students will have to hand in on Moodle:
+1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2 _(Weekly coding exercises can be done alone or in groups of two)_.
+2. A final project during Part 3 (60% of the final grade) _(Final projects submission includes codes in a git repository and extensive documentation)_.
