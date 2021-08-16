@@ -10,7 +10,11 @@ rss = "A short description of the page which would serve as **blurb** in a `RSS`
 
 \toc
 
-<!-- ## Installing Julia v1.6 (or later)
+## Opening and running the Jupyter Julia notebook
+
+Description to come 🚧
+
+## Installing Julia v1.6 (or later)
 Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]** if needed.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
@@ -22,15 +26,20 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.1-linux-x86_
 Then add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
 ### Terminal + external editor
-Ensure you have a text editor with syntax highlighting support for Julia. From within the terminal, type
+Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
+
+From within the terminal, type
 ```sh
 julia
 ```
-to make sure that the Julia REPL (aka terminal) starts.  Exit with `Ctrl-d`.
+to make sure that the Julia REPL (aka terminal) starts. Then you should ba able to add `1+1` and verify you get the expected result. Exit with `Ctrl-d`.
+
+![Julia from Terminal](/assets/julia_terminal.png)
+
 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
-
+<!-- 
 ## Running the scripts
 To get started with the workshop,
 1. clone (or download the ZIP archive) the workshop repository ([help here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository))
