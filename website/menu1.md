@@ -1,5 +1,7 @@
-@def title = "Solving PDEs in parallel on GPUs with Julia"
-@def tags = ["syntax", "code"]
++++
+title = "Solving PDEs in parallel on GPUs with Julia"
+hascode = true
++++
 
 # Course 1
 

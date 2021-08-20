@@ -1,10 +1,7 @@
 +++
 title = "Logistics"
 hascode = true
-date = Date(2021, 4, 03)
-rss = "A short description of the page which would serve as **blurb** in a `RSS` feed."
 +++
-@def tags = ["syntax", "code"]
 
 # Logistics
 
@@ -28,7 +25,8 @@ In a final project you will solve a solid mechanics or fluid dynamics problem of
 Your Julia GPU application will be hosted on a git-platform and implement modern software development practices.
 
 ## Lectures
-⚠ subject to changes
+
+🚧 subject to changes
 
 **Live lectures** will take place on Tuesday 13h-16h
 
