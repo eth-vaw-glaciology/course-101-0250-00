@@ -26,7 +26,7 @@ Your Julia GPU application will be hosted on a git-platform and implement modern
 
 ## Lectures
 
-🚧 subject to changes
+⚠️ subject to changes
 
 **Live lectures** will take place on Tuesday 13h-16h
 
