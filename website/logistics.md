@@ -10,6 +10,8 @@ hascode = true
 [![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch)
 
 ## Objective
+The goal of this course is to offer a practical approach to solve systems of differential equations in parallel on GPUs using the [Julia language](http://www.julialang.org/). Julia combines high-level language conciseness to low-level language performance which enables efficient code development. 
+
 The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum.
 
 In a final project you will solve a solid mechanics or fluid dynamics problem of your interest, such as:

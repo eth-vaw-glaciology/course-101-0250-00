@@ -240,9 +240,15 @@ td {
 ================================================================== */
 
 .franklin-content img {
+  width: 90%;
+  text-align: center;
+  padding-left: 5%;
+}
+
+.franklin-content .img-med img {
   width: 70%;
   text-align: center;
-  padding-left: 10%;
+  padding-left: 20%;
 }
 
 .franklin-content .img-small img {

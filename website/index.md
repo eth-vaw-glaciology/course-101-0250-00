@@ -11,7 +11,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
 
-![Acoustic wave 2-D](/assets/acoustic2D.gif)
+@@img-med ![Acoustic wave 2-D](/assets/acoustic2D.gif) @@
 
 - **Part 1**
   - The Julia language
