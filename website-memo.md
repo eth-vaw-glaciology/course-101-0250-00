@@ -3,7 +3,6 @@ This document lists the basics on how to edit the course website accessible at h
 
 🚧 More to come soon.
 
-
 ## Franklin static website
 
 To test the website locally (or after making the a pull from Git):
@@ -46,11 +45,10 @@ title = "Course 1"
 hascode = true
 +++
 ```
-- add the link to which notebook the output refers to, e.g.
+- add the link to which notebook the output refers to, e.g. course 1 notebook:
 ```md
-> This it the output of the [course1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/course1/course1.ipynb)
+> This it the output of the [course1.ipynb](../course1/course1.ipynb)
 ```
-
 
 ## Misc
 
