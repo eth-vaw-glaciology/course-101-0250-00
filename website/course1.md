@@ -7,7 +7,7 @@ hascode = true
 
 **Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing untis (GPUs) with the Julia language.**
 
-> This it the output of the [course1.ipynb](../course1/course1.ipynb)
+> This it the output of the [course1.ipynb](/../course1/course1.ipynb)
 
 ## Objective
 
