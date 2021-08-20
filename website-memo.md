@@ -45,7 +45,7 @@ title = "Course 1"
 hascode = true
 +++
 ```
-- add the link to which notebook the output refers to, e.g. course 1 notebook:
+- add the link to which notebook the output refers to, e.g. course 1 notebook _(note that this won't work in the local build)_:
 ```md
 > This it the output of the [course1.ipynb](../course1/course1.ipynb)
 ```
