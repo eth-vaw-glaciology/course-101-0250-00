@@ -39,12 +39,16 @@ Then, you need to move the generated `course1_files` folder and the `course1.md`
 **Important**: For now, one needs to manually
 - fix the links to images as the first `/` is missing, e.g.:
 `![](course1_files/course1_2_0.svg)` needs to be modified to `![](/course1_files/course1_2_0.svg)`.
-- add code hihglight command on page's top:
+- add code highlight command on page's top:
 ```md
 +++
 title = "Course 1"
 hascode = true
 +++
+```
+- add the link to which notebook the output refers to, e.g.
+```md
+> This it the output of the [course1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/course1/course1.ipynb)
 ```
 
 
