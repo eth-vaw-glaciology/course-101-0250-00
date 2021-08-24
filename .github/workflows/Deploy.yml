@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - master
+    paths:
+      - 'website/**'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
