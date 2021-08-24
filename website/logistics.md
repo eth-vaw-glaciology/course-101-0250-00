@@ -40,4 +40,4 @@ We encourage students to ask questions related to the course and the exercises a
 ## Evaluation
 Enrolled ETHZ students will have to hand in on Moodle:
 1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2 _(Weekly coding exercises can be done alone or in groups of two)_.
-2. A final project during Part 3 (60% of the final grade) _(Final projects submission includes codes in a git repository and extensive documentation)_.
+2. A final project during Part 3 (60% of the final grade) _(Final projects submission includes codes in a git repository and an automatic generated documentation)_.
