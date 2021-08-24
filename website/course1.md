@@ -30,4 +30,3 @@ heatmap(A')
 ```
 
 ![](/course1_files/course1_2_0.svg)
-
