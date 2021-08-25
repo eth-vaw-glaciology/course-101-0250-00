@@ -14,3 +14,12 @@ The course staff is composed of:
 
 ## Organisation
 
+### Course material
+
+### Live lectures
+
+### Discussion
+
+### Homework and Evaluation
+
+🔗 [staff resources (private)](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)
