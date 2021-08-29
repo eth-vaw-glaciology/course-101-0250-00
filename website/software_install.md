@@ -11,14 +11,15 @@ hascode = true
 
 Description to come 🚧
 
+
 ## Installing Julia v1.6 (or later)
 Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]** if needed.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.1-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.1-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.1-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.2-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.2-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz # Linux x86
 ```
 Then add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
@@ -32,7 +33,6 @@ julia
 to make sure that the Julia REPL (aka terminal) starts. Then you should ba able to add `1+1` and verify you get the expected result. Exit with `Ctrl-d`.
 
 ![Julia from Terminal](/assets/julia_terminal.png)
-
 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
