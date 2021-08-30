@@ -12,6 +12,7 @@ hascode = true
 - [Fastrack to Julia](https://juliadocs.github.io/Julia-Cheat-Sheet/) cheatsheet
 - [MATLAB-Julia-Python comparative](https://cheatsheets.quantecon.org/) cheatsheet (by [QuantEcon group](https://quantecon.org/))
 - [Plots.jl](https://github.com/sswatson/cheatsheets/blob/master/plotsjl-cheatsheet.pdf) cheatsheet
+- [7 rules of a great `git commit` message](https://chris.beams.io/posts/git-commit/)
 
 ## Extra material 
 
