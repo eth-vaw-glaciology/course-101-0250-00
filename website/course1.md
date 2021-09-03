@@ -5,28 +5,36 @@ hascode = true
 
 # Course 1
 
-**Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing untis (GPUs) with the Julia language.**
+**Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the Julia language.**
 
-> This it the output of the [course1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/course1/course1.ipynb)
+> **Course structure**\
+> The course structure includes following 3 items, to bring in new material each course both for the "physics-numerics" (aka physics) and the "code-management" (aka code), as well as propose exercises for those concepts:
+> 1. Physics: equations, discretisation, implementation, solver, visualisation
+> 2. Code: technical, Julia, GitHub
+> 3. Exercises
 
 ## Objective
 
-In this first course, we will discuss:
-- The Julia basics
-- Visualisation
-- ...
+### :bulb: Intro to Julia, JupyterHub/Jupyter notebooks
+- Julia basics
+  - syntax
+  - plotting
+  - (datatypes?)
+- Julia package manager/system
+- Environments
+- Tips and tricks: Revise, debugging
 
+### :books: Solving simple problems numerically
+- Initial conditions
+- Time loop
+- Visulisation
 
-```julia
-using Plots
-```
+### :computer: Code: Git and GitHub
+- Get started on GitHub:
+  - Create an account
+  - Create a repo for the course to track your progress in the class
 
-```julia
-# Generate a 2D array of random numbers
-A = rand(10,10)
-
-# Visualise the output
-heatmap(A')
-```
-
-![](/course1_files/course1_2_0.svg)
+### :construction: Exercises
+- Money in the bank (update, rate of change)
+- Volcanic bomb(s)
+- Car travelling
