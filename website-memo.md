@@ -28,26 +28,26 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 ~~~
 ```
 
-### Export `.ipynb` to Markdown and use it as course page
-To export an ipython notebook, and statically render it as webpage (e.g. course 1 page), type following command in the shell.
+### Export `.ipynb` to Markdown and use it as lecture page
+To export an ipython notebook, and statically render it as webpage (e.g. lecture 1 page), type following command in the shell.
 ```sh
 nbconvert --to markdown  course1.ipynb
 ```
-Then, you need to move the generated `course1_files` folder and the `course1.md` file to the `website` folder.
+Then, you need to move the generated `lecture1_files` folder and the `lecture1.md` file to the `website` folder.
 
 **Important**: For now, one needs to manually
 - fix the links to images as the first `/` is missing, e.g.:
-`![](course1_files/course1_2_0.svg)` needs to be modified to `![](/course1_files/course1_2_0.svg)`.
+`![](lecture1_files/lecture1_2_0.svg)` needs to be modified to `![](/lecture1_files/lecture1_2_0.svg)`.
 - add code highlight command on page's top:
 ```md
 +++
-title = "Course 1"
+title = "Lecture 1"
 hascode = true
 +++
 ```
-- add the link to which notebook the output refers to, e.g. course 1 notebook. For now I did not find another workaround than putting the absolute path:
+- add the link to which notebook the output refers to, e.g. lecture 1 notebook. For now I did not find another workaround than putting the absolute path:
 ```md
-> This it the output of the [course1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/course1/course1.ipynb)
+> This it the output of the [lecture1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/lecture1/lecture1.ipynb)
 ```
 
 ## Misc
