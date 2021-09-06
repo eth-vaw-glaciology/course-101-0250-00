@@ -10,9 +10,9 @@ showall = false
 
 > **Course structure**\
 > The course structure includes following 3 items, to bring in new material each course both for the "physics-numerics" (aka physics) and the "code-management" (aka code), as well as propose exercises for those concepts:
-> 1. Physics: equations, discretisation, implementation, solver, visualisation
-> 2. Code: technical, Julia, GitHub
-> 3. Exercises
+> 1. :books: Physics: equations, discretisation, implementation, solver, visualisation
+> 2. :computer: Code: technical, Julia, GitHub
+> 3. :construction: Exercises
 
 ## Objective
 
@@ -25,7 +25,7 @@ showall = false
 ### :books: Solving simple problems numerically
 - Initial conditions
 - Time loop
-- Visulisation
+- Visualisation
 
 ### :computer: Code: Git and GitHub
 - Get started on GitHub:
@@ -34,7 +34,7 @@ showall = false
 
 ### :construction: Exercises
 - Money in the bank (update, rate of change)
-- Car travelling 1, 2 directions
+- Car travelling in 1D, 2D
 - Volcanic bomb
 - _(optional)_ orbital
 
