@@ -28,10 +28,13 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 ~~~
 ```
 
-### Export `.ipynb` to Markdown and use it as lecture page
+### Notebook, code, and markdown with Franklin
+Using `Literate.jl` ... 
+
+### Export `.ipynb` to Markdown and use it as lecture page (may be soon deprecated in flavor of `Literate,jl`)
 To export an ipython notebook, and statically render it as webpage (e.g. lecture 1 page), type following command in the shell.
 ```sh
-nbconvert --to markdown  course1.ipynb
+nbconvert --to markdown  lecture1.ipynb
 ```
 Then, you need to move the generated `lecture1_files` folder and the `lecture1.md` file to the `website` folder.
 

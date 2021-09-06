@@ -1,6 +1,7 @@
 +++
 title = "Lecture 1"
 hascode = true
+showall = false
 +++
 
 # Lecture 1
@@ -17,9 +18,6 @@ hascode = true
 
 ### :bulb: Intro to Julia, JupyterHub/Jupyter notebooks
 - Julia basics
-  - syntax
-  - plotting
-  - (datatypes?)
 - Julia package manager/system
 - Environments
 - Tips and tricks: Revise, debugging
@@ -36,5 +34,15 @@ hascode = true
 
 ### :construction: Exercises
 - Money in the bank (update, rate of change)
-- Volcanic bomb(s)
-- Car travelling
+- Car travelling 1, 2 directions
+- Volcanic bomb
+- _(optional)_ orbital
+
+
+# Exercise - lecture 1
+
+\literate{/_literate/lecture1_ex1.jl}
+
+<!-- ---
+
+\literate{/_literate/lecture1_ex2.jl} -->
