@@ -1,9 +1,9 @@
 +++
-title = "Course 3"
+title = "Lecture 3"
 hascode = true
 +++
 
-# Course 3
+# Lecture 3
 
 \toc
 

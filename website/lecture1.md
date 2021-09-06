@@ -1,9 +1,9 @@
 +++
-title = "Course 1"
+title = "Lecture 1"
 hascode = true
 +++
 
-# Course 1
+# Lecture 1
 
 **Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the Julia language.**
 
