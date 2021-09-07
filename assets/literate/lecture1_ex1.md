@@ -80,7 +80,7 @@ for it=2:tot_yrs
 end
 ```
 
-> 💡 hint: each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.
+\note{Each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.}
 
 Report the total wealth of the client after `tot_yrs`:
 
@@ -111,7 +111,7 @@ The final task you'll have to perform for your client before transferring his do
 
 Define a yearly variable interest rate of 0.5% +/- 1%. Report the final wealth as well as a graphical evolution of your client's wealth taking the random market evolution into account for the coming 35 years.
 
-> 💡 hint: you can use `randn()` to generate a normally-distributed random number.
+\note{You can use `randn()` to generate a normally-distributed random number.}
 
 🎉 Good job! You are done with **Exercise 1**
 
