@@ -1,4 +1,23 @@
-# This file was generated, do not modify it. # hide
+# This file was generated, do not modify it.
+
+using Plots
+
+@views function main_fun()
+    # Physical parameters
+
+    # Numerical parameters
+
+    # Array initialisation
+
+    # Time loop
+
+    # Visualisation
+
+    return
+end
+
+main_fun()
+
 using Plots
 
 @views function car_travel_1D()
@@ -30,3 +49,4 @@ using Plots
 end
 
 car_travel_1D()
+

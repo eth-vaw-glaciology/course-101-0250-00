@@ -1,41 +1,41 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/course-101-0250-00/libs/highlight/github.min.css"> <link rel=stylesheet  href="/course-101-0250-00/css/franklin.css"> <link rel=stylesheet  href="/course-101-0250-00/css/poole_hyde.css"> <link rel=stylesheet  href="/course-101-0250-00/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/course-101-0250-00/assets/favicon.png"> <title>Lecture 1</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/course-101-0250-00/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/course-101-0250-00/"> Fall 2021</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/course-101-0250-00/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a> & <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9"> <a class="sidebar-nav-item " href="/course-101-0250-00/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/course-101-0250-00/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/course-101-0250-00/software_install/">Software install</a> <a class="sidebar-nav-item " href="/course-101-0250-00/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item active" href="/course-101-0250-00/lecture1/">Lecture 1</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture2/">Lecture 2</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture3/">Lecture 3</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <div class=course-section >Part 3 - Projects</div> </nav> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_1 ><a href="#lecture_1" class=header-anchor >Lecture 1</a></h1> <p><strong>Welcome to ETH&#39;s course 101-0250-00L on solving partial differential equations &#40;PDEs&#41; in parallel on graphical processing units &#40;GPUs&#41; with the Julia language.</strong></p> <blockquote> <p><strong>Course structure</strong><br />The course structure includes following 3 items, to bring in new material each course both for the &quot;physics-numerics&quot; &#40;aka physics&#41; and the &quot;code-management&quot; &#40;aka code&#41;, as well as propose exercises for those concepts:</p> <ol> <li><p>📚 Physics: equations, discretisation, implementation, solver, visualisation</p> <li><p>💻 Code: technical, Julia, GitHub</p> <li><p>🚧 Exercises</p> </ol> </blockquote> <h2 id=objective ><a href="#objective" class=header-anchor >Objective</a></h2> <h3 id=intro_to_julia_jupyterhubjupyter_notebooks ><a href="#intro_to_julia_jupyterhubjupyter_notebooks" class=header-anchor >💡 Intro to Julia, JupyterHub/Jupyter notebooks</a></h3> <ul> <li><p>Julia basics</p> <li><p>Julia package manager/system</p> <li><p>Environments</p> <li><p>Tips and tricks: Revise, debugging</p> </ul> <h3 id=solving_simple_problems_numerically ><a href="#solving_simple_problems_numerically" class=header-anchor >📚 Solving simple problems numerically</a></h3> <ul> <li><p>Initial conditions</p> <li><p>Time loop</p> <li><p>Visualisation</p> </ul> <h3 id=code_git_and_github ><a href="#code_git_and_github" class=header-anchor >💻 Code: Git and GitHub</a></h3> <ul> <li><p>Get started on GitHub:</p> <ul> <li><p>Create an account</p> <li><p>Create a repo for the course to track your progress in the class</p> </ul> </ul> <h3 id=exercises ><a href="#exercises" class=header-anchor >🚧 Exercises</a></h3> <ul> <li><p>Money in the bank &#40;update, rate of change&#41;</p> <li><p>Car travelling in 1D, 2D</p> <li><p>Volcanic bomb</p> <li><p><em>&#40;optional&#41;</em> orbital</p> </ul> <div class=warning ><div class=title >⚠ Warning&#33;</div> <div class=messg >Sometimes it&#39;s useful to have a warning as it may warn you about something you should pay attention to.</div></div> <h1 id=exercise_-_lecture_1 ><a href="#exercise_-_lecture_1" class=header-anchor >Exercise - lecture 1</a></h1> <h2 id=exercise_1_-_money_in_the_bank ><a href="#exercise_1_-_money_in_the_bank" class=header-anchor >Exercise 1 - <strong>Money in the bank</strong></a></h2> <p>The goal of this exercise is to familiarise with:</p> <ul> <li><p>array initialisation</p> <li><p><code>for</code> loop</p> <li><p>indexing</p> <li><p>update rule</p> <li><p>basic visualisation</p> </ul> <p>You are managing assets from a client which has an initial wealth <code>M_init</code> of 20kCHF. Your client&#39;s business generates yearly savings <code>M_save</code> of 500CHF.</p> <pre><code class="julia hljs">M_init  = <span class=hljs-number >20000.0</span>   <span class=hljs-comment ># initial wealth</span>
-M_save  = <span class=hljs-number >500.0</span>;    <span class=hljs-comment ># yearly savings</span></code></pre> <h3 id=question_1 ><a href="#question_1" class=header-anchor >Question 1</a></h3> <p>Model the wealth evolution of your client for the coming 35 years <code>tot_yrs</code>:</p> <pre><code class="julia hljs">tot_yrs = <span class=hljs-number >35</span>;       <span class=hljs-comment ># number of years</span></code></pre>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/course-101-0250-00/libs/katex/katex.min.css"> <link rel=stylesheet  href="/course-101-0250-00/libs/highlight/github.min.css"> <link rel=stylesheet  href="/course-101-0250-00/css/franklin.css"> <link rel=stylesheet  href="/course-101-0250-00/css/poole_hyde.css"> <link rel=stylesheet  href="/course-101-0250-00/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/course-101-0250-00/assets/favicon.png"> <title>Lecture 1</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/course-101-0250-00/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/course-101-0250-00/"> Fall 2021</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/course-101-0250-00/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a> & <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9"> <a class="sidebar-nav-item " href="/course-101-0250-00/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/course-101-0250-00/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/course-101-0250-00/software_install/">Software install</a> <a class="sidebar-nav-item " href="/course-101-0250-00/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item active" href="/course-101-0250-00/lecture1/">Lecture 1</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture2/">Lecture 2</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture3/">Lecture 3</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <div class=course-section >Part 3 - Projects</div> </nav> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_1 ><a href="#lecture_1" class=header-anchor >Lecture 1</a></h1> <p><strong>Welcome to ETH&#39;s course 101-0250-00L on solving partial differential equations &#40;PDEs&#41; in parallel on graphical processing units &#40;GPUs&#41; with the Julia language.</strong></p> <blockquote> <p><strong>Course structure</strong><br />The course structure includes following 3 items, to bring in new material each course both for the &quot;physics-numerics&quot; &#40;aka physics&#41; and the &quot;code-management&quot; &#40;aka code&#41;, as well as propose exercises for those concepts:</p> <ol> <li><p>📚 Physics: equations, discretisation, implementation, solver, visualisation</p> <li><p>💻 Code: technical, Julia, GitHub</p> <li><p>🚧 Exercises</p> </ol> </blockquote> <h2 id=objective ><a href="#objective" class=header-anchor >Objective</a></h2> <h3 id=intro_to_julia_jupyterhubjupyter_notebooks ><a href="#intro_to_julia_jupyterhubjupyter_notebooks" class=header-anchor >💡 Intro to Julia, JupyterHub/Jupyter notebooks</a></h3> <ul> <li><p>Julia basics</p> <li><p>Julia package manager/system</p> <li><p>Environments</p> <li><p>Tips and tricks: Revise, debugging</p> </ul> <h3 id=solving_simple_problems_numerically ><a href="#solving_simple_problems_numerically" class=header-anchor >📚 Solving simple problems numerically</a></h3> <ul> <li><p>Initial conditions</p> <li><p>Time loop</p> <li><p>Visualisation</p> </ul> <h3 id=code_git_and_github ><a href="#code_git_and_github" class=header-anchor >💻 Code: Git and GitHub</a></h3> <ul> <li><p>Get started on GitHub:</p> <ul> <li><p>Create an account</p> <li><p>Create a repo for the course to track your progress in the class</p> </ul> </ul> <h3 id=exercises ><a href="#exercises" class=header-anchor >🚧 Exercises</a></h3> <ul> <li><p>Money in the bank &#40;update, rate of change&#41;</p> <li><p>Car travelling in 1D, 2D</p> <li><p>Volcanic bomb</p> <li><p><em>&#40;optional&#41;</em> orbital</p> </ul> <p><a href="#exe_start"><em>👉 get started</em></a></p> <div class=warning ><div class=title >⚠ Warning&#33;</div> <div class=messg >Sometimes it&#39;s useful to have a warning as it may warn you about something you should pay attention to.</div></div> <a id=exe_start  class=anchor ></a> <h1 id=exercise_-_lecture_1 ><a href="#exercise_-_lecture_1" class=header-anchor >Exercise - lecture 1</a></h1> <h2 id=exercise_1_-_money_in_the_bank ><a href="#exercise_1_-_money_in_the_bank" class=header-anchor >Exercise 1 - <strong>Money in the bank</strong></a></h2> <p>The goal of this exercise is to familiarise with:</p> <ul> <li><p>array initialisation</p> <li><p><code>for</code> loop</p> <li><p>indexing</p> <li><p>update rule</p> <li><p>basic visualisation</p> </ul> <p>You are managing assets from a client which has an initial wealth <code>M_init</code> of 20kCHF. Your client&#39;s business generates yearly savings <code>M_save</code> of 500CHF.</p> <pre><code class=language-julia >M_init  &#61; 20000.0   # initial wealth
+M_save  &#61; 500.0;    # yearly savings</code></pre> <h3 id=question_1 ><a href="#question_1" class=header-anchor >Question 1</a></h3> <p>Model the wealth evolution of your client for the coming 35 years <code>tot_yrs</code>:</p> <pre><code class=language-julia >tot_yrs &#61; 35;       # number of years</code></pre>
 <p>To do so, we will first initialise a one dimensional array &#40;vector&#41; to store the wealth evolution of the client and check that the vector <code>M_evol1</code> has the correct <code>length</code> &#40;or size&#41;:</p>
-<pre><code class="julia hljs">M_evol1 = zeros(tot_yrs)
-length(M_evol1)</code></pre>
+<pre><code class=language-julia >M_evol1 &#61; zeros&#40;tot_yrs&#41;
+length&#40;M_evol1&#41;</code></pre>
 <p>We then need to initialise that vector with the initial wealth of the client:</p>
-<pre><code class="julia hljs">M_evol1[<span class=hljs-number >1</span>] = M_init;</code></pre>
+<pre><code class=language-julia >M_evol1&#91;1&#93; &#61; M_init;</code></pre>
 <p>Now we have to define the core of our simulator; predicting the wealth evolution. To do so, we will define the the wealth fo the current year <code>it</code> as the wealth from previous year <code>it-1</code> plus the amount of saving <code>M_save</code> and repeat this for <code>tot_yrs</code> &#40;taking care about the start value of the iterator&#41;:</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >for</span> it=<span class=hljs-number >2</span>:tot_yrs
-    M_evol1[it] =  M_evol1[it-<span class=hljs-number >1</span>] + M_save
-<span class=hljs-keyword >end</span></code></pre>
+<pre><code class=language-julia >for it&#61;2:tot_yrs
+    M_evol1&#91;it&#93; &#61;  M_evol1&#91;it-1&#93; &#43; M_save
+end</code></pre>
 <p>Now, we want to print the wealth of our client after <code>tot_yrs</code></p>
-<pre><code class="julia hljs">println(<span class=hljs-string >&quot;Wealth after <span class=hljs-subst >$(tot_yrs)</span> years: <span class=hljs-subst >$(M_evol1[<span class=hljs-keyword >end</span>])</span> CHF&quot;</span>)</code></pre>
+<pre><code class=language-julia >println&#40;&quot;Wealth after &#36;&#40;tot_yrs&#41; years: &#36;&#40;M_evol1&#91;end&#93;&#41; CHF&quot;&#41;</code></pre>
 <p>Perfect. However, the client is interested in a graphical evolution as he needs this to convince future investors.</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >using</span> Plots
-plot(M_evol1 ./ <span class=hljs-number >1000</span>, linewidth=<span class=hljs-number >3</span>,
-     xlabel=<span class=hljs-string >&quot;time, yrs&quot;</span>, ylabel=<span class=hljs-string >&quot;savings, kchf&quot;</span>, label=<span class=hljs-string >&quot;without interest&quot;</span>,
-     framestyle=:box, legend=:topleft, foreground_color_legend = <span class=hljs-literal >nothing</span>)</code></pre>
+<pre><code class=language-julia >using Plots
+plot&#40;M_evol1 ./ 1000, linewidth&#61;3,
+     xlabel&#61;&quot;time, yrs&quot;, ylabel&#61;&quot;savings, kchf&quot;, label&#61;&quot;without interest&quot;,
+     framestyle&#61;:box, legend&#61;:topleft, foreground_color_legend &#61; nothing&#41;</code></pre>
 <h3 id=question_2 ><a href="#question_2" class=header-anchor >Question 2</a></h3>
 <p>The bank you are working for offers actually a yearly interest rate <code>intrst</code> of 0.6&#37; for all premium client, a category your client belongs to. Repeat the exercise from Question 1 including now the interest rate.</p>
 <p>Create a new vector <code>M_evol2</code> to store the wealth evolution with interest rate and assign the initial wealth:</p>
-<pre><code class="julia hljs">intrst     = <span class=hljs-number >0.006</span>     <span class=hljs-comment ># fixed interest rate</span>
-M_evol2    = zeros(tot_yrs)
-M_evol2[<span class=hljs-number >1</span>] = M_init;</code></pre>
+<pre><code class=language-julia >intrst     &#61; 0.006     # fixed interest rate
+M_evol2    &#61; zeros&#40;tot_yrs&#41;
+M_evol2&#91;1&#93; &#61; M_init;</code></pre>
 <p>Then, update the prediction formula within the time loop to account for the interest rate &#40;replacing the <code>??</code>&#41;</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># TO DO: add correct formula !</span>
-<span class=hljs-keyword >for</span> it=<span class=hljs-number >2</span>:tot_yrs
-    M_evol2[it] = M_evol2[it-<span class=hljs-number >1</span>] + M_save
-<span class=hljs-keyword >end</span></code></pre>
+<pre><code class=language-julia ># TO DO: add correct formula &#33;
+for it&#61;2:tot_yrs
+    M_evol2&#91;it&#93; &#61; M_evol2&#91;it-1&#93; &#43; M_save
+end</code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.</div></div>
 <p>Report the total wealth of the client after <code>tot_yrs</code>:</p>
-<pre><code class="julia hljs">println(<span class=hljs-string >&quot;Wealth after <span class=hljs-subst >$(tot_yrs)</span> years with interest rate: <span class=hljs-subst >$(M_evol2[<span class=hljs-keyword >end</span>])</span> CHF&quot;</span>)</code></pre>
+<pre><code class=language-julia >println&#40;&quot;Wealth after &#36;&#40;tot_yrs&#41; years with interest rate: &#36;&#40;M_evol2&#91;end&#93;&#41; CHF&quot;&#41;</code></pre>
 <p>And display the graphical evolution on top of previous one:</p>
-<pre><code class="julia hljs">plot!(M_evol2 ./ <span class=hljs-number >1000</span>, linewidth=<span class=hljs-number >3</span>, label=<span class=hljs-string >&quot;with interest&quot;</span>)</code></pre>
+<pre><code class=language-julia >plot&#33;&#40;M_evol2 ./ 1000, linewidth&#61;3, label&#61;&quot;with interest&quot;&#41;</code></pre>
 <p>Finally, quantify the difference in the final wealth with and without interest rate:</p>
-<pre><code class="julia hljs">∆evo = M_evol2[<span class=hljs-keyword >end</span>] - M_evol1[<span class=hljs-keyword >end</span>]
-println(<span class=hljs-string >&quot;∆evo = <span class=hljs-subst >$(round(∆evo, sigdigits=<span class=hljs-number >5</span>)</span>)&quot;</span>)</code></pre>
+<pre><code class=language-julia >∆evo &#61; M_evol2&#91;end&#93; - M_evol1&#91;end&#93;
+println&#40;&quot;∆evo &#61; &#36;&#40;round&#40;∆evo, sigdigits&#61;5&#41;&#41;&quot;&#41;</code></pre>
 <h3 id=question_3 ><a href="#question_3" class=header-anchor >Question 3</a></h3>
 <p>Great job, your client is very happy and could use the financial prediction you made to convince the investors to further support his business. Your client now wants to know the final wealth after 35 years given the fact he plans a one time expense <code>expns</code> of 1125CHF in 20 years. Provide the final wealth and a graphical evolution for both cases with and without interest rate.</p>
 <h3 id=question_4 ><a href="#question_4" class=header-anchor >Question 4</a></h3>
@@ -45,6 +45,229 @@ println(<span class=hljs-string >&quot;∆evo = <span class=hljs-subst >$(round(
 <div class=messg >You can use <code>randn&#40;&#41;</code> to generate a normally-distributed random number.</div></div>
 <p>🎉 Good job&#33; You are done with <strong>Exercise 1</strong></p>
 
+<hr />
+<h2 id=exercise_2_-_car_travel ><a href="#exercise_2_-_car_travel" class=header-anchor >Exercise 2 - <strong>Car travel</strong></a></h2>
+<p>The goal of this exercise is to familiarise with:</p>
+<ul>
+<li><p>code structure <code># Physics, # Numerics, # Time loop, # Visualisation</code></p>
+
+<li><p>array initialisation</p>
+
+<li><p><code>for</code> loop</p>
+
+<li><p>update rule</p>
+
+<li><p><code>if</code> condition</p>
+
+</ul>
+<p>A car cruises on a straight road at given speed \(\mathrm{V = 113}\) km/h for 16 hours, making a U-turn after a distance \(\mathrm{L = 200}\) km. The car speed is defined as the change of position its \(x\) per time \(t\):</p>
+\[
+V = \frac{\partial x}{\partial t}
+\]
+<p>In the above derivative, \(\partial x\) and \(\partial t\) are considered infinitesimal - a representation it is not possible to handle within a computer &#40;as it would require infinite amount of resources&#41;. However, we can discretise this differential equation in order to solve it numerically by transforming the infinitesimal quantities into discrete increments:</p>
+\[
+V = \frac{\partial x}{\partial t} \approx \frac{\Delta x}{\Delta t} = \frac{x_{t+\Delta t}-x_t}{\Delta t}~,
+\]
+<p>where \(\Delta x\) and \(\Delta t\) are discrete quantities. This equation can be re-organised to return an explicit solution of the position \(x\) at time \(t+\Delta t\):</p>
+\[
+x_{t+\Delta t} = x_{t} + V \Delta t~.
+\]
+<ol>
+<li><p>Based on this equation, your task is to setup a numerical model to predict the position of the car as function of time. In order not to start from scratch this time, you can complete the code draft below, filling in the relevant quantities in following order:</p>
+
+</ol>
+<pre><code class=language-julia >using Plots
+
+@views function main_fun&#40;&#41;
+    # Physical parameters
+
+    # Numerical parameters
+
+    # Array initialisation
+
+    # Time loop
+
+    # Visualisation
+
+    return
+end
+
+main_fun&#40;&#41;</code></pre>
+<ol start=2 >
+<li><p>Implement a condition to allow you doing U-turns whenever you reach the position 0 or 200.</p>
+
+</ol>
+<hr />
+<p>The sample code you can use to get started looks like:</p>
+<pre><code class=language-julia >using Plots
+
+@views function car_travel_1D&#40;&#41;
+    # Physical parameters
+    V     &#61;           # speed, km/h
+    L     &#61;           # length of segment, km
+    ttot  &#61;           # total time, h
+    # Numerical parameters
+    dt    &#61; 0.1            # time step, h
+    nt    &#61; Int&#40;cld&#40;ttot, dt&#41;&#41;  # number of time steps
+    # Array initialisation
+    T     &#61;
+    X     &#61;
+    # Time loop
+    for it &#61; 2:nt
+        T&#91;it&#93; &#61; T&#91;it-1&#93; &#43; dt
+        X&#91;it&#93; &#61;   # move the car
+        if X&#91;it&#93; &gt; L
+                  # if beyond L, go back &#40;left&#41;
+        elseif X&#91;it&#93; &lt; 0
+                   # if beyond 0, go back &#40;right&#41;
+        end
+    end
+    # Visualisation
+    display&#40;scatter&#40;T, X, markersize&#61;5,
+                    xlabel&#61;&quot;time, hrs&quot;, ylabel&#61;&quot;distance, km&quot;,
+                    framestyle&#61;:box, legend&#61;:none&#41;&#41;
+    return
+end
+
+car_travel_1D&#40;&#41;</code></pre>
+<h3 id=question_1__2 ><a href="#question_1__2" class=header-anchor >Question 1</a></h3>
+<p>Once the code is running, test various time step increments <code>0.1 &lt; dt &lt; 0.01</code> and briefly comment on your findings.</p>
+
+<hr />
+<h2 id=exercise_3_-_car_travel_in_2_dimensions ><a href="#exercise_3_-_car_travel_in_2_dimensions" class=header-anchor >Exercise 3 - <strong>Car travel in 2 dimensions</strong></a></h2>
+<p>The goal of this exercise is to familiarise with:</p>
+<ul>
+<li><p>code structure <code># Physics, # Numerics, # Time loop, # Visualisation</code></p>
+
+<li><p>array initialisation</p>
+
+<li><p><code>for</code> loop</p>
+
+<li><p>update rule</p>
+
+<li><p><code>if</code> condition</p>
+
+<li><p>2 spatial dimensions</p>
+
+</ul>
+<p>Based on the experience you acquired solving the <a href="#exercise_2_-_car_travel">Exercise 2</a> we can now consider a car moving within a 2-dimensional space. The car still travels at speed \(V=113\) km/h, but now in North-East or North-West direction. The car&#39;s displacement in the West-East directions &#40;\(x\)-axis&#41; is limited to \(L=200\) km. The speed in the North direction is constant remains constant.</p>
+<p>Starting from the 1D code done in <a href="#exercise_2_-_car_travel">Exercise 2</a>, work towards adding the second spatial dimension. Now, the car&#39;s position \((x,y)\) as function of time \(t\) has two components.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><ul>
+<li><p>split velocity magnitude \(V\) into \(x\) and \(y\) component</p>
+
+<li><p>use <code>sind&#40;&#41;</code> or <code>cosd&#40;&#41;</code> functions if passing the angle in <em>deg</em> instead of <em>rad</em></p>
+
+<li><p>use two vectors or an array to store the car&#39;s coordinates</p>
+
+<li><p>define the y-axis extend in the plot <code>ylims&#61;&#40;0, ttot*Vy&#41;</code></p>
+
+</ul></div></div>
+<h3 id=question_1__3 ><a href="#question_1__3" class=header-anchor >Question 1</a></h3>
+<p>Visualise graphically the trajectory of the travelling car for a simulation with time step parameter defined as <code>dt &#61; 0.1</code>.</p>
+
+<hr />
+<h2 id=exercise_4_-_volcanic_bomb ><a href="#exercise_4_-_volcanic_bomb" class=header-anchor >Exercise 4 - <strong>Volcanic bomb</strong></a></h2>
+<p>The goal of this exercise is to consolidate:</p>
+<ul>
+<li><p>code structure <code># Physics, # Numerics, # Time loop, # Visualisation</code></p>
+
+<li><p>array initialisation</p>
+
+<li><p>update rule</p>
+
+<li><p><code>if</code> condition</p>
+
+</ul>
+<p>You will now simulate the trajectory of a <a href="https://en.wikipedia.org/wiki/Volcanic_bomb">volcanic bomb</a> that got ejected during a volcanic eruption. The ejection speed is given by the horizontal and vertical velocity components</p>
+\[
+V_x = \frac{\partial x}{\partial t}\\[10pt]
+V_y = \frac{\partial y}{\partial t}
+\]
+<p>Once ejected, the volcanic bomb is subject to gravity acceleration \(g\). Air friction will be neglected. Acceleration being defined as the change of velocity over time, we obtain the following update rule:</p>
+\[
+\frac{\partial V_y}{\partial t}=-g
+\]
+<p>These equations define a mathematical model describing the kinematics of the volcanic bomb. You may remember from your studies how to solve those equation analytically; however we&#39;ll here focus on a numerical solution using a similar approach as for the previous exercises. The \(x\) and \(y\) location of the bomb as function of time can be obtained based on updating previous values using the definition of velocity:</p>
+\[
+x_{t+\Delta t} = x_{t} + V_x    \Delta t~,\\[5pt]
+y_{t+\Delta t} = y_{t} + V_y(t) \Delta t~.
+\]
+<p>And because of gravity acceleration, the \(V_y\) velocity evolution can be obtained according to</p>
+\[
+V_{y,t+\Delta t} = V_{y,t} - g \Delta t~.
+\]
+<p>The 3 equations above represent the discretised form of the 3 first equations and should be used to solve the problem numerically. The initial position of the volcanic bomb \((x_0, y_0)=(0,480)\) m. The magnitude of the ejection speed is of 120 m/s and the angle \(\alpha = 60°\). The simulation stops when the volcanic bomb touches the ground &#40;\(y=0\)&#41;.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><ul>
+<li><p>modify the code from exercise 3 to, in addition, account for the change of <code>Vy</code> with time</p>
+
+<li><p>use e.g. a <code>break</code> statement to exit the loop once the bomb hits the ground</p>
+
+</ul></div></div>
+<h3 id=question_1__4 ><a href="#question_1__4" class=header-anchor >Question 1</a></h3>
+<p>Report the height of the volcanic bomb at position \(x=900\) m away from origin.</p>
+
+<hr />
+<h2 id=exercise_5_optional_-_orbital_around_a_centre_of_mass ><a href="#exercise_5_optional_-_orbital_around_a_centre_of_mass" class=header-anchor >Exercise 5 <em>&#40;optional&#41;</em> - <strong>orbital around a centre of mass</strong></a></h2>
+<p>The goal of this exercise is to consolidate:</p>
+<ul>
+<li><p>code structure <code># Physics, # Numerics, # Time loop, # Visualisation</code></p>
+
+<li><p>physics implementation</p>
+
+<li><p>update rule</p>
+
+</ul>
+<p>The goal of this exercise is to reproduce an orbital around a fixed centre of mass, which is also the origin of the coordinate system &#40;e.g. Earth - Sun&#41;. To solve this problem, you will have to know about the definition of velocity, Newton&#39;s second law and universal gravitation&#39;s law:</p>
+\[
+\frac{dr_i}{dt}=v_i \\[10pt]
+\frac{dv_i}{dt}=\frac{F_i}{m} \\[10pt]
+F_i = -G\frac{mM}{|r_i^2|}\frac{r_i}{|r_i|}~,
+\]
+<p>where \(r_i\) is the position vector, \(v_i\) the velocity vector, \(F_i\) the force vector, \(G\) is the gravitational constant, \(m\) is the mass of the orbiting object, \(M\) is the mass of the centre of mass and \(|r_i|\) is the norm of the position vector.</p>
+<hr />
+<p>The sample code you can use to get started looks like:</p>
+<pre><code class=language-julia >using Plots
+
+@views function orbital&#40;&#41;
+    # Physics
+    G    &#61; 1.0
+    # TODO - add physics input
+    tt   &#61; 6.0
+    # Numerics
+    dt   &#61; 0.05
+    # Initial conditions
+    #xpos &#61; ??
+    #ypos &#61; ??
+    # TODO - add further initial conditions
+    # Time loop
+    for it &#61; 1:nt
+        # TODO - Add physics equations
+        # Visualisation
+        display&#40;scatter&#33;&#40;&#91;xpos&#93;, &#91;ypos&#93;, title&#61;&quot;&#36;it&quot;,
+                         aspect_ratio&#61;1, markersize&#61;5, markercolor&#61;:blue, framestyle&#61;:box,
+                         legend&#61;:none, xlims&#61;&#40;-1.1, 1.1&#41;, ylims&#61;&#40;-1.1, 1.1&#41;&#41;&#41;
+    end
+    return
+end
+
+orbital&#40;&#41;</code></pre>
+<h3 id=question_1__5 ><a href="#question_1__5" class=header-anchor >Question 1</a></h3>
+<p>For a safe start, set all physical parameters \((G, m, M)\) equal to 1, and use as initial conditions \(x_0=0\) and \(y_0=1\), and \(v_x=1\) and \(v_y=0\). You should obtain a circular orbital.</p>
+<p>Report the last \((x,y)\) position of the Earth for a total time of <code>tt&#61;6.0</code> with a time step <code>dt&#61;0.05</code>.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><ul>
+<li><p>\(r_i=[x,y]\)</p>
+
+<li><p>\(|r_i|=\sqrt{x^2 + y^2}\)</p>
+
+<li><p>\(r_i/|r_i|\) stands for the unity vector &#40;of length 1&#41; pointing from \(m\) towards \(M\)</p>
+
+</ul></div></div>
+<h3 id=question_2__2 ><a href="#question_2__2" class=header-anchor >Question 2</a></h3>
+<p>Head to e.g. Wikipedia and look up for approximate of real values and asses whether the Earth indeed needs ~365 days to achieve one rotation around the Sun.</p>
+
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
@@ -52,4 +275,13 @@ println(<span class=hljs-string >&quot;∆evo = <span class=hljs-subst >$(round(
   </div>
 </div>
 </div>
-    </div>
+    </div>  
+    
+        <script src="/course-101-0250-00/libs/katex/katex.min.js"></script>
+<script src="/course-101-0250-00/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/course-101-0250-00/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
