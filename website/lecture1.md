@@ -37,14 +37,28 @@ showall = false
 - Car travelling in 1D, 2D
 - Volcanic bomb
 - _(optional)_ orbital
+[_👉 get started_](#exe_start)
 
 \warn{Sometimes it's useful to have a warning as it may warn you about something you should pay attention to.}
 
-
+\label{exe_start}
 # Exercise - lecture 1
 
 \literate{/_literate/lecture1_ex1.jl}
 
-<!-- ---
+---
 
-\literate{/_literate/lecture1_ex2.jl} -->
+\literate{/_literate/lecture1_ex2.jl}
+
+---
+
+\literate{/_literate/lecture1_ex3.jl}
+
+---
+
+\literate{/_literate/lecture1_ex4.jl}
+
+---
+
+\literate{/_literate/lecture1_ex5.jl}
+
