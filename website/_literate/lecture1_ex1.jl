@@ -55,7 +55,8 @@ for it=2:tot_yrs
     M_evol2[it] = M_evol2[it-1] + M_save
 end
 
-# > 💡 hint: each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.
+#nb > 💡 hint: Each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.
+#md # \note{Each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.}
 
 # Report the total wealth of the client after `tot_yrs`:
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
@@ -77,6 +78,7 @@ println("∆evo = $(round(∆evo, sigdigits=5))")
 
 # Define a yearly variable interest rate of 0.5% +/- 1%. Report the final wealth as well as a graphical evolution of your client's wealth taking the random market evolution into account for the coming 35 years.
 
-# > 💡 hint: you can use `randn()` to generate a normally-distributed random number.
+#nb # > 💡 hint: You can use `randn()` to generate a normally-distributed random number.
+#md # \note{You can use `randn()` to generate a normally-distributed random number.}
 
 # 🎉 Good job! You are done with **Exercise 1**

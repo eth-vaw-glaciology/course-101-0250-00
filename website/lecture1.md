@@ -38,6 +38,8 @@ showall = false
 - Volcanic bomb
 - _(optional)_ orbital
 
+\warn{Sometimes it's useful to have a warning as it may warn you about something you should pay attention to.}
+
 
 # Exercise - lecture 1
 
