@@ -55,8 +55,8 @@ for it=2:tot_yrs
     M_evol2[it] = M_evol2[it-1] + M_save
 end
 
-#nb > 💡 hint: Each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.
-#md # \note{Each year, the total wealth is the wealth of previsou year plus the percentage proportional to the interest rate.}
+#nb > 💡 hint: Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.
+#md # \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
 
 # Report the total wealth of the client after `tot_yrs`:
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
@@ -70,7 +70,7 @@ println("∆evo = $(round(∆evo, sigdigits=5))")
 
 # ### Question 3
 #
-# Great job, your client is very happy and could use the financial prediciton you made to convince the investors to fruther support his business. Your client now wants to know the final wealth after 35 years given the fact he plans a one time expense `expns` of 1125CHF in 20 years. Provide the final wealth and a graphical evolution for both cases with and without interest rate.
+# Great job, your client is very happy and could use the financial prediction you made to convince the investors to further support his business. Your client now wants to know the final wealth after 35 years given the fact he plans a one time expense `expns` of 1125CHF in 20 years. Provide the final wealth and a graphical evolution for both cases with and without interest rate.
 
 # ### Question 4
 #
