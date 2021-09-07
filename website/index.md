@@ -16,13 +16,15 @@ This course aims to cover state-of-the-art methods in modern parallel GPU comput
 - **Part 1**
   - The Julia language
   - Basic physical processes
-  - Challenges of parallel, GPU, and distributed computing
-  - Software development tools
+  - Spatial and temporal discretisation
+  - Software development tools (Git, CI)
 
 - **Part 2**
-  - Spatial and temporal discretisation
-  - Efficient iterative algorithms
+  - Parallel and GPU computing
   - Simulation performance limiters
+  - Efficient iterative algorithms
+  - Distributed computing
+  - Advanced physics
 
 - **Part 3**
   - Final project
