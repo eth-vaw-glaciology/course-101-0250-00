@@ -1,5 +1,7 @@
 # ## Exercise 1 - **Money in the bank**
 #
+#md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/lecture1/lecture1_ex1.ipynb)
+#md #
 # The goal of this exercise is to familiarise with:
 # - array initialisation
 # - `for` loop
@@ -55,7 +57,7 @@ for it=2:tot_yrs
     M_evol2[it] = M_evol2[it-1] + M_save
 end
 
-#nb > 💡 hint: Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.
+#nb # > 💡 hint: Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.
 #md # \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
 
 # Report the total wealth of the client after `tot_yrs`:

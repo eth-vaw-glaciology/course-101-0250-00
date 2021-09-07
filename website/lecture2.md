@@ -5,24 +5,22 @@ hascode = true
 
 # Lecture 2
 
-\toc
+<!-- \toc -->
 
-## Live evaluation of code blocks
+## Objective
+### :books: Physics: ODEs and PDEs
+- 1D ODE: reaction
+- 1D PDE: diffusion
+- 1D advection
 
-If you would like to show code as well as what the code outputs, you only need to specify where the script corresponding to the code block will be saved.
+### :computer: Code: GitHub
+- Get started using GitHub:
+  - git basics
+  - Add first items to the Git repo to make it "Julia-ready"
 
-Indeed, what happens is that the code block gets saved as a script which then gets executed.
-This also allows for that block to not be re-executed every time you change something _else_ on the page.
-
-Here's a simple example (change values in `a` to see the results being live updated):
-
-```julia:./exdot.jl
-using LinearAlgebra
-a = [1, 2, 3, 3, 4, 5, 2, 2]
-@show dot(a, a)
-println(dot(a, a))
-```
-
-You can now show what this would look like:
-
-\output{./exdot.jl}
+### :construction: Exercises
+- `n` volcanic bombs
+- `n` volcanic bombs vectorised
+- Reaction-Diffusion-Advection code
+- Create a repository and upload code + `README`
+- Personal Julia install
