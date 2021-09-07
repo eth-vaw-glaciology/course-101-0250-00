@@ -39,8 +39,6 @@ showall = false
 - _(optional)_ orbital
 [_👉 get started_](#exe_start)
 
-\warn{Sometimes it's useful to have a warning as it may warn you about something you should pay attention to.}
-
 \label{exe_start}
 # Exercise - lecture 1
 

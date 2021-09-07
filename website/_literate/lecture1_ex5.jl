@@ -1,5 +1,7 @@
 # ## Exercise 5 _(optional)_ - **orbital around a centre of mass**
 # 
+#md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex5.ipynb)
+#md #
 # The goal of this exercise is to consolidate:
 # - code structure `# Physics, # Numerics, # Time loop, # Visualisation`
 # - physics implementation

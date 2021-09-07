@@ -24,3 +24,5 @@ hascode = true
 - Reaction-Diffusion-Advection code
 - Create a repository and upload code + `README`
 - Personal Julia install
+
+\warn{Sometimes it's useful to have a warning as it may warn you about something you should pay attention to.}
