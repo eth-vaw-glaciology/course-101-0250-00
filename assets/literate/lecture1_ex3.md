@@ -1,6 +1,8 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 3 - **Car travel in 2 dimensions**
 
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex3.ipynb)
+
 The goal of this exercise is to familiarise with:
 - code structure `# Physics, # Numerics, # Time loop, # Visualisation`
 - array initialisation

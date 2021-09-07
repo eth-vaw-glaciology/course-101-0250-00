@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 1 - **Money in the bank**
 
-👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/lecture1/lecture1_ex1.ipynb)
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex1.ipynb)
 
 The goal of this exercise is to familiarise with:
 - array initialisation
