@@ -1,41 +1,39 @@
 +++
 title = "Logistics"
-hascode = true
+hascode = false
 +++
 
 # Logistics
 
 [![Element chat](/assets/element_chat.svg#badge)](https://chat.ethz.ch)
-[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us)
-[![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch)
+[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us/j/61047225026?pwd=SlFkK2ErYmlOUGE1aFdGZFVLOUlmUT09)
+[![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=15755)
 
-## Objective
-The goal of this course is to offer a practical approach to solve systems of differential equations in parallel on GPUs using the [Julia language](http://www.julialang.org/). Julia combines high-level language conciseness to low-level language performance which enables efficient code development. 
+> **Suggestion:** Bookmark this page for easy access to all infos you need for the course.
 
 The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum.
 
-In a final project you will solve a solid mechanics or fluid dynamics problem of your interest, such as:
-- the shallow water equation,
-- the shallow ice equation,
-- acoustic wave propagation,
-- nonlinear diffusion,
-- viscous flow or elastic deformation,
-- viscous or elastic poromechanics,
-- frictional heating,
-- and more...
-
-Your Julia GPU application will be hosted on a git-platform and implement modern software development practices.
+> ⚠️ **Note:** The following information is subject to changes until the course start, and later-on depending to the evolution of the pandemic. 
 
 ## Lectures
 
-⚠️ subject to changes
+### Live lectures | Tuesdays 13h-16h
+- In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
+- Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/61047225026?pwd=SlFkK2ErYmlOUGE1aFdGZFVLOUlmUT09) (lecture only).
+- **Exercise session** following-up the lecture will not be broadcasted _(limited to no online support will be provided during the exercise session)_.
 
-**Live lectures** will take place on Tuesday 13h-16h
-
-**Office hours** schedule tbd (on Element/Zoom or in-person)
+### Office hours 
+Schedule to be defined (on Element/Zoom or in-person)
 
 ## Discussion
-We encourage students to ask questions related to the course and the exercises as well as other technical issues on the relevant [Element](https://chat.ethz.ch) room. Using the chat server should facilitate eychange among students and may provide a knowledge basis useful to everyone.
+We encourage students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat. Using the chat server should facilitate exchange among students and may provide a knowledge basis useful to everyone.
+
+## Homework
+Homework tasks will be announced after each week's lecture. The exercise session following the lecture will get you started. Due date will be by the end of every following week to allow for Q&A during the in-class exercise session.
+- Submission of scripts and other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755).
+- Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
+
+> ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
 ## Evaluation
 Enrolled ETHZ students will have to hand in on Moodle:
