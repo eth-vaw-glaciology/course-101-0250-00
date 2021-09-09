@@ -1,3 +1,5 @@
 .DS_Store
 .vscode/
 .ipynb_checkpoints/
+slide-notebooks/Manifest.toml
+exercise-notebook/Manifest.toml
