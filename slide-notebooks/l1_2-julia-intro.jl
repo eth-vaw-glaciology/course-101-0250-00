@@ -1,14 +1,4 @@
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-# # Lecture 1: Why solve PDEs on a GPU? & The tools to do it
-#
-# ## Why solve PDEs on a GPU?
-# An intro by Ludovic about GPU computing:
-# - why we do it
-# - why it is cool
-# - examples from his research
-
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## Tools for the job: introduction to Julia
 #
 # ### Aside 1: Jupyter Notebooks
@@ -37,7 +27,7 @@
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## The Julia programming language
 #
-# [Julia](https://julialang.org/) is a modern, interactive, and high performace programming language.  It's a general purpose
+# [Julia](https://julialang.org/) is a modern, interactive, and high performance programming language.  It's a general purpose
 # language with a bend on technical computing.
 #
 # ![julia-logo](./figures/julia-logo-repl.png)
@@ -49,7 +39,7 @@
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 # ### What does Julia look like
 #
-# An example soling the Lorenz system of ODEs:
+# An example solving the Lorenz system of ODEs:
 
 using OrdinaryDiffEq, Plots
 
@@ -153,7 +143,7 @@ plot(sol, vars=(1,2,3)) # plot Lorenz attractor
 # - similar to overloading but method selection occurs at runtime
 # > very natural for mathematical programming
 #
-# Juliacon 2019 presentation on the subject by Stefan Karpinski
+# JuliaCon 2019 presentation on the subject by Stefan Karpinski
 # (co-creator of Julia):
 #
 # ["The Unreasonable Effectiveness of Multiple Dispatch"](https://www.youtube.com/watch?v=kc9HwsxE1OY)
