@@ -24,6 +24,6 @@ The course staff is composed of:
 
 ---
 
-To [website-memo](website-memo.md) document.
-
-🔗 [staff resources (private)](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)
+_**Admin**_
+- [website-memo](website-memo.md) document.
+- 🔗 [staff resources (private)](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)
