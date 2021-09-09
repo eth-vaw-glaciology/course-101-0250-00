@@ -30,6 +30,9 @@ We encourage students to ask questions related to the course and the exercises a
 
 ## Homework
 Homework tasks will be announced after each week's lecture. The exercise session following the lecture will get you started. Due date will be by the end of every following week to allow for Q&A during the in-class exercise session.
+
+Homework assignements can be carried-out by groups of 2. However, **_note that every student has to hand in a version of the homework_**.
+
 - Submission of scripts and other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
