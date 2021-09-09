@@ -8,9 +8,9 @@ This course aims to cover state-of-the-art methods in modern parallel Graphical 
 
 ## Staff
 The course staff is composed of:
-- Ludovic Räss  _ETHZ - VAW-GL_
-- Mauro Werder  _ETHZ - VAW-GL_
-- Samuel Omlin  _ETHZ - CSCS_
+- [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
+- [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS ETHZ
 
 ## Organisation
 
@@ -21,5 +21,9 @@ The course staff is composed of:
 ### Discussion
 
 ### Homework and Evaluation
+
+---
+
+To [website-memo](website-memo.md) document.
 
 🔗 [staff resources (private)](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)

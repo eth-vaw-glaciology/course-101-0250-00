@@ -67,11 +67,10 @@ julia> notebook(dir="/some/path")
 
 #### Transform the notebook into a presentation
 
-1. Populate `my_script.jl` "source" code with
+1. To allow for slide rendering as _slide, subslide or fragment_, populate `my_script.jl` "source" code with
 ```julia
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide/subslide/fragment"}}
 ```
-to allow for slide rendering as slide, subslide or fragment.
 
 2. To view the notebook as a slideshow, install the [RISE plugin](https://rise.readthedocs.io/en/stable/installation.html).
 
