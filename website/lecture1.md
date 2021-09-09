@@ -16,16 +16,17 @@ showall = false
 
 ## Objective
 
-### :bulb: Intro to Julia, JupyterHub/Jupyter notebooks
+### :bulb: Intro to Julia, Jupyter notebooks
 - Julia basics
 - Julia package manager/system
 - Environments
-- Tips and tricks: Revise, debugging
+- Visualisation
+- Tips and tricks
 
 ### :books: Solving simple problems numerically
-- Initial conditions
-- Time loop
-- Visualisation
+- Why GPU and parallel computing
+- From equations to code
+- Update rule and predictive modelling
 
 ### :computer: Code: Git and GitHub
 - Get started on GitHub:
@@ -36,8 +37,10 @@ showall = false
 - Money in the bank (update, rate of change)
 - Car travelling in 1D, 2D
 - Volcanic bomb
-- _(optional)_ orbital
+- _(optional)_ orbital (Earth-Sun)
 [_👉 get started_](#exe_start)
+
+
 
 \label{exe_start}
 # Exercise - lecture 1

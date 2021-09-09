@@ -29,29 +29,46 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 ```
 
 ### Notebook, code, and markdown with Franklin
-Using `Literate.jl` ... 
 
-### Export `.ipynb` to Markdown and use it as lecture page (may be soon deprecated in flavor of `Literate,jl`)
-To export an ipython notebook, and statically render it as webpage (e.g. lecture 1 page), type following command in the shell.
-```sh
-nbconvert --to markdown  lecture1.ipynb
-```
-Then, you need to move the generated `lecture1_files` folder and the `lecture1.md` file to the `website` folder.
+Using `Literate.jl` permit to write a single `.jl` source file that can contain Julia code and markdown comments and can be transformed into a markdown page, a notebook and notebook-based slides. The website build with `Franklin.jl` has native support to integrate `.jl` scripts ready to me processed by `Literate.jl` in markdown.
 
-**Important**: For now, one needs to manually
-- fix the links to images as the first `/` is missing, e.g.:
-`![](lecture1_files/lecture1_2_0.svg)` needs to be modified to `![](/lecture1_files/lecture1_2_0.svg)`.
-- add code highlight command on page's top:
+#### Display Julia script as Markdown page on the website
+1. Create a Literate-ready `my_script.jl` script
+2. Place it in the `_literate` folder
+3. Add `\literate{/_literate/my_script.jl}` in the website page you want to include `my_script.jl` markdown rendering
+4. Done
+
+Note that there are 2 pre-defined box environments to highlight **note** and **warning**. Use them as following:
 ```md
-+++
-title = "Lecture 1"
-hascode = true
-+++
+#md # \note{...}
+#md # \warn{...}
 ```
-- add the link to which notebook the output refers to, e.g. lecture 1 notebook. For now I did not find another workaround than putting the absolute path:
-```md
-> This it the output of the [lecture1.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/lecture1/lecture1.ipynb)
+
+#### Launch a notebook from the script
+1. In Julia, load Literate and export `my_script.jl` as a notebook:
+```julia
+julia> using Literate
+
+julia> Literate.notebook("my_scritp.jl", outputdir=pwd())
+
 ```
+2. Then load IJulia and launch the notebook for the given path
+```julia
+julia> using IJulia
+
+julia> notebook(dir="/some/path")
+```
+
+#### Transform the notebook into a presentation
+1. Populate `my_script.jl` "source" code with
+```julia
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide/subslide/fragment"}}
+```
+to allow for slide rendering as slide, subslide or fragment.
+2. To view the notebook as a slideshow, install the [RISE plugin](https://rise.readthedocs.io/en/stable/installation.html)
+3. Open the notebook as in [here](#launch-a-notebook-from-the-script)
+4. Press `alt-r` to start. Use spacebar to advance.
+
 
 ## Misc
 
