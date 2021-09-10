@@ -2,7 +2,7 @@ md"""
 ## Exercise 4 - **Volcanic bomb**
 """
 
-#md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex4.ipynb)
+#md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex4.ipynb)
 #md #
 
 md"""
