@@ -13,9 +13,9 @@ hascode = false
 
 The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum.
 
-> ⚠️ **Note:** The following information is subject to changes until the course start, and later-on depending to the evolution of the pandemic. 
-
 ## Lectures
+
+> ⚠️ **Note:** The following information is subject to changes until the course start, and later-on depending to the evolution of the pandemic. 
 
 ### Live lectures | Tuesdays 13h-16h
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
@@ -39,6 +39,6 @@ Homework assignements can be carried-out by groups of 2. However, **_note that e
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
 ## Evaluation
-Enrolled ETHZ students will have to hand in on Moodle:
+Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755):
 1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.
 2. A final project during Part 3 (60% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
