@@ -7,8 +7,14 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Why solve PDEs on a GPU?
-An intro about GPU computing:
+## Why solve PDEs on GPUs?
+
+![gpu](./figures/gpu.png)
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+### An brief intro about GPU computing:
 - why we do it
 - why it is cool
 - examples from current research
