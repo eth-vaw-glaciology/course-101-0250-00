@@ -11,7 +11,7 @@ md"""
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-> You can follow the lecture along life at https://achtzack01.ethz.ch/, login with your nethz-name and an
+> You can follow the lecture along live at https://achtzack01.ethz.ch/, login with your nethz-name and an
 > arbitrary password (**but don't use your nethz password**).  You have to be within the ETHZ network or
 > use a VPN connection.
 
