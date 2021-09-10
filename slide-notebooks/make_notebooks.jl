@@ -32,7 +32,7 @@ for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl
         continue
     end
-    Literate.notebook(fl, "notebooks", credit=false, execute=false) #, preprocess=include2nbinclude)
+    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
 end
 # copy figures
 mkpath("notebooks/figures")
