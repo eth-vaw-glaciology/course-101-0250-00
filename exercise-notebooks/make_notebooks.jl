@@ -32,11 +32,12 @@ for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl
         continue
     end
-    Literate.notebook(fl, "notebooks", credit=false, execute=false) #, preprocess=include2nbinclude)
+    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
+    # Literate.markdown(fl, "notebooks", credit=false, execute=false, mdstrings=true)
 end
 # copy figures
-mkpath("notebooks/figures")
-[cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
+# mkpath("notebooks/figures")
+# [cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
 
 # # Cannot export directly to ../notebooks as then @nbinclude does not work.
 # # Instead move them by hand:
