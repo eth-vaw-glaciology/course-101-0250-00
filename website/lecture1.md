@@ -15,7 +15,7 @@ showall = false
 > :computer: Intro to Julia\
 > :construction: Exercises:
 > - numerical solutions
-> - predicitve modelling
+> - predictive modelling
 > - visualisation
 
 --- 
@@ -27,7 +27,6 @@ showall = false
 [_👉 get started with exercises_](#exercises_-_lecture_1)
 
 ---
-
 
 # Exercises - lecture 1
 

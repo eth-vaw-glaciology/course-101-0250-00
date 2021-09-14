@@ -33,11 +33,11 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 Schedule to be defined (on Element/Zoom or in-person)
 
 ## Discussion
-We encourage ETH students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat. Using the chat server should facilitate exchange among students and may provide a knowledge basis useful to everyone.
+We plan to use the [Element-chat (https://chat.ethz.ch/)](https://chat.ethz.ch/) as the main communication channel for the course, both between the teachers and the students, and hopefully also between students. We encourage ETH students to ask course, exercises and technical questions there.
 
 Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element:
 1. Select **Start Student-Chat**
-2. Login using your nethz credentials to start using the browser-based client.
+2. Login using your NETHZ credentials to start using the browser-based client.
 3. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access.
 
 ## Homework
