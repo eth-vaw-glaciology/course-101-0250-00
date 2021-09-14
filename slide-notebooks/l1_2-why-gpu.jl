@@ -20,7 +20,7 @@ md"""
 - examples from current research
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Agenda
 #### why we do it
@@ -51,10 +51,19 @@ md"""
 - Availability
 - Workstation turns into Supercomputers
 - Two-language solution
+  - Single code for prototyping and production
+  - Single approach to learn basics and aggressive optimisations 
 - Backend agnostic
+  - Single code to run on single CPU or thousands of GPUs
+  - Single code to run on various CPU and GPU architectures
 - Interactive
+  - No need for 3rd party visualisation software
+  - Debugging in interactive mode
+  - Efficient for development
 
 #### examples from current research
-- Show some cool stuff.
+- Show some cool stuff
+  - ParallelStencil _miniapps_
+  - 3D hydro-mechanics
 
 """
