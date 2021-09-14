@@ -17,6 +17,9 @@ The teaching staff is composed of:
 ### Course material
 Course material, exercises and extra resources are available on the [**course website**](https://eth-vaw-glaciology.github.io/course-101-0250-00/).
 
+Detailed course description is available on the [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en)
+
+
 ### Live lectures
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
 - Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/61047225026) (ETH Students only - Password _and password-less login_ available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755)).
