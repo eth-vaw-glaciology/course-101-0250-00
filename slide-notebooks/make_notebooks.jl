@@ -28,11 +28,46 @@ using Literate
 #     return str
 # end
 
+"""
+    process_sol(str, [:remove, :keep])
+
+process solutions.
+"""
+function process_sol(str, todo)
+    locs = findall("#sol", str)
+    length(locs)==0 && return str
+
+    if todo==:keep
+        str = replace(str, "#sol "=> "")
+    elseif todo==:remove
+        for loc in reverse(locs)
+            i1 = findnext('\n', str, loc[1])
+            str = str[1:loc[1]-1]*str[i1+1:end]
+        end
+    else
+        error("unrecognized option")
+    end
+    return str
+end
+
+remove_sol(str) = process_sol(str, :remove)
+keep_sol(str) = process_sol(str, :keep)
+
+"""
+    process_sol(str)
+
+Process solutions.
+"""
+function process_sol(str)
+
+end
+
+
 for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl
         continue
     end
-    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
+    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preprocess=keep_sol)
 end
 # copy figures
 mkpath("notebooks/figures")

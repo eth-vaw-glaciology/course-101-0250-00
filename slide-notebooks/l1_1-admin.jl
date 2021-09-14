@@ -25,9 +25,6 @@ md"""
 All you need should be available on the course website: [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 
 _if something is missing, ping us so we can add it_
-
-> **Suggestion:**\
-> Bookmark https://eth-vaw-glaciology.github.io/course-101-0250-00/
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -35,22 +32,15 @@ md"""
 Let's have a brief tour of the [course website](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## Recap of the important things to remember
-
-- All infos are on [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
-"""
-
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 ### Discussion & help
 
-- Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/)
-  - ping us so we can invite you to the course "rooms"
-  - will be our main communication channel
-  - use it between you as well for support :-)
+We plan to use the Element-chat as the main communication channel for the course, both between the teachers and the student, and
+hopefully also between students.
+
+Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with you NETHZ usernam & password.
+  - Invite links to our chat rooms we sent you by email.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -71,20 +61,8 @@ Bring your laptop to all lectures!
 - Who has access to an Nvidia GPU?
 - What operating system are you on?
 
-JupyterHub and direct access to one of our compute servers `achtzack01`.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## GPU compute server
-
-You can have access and use the `achtzack01` server for
-- Jupyter notebook execution
-- GPU calculations (later in the course)
-
-> **Warning:**\
-> login with your nethz-name and an arbitrary password (**but don't use your nethz password**)
+In the first few lecture we will us JupyterHub to get you started.  Later we plan to
+get you all setup with a Julia installation.
 """
 
 #src #########################################################################
@@ -92,9 +70,12 @@ You can have access and use the `achtzack01` server for
 md"""
 ## Summary
 
-- All infos on [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
+- (Almost) All infos on [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 - Get started with [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/)
-- _If some important info is missing, ping us so we can add it_
+
+If some important info is missing, ping us so we can add it
+
+_This is the first time we run this course, things will be missing!_  Help is appreciated.
 
 > **Suggestion:**\
 > Bookmark https://eth-vaw-glaciology.github.io/course-101-0250-00/
