@@ -32,20 +32,20 @@ showall = false
 # Exercises - lecture 1
 
 
-\literate{/_literate/lecture1_ex1.jl}
+\literate{/_literate/lecture1_ex1_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex2.jl}
+\literate{/_literate/lecture1_ex2_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex3.jl}
+\literate{/_literate/lecture1_ex3_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex4.jl}
+\literate{/_literate/lecture1_ex4_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex5.jl}
+\literate{/_literate/lecture1_ex5_web.jl}

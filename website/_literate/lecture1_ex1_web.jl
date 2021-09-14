@@ -87,13 +87,13 @@ end
 #nb # > 💡 hint: Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.
 #md # \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
 
-md"""
+"""md
 Report the total wealth of the client after `tot_yrs`:
 """
 
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
 
-md"""
+"""md
 And display the graphical evolution on top of previous one:
 """
 
