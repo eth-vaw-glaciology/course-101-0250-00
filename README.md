@@ -28,6 +28,8 @@ Detailed course description is available on the [**ETHZ course catalogue**](http
 ### Discussion
 We encourage students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat.
 
+Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element.
+
 ### Homework and Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) (& GitHub):
 1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.

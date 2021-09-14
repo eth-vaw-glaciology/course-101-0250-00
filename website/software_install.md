@@ -12,14 +12,14 @@ hascode = true
 ### Course slides and lecture material
 Most of the course slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your nethz-name and an arbitrary password (**but don't use your nethz password**).  You have to be within the ETHZ network or use a VPN connection.
+You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your nethz-name and an arbitrary password (**but don't use your nethz password**).  _You have to be within the ETHZ network or use a VPN connection._
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two homework assignements will be [Jupyter notebooks](https://jupyter.org/).
+The first two homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/) as well. You can execute them on the server or download and run them them locally as well.
 
-🚧 WIP Procedure on how-to with the notebook exercises.
+For submission, download the final notebooks from the server, or collect the local notebooks into a local folder you then upload to Moodle. See [Logistics](/Logistics) and [Homework](/Homework) for details.
 
 
 ## Installing Julia v1.6 (or later)

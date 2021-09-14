@@ -33,14 +33,19 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 Schedule to be defined (on Element/Zoom or in-person)
 
 ## Discussion
-We encourage students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat. Using the chat server should facilitate exchange among students and may provide a knowledge basis useful to everyone.
+We encourage ETH students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat. Using the chat server should facilitate exchange among students and may provide a knowledge basis useful to everyone.
+
+Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element:
+1. Select **Start Student-Chat**
+2. Login using your nethz credentials to start using the browser-based client.
+3. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access.
 
 ## Homework
 [Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
 
 Homework **due date will be Thursday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
 
-Homework assignements can be carried-out by groups of 2. However, **_note that every student has to hand in a version of the homework_**.
+Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a version of the homework_**.
 
 - Submission of scripts and other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
