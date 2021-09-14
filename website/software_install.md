@@ -14,12 +14,13 @@ Most of the course slides are a [Jupyter notebook](https://jupyter.org/); a brow
 
 You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your nethz-name and an arbitrary password (**but don't use your nethz password**).  You have to be within the ETHZ network or use a VPN connection.
 
-Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
+Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two (and maybe more) homework assignements will be [Jupyter notebooks](https://jupyter.org/).
+The first two homework assignements will be [Jupyter notebooks](https://jupyter.org/).
 
 🚧 WIP Procedure on how-to with the notebook exercises.
+
 
 ## Installing Julia v1.6 (or later)
 Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]** if needed.
@@ -45,6 +46,7 @@ to make sure that the Julia REPL (aka terminal) starts. Then you should ba able 
 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
+
 <!-- 
 ## Running the scripts
 To get started with the workshop,

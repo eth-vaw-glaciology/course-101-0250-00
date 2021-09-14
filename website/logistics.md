@@ -6,7 +6,7 @@ hascode = false
 # Logistics
 
 [![Element chat](/assets/element_chat.svg#badge)](https://chat.ethz.ch)
-[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us/j/61047225026?pwd=SlFkK2ErYmlOUGE1aFdGZFVLOUlmUT09)
+[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us)
 [![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=15755)
 
 > **Suggestion:** Bookmark this page for easy access to all infos you need for the course.
@@ -26,7 +26,7 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 
 ### Live lectures | Tuesdays 13h-16h
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
-- Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/61047225026?pwd=SlFkK2ErYmlOUGE1aFdGZFVLOUlmUT09) (lecture only).
+- Online attendance will be possible on [Zoom](https://ethz.zoom.us) (lecture only).
 - **Exercise session** following-up the lecture will not be broadcasted _(no online support will be provided during the exercise session)_.
 
 ### Office hours 
