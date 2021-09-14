@@ -50,9 +50,11 @@ md"""
 - Price / Performance
 - Availability
 - Workstation turns into Supercomputers
-- 
-
+- Two-language solution
+- Backend agnostic
+- Interactive
 
 #### examples from current research
+- Show some cool stuff.
 
 """
