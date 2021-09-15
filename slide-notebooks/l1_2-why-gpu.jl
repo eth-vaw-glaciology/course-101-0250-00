@@ -16,24 +16,24 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 ### An brief intro about GPU computing:
-- why we do it
-- why it is cool (in Julia)
-- examples from current research
+- Why we do it
+- Why it is cool (in Julia)
+- Examples from current research
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Propaganda
-#### why we do it
+#### Why we do it
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 Predict the evolution of complex natural and engineered systems
-- e.g. groundwater pollution, ice cap evolution, force distribution in a bridge, etc...
+- e.g. ice cap evolution, stress distribution, etc...
 
-  _Add figure_
+![ice2](./figures/ice2.png)
 """
 
 #src #########################################################################
@@ -50,9 +50,9 @@ Physical processes that describe those systems are **complex** and often **nonli
 md"""
 A numerical solution means solving a system of (coupled) differential equations
 
-_**mathematical model -> discretisation -> solution**_
+_**mathematical model $~ → ~$ discretisation $~ → ~$ solution**_
 
-_Add figure_
+$\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} * ...$
 """
 
 #src #########################################################################
@@ -70,7 +70,7 @@ but...
 md"""
 - PDEs - involve vectors (and tensors)  👉 local gradients & neighbours
 
-$$ \frac{∂C}{∂t} = D~(\frac{∂^2C}{∂x^2} + \frac{∂^2C}{∂y^2}) $$
+$$ \frac{∂C}{∂t} = D~ \left(\frac{∂^2C}{∂x^2} + \frac{∂^2C}{∂y^2} \right) $$
 
 """
 
@@ -82,7 +82,8 @@ Computational costs increase
 - with dimensions (3D tensors...)
 - upon refining spatial and temporal resolution
 
-_Add figure tensor, resolution_
+![Stokes2D_vep](./figures/Stokes2D_vep.gif)
+
 """
 
 #src #########################################################################
@@ -103,7 +104,7 @@ GPUS are massively multi-core devices
 - SIMD model
 - Further increases the Flop vs Bytes gap
 
-![flops_bytes](./figures/flops_bytes.png)
+![cpu_gpu_evo](./figures/cpu_gpu_evo.png)
 
 """
 
@@ -130,19 +131,31 @@ md"""
 md"""
 #### GPU are cool
 Price vs Performance
-- Nvidia Tesla A100 has **1TB/s** memory throughput
+- Close to **1TB/s** memory throughput 
 
+![perf_gpu](./figures/perf_gpu.png)
+
+And one can get there!
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Availability (less fight for resources)
-  - Still not many applications run on GPUs
+- Still not many applications run on GPUs
 
 Workstation turns into a personal Supercomputers
+- GPU vs CPUs peak memory bandwidth: theoretical 10x, practical 20-100x
+
+![titan_node](./figures/titan_node.jpg)
+
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### Julia is cool
-Solution to the "Two-language problem"
+Solution to the "two-language problem"
 - Single code for prototyping and production
 
 ![two_lang](./figures/two_lang.png)
@@ -153,12 +166,12 @@ Solution to the "Two-language problem"
 md"""
 Backend agnostic
 - Single code to run on single CPU or thousands of GPUs
-- Single code to run on various CPU (x86, Power9, ARM) and GPU (Nvidia, AMD, Intel?) architectures
+- Single code to run on various CPUs (x86, Power9, ARM) and GPUs (Nvidia, AMD, Intel?)
 
 Interactive
-  - No need for 3rd-party visualisation software
-  - Debugging in interactive mode
-  - Efficient for development
+- No need for 3rd-party visualisation software
+- Debugging and interactive REPL mode
+- Efficient for development
 """
 
 #src #########################################################################
