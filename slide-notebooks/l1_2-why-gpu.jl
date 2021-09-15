@@ -30,7 +30,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Predict the evolution of complex natural and engineered systems
+Predict the evolution of natural and engineered systems
 - e.g. ice cap evolution, stress distribution, etc...
 
 ![ice2](./figures/ice2.png)
@@ -52,7 +52,7 @@ A numerical solution means solving a system of (coupled) differential equations
 
 _**mathematical model $~ → ~$ discretisation $~ → ~$ solution**_
 
-$\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} * ...$
+$\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} \cdot ...$
 """
 
 #src #########################################################################
@@ -91,7 +91,7 @@ Computational costs increase
 md"""
 Use **parallel computing** to address this:
 - The "memory wall" in \~ 2004
-- Single core to multi-core devices
+- Single-core to multi-core devices
 
 ![mem_wall](./figures/mem_wall.png)
 
@@ -110,7 +110,7 @@ GPUS are massively multi-core devices
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-👉 We are memory bound: Requires to re-think the numerical implementation and solution strategies
+👉 We are memory bound: requires to re-think the numerical implementation and solution strategies
 """
 
 #src #########################################################################
@@ -131,11 +131,11 @@ md"""
 md"""
 #### GPU are cool
 Price vs Performance
-- Close to **1TB/s** memory throughput 
+- Close to **1TB/s** memory throughput (here on nonlinear diffusion SIA)
 
 ![perf_gpu](./figures/perf_gpu.png)
 
-And one can get there!
+! And one can get there !
 """
 
 #src #########################################################################
@@ -164,11 +164,12 @@ Solution to the "two-language problem"
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Backend agnostic
+Backend agnostic:
 - Single code to run on single CPU or thousands of GPUs
-- Single code to run on various CPUs (x86, Power9, ARM) and GPUs (Nvidia, AMD, Intel?)
+- Single code to run on various CPUs (x86, Power9, ARM) \
+  and GPUs (Nvidia, AMD, Intel?)
 
-Interactive
+Interactive:
 - No need for 3rd-party visualisation software
 - Debugging and interactive REPL mode
 - Efficient for development
