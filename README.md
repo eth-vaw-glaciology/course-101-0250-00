@@ -38,5 +38,5 @@ Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.
 ---
 
 _**Admin**_
-- [website-memo](website-memo.md) document.
-- 🔗 [staff resources (private)](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)
+- [website-memo](website-memo.md) document
+- 🔗 [staff resources](https://github.com/eth-vaw-glaciology/course-101-0250-00-staff)
