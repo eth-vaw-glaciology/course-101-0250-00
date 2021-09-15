@@ -84,23 +84,21 @@ end
 
 \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
 
-```julia:ex10
-"""md
 Report the total wealth of the client after `tot_yrs`:
-"""
 
+```julia:ex10
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
+```
 
-"""md
 And display the graphical evolution on top of previous one:
-"""
 
+```julia:ex11
 plot!(M_evol2 ./ 1000, linewidth=3, label="with interest")
 ```
 
 Finally, quantify the difference in the final wealth with and without interest rate:
 
-```julia:ex11
+```julia:ex12
 ∆evo = M_evol2[end] - M_evol1[end]
 println("∆evo = $(round(∆evo, sigdigits=5))")
 ```

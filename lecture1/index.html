@@ -29,17 +29,10 @@ for it&#61;2:tot_yrs
 end</code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.</div></div>
-<pre><code class=language-julia >&quot;&quot;&quot;md
-Report the total wealth of the client after &#96;tot_yrs&#96;:
-&quot;&quot;&quot;
-
-println&#40;&quot;Wealth after &#36;&#40;tot_yrs&#41; years with interest rate: &#36;&#40;M_evol2&#91;end&#93;&#41; CHF&quot;&#41;
-
-&quot;&quot;&quot;md
-And display the graphical evolution on top of previous one:
-&quot;&quot;&quot;
-
-plot&#33;&#40;M_evol2 ./ 1000, linewidth&#61;3, label&#61;&quot;with interest&quot;&#41;</code></pre>
+<p>Report the total wealth of the client after <code>tot_yrs</code>:</p>
+<pre><code class=language-julia >println&#40;&quot;Wealth after &#36;&#40;tot_yrs&#41; years with interest rate: &#36;&#40;M_evol2&#91;end&#93;&#41; CHF&quot;&#41;</code></pre>
+<p>And display the graphical evolution on top of previous one:</p>
+<pre><code class=language-julia >plot&#33;&#40;M_evol2 ./ 1000, linewidth&#61;3, label&#61;&quot;with interest&quot;&#41;</code></pre>
 <p>Finally, quantify the difference in the final wealth with and without interest rate:</p>
 <pre><code class=language-julia >∆evo &#61; M_evol2&#91;end&#93; - M_evol1&#91;end&#93;
 println&#40;&quot;∆evo &#61; &#36;&#40;round&#40;∆evo, sigdigits&#61;5&#41;&#41;&quot;&#41;</code></pre>
