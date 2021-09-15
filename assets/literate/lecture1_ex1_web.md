@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 1 - **Money in the bank**
 
-👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex1.ipynb)
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex1.ipynb)
 
 The goal of this exercise is to familiarise with:
 - array initialisation
@@ -84,21 +84,23 @@ end
 
 \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
 
-Report the total wealth of the client after `tot_yrs`:
-
 ```julia:ex10
+"""md
+Report the total wealth of the client after `tot_yrs`:
+"""
+
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
-```
 
+"""md
 And display the graphical evolution on top of previous one:
+"""
 
-```julia:ex11
 plot!(M_evol2 ./ 1000, linewidth=3, label="with interest")
 ```
 
 Finally, quantify the difference in the final wealth with and without interest rate:
 
-```julia:ex12
+```julia:ex11
 ∆evo = M_evol2[end] - M_evol1[end]
 println("∆evo = $(round(∆evo, sigdigits=5))")
 ```

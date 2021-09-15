@@ -30,7 +30,16 @@ for it=2:tot_yrs
     M_evol2[it] = M_evol2[it-1] + M_save
 end
 
+
+"""md
+Report the total wealth of the client after `tot_yrs`:
+"""
+
 println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
+
+"""md
+And display the graphical evolution on top of previous one:
+"""
 
 plot!(M_evol2 ./ 1000, linewidth=3, label="with interest")
 
