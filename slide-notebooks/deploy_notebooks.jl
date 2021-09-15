@@ -13,6 +13,8 @@ for fl in readdir()
         continue
     end
     
+    println("File: $fl")
+    
     # create ipynb
     Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
 
@@ -24,7 +26,7 @@ for fl in readdir()
     strn = replace_string(str)
     write(tmp, strn)
 
-    mv("$tmp", "../website/_literate/$tmp")
+    mv("$tmp", "../website/_literate/$tmp", force=true)
 end
 
 # copy figures for ipynb

@@ -12,7 +12,9 @@ for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || "make_notebooks.jl"==fl
         continue
     end
-    
+
+    println("File: $fl")
+
     # create ipynb
     Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
 
@@ -24,7 +26,7 @@ for fl in readdir()
     # strn = replace_string(str)
     # write(tmp, strn)
 
-    mv("$tmp", "../website/_literate/$tmp")
+    mv("$tmp", "../website/_literate/$tmp", force=true)
 end
 
 # # copy figures for ipynb
