@@ -32,6 +32,8 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 
 Using `Literate.jl` permit to write a single `.jl` source file that can contain Julia code and markdown comments and can be transformed into a markdown page, a notebook and notebook-based slides. The website build with `Franklin.jl` has native support to integrate `.jl` scripts ready to me processed by `Literate.jl` in markdown.
 
+To allow `mdstring` to render correctly in Franklin, one need to set the page variable `literate_mds = true`.
+
 #### Display Julia script as Markdown page on the website
 
 1. Create a Literate-ready `my_script.jl` script
@@ -47,6 +49,19 @@ Note that there are 2 pre-defined box environments to highlight **note** and **w
 #md # \note{...}
 #md # \warn{...}
 ```
+
+#### Notebook deploy
+
+Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-notebooks) and [exercise-notebooks](exercise-notebooks) folder will:
+- create `.ipynb` from the `.jl` script
+- move the `.ipynb` and figures to the notebook folder (and notebook/figures)
+- create a `_web.jl` script and move it to `website/_literate` to be included in the website lecture pages. Figure links in the `_web.jl` files are changes from `./figures/` to `../website/_assets/literate_figures/` for correct rendering in html file.
+- create, if needed, a figures folder in `website/_assets/literate_figures` folder to hold figures for Literate scripts
+
+**To deploy notebooks**
+1. Run the deploy script from its folder
+2. Include the correct `_web.jl` filename in e.g. `website/lectureXY.md` file
+3. Push
 
 #### Launch a notebook from the script
 

@@ -1,28 +1,27 @@
 +++
 title = "Lecture 3"
 hascode = true
+literate_mds = true
+showall = false
 +++
 
 # Lecture 3
 
+> **Agenda**\
+> :books: acoustic wave propagation, 1D to 2D\
+> :computer: Personal Julia instal, Julia's `Project` environment, Git\
+> :construction: Exercises:
+> - acoustic vs diffusion
+> - 1D vs 2D
+
+--- 
+
+**Content**
+
 \toc
 
-## Live evaluation of code blocks
+[_👉 get started with exercises_](#exercises_-_lecture_3)
 
-If you would like to show code as well as what the code outputs, you only need to specify where the script corresponding to the code block will be saved.
+---
 
-Indeed, what happens is that the code block gets saved as a script which then gets executed.
-This also allows for that block to not be re-executed every time you change something _else_ on the page.
-
-Here's a simple example (change values in `a` to see the results being live updated):
-
-```julia:./exdot.jl
-using LinearAlgebra
-a = [1, 2, 3, 3, 4, 5, 2, 2]
-@show dot(a, a)
-println(dot(a, a))
-```
-
-You can now show what this would look like:
-
-\output{./exdot.jl}
+# Exercises - lecture 3

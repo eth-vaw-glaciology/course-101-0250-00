@@ -9,7 +9,17 @@ hascode = true
 
 ## Opening and running the Jupyter Julia notebook
 
-Description to come 🚧
+### Course slides and lecture material
+Most of the course slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
+
+You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your nethz-name and an arbitrary password (**but don't use your nethz password**).  _You have to be within the ETHZ network or use a VPN connection._
+
+Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
+
+### Exercises and homework
+The first two homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/) as well. You can execute them on the server or download and run them them locally as well.
+
+For submission, download the final notebooks from the server, or collect the local notebooks into a local folder you then upload to Moodle. See [Logistics](/Logistics) and [Homework](/Homework) for details.
 
 
 ## Installing Julia v1.6 (or later)
@@ -22,6 +32,9 @@ wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.2-mac64.dmg # 
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz # Linux x86
 ```
 Then add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
+
+> **Note for Windows users**\
+> When installing Julia 1.6 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).
 
 ### Terminal + external editor
 Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
@@ -36,6 +49,7 @@ to make sure that the Julia REPL (aka terminal) starts. Then you should ba able 
 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
+
 <!-- 
 ## Running the scripts
 To get started with the workshop,

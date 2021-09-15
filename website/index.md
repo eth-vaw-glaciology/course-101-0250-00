@@ -6,7 +6,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 🎉 Welcome to ETH's **course 101-0250-00L** on solving partial differential equations (PDEs) in parallel on graphical processing untis (GPUs) with the [Julia programming language](http://www.julialang.org/).
 
-> **Announce:** course starts on Tuesday Sept. 21, 2021 at 13h
+> **Announce:** course starts on Tuesday Sept. 21, 2021 at 12h45
 
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
@@ -34,12 +34,11 @@ The goal of this course is to offer a practical approach to solve systems of dif
 - **Part 3** _Final project_
   
   Solve a solid mechanics or fluid dynamics problem of your interest, such as:
-  - the shallow water / ice equation,
-  - acoustic wave propagation,
-  - nonlinear diffusion,
-  - viscous flow or elastic deformation,
-  - viscous or elastic poromechanics,
-  - frictional heating,
+  - the shallow water / ice equation
+  - acoustic wave propagation, nonlinear diffusion
+  - viscous flow or elastic deformation
+  - viscous or elastic poromechanics
+  - frictional heating
   - and more...
 
 > Detailled content is available on [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en)

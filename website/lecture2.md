@@ -1,28 +1,28 @@
 +++
 title = "Lecture 2"
 hascode = true
+literate_mds = true
+showall = false
 +++
 
 # Lecture 2
 
-<!-- \toc -->
+> **Agenda**\
+> :books: ODEs & PDEs - advection, diffusion, reaction\
+> :computer: Get started on GitHub\
+> :construction: Exercises:
+> - basic code structure & vectorisation
+> - combine physical processes
+> - first steps on Git
 
-## Objective
-### :books: Physics: ODEs and PDEs
-- 1D ODE: reaction
-- 1D PDE: diffusion
-- 1D advection
+--- 
 
-### :computer: Code: GitHub
-- Get started using GitHub:
-  - git basics
-  - Add first items to the Git repo to make it "Julia-ready"
+**Content**
 
-### :construction: Exercises
-- `n` volcanic bombs
-- `n` volcanic bombs vectorised
-- Reaction-Diffusion-Advection code
-- Create a repository and upload code + `README`
-- Personal Julia install
+\toc
 
-\warn{Sometimes it's useful to have a warning as it may warn you about something you should pay attention to.}
+[_👉 get started with exercises_](#exercises_-_lecture_2)
+
+---
+
+# Exercises - lecture 2

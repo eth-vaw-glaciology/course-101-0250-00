@@ -28,6 +28,12 @@ hascode = true
 - [Solving differential equations in parallel with Julia @EGU2021](https://github.com/luraess/julia-parallel-course-EGU21)
 
 
-### Other courses
+### Other courses and workshops
 
 - [Introduction to Computational Thinking @MIT](https://computationalthinking.mit.edu/Spring21/)
+
+- [Julia GPU workshop @JuliaCon2021](https://github.com/maleadt/juliacon21-gpu_workshop)
+
+~~~
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Hz9IMJuW5hU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+~~~

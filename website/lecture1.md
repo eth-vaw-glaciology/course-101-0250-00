@@ -1,6 +1,7 @@
 +++
 title = "Lecture 1"
 hascode = true
+literate_mds = true
 showall = false
 +++
 
@@ -8,58 +9,42 @@ showall = false
 
 **Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the Julia language.**
 
-> **Course structure**\
-> The course structure includes following 3 items, to bring in new material each course both for the "physics-numerics" (aka physics) and the "code-management" (aka code), as well as propose exercises for those concepts:
-> 1. :books: Physics: equations, discretisation, implementation, solver, visualisation
-> 2. :computer: Code: technical, Julia, GitHub
-> 3. :construction: Exercises
+> **Agenda**\
+> :bulb: Welcome words & The small print\
+> :books: Why GPU computing\
+> :computer: Intro to Julia\
+> :construction: Exercises:
+> - numerical solutions
+> - predictive modelling
+> - visualisation
 
-## Objective
+--- 
 
-### :bulb: Intro to Julia, Jupyter notebooks
-- Julia basics
-- Julia package manager/system
-- Environments
-- Visualisation
-- Tips and tricks
+**Content**
 
-### :books: Solving simple problems numerically
-- Why GPU and parallel computing
-- From equations to code
-- Update rule and predictive modelling
+\toc
 
-### :computer: Code: Git and GitHub
-- Get started on GitHub:
-  - Create an account
-  - Create a repo for the course to track your progress in the class
-
-### :construction: Exercises
-- Money in the bank (update, rate of change)
-- Car travelling in 1D, 2D
-- Volcanic bomb
-- _(optional)_ orbital (Earth-Sun)
-[_👉 get started_](#exe_start)
-
-
-
-\label{exe_start}
-# Exercise - lecture 1
-
-\literate{/_literate/lecture1_ex1.jl}
+[_👉 get started with exercises_](#exercises_-_lecture_1)
 
 ---
 
-\literate{/_literate/lecture1_ex2.jl}
+# Exercises - lecture 1
+
+
+\literate{/_literate/lecture1_ex1_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex3.jl}
+\literate{/_literate/lecture1_ex2_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex4.jl}
+\literate{/_literate/lecture1_ex3_web.jl}
 
 ---
 
-\literate{/_literate/lecture1_ex5.jl}
+\literate{/_literate/lecture1_ex4_web.jl}
 
+---
+
+\literate{/_literate/lecture1_ex5_web.jl}
