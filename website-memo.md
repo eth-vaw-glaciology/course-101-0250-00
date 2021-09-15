@@ -94,7 +94,6 @@ julia> notebook(dir="/some/path")
 4. Press `alt-r` to start. Use spacebar to advance.
 
 
-
 ## Misc
 
 ### HTML color-picker
