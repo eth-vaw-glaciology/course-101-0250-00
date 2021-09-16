@@ -96,6 +96,15 @@ julia> notebook(dir="/some/path")
 
 ## Misc
 
+### Control the global page content width
+
+Put in `_layout/head` the following, before the opening of the body and after the loading of the css:
+```html
+<style>
+.content {max-width: 50rem}
+</style>
+```
+
 ### HTML color-picker
 
 https://www.w3schools.com/colors/colors_picker.asp
