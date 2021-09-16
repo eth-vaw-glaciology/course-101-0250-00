@@ -26,6 +26,8 @@ showall = false
 
 [_👉 get started with exercises_](#exercises_-_lecture_1)
 
+\note{This week's homework have to handed in as notebook. See [here](/software_install/#exercises_and_homework) for details.}
+
 ---
 
 # Exercises - lecture 1

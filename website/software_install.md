@@ -17,9 +17,11 @@ You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://a
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/) as well. You can execute them on the server or download and run them them locally as well.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/) as well. You can execute them on the server or download and run them them locally as well.
 
-For submission, download the final notebooks from the server, or collect the local notebooks into a local folder you then upload to Moodle. See [Logistics](/Logistics) and [Homework](/Homework) for details.
+For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
+
+\warn{The `achtzack01` is **not** backed up. Make sure to keep local copy of your data!}
 
 
 ## Installing Julia v1.6 (or later)
