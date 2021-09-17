@@ -9,7 +9,7 @@ function replace_string(str)
 end
 
 for fl in readdir()
-    if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || "make_notebooks.jl"==fl
+    if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl
         continue
     end
 
