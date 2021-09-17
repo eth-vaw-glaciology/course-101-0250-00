@@ -56,6 +56,8 @@ A numerical solution means solving a system of (coupled) differential equations
 _**mathematical model $~ → ~$ discretisation $~ → ~$ solution**_
 
 $\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} \cdot ...$
+
+
 """
 
 #src #########################################################################
@@ -182,8 +184,11 @@ Interactive:
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### Examples from current research
-ParallelStencil _miniapps_
 
-3D hydro-mechanics
+- [ParallelStencil _miniapps_](https://github.com/omlins/ParallelStencil.jl#miniapp-content)
+- [Ice-flow modelling](https://github.com/luraess/julia-parallel-course-EGU21#greenlands-ice-cap-evolution)
+- [3D hydro-mechanical inversions](https://github.com/PTsolvers/PseudoTransientAdjoint.jl#3d-hydro-mechanically-constrained-inversion)
+- [3D Random fields](https://github.com/luraess/ParallelRandomFields.jl#parallelrandomfieldsjl)
+- more ...
 
 """
