@@ -29,4 +29,4 @@ For instance:
 \newcommand{\scal}[1]{\langle #1 \rangle}
 
 \newcommand{\note}[1]{@@note @@title :bulb: Note@@ @@messg #1 @@ @@}
-\newcommand{\warn}[1]{@@warning @@title ⚠ Warning!@@ @@messg #1 @@ @@}
+\newcommand{\warn}[1]{@@warning @@title ⚠️ Warning!@@ @@messg #1 @@ @@}
