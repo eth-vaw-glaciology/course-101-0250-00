@@ -2,9 +2,9 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # _Lecture 1_
 md"""
-# _Lecture 1_
-# Why solve PDEs on GPUs? & The tools to do it
+# Why solve PDEs on GPUs? & The tool for the job
 """
 
 #src #########################################################################

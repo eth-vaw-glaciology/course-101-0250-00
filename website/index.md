@@ -49,5 +49,5 @@ The goal of this course is to offer a practical approach to solve systems of dif
 ## Teaching staff
 - [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS ETHZ
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
 

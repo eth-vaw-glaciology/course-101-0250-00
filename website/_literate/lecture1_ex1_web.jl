@@ -76,7 +76,7 @@ M_evol2    = zeros(tot_yrs)
 M_evol2[1] = M_init;
 
 md"""
-Then, update the prediction formula within the time loop to account for the interest rate (replacing the `??`)
+Then, update the prediction formula within the time loop to account for the interest rate (changing the update formula)
 """
 
 ## TO DO: add correct formula !

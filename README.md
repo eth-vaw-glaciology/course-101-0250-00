@@ -10,7 +10,7 @@ This course aims to cover state-of-the-art methods in modern parallel Graphical 
 The teaching staff is composed of:
 - [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS ETHZ
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
 
 ## Organisation
 

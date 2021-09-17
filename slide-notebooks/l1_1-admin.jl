@@ -4,6 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 $\texttt{The small print of}$
+
 # Solving partial differential equations in parallel on GPUs
 """
 
@@ -87,5 +88,5 @@ If some important info is missing, ping us so we can add it
 _This is the first time we run this course, things will be missing!_  Help is appreciated.
 
 > **Suggestion:**\
-> Bookmark https://eth-vaw-glaciology.github.io/course-101-0250-00/
+> Bookmark [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 """

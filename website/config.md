@@ -9,7 +9,8 @@ The website_* must be defined for the RSS to work
 
 @def author = "ETHZ - VAW-GL"
 
-@def mintoclevel = 2
+@def mintoclevel = 1
+@def maxtoclevel = 2
 
 @def prepath = "course-101-0250-00"
 <!--
