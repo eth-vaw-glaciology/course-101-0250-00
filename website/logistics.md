@@ -22,7 +22,7 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 
 ## Lectures
 
-> ⚠️ **Note:** The following information is subject to changes until the course starts, and later-on depending to the evolution of the pandemic. 
+> ⚠️ **Note:** The requirement for a certificate applies from Monday, 20 September 2021 for teachers and students. For further questions, please see the [Coronavirus FAQs for Students](https://ethz.ch/services/en/news-and-events/coronavirus/students.html). 
 
 ### Live lectures | Tuesdays 13h-16h
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
