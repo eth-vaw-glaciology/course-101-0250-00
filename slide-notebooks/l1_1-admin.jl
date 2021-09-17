@@ -1,3 +1,6 @@
+#src # This is needed to make this run as normal Julia file
+using Markdown #src
+
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 $\texttt{The small print of}$
@@ -30,6 +33,8 @@ All you need should be available on the course website:\
 [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 
 _if something is missing, ping us so we can add it_
+
+(_or even better_ do a pull request at https://github.com/eth-vaw-glaciology/course-101-0250-00/)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}

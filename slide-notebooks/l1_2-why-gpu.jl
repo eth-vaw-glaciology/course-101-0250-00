@@ -1,3 +1,6 @@
+#src # This is needed to make this run as normal Julia file
+using Markdown #src
+
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 # _Lecture 1_

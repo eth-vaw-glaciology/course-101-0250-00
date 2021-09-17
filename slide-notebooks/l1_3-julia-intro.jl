@@ -1,3 +1,4 @@
+#src # This is needed to make this run as normal Julia file:
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -13,9 +14,8 @@ md"""
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-> You can follow the lecture along live at https://achtzack01.ethz.ch/, login with your nethz-name and an
-> arbitrary password (**but don't use your nethz password**).  You have to be within the ETHZ network or
-> use a VPN connection.
+> You can follow the lecture along live at https://achtzack01.ethz.ch/, login with your first-name and an
+> arbitrary password.  You have to be within the ETHZ network or use a VPN connection.
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
 info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
@@ -107,7 +107,7 @@ Features:
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The two language problem*
+### The two language problem
 
 **One language to prototype   ---  one language for production**
 - example from Ludovic's past: prototype in Matlab, production in CUDA-C
@@ -172,16 +172,16 @@ We will now look at
 
 The documentation of Julia is good and can be found at https://docs.julialang.org; although for learning it might be a bit terse...
 
-There are also tutorials, e.g. TODO
-"""
+There are also tutorials, see https://julialang.org/learning/.
 
-# Furthermore, documentation can be gotten with `?xyz`
-?cos
+Furthermore, documentation can be gotten with `?xyz`
+"""
+## ?cos
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Variables and assignments
+## Variables, assignments, and types
 https://docs.julialang.org/en/v1/manual/variables/
 """
 
@@ -193,7 +193,7 @@ md"""
 Conventions:
 - variables are (usually) lowercase, words can be separated by `_`
 - function names are lowercase
-- modules and types are in CamelCase
+- modules, packages and types are in CamelCase
 """
 
 #src #########################################################################
@@ -220,6 +220,8 @@ that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 """
 
+##
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -241,7 +243,7 @@ typeof(1.5)
 #-
 [1, 2, 3,] # array of eltype Int
 #-
-Dict(a=>1, b=>cos)
+Dict("a"=>1, "b"=>cos)
 
 
 #src #########################################################################
@@ -260,14 +262,18 @@ Datatypes belonging to AbstactArrays:
 # Task: assign two vectors to `a`, and `b` and the concatenate them using `;`:
 
 a = [2, 3]
+## Hint:
 ## b = ...
 ## [ ; ]
-#sol b = [4, 5]
-#sol [a ; b]
+#md ## Solution:
+#md b = [4, 5]
+#md [a ; b]
 
 # Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 
 ##
+#md push!(b, 1)
+#md push!(b, 3, 4)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -309,8 +315,8 @@ a[1,1]
 
 # Access the last element (look up `?end`) both with linear and Cartesian indices
 
-# a[...]
-# a[..., ...]
+## a[...]
+## a[..., ...]
 
 
 #src #########################################################################
@@ -454,8 +460,8 @@ md"""
 ### Conditional evaluation
 
 Read the first paragraph of
-https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation)
-(up to "and no further condition expressions or blocks are evaluated.")
+https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation
+(up to "... and no further condition expressions or blocks are evaluated.")
 """
 
 #-
@@ -499,14 +505,104 @@ a < 0 && error("Not valid input for `a`")
 """
 
 # Your answer here:
+#md # If `a < 0` evaluates to `true` then the bit after the `&&` is evaluated too,
+#md # i.e. an error is thrown.  Otherwise, only `a < 0` is evaluated and no error is thrown.
 
 
 
-#src #########################################################################
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Key feature: multiple dispatch
+## Functions
+
+Functions can be defined in Julia in a number of ways.  In particular there is one variant
+more suited to longer definitions, and one for one-liners:
+
+```
+function f(a, b)
+   a * b
+end
+f(a, b) = a * b
+```
+
+Defining many, short functions is typical in good Julia code.
+
+Read https://docs.julialang.org/en/v1/manual/functions/ up to an including "The return Keyword"
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Functions: exercises
+
+Define a function in long-form which takes two arguments.
+Use some if-else statements and the return keyword.
+"""
+
+##
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Functions: exercises
+
+Re-define the `map` function.  First look up what it does `?map`, then create a `mymap` which
+does the same.  Map `sin` over the vector `1:10`.
+
+(Note, this is a higher-order function: a function which take a function as a argument)
+"""
+
+##
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Functions: dot-syntax
+
+This is really similar to the `map` function, a short-hand to map/broadcast a
+function over values.
+
+Exercise: apply the `sin` function to a vector `1:10`:
+"""
+
+##
+
+# Broadcasting will extend row and column vectors into a matrix.
+# Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
+
+##
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Functions: dot-syntax exercise
+
+Evaluate the function `sin(x) + cos(y)` for
+`x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
+"""
+
+##
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Functions: anonymous functions
+
+So far our function got a name with the definition.  They can also be defined without name.
+
+Read https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
+
+Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
+function.
+"""
+
+##
+
+#src #########################################################################
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Key feature: multiple dispatch functions
 
 - Julia is not an object oriented language
 
@@ -527,9 +623,9 @@ JuliaCon 2019 presentation on the subject by Stefan Karpinski
 """
 
 #src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
-### Multiple dispatch demo
+## Functions: Multiple dispatch demo
 """
 
 struct Rock end
@@ -551,7 +647,7 @@ play(a, b) = play(b, a) # commutative
 play(Scissors(), Rock())
 
 #src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
 ### Multiple dispatch demo
 Can easily be extended later
@@ -581,4 +677,58 @@ md"""
 *Multiple dispatch makes Julia packages very composable!*
 
 This is a key characteristic of the Julia package ecosystem.
+"""
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Modules and packages
+
+Modules can be used to structure code into larger entities, and be used to divide it into
+different name spaces.  We will not make much use of those, but if interested see
+https://docs.julialang.org/en/v1/manual/modules/
+
+**Packages** are the way people distribute code and we'll make use of them extensively.
+In the first example, the Lorenz ODE, you saw
+```
+using OrdinaryDiffEq, Plots
+```
+This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
+and types available in the current session.
+"""
+
+using Plots
+plot( (1:10).^2 )
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+### Packages
+
+All public Julia packages are listed on https://juliahub.com/ui/Packages.
+
+You can install a package, say `UnPack.jl` by
+```
+using Pkg
+Pkg.install("UnPack.jl")
+using UnPack
+```
+
+In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
+"""
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
+md"""
+## This concludes the rapid Julia tour
+
+There are many more features of Julia for sure but this should get you started, and setup for
+the exercises.  (let us know if you feel we left something out which would have been helpful for the exercises).
+
+Remember you can self-help with:
+- using `?` at the notebook.  Similarly there is an `apropos` function.
+- the docs are your friend https://docs.julialang.org/en/v1/
+- ask for help in our chat channel: see moodle
 """
