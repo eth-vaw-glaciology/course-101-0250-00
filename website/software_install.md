@@ -25,7 +25,7 @@ For submission, download the final `.ipynb` notebooks from the server, or collec
 
 
 ## Installing Julia v1.6 (or later)
-Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]** if needed.
+Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
@@ -33,7 +33,7 @@ wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.2-win64.exe 
 wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.2-mac64.dmg # macOS
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz # Linux x86
 ```
-Then add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
+Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
 > **Note for Windows users**\
 > When installing Julia 1.6 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).
