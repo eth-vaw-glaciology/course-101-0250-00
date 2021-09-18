@@ -46,7 +46,7 @@ end
 main_fun()
 ```
 
-2. Implement a condition to allow you doing U-turns whenever you reach the position 0 or 200.
+2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.
 
 ---
 
