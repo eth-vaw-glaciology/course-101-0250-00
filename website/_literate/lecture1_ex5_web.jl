@@ -1,23 +1,28 @@
-# ## Exercise 5 _(optional)_ - **orbital around a centre of mass**
-# 
+md"""
+## Exercise 5 _(optional)_ - **orbital around a centre of mass**
+"""
+
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex5.ipynb)
 #md #
-# The goal of this exercise is to consolidate:
-# - code structure `# Physics, # Numerics, # Time loop, # Visualisation`
-# - physics implementation
-# - update rule
 
-# The goal of this exercise is to reproduce an orbital around a fixed centre of mass, which is also the origin of the coordinate system (e.g. Earth - Sun). To solve this problem, you will have to know about the definition of velocity, Newton's second law and universal gravitation's law:
-# $$
-# \frac{dr_i}{dt}=v_i \\[10pt]
-# \frac{dv_i}{dt}=\frac{F_i}{m} \\[10pt]
-# F_i = -G\frac{mM}{|r_i^2|}\frac{r_i}{|r_i|}~,
-# $$
-# where $r_i$ is the position vector, $v_i$ the velocity vector, $F_i$ the force vector, $G$ is the gravitational constant, $m$ is the mass of the orbiting object, $M$ is the mass of the centre of mass and $|r_i|$ is the norm of the position vector.
-# 
-# ---
-# 
-# The sample code you can use to get started looks like:
+md"""
+The goal of this exercise is to consolidate:
+- code structure `# Physics, # Numerics, # Time loop, # Visualisation`
+- physics implementation
+- update rule
+
+The goal of this exercise is to reproduce an orbital around a fixed centre of mass, which is also the origin of the coordinate system (e.g. Earth - Sun). To solve this problem, you will have to know about the definition of velocity, Newton's second law and universal gravitation's law:
+$$
+\frac{dr_i}{dt}=v_i \\[10pt]
+\frac{dv_i}{dt}=\frac{F_i}{m} \\[10pt]
+F_i = -G\frac{mM}{|r_i^2|}\frac{r_i}{|r_i|}~,
+$$
+where $r_i$ is the position vector, $v_i$ the velocity vector, $F_i$ the force vector, $G$ is the gravitational constant, $m$ is the mass of the orbiting object, $M$ is the mass of the centre of mass and $|r_i|$ is the norm of the position vector.
+
+---
+
+The sample code you can use to get started looks like:
+"""
 
 using Plots
 
@@ -45,11 +50,13 @@ end
 
 orbital()
 
-# ### Question 1
-# 
-# For a safe start, set all physical parameters $(G, m, M)$ equal to 1, and use as initial conditions $x_0=0$ and $y_0=1$, and $v_x=1$ and $v_y=0$. You should obtain a circular orbital.
-# 
-# Report the last $(x,y)$ position of the Earth for a total time of `tt=6.0` with a time step `dt=0.05`.
+md"""
+### Question 1
+
+For a safe start, set all physical parameters $(G, m, M)$ equal to 1, and use as initial conditions $x_0=0$ and $y_0=1$, and $v_x=1$ and $v_y=0$. You should obtain a circular orbital.
+
+Report the last $(x,y)$ position of the Earth for a total time of `tt=6.0` with a time step `dt=0.05`.
+"""
 
 #nb # > 💡 hint:
 #nb # > - $r_i=[x,y]$
@@ -59,6 +66,8 @@ orbital()
 #md # - $|r_i|=\sqrt{x^2 + y^2}$
 #md # - $r_i/|r_i|$ stands for the unity vector (of length 1) pointing from $m$ towards $M$}
 
-# ### Question 2
-# 
-# Head to e.g. Wikipedia and look up for approximate of real values and asses whether the Earth indeed needs ~365 days to achieve one rotation around the Sun.
+md"""
+### Question 2
+
+Head to e.g. Wikipedia and look up for approximate of real values and asses whether the Earth indeed needs ~365 days to achieve one rotation around the Sun.
+"""
