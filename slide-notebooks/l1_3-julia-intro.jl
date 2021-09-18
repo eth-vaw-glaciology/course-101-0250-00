@@ -14,7 +14,7 @@ md"""
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-> You can follow the lecture along live at https://achtzack01.ethz.ch/, login with your first-name and an
+> You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your first-name and an
 > arbitrary password.  You have to be within the ETHZ network or use a VPN connection.
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
@@ -47,7 +47,7 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.6.2
+- current version 1.6.2 (09.2021)
 - thriving community, for instance there are currently around 6300 packages registered
 """
 
@@ -109,11 +109,11 @@ Features:
 md"""
 ### The two language problem
 
-**One language to prototype   ---  one language for production**
+**One language to prototype   --  one language for production**
 - example from Ludovic's past: prototype in Matlab, production in CUDA-C
 
-**One language for the users  ---  one language for under-the-hood**
-- Numpy (python --- C)
+**One language for the users  --  one language for under-the-hood**
+- Numpy (python -- C)
 - machine-learning: pytorch, tensorflow
 """
 
@@ -170,19 +170,21 @@ We will now look at
 - functions
 - modules and packages
 
-The documentation of Julia is good and can be found at https://docs.julialang.org; although for learning it might be a bit terse...
+The documentation of Julia is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
 
-There are also tutorials, see https://julialang.org/learning/.
+There are also tutorials, see [https://julialang.org/learning/](https://julialang.org/learning/).
 
 Furthermore, documentation can be gotten with `?xyz`
 """
+#md let
 ## ?cos
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Variables, assignments, and types
-https://docs.julialang.org/en/v1/manual/variables/
+[https://docs.julialang.org/en/v1/manual/variables/](https://docs.julialang.org/en/v1/manual/variables/)
 """
 
 a = 4
@@ -200,11 +202,11 @@ Conventions:
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Variables: Unicode
-From https://docs.julialang.org/en/v1/manual/variables/:
+From [https://docs.julialang.org/en/v1/manual/variables/](https://docs.julialang.org/en/v1/manual/variables/):
 
 Unicode names (in UTF-8 encoding) are allowed:
 
-```jldoctest
+```julia
 julia> δ = 0.00001
 1.0e-5
 
@@ -220,7 +222,9 @@ that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 """
 
+#md let
 ##
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -271,7 +275,6 @@ a = [2, 3]
 
 # Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 
-##
 #md push!(b, 1)
 #md push!(b, 3, 4)
 
@@ -283,15 +286,18 @@ md"""
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 """
 
+#md let
 ## [  ;  ]
+#md end
 
 
 md"""
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 """
 
+#md let
 ##
-
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -301,11 +307,15 @@ md"""
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 """
 
+#md let
 ## a[ ... ], a[ ... ]
+#md end
 
 # Put those two values into a vector
 
+#md let
 ##
+#md end
 
 # Linear vs Cartesian indexing,
 # access the first element:
@@ -315,9 +325,10 @@ a[1,1]
 
 # Access the last element (look up `?end`) both with linear and Cartesian indices
 
+#md let
 ## a[...]
 ## a[..., ...]
-
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -327,10 +338,14 @@ md"""
 Access the last row of `a` (hint use `1:end`)
 """
 
+#md let
 ## a[... , ...]
+#md end
 
 # Access a 2x2 sub-matrix
+#md let
 ## a[ ]
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -386,7 +401,9 @@ b[1] = 99
 
 # check whether the change in `b` is reflected in `a`:
 
+#md let
 ## @assert ...
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -406,19 +423,24 @@ String["one", "two"]
 
 # Create an array taking `Int` with no elements
 
+#md let
 ##
+#md end
 
 #-
 # Make an array of type `Any` (which can store any value).  Push a value of type
 # Int and one of type String to it.
 
+#md let
 ##
+#md end
 
 #-
 # Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
+#md let
 ##
-
+#md end
 
 
 #src #########################################################################
@@ -439,7 +461,7 @@ First look up the docs of Array with `?Array`
 md"""
 ### Array exercises: ALL DONE
 
-The rest will be learing-by-doing
+The rest will be learning-by-doing
 """
 
 #src #########################################################################
@@ -460,7 +482,7 @@ md"""
 ### Conditional evaluation
 
 Read the first paragraph of
-https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation
+[https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation)
 (up to "... and no further condition expressions or blocks are evaluated.")
 """
 
@@ -493,9 +515,9 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Short cirquit operators `&&` and `||`
+### Short circuit operators `&&` and `||`
 
-Read https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation
+Read [https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation](https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation)
 
 Explain what this does
 
@@ -527,7 +549,7 @@ f(a, b) = a * b
 
 Defining many, short functions is typical in good Julia code.
 
-Read https://docs.julialang.org/en/v1/manual/functions/ up to an including "The return Keyword"
+Read [https://docs.julialang.org/en/v1/manual/functions/](https://docs.julialang.org/en/v1/manual/functions/) up to an including "The return Keyword"
 """
 
 #src #########################################################################
@@ -539,7 +561,9 @@ Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 """
 
+#md let
 ##
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -552,7 +576,9 @@ does the same.  Map `sin` over the vector `1:10`.
 (Note, this is a higher-order function: a function which take a function as a argument)
 """
 
+#md let
 ##
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -565,12 +591,16 @@ function over values.
 Exercise: apply the `sin` function to a vector `1:10`:
 """
 
+#md let
 ##
+#md end
 
 # Broadcasting will extend row and column vectors into a matrix.
 # Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
+#md let
 ##
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -581,24 +611,27 @@ Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 """
 
+#md let
 ##
+#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
 ### Functions: anonymous functions
 
-So far our function got a name with the definition.  They can also be defined without name.
+So far our function got a name with the definition. They can also be defined without name.
 
-Read https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
+Read [https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions)
 
 Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
 function.
 """
 
+#md let
 ##
+#md end
 
-#src #########################################################################
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
@@ -687,7 +720,7 @@ md"""
 
 Modules can be used to structure code into larger entities, and be used to divide it into
 different name spaces.  We will not make much use of those, but if interested see
-https://docs.julialang.org/en/v1/manual/modules/
+[https://docs.julialang.org/en/v1/manual/modules/](https://docs.julialang.org/en/v1/manual/modules/)
 
 **Packages** are the way people distribute code and we'll make use of them extensively.
 In the first example, the Lorenz ODE, you saw
@@ -706,7 +739,7 @@ plot( (1:10).^2 )
 md"""
 ### Packages
 
-All public Julia packages are listed on https://juliahub.com/ui/Packages.
+All public Julia packages are listed on [https://juliahub.com/ui/Packages](https://juliahub.com/ui/Packages).
 
 You can install a package, say `UnPack.jl` by
 ```
@@ -725,10 +758,10 @@ md"""
 ## This concludes the rapid Julia tour
 
 There are many more features of Julia for sure but this should get you started, and setup for
-the exercises.  (let us know if you feel we left something out which would have been helpful for the exercises).
+the exercises.  (Let us know if you feel we left something out which would have been helpful for the exercises).
 
 Remember you can self-help with:
 - using `?` at the notebook.  Similarly there is an `apropos` function.
-- the docs are your friend https://docs.julialang.org/en/v1/
-- ask for help in our chat channel: see moodle
+- the docs are your friend [https://docs.julialang.org/en/v1/](https://docs.julialang.org/en/v1/)
+- ask for help in our chat channel: see Moodle
 """
