@@ -20,6 +20,7 @@ showall = false
 
 ---
 
+\label{content}
 **Content**
 
 \toc
@@ -30,23 +31,44 @@ showall = false
 
 ---
 
+\literate{/_literate/l1_1-admin_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+\literate{/_literate/l1_2-why-gpu_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+\literate{/_literate/l1_3-julia-intro_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
 # Exercises - lecture 1
 
-
 \literate{/_literate/lecture1_ex1_web.jl}
+
+[⤴ _**back to Content**_](#content)
 
 ---
 
 \literate{/_literate/lecture1_ex2_web.jl}
 
+[⤴ _**back to Content**_](#content)
+
 ---
 
 \literate{/_literate/lecture1_ex3_web.jl}
+
+[⤴ _**back to Content**_](#content)
 
 ---
 
 \literate{/_literate/lecture1_ex4_web.jl}
 
+[⤴ _**back to Content**_](#content)
+
 ---
 
 \literate{/_literate/lecture1_ex5_web.jl}
+
+[⤴ _**back to Content**_](#content)
