@@ -53,10 +53,11 @@ Physical processes that describe those systems are **complex** and often **nonli
 md"""
 A numerical solution means solving a system of (coupled) differential equations
 
-_**mathematical model $~ → ~$ discretisation $~ → ~$ solution**_
+$$
+\mathbf{mathematical ~ model ~ → ~ discretisation ~ → ~ solution}\\[10pts]
 
-$\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} \cdot ...$
-
+\frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} \cdot ...
+$$
 
 """
 

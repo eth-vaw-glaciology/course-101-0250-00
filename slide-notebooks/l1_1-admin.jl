@@ -12,17 +12,17 @@ $\texttt{The small print of}$
 md"""
 ## The Team
 
-- Ludovic Räss - _the good_
+- Ludovic Räss -- _the good_
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- Samuel Omlin - _the bad_
+- Samuel Omlin -- _the bad_
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- Mauro Werder - _the ugly_
+- Mauro Werder -- _the ugly_
 """
 
 #src #########################################################################
@@ -33,9 +33,8 @@ md"""
 All you need should be available on the course website:\
 [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 
-_if something is missing, ping us so we can add it_
-
-(_or even better_ do a pull request at https://github.com/eth-vaw-glaciology/course-101-0250-00/)
+> If something is missing, ping us so we can add it (_or even better_ do a pull request\
+> at [https://github.com/eth-vaw-glaciology/course-101-0250-00/](https://github.com/eth-vaw-glaciology/course-101-0250-00/))
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
