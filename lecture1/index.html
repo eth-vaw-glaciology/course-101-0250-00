@@ -114,9 +114,7 @@ sol &#61; solve&#40;ODEProblem&#40;lorenz, x₀, tspan&#41;, Tsit5&#40;&#41;&#41
 <p>The documentation of Julia is good and can be found at <a href="https://docs.julialang.org">https://docs.julialang.org</a>; although for learning it might be a bit terse...</p>
 <p>There are also tutorials, see <a href="https://julialang.org/learning/">https://julialang.org/learning/</a>.</p>
 <p>Furthermore, documentation can be gotten with <code>?xyz</code></p>
-<pre><code class=language-julia >let
-# ?cos
-end</code></pre>
+<pre><code class=language-julia ># ?cos</code></pre>
 <h2 id=variables_assignments_and_types ><a href="#variables_assignments_and_types" class=header-anchor >Variables, assignments, and types</a></h2>
 <p><a href="https://docs.julialang.org/en/v1/manual/variables/">https://docs.julialang.org/en/v1/manual/variables/</a></p>
 <pre><code class=language-julia >a &#61; 4
@@ -140,9 +138,7 @@ c &#61; b # now b and c bind to the same value</code></pre>
 julia&gt; 안녕하세요 &#61; &quot;Hello&quot;
 &quot;Hello&quot;</code></pre>
 <p>In the Julia REPL and several other Julia editing environments, you can type many Unicode math symbols by typing the backslashed LaTeX symbol name followed by tab. For example, the variable name <code>δ</code> can be entered by typing <code>\delta</code>-<em>tab</em>, or even <code>α̂⁽²⁾</code> by <code>\alpha</code>-<em>tab</em>-<code>\hat</code>- <em>tab</em>-<code>\^&#40;2&#41;</code>-<em>tab</em>. &#40;If you find a symbol somewhere, e.g. in someone else&#39;s code, that you don&#39;t know how to type, the REPL help will tell you: just type <code>?</code> and then paste the symbol.&#41;</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=basic_datatypes ><a href="#basic_datatypes" class=header-anchor >Basic datatypes</a></h3>
 <ul>
 <li><p>numbers &#40;Ints, Floats, Complex, etc.&#41;</p>
@@ -187,39 +183,25 @@ b &#61; &#91;4, 5&#93;
 push&#33;&#40;b, 3, 4&#41;</code></pre>
 <h3 id=array_exercises__2 ><a href="#array_exercises__2" class=header-anchor >Array exercises</a></h3>
 <p>Concatenate a Range, say <code>1:10</code>, with a Vector, say &#91;4,5&#93;:</p>
-<pre><code class=language-julia >let
-# &#91;  ;  &#93;
-end</code></pre>
+<pre><code class=language-julia ># &#91;  ;  &#93;</code></pre>
 <p>Make a random array of size &#40;3,3&#41;.  Look up <code>?rand</code>.  Assign it to <code>a</code></p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=array_exercise_indexing ><a href="#array_exercise_indexing" class=header-anchor >Array exercise: indexing</a></h3>
 <p>Access element <code>&#91;1,2&#93;</code> and <code>&#91;2,1&#93;</code> of Matrix <code>a</code> &#40;hint use &#91;&#93;&#41;:</p>
-<pre><code class=language-julia >let
-# a&#91; ... &#93;, a&#91; ... &#93;
-end</code></pre>
+<pre><code class=language-julia ># a&#91; ... &#93;, a&#91; ... &#93;</code></pre>
 <p>Put those two values into a vector</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <p>Linear vs Cartesian indexing, access the first element:</p>
 <pre><code class=language-julia >a&#91;1&#93;
 a&#91;1,1&#93;</code></pre>
 <p>Access the last element &#40;look up <code>?end</code>&#41; both with linear and Cartesian indices</p>
-<pre><code class=language-julia >let
-# a&#91;...&#93;
-# a&#91;..., ...&#93;
-end</code></pre>
+<pre><code class=language-julia ># a&#91;...&#93;
+# a&#91;..., ...&#93;</code></pre>
 <h3 id=array_exercise_indexing_by_ranges ><a href="#array_exercise_indexing_by_ranges" class=header-anchor >Array exercise: indexing by ranges</a></h3>
 <p>Access the last row of <code>a</code> &#40;hint use <code>1:end</code>&#41;</p>
-<pre><code class=language-julia >let
-# a&#91;... , ...&#93;
-end</code></pre>
+<pre><code class=language-julia ># a&#91;... , ...&#93;</code></pre>
 <p>Access a 2x2 sub-matrix</p>
-<pre><code class=language-julia >let
-# a&#91; &#93;
-end</code></pre>
+<pre><code class=language-julia ># a&#91; &#93;</code></pre>
 <h3 id=array_exercises_variable_bindings_and_views ><a href="#array_exercises_variable_bindings_and_views" class=header-anchor >Array exercises: variable bindings and views</a></h3>
 <p>What do you make of</p>
 <pre><code class=language-julia >a &#61; &#91;1 4; 3 4&#93; # note, this is another way to define a Matrix
@@ -247,9 +229,7 @@ b&#91;1&#93; &#61; 99
 b &#61; @view a&#91;1:3, 1:2&#93;
 b&#91;1&#93; &#61; 99</code></pre>
 <p>check whether the change in <code>b</code> is reflected in <code>a</code>:</p>
-<pre><code class=language-julia >let
-# @assert ...
-end</code></pre>
+<pre><code class=language-julia ># @assert ...</code></pre>
 <h3 id=detour_types ><a href="#detour_types" class=header-anchor >Detour: types</a></h3>
 <p>All values have types as we saw above.  Arrays store in their type what type the elements can be.</p>
 <blockquote>
@@ -260,17 +240,11 @@ end</code></pre>
 <p>The type can be specified at creation</p>
 <pre><code class=language-julia >String&#91;&quot;one&quot;, &quot;two&quot;&#93;</code></pre>
 <p>Create an array taking <code>Int</code> with no elements</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <p>Make an array of type <code>Any</code> &#40;which can store any value&#41;.  Push a value of type Int and one of type String to it.</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <p>Try to assgin 1.5 to the first element of an array of type Array&#123;Int,1&#125;</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=array_exercises__3 ><a href="#array_exercises__3" class=header-anchor >Array exercises</a></h3>
 <p>Create a uninitialised Matrix of size &#40;3,3&#41; and assign it to <code>a</code>. First look up the docs of Array with <code>?Array</code></p>
 <p>Test that its size is correct, see <code>size</code></p>
@@ -320,37 +294,25 @@ f&#40;a, b&#41; &#61; a * b</code></pre>
 <p>Read <a href="https://docs.julialang.org/en/v1/manual/functions/">https://docs.julialang.org/en/v1/manual/functions/</a> up to an including &quot;The return Keyword&quot;</p>
 <h3 id=functions_exercises ><a href="#functions_exercises" class=header-anchor >Functions: exercises</a></h3>
 <p>Define a function in long-form which takes two arguments. Use some if-else statements and the return keyword.</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=functions_exercises__2 ><a href="#functions_exercises__2" class=header-anchor >Functions: exercises</a></h3>
 <p>Re-define the <code>map</code> function.  First look up what it does <code>?map</code>, then create a <code>mymap</code> which does the same.  Map <code>sin</code> over the vector <code>1:10</code>.</p>
 <p>&#40;Note, this is a higher-order function: a function which take a function as a argument&#41;</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=functions_dot-syntax ><a href="#functions_dot-syntax" class=header-anchor >Functions: dot-syntax</a></h3>
 <p>This is really similar to the <code>map</code> function, a short-hand to map/broadcast a function over values.</p>
 <p>Exercise: apply the <code>sin</code> function to a vector <code>1:10</code>:</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <p>Broadcasting will extend row and column vectors into a matrix. Try <code>&#40;1:10&#41; .&#43; &#40;1:10&#41;&#39;</code>  &#40;Note the <code>&#39;</code>, this is the transpose operator&#41;</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=functions_dot-syntax_exercise ><a href="#functions_dot-syntax_exercise" class=header-anchor >Functions: dot-syntax exercise</a></h3>
 <p>Evaluate the function <code>sin&#40;x&#41; &#43; cos&#40;y&#41;</code> for <code>x &#61; 0:0.1:pi</code> and <code>y &#61; -pi:0.1:pi</code>.  Remember to use <code>&#39;</code>.</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=functions_anonymous_functions ><a href="#functions_anonymous_functions" class=header-anchor >Functions: anonymous functions</a></h3>
 <p>So far our function got a name with the definition. They can also be defined without name.</p>
 <p>Read <a href="https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions">https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions</a></p>
 <p>Map the function <code>f&#40;x,y&#41; &#61; sin&#40;x&#41; &#43; cos&#40;x&#41;</code> over <code>1:10</code> but define it as an anonymous function.</p>
-<pre><code class=language-julia >let
-#
-end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=key_feature_multiple_dispatch_functions ><a href="#key_feature_multiple_dispatch_functions" class=header-anchor >Key feature: multiple dispatch functions</a></h3>
 <ul>
 <li><p>Julia is not an object oriented language</p>
@@ -741,7 +703,7 @@ orbital&#40;&#41;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: September 18, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: September 19, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

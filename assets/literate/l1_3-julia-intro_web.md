@@ -134,9 +134,7 @@ There are also tutorials, see [https://julialang.org/learning/](https://julialan
 Furthermore, documentation can be gotten with `?xyz`
 
 ```julia:ex3
-let
 # ?cos
-end
 ```
 
 ## Variables, assignments, and types
@@ -174,9 +172,7 @@ that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 
 ```julia:ex5
-let
 #
-end
 ```
 
 ### Basic datatypes
@@ -241,17 +237,13 @@ push!(b, 3, 4)
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 
 ```julia:ex13
-let
 # [  ;  ]
-end
 ```
 
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 
 ```julia:ex14
-let
 #
-end
 ```
 
 ### Array exercise: indexing
@@ -259,17 +251,13 @@ end
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 
 ```julia:ex15
-let
 # a[ ... ], a[ ... ]
-end
 ```
 
 Put those two values into a vector
 
 ```julia:ex16
-let
 #
-end
 ```
 
 Linear vs Cartesian indexing,
@@ -283,10 +271,8 @@ a[1,1]
 Access the last element (look up `?end`) both with linear and Cartesian indices
 
 ```julia:ex18
-let
 # a[...]
 # a[..., ...]
-end
 ```
 
 ### Array exercise: indexing by ranges
@@ -294,17 +280,13 @@ end
 Access the last row of `a` (hint use `1:end`)
 
 ```julia:ex19
-let
 # a[... , ...]
-end
 ```
 
 Access a 2x2 sub-matrix
 
 ```julia:ex20
-let
 # a[ ]
-end
 ```
 
 ### Array exercises: variable bindings and views
@@ -359,9 +341,7 @@ b[1] = 99
 check whether the change in `b` is reflected in `a`:
 
 ```julia:ex25
-let
 # @assert ...
-end
 ```
 
 ### Detour: types
@@ -385,26 +365,20 @@ String["one", "two"]
 Create an array taking `Int` with no elements
 
 ```julia:ex28
-let
 #
-end
 ```
 
 Make an array of type `Any` (which can store any value).  Push a value of type
 Int and one of type String to it.
 
 ```julia:ex29
-let
 #
-end
 ```
 
 Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
 ```julia:ex30
-let
 #
-end
 ```
 
 ### Array exercises
@@ -487,9 +461,7 @@ Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 
 ```julia:ex31
-let
 #
-end
 ```
 
 ### Functions: exercises
@@ -500,9 +472,7 @@ does the same.  Map `sin` over the vector `1:10`.
 (Note, this is a higher-order function: a function which take a function as a argument)
 
 ```julia:ex32
-let
 #
-end
 ```
 
 ### Functions: dot-syntax
@@ -513,18 +483,14 @@ function over values.
 Exercise: apply the `sin` function to a vector `1:10`:
 
 ```julia:ex33
-let
 #
-end
 ```
 
 Broadcasting will extend row and column vectors into a matrix.
 Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
 ```julia:ex34
-let
 #
-end
 ```
 
 ### Functions: dot-syntax exercise
@@ -533,9 +499,7 @@ Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 
 ```julia:ex35
-let
 #
-end
 ```
 
 ### Functions: anonymous functions
@@ -548,9 +512,7 @@ Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anon
 function.
 
 ```julia:ex36
-let
 #
-end
 ```
 
 ### Key feature: multiple dispatch functions
