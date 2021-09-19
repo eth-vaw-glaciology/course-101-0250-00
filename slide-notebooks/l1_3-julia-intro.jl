@@ -176,9 +176,8 @@ There are also tutorials, see [https://julialang.org/learning/](https://julialan
 
 Furthermore, documentation can be gotten with `?xyz`
 """
-#md let
+
 ## ?cos
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -222,9 +221,8 @@ that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 """
 
-#md let
 ##
-#md end
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -286,18 +284,14 @@ md"""
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 """
 
-#md let
 ## [  ;  ]
-#md end
 
 
 md"""
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 """
 
-#md let
 ##
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -307,15 +301,11 @@ md"""
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 """
 
-#md let
 ## a[ ... ], a[ ... ]
-#md end
 
 # Put those two values into a vector
 
-#md let
 ##
-#md end
 
 # Linear vs Cartesian indexing,
 # access the first element:
@@ -325,10 +315,9 @@ a[1,1]
 
 # Access the last element (look up `?end`) both with linear and Cartesian indices
 
-#md let
+
 ## a[...]
 ## a[..., ...]
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -338,14 +327,11 @@ md"""
 Access the last row of `a` (hint use `1:end`)
 """
 
-#md let
 ## a[... , ...]
-#md end
 
 # Access a 2x2 sub-matrix
-#md let
+
 ## a[ ]
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -401,9 +387,8 @@ b[1] = 99
 
 # check whether the change in `b` is reflected in `a`:
 
-#md let
 ## @assert ...
-#md end
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -423,24 +408,18 @@ String["one", "two"]
 
 # Create an array taking `Int` with no elements
 
-#md let
 ##
-#md end
 
 #-
 # Make an array of type `Any` (which can store any value).  Push a value of type
 # Int and one of type String to it.
 
-#md let
 ##
-#md end
 
 #-
 # Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
-#md let
 ##
-#md end
 
 
 #src #########################################################################
@@ -561,9 +540,8 @@ Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 """
 
-#md let
 ##
-#md end
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -576,9 +554,7 @@ does the same.  Map `sin` over the vector `1:10`.
 (Note, this is a higher-order function: a function which take a function as a argument)
 """
 
-#md let
 ##
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -591,16 +567,12 @@ function over values.
 Exercise: apply the `sin` function to a vector `1:10`:
 """
 
-#md let
 ##
-#md end
 
 # Broadcasting will extend row and column vectors into a matrix.
 # Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
-#md let
 ##
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -611,9 +583,7 @@ Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 """
 
-#md let
 ##
-#md end
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -628,9 +598,8 @@ Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anon
 function.
 """
 
-#md let
 ##
-#md end
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
