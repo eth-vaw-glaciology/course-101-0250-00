@@ -51,6 +51,7 @@ We plan to use the Element-chat as the main communication channel for the course
 
 Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with you NETHZ usernam & password.
   - Login link is available on [Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283).
+  - Join the _**General**_ (course infos) and _**Heldesk**_ (exercises Q&A) rooms.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
