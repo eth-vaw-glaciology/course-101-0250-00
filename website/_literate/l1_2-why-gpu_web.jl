@@ -87,6 +87,10 @@ Computational costs increase
 - with dimensions (3D tensors...)
 - upon refining spatial and temporal resolution
 
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 ![Stokes2D_vep](../assets/literate_figures/Stokes2D_vep.gif)
 
 """
