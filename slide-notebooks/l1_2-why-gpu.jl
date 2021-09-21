@@ -106,8 +106,8 @@ Use **parallel computing** to address this:
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-GPUS are massively multi-core devices
-- SIMD model
+GPUs are massively parallel devices
+- SIMD machine (programmed using threads - SPMD)
 - Further increases the Flop vs Bytes gap
 
 ![cpu_gpu_evo](./figures/cpu_gpu_evo.png)
@@ -151,7 +151,7 @@ Availability (less fight for resources)
 - Still not many applications run on GPUs
 
 Workstation turns into a personal Supercomputers
-- GPU vs CPUs peak memory bandwidth: theoretical 10x, practical 20-100x
+- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically maybe more)
 
 ![titan_node](./figures/titan_node.jpg)
 
