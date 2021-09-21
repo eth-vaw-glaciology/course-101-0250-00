@@ -45,8 +45,12 @@ hascode = false
 - [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl)
 - [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl)
 - [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
+- [Revise.jl](https://github.com/timholy/Revise.jl)
 
 ### Other resources
 
+- [Julia language](https://julialang.org) main website
+- [Julia Discourse](https://discourse.julialang.org/) (Q&A - help)
 - [JuliaGPU](https://juliagpu.org)
+- [JuliaHub: Package search](https://juliahub.com/ui/Packages)
 
