@@ -54,8 +54,7 @@ md"""
 A numerical solution means solving a system of (coupled) differential equations
 
 $$
-\mathbf{mathematical ~ model ~ → ~ discretisation ~ → ~ solution}\\[10pts]
-
+\mathbf{mathematical ~ model ~ → ~ discretisation ~ → ~ solution}\\
 \frac{∂C}{∂t} = ... ~ → ~ \frac{\texttt{C}^{i+1} - \texttt{C}^{i}}{\texttt{∆t}} = ... ~ → ~ \texttt{C} = \texttt{C} + \texttt{∆t} \cdot ...
 $$
 
@@ -96,7 +95,7 @@ Computational costs increase
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Use **parallel computing** to address this:
-- The "memory wall" in \~ 2004
+- The "memory wall" in ~ 2004
 - Single-core to multi-core devices
 
 ![mem_wall](../assets/literate_figures/mem_wall.png)
@@ -107,7 +106,7 @@ Use **parallel computing** to address this:
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 GPUs are massively parallel devices
-- SIMD machine (programmed using threads - SPMD)
+- SIMD machine (programmed using threads - SPMD) ([more](https://safari.ethz.ch/architecture/fall2020/lib/exe/fetch.php?media=onur-comparch-fall2020-lecture24-simdandgpu-afterlecture.pdf))
 - Further increases the Flop vs Bytes gap
 
 ![cpu_gpu_evo](../assets/literate_figures/cpu_gpu_evo.png)
