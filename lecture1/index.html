@@ -5,7 +5,7 @@ function lorenz&#40;x, p, t&#41;
     β &#61; 8/3
     ρ &#61; 28
     &#91;σ*&#40;x&#91;2&#93;-x&#91;1&#93;&#41;,
-     x&#91;1&#93;*&#40;ρ-x&#91;3&#93;&#41;,
+     x&#91;1&#93;*&#40;ρ-x&#91;3&#93;&#41; - x&#91;2&#93;,
      x&#91;1&#93;*x&#91;2&#93; - β*x&#91;3&#93;&#93;
 end
 
@@ -247,7 +247,9 @@ b&#91;1&#93; &#61; 99</code></pre>
 <pre><code class=language-julia >#</code></pre>
 <h3 id=array_exercises__3 ><a href="#array_exercises__3" class=header-anchor >Array exercises</a></h3>
 <p>Create a uninitialised Matrix of size &#40;3,3&#41; and assign it to <code>a</code>. First look up the docs of Array with <code>?Array</code></p>
+<pre><code class=language-julia >#</code></pre>
 <p>Test that its size is correct, see <code>size</code></p>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=array_exercises_all_done ><a href="#array_exercises_all_done" class=header-anchor >Array exercises: ALL DONE</a></h3>
 <p>The rest will be learning-by-doing</p>
 <h2 id=control_flow ><a href="#control_flow" class=header-anchor >Control flow</a></h2>
@@ -262,7 +264,7 @@ b&#91;1&#93; &#61; 99</code></pre>
 </ul>
 <h3 id=conditional_evaluation ><a href="#conditional_evaluation" class=header-anchor >Conditional evaluation</a></h3>
 <p>Read the first paragraph of <a href="https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation">https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation</a> &#40;up to &quot;... and no further condition expressions or blocks are evaluated.&quot;&#41;</p>
-<p>Write a test which looks at the start of the string in variable <code>a</code> &#40;?startswith&#41; and sets <code>b</code> accodingly.  If the start is</p>
+<p>Write a test which looks at the start of the string in variable <code>a</code> &#40;?startswith&#41; and sets <code>b</code> accordingly.  If the start is</p>
 <ul>
 <li><p>&quot;Wh&quot; then set <code>b &#61; &quot;Likely a question&quot;</code></p>
 
@@ -271,6 +273,7 @@ b&#91;1&#93; &#61; 99</code></pre>
 <li><p>otherwise set <code>b &#61; &quot;no idea&quot;</code></p>
 
 </ul>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=conditional_evaluation_the_ternary_operator ><a href="#conditional_evaluation_the_ternary_operator" class=header-anchor >Conditional evaluation: the &quot;ternary operator&quot; <code>?</code></a></h3>
 <p>Look up the docs for <code>?</code> &#40;i.e. evaluate <code>??</code>&#41;</p>
 <p>Re-write using <code>?</code></p>
@@ -279,11 +282,12 @@ b&#91;1&#93; &#61; 99</code></pre>
 else
     &quot;not so big&quot;
 end</code></pre>
+<pre><code class=language-julia >#</code></pre>
 <h3 id=short_circuit_operators_and ><a href="#short_circuit_operators_and" class=header-anchor >Short circuit operators <code>&amp;&amp;</code> and <code>||</code></a></h3>
 <p>Read <a href="https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation">https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation</a></p>
 <p>Explain what this does</p>
 <pre><code class=language-julia >a &lt; 0 &amp;&amp; error&#40;&quot;Not valid input for &#96;a&#96;&quot;&#41;</code></pre>
-<p>Your answer here: If <code>a &lt; 0</code> evaluates to <code>true</code> then the bit after the <code>&amp;&amp;</code> is evaluated too, i.e. an error is thrown.  Otherwise, only <code>a &lt; 0</code> is evaluated and no error is thrown.</p>
+<p>Type your answer here &#40;to start editing, double click into this cell.  When done shift&#43;enter&#41;: If <code>a &lt; 0</code> evaluates to <code>true</code> then the bit after the <code>&amp;&amp;</code> is evaluated too, i.e. an error is thrown.  Otherwise, only <code>a &lt; 0</code> is evaluated and no error is thrown.</p>
 <h2 id=functions ><a href="#functions" class=header-anchor >Functions</a></h2>
 <p>Functions can be defined in Julia in a number of ways.  In particular there is one variant more suited to longer definitions, and one for one-liners:</p>
 <pre><code class=language-julia >function f&#40;a, b&#41;
@@ -388,6 +392,8 @@ plot&#40; &#40;1:10&#41;.^2 &#41;</code></pre>
 Pkg.install&#40;&quot;UnPack.jl&quot;&#41;
 using UnPack</code></pre>
 <p>In the REPL, there is also a package-mode &#40;hit <code>&#93;</code>&#41; which is for interactive use.</p>
+<pre><code class=language-julia ># Install a package &#40;maybe not a too big one, UnPack.jl is good that way&#41;,
+# use it, query help on the package itself</code></pre>
 <h2 id=this_concludes_the_rapid_julia_tour ><a href="#this_concludes_the_rapid_julia_tour" class=header-anchor >This concludes the rapid Julia tour</a></h2>
 <p>There are many more features of Julia for sure but this should get you started, and setup for the exercises.  &#40;Let us know if you feel we left something out which would have been helpful for the exercises&#41;.</p>
 <p>Remember you can self-help with:</p>
@@ -703,7 +709,7 @@ orbital&#40;&#41;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: September 21, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: September 22, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

@@ -7,7 +7,7 @@ function lorenz(x, p, t)
     β = 8/3
     ρ = 28
     [σ*(x[2]-x[1]),
-     x[1]*(ρ-x[3]),
+     x[1]*(ρ-x[3]) - x[2],
      x[1]*x[2] - β*x[3]]
 end
 
@@ -105,6 +105,14 @@ String["one", "two"]
 
 #
 
+#
+
+#
+
+#
+
+#
+
 struct Rock end
 struct Paper end
 struct Scissors end
@@ -138,4 +146,7 @@ combine(Rock(), Paper())
 
 using Plots
 plot( (1:10).^2 )
+
+# Install a package (maybe not a too big one, UnPack.jl is good that way),
+# use it, query help on the package itself
 

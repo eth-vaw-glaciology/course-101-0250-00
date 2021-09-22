@@ -1,1 +1,1 @@
-"Pond wins"
+nothing

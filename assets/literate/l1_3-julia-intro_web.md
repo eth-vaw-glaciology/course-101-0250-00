@@ -47,7 +47,7 @@ function lorenz(x, p, t)
     β = 8/3
     ρ = 28
     [σ*(x[2]-x[1]),
-     x[1]*(ρ-x[3]),
+     x[1]*(ρ-x[3]) - x[2],
      x[1]*x[2] - β*x[3]]
 end
 
@@ -386,7 +386,15 @@ Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 Create a uninitialised Matrix of size (3,3) and assign it to `a`.
 First look up the docs of Array with `?Array`
 
+```julia:ex31
+#
+```
+
 Test that its size is correct, see `size`
+
+```julia:ex32
+#
+```
 
 ### Array exercises: ALL DONE
 
@@ -407,10 +415,14 @@ Read the first paragraph of
 (up to "... and no further condition expressions or blocks are evaluated.")
 
 Write a test which looks at the start of the string in variable `a`
-(?startswith) and sets `b` accodingly.  If the start is
+(?startswith) and sets `b` accordingly.  If the start is
 - "Wh" then set `b = "Likely a question"`
 - "The " then set `b = "A noun"`
 - otherwise set `b = "no idea"`
+
+```julia:ex33
+#
+```
 
 ### Conditional evaluation: the "ternary operator" `?`
 
@@ -425,6 +437,10 @@ else
 end
 ```
 
+```julia:ex34
+#
+```
+
 ### Short circuit operators `&&` and `||`
 
 Read [https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation](https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation)
@@ -435,7 +451,7 @@ Explain what this does
 a < 0 && error("Not valid input for `a`")
 ```
 
-Your answer here:
+Type your answer here (to start editing, double click into this cell.  When done shift+enter):
 If `a < 0` evaluates to `true` then the bit after the `&&` is evaluated too,
 i.e. an error is thrown.  Otherwise, only `a < 0` is evaluated and no error is thrown.
 
@@ -460,7 +476,7 @@ Read [https://docs.julialang.org/en/v1/manual/functions/](https://docs.julialang
 Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 
-```julia:ex31
+```julia:ex35
 #
 ```
 
@@ -471,7 +487,7 @@ does the same.  Map `sin` over the vector `1:10`.
 
 (Note, this is a higher-order function: a function which take a function as a argument)
 
-```julia:ex32
+```julia:ex36
 #
 ```
 
@@ -482,14 +498,14 @@ function over values.
 
 Exercise: apply the `sin` function to a vector `1:10`:
 
-```julia:ex33
+```julia:ex37
 #
 ```
 
 Broadcasting will extend row and column vectors into a matrix.
 Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
-```julia:ex34
+```julia:ex38
 #
 ```
 
@@ -498,7 +514,7 @@ Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 
-```julia:ex35
+```julia:ex39
 #
 ```
 
@@ -511,7 +527,7 @@ Read [https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
 Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
 function.
 
-```julia:ex36
+```julia:ex40
 #
 ```
 
@@ -536,7 +552,7 @@ JuliaCon 2019 presentation on the subject by Stefan Karpinski
 
 ## Functions: Multiple dispatch demo
 
-```julia:ex37
+```julia:ex41
 struct Rock end
 struct Paper end
 struct Scissors end
@@ -561,7 +577,7 @@ Can easily be extended later
 
 with new type:
 
-```julia:ex38
+```julia:ex42
 struct Pond end
 play(::Rock, ::Pond) = "Pond wins"
 play(::Paper, ::Pond) = "Paper wins"
@@ -572,7 +588,7 @@ play(Scissors(), Pond())
 
 with new function:
 
-```julia:ex39
+```julia:ex43
 combine(::Rock, ::Paper) = "Paperweight"
 combine(::Paper, ::Scissors) = "Two pieces of papers"
 # ...
@@ -598,7 +614,7 @@ using OrdinaryDiffEq, Plots
 This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
 and types available in the current session.
 
-```julia:ex40
+```julia:ex44
 using Plots
 plot( (1:10).^2 )
 ```
@@ -615,6 +631,11 @@ using UnPack
 ```
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
+
+```julia:ex45
+# Install a package (maybe not a too big one, UnPack.jl is good that way),
+# use it, query help on the package itself
+```
 
 ## This concludes the rapid Julia tour
 
