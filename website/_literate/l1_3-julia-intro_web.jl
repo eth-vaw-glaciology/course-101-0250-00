@@ -65,7 +65,7 @@ function lorenz(x, p, t)
     β = 8/3
     ρ = 28
     [σ*(x[2]-x[1]),
-     x[1]*(ρ-x[3]),
+     x[1]*(ρ-x[3]) - x[2],
      x[1]*x[2] - β*x[3]]
 end
 
@@ -431,9 +431,12 @@ Create a uninitialised Matrix of size (3,3) and assign it to `a`.
 First look up the docs of Array with `?Array`
 """
 
+##
+
 #-
 # Test that its size is correct, see `size`
 
+##
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -468,11 +471,13 @@ Read the first paragraph of
 #-
 md"""
 Write a test which looks at the start of the string in variable `a`
-(?startswith) and sets `b` accodingly.  If the start is
+(?startswith) and sets `b` accordingly.  If the start is
 - "Wh" then set `b = "Likely a question"`
 - "The " then set `b = "A noun"`
 - otherwise set `b = "no idea"`
 """
+
+##
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -491,6 +496,8 @@ end
 ```
 """
 
+##
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -505,7 +512,7 @@ a < 0 && error("Not valid input for `a`")
 ```
 """
 
-# Your answer here:
+# Type your answer here (to start editing, double click into this cell.  When done shift+enter):
 #md # If `a < 0` evaluates to `true` then the bit after the `&&` is evaluated too,
 #md # i.e. an error is thrown.  Otherwise, only `a < 0` is evaluated and no error is thrown.
 
@@ -719,6 +726,9 @@ using UnPack
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
 """
+
+## Install a package (maybe not a too big one, UnPack.jl is good that way),
+## use it, query help on the package itself
 
 
 #src #########################################################################
