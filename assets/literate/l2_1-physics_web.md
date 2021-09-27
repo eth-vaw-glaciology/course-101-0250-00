@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# ODEs & PDEs: advection - diffusion - reaction
+# ODEs & PDEs: reaction - diffusion - advection
 
 Reaction - Diffusion - Advection gifs
 
@@ -14,7 +14,7 @@ Reaction - Diffusion - Advection gifs
 > A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function.\
 > **Ordinary differential equations (ODE)** form a subclass of partial differential equations, corresponding to functions of a single variable. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 
-## ODEs
+## ODEs - reaction
 Simple reaction equation, finite-difference method and explicit solution
 
 Let's take-off 🚀
@@ -31,7 +31,7 @@ Suppose the reaction kinetics process occurs in a spatial domain (x-direction) o
 
 The goal is now to predict the evolution of a system with initial random distribution of concentration $C$ in the range $[0, 1]$ for non-dimensional total time of $20.0$.
 
-```julia:ex1
+```julia
 # Physics
 Lx   = 10.0
 ξ    = 10.0
@@ -45,7 +45,7 @@ In a new `# Numerics` section we define the number of grid points we will use to
 
 Then, in a `# Derived numerics` section, we compute the grid size `dx`, the time-step `dt`, the number of time-steps `nt` and the vector containing the coordinate of all cell centres `xc`.
 
-```julia:ex2
+```julia
 # Numerics
 nx   = 128
 # Derived numerics
@@ -59,7 +59,7 @@ xc   = LinRange(dx/2, Lx-dx/2, nx)
 
 We now need to initialise 3 1D arrays to hold information about concentration `C`, initial concentration distribution `Ci`, and rate of change of concentration `dCdt`.
 
-```julia:ex3
+```julia
 # Array initialisation
 C    =  rand(Float64, nx)
 Ci   =  copy(C)
@@ -106,7 +106,7 @@ Note that calling further instances of `plot!()` will act as "hold-on" and allow
 
 We may want to write a single "monolithic" `reaction_1D.jl` code to perform these steps that looks as following
 
-```julia:ex4
+```julia:ex1
 using Plots
 
 @views function reaction_1D()
@@ -142,6 +142,8 @@ end
 reaction_1D()
 ```
 
+Let's execute it and visualise output
+
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 
 ## PDEs - diffusion
@@ -154,7 +156,7 @@ The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was i
 
 Diffusive processes were also employed by Fick in 1855 with application to chemical and particle diffusion ([Fick's law](https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion)).
 
-The diffusion equation is often reported as a second order parabolic PDE, here for a multivariable function $C(x,t)$ showing derivatives in both temporal $∂t$ and spatial $∂x$ derivatives (or changes)
+The diffusion equation is often reported as a second order parabolic PDE, here for a multivariable function $C(x,t)$ showing derivatives in both temporal $∂t$ and spatial $∂x$ derivatives (here for the 1D case)
 
 $$
 \frac{∂C}{∂t} = D\frac{∂^2 C}{∂ x^2}~,
@@ -197,7 +199,7 @@ So, we are ready to solve the 1D diffusion equation.
 
 Starting from the reaction code, turn `ξ` into `D=1.0`, the diffusion coefficient, remove `C_eq`, set total simulation time `ttot = 2.0`
 
-```julia:ex5
+```julia
 # Physics
 Lx   = 10.0
 D    = 1.0
@@ -206,16 +208,16 @@ ttot = 2.0
 
 The only change in the `# Derived numerics` section is the diffusive stable time step definition, to comply with the [CFL stability condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration
 
-```julia:ex6
+```julia
 # Derived numerics
 dt   = dx^2/D/2.1
 ```
 
 In the `# Array initialisation` section, we need a new object to hold the diffusive flux in x direction `qx`
 
-```julia:ex7
-dCdt = zeros(Float64, nx) # wring size - will fail because of staggering
-qx   = zeros(Float64, nx) # wring size - will fail because of staggering
+```julia
+dCdt = zeros(Float64, nx) # wrong size - will fail because of staggering
+qx   = zeros(Float64, nx) # wrong size - will fail because of staggering
 ```
 
 Wait... what about the staggering ?
@@ -226,7 +228,7 @@ No surprise `C .= diff(C)` won't work ...
 
 The initialisation steps of the diffusion code should contain
 
-```julia:ex8
+```julia:ex2
 # Physics
 Lx   = 10.0
 D    = 1.0
@@ -246,11 +248,9 @@ dCdt = zeros(Float64, nx-2)
 qx   = zeros(Float64, nx-1);
 ```
 
-_(execute it)_
-
 Followed by the 3 physics computations (lines) in the time loop
 
-```julia:ex9
+```julia:ex3
 # Time loop
 for it = 1:nt
     qx         .= .-D.*diff(C )./dx
@@ -260,11 +260,9 @@ for it = 1:nt
 end
 ```
 
-_(execute it)_
-
 One can examine the size of the various vectors ...
 
-```julia:ex10
+```julia:ex4
 # check sizes and staggering
 @show size(qx)
 @show size(dCdt)
@@ -274,11 +272,11 @@ One can examine the size of the various vectors ...
 
 ... and visualise it
 
-```julia:ex11
+```julia:ex5
 using Plots
- plot(xc               , C   , legend=false, linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[1:end-1].+dx/2, qx  , legend=false, linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[2:end-1]      , dCdt, legend=false, linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+ plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 ```
 
 Note: plotting and visualisation is slow. A convenient workaround is to only visualise or render the figure every `nout` iteration within the time loop
@@ -289,7 +287,72 @@ if it % nout == 0
 end
 ```
 
-## PDEs - Advection
+## PDEs - advection
 
-From reactions to diffusion and advection - involving gradients (neighbouring cells).
+> Advection is a partial differential equation that governs the motion of a conserved scalar field as it is advected by a known velocity vector field. [_Wikipedia_](https://en.wikipedia.org/wiki/Advection)
+
+We will here briefly discuss advection of a quantity $C$ by a constant velocity $v_x$ in the one-dimensional x-direction.
+
+$$ \frac{∂C}{∂t} = -\frac{v_x ~ ∂C}{∂x} ~.$$
+
+In case the flow is incompressible ($∇⋅v = 0$ -- here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
+
+$$ \frac{∂C}{∂t} = -v_x \frac{∂C}{∂x} ~.$$
+
+Let's once more start from the simple 1D reaction code, modifying it to implement the advection equation.
+
+Starting from the reaction code, turn `ξ` into `vx=1.0`, the advection velocity, remove `C_eq`, set total simulation time `ttot = 5.0`
+
+```julia
+# Physics
+Lx   = 10.0
+vx   = 1.0
+ttot = 5.0
+```
+
+The only change in the `# Derived numerics` section is the stable advection time step definition, to comply with the [CFL stability condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration.
+
+```julia
+# Derived numerics
+dt   = dx/vx
+```
+
+In the `# Array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 Lx$.
+
+```julia
+C = exp.( ... )
+```
+
+\note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(xc - c)^2 $}
+
+One should also pay attention regarding the correct initialisation of `dCdt` in terms of vector dimension, since the rate of change of `C`, `dCdt`, is the derivative of `C`.
+
+Defining `dCdt` as following
+
+```julia
+dCdt     .= .-vx.*diff(C)./dx
+```
+
+implements the right and side of the 1D advection equation.
+
+Now, the question is how to add `dCdt` to `C` within the update rule ?
+
+3 (main) possibilities exist.
+
+👉 Your turn. Try it out yourself and motivate your best choice.
+
+Here we go, an upwind approach is needed to implement a stable advection algorithm
+
+```julia
+C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
+C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
+```
+
+## Wrapping-up
+
+- We implemented and solved PDEs for reaction, diffusion and advection processes in 1D
+
+- We used conservative staggered grid finite-differences, explicit forward Euler time stepping and upwind scheme (advection).
+
+Note that this is far from being the only way to tackle numerical solutions to these PDEs. In this course, we will stick to those concepts as they will allow for efficient GPU (parallel) implementations.
 
