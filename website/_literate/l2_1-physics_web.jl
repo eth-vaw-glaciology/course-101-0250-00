@@ -263,6 +263,8 @@ md"""
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 """
 
+#md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -513,6 +515,8 @@ end
 ```
 """
 
+#md # 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -657,6 +661,8 @@ C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
 C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
 """
+
+#md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
