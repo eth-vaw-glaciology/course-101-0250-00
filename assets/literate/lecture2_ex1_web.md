@@ -1,7 +1,9 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 1 - **Many volcanic bomb**
 
-👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture2_ex1.ipynb)
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture2_ex1.ipynb)
+
+\warn{Write a monolithic Julia script to solve this exercise in a Jupyter notebook and hand it in on Moodle ([more](/homework)).}
 
 The goal of this exercise is to consolidate:
 - vectorisation and element-wise operations using `.`
@@ -21,7 +23,7 @@ nb = 5 # number of volcanic bombs
 
 Then, replace the vertical angle of ejection α to randomly vary between 60° and 120° with respect to the horizon for each bomb. Keep the magnitude of the ejection velocity as before, i.e. $V=120$ m/s.
 
-\note{- use the `randn()` function to generate random numbers in the range [-1, 1]}
+\note{Use the `randn()` function to generate random numbers in the range [-1, 1]}
 
 All bombs have the same initial location $(x=0, y=480)$ as before.
 
