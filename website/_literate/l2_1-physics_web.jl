@@ -31,11 +31,8 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> A partial differential equation (PDE) is an equation which imposes relations between the various partial derivatives of a multivariable function.
-
-> Ordinary differential equations form a subclass of partial differential equations, corresponding to functions of a single variable".
-
-[_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function.\
+> **Ordinary differential equations (ODE)** form a subclass of partial differential equations, corresponding to functions of a single variable. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 """
 
 #src #########################################################################
@@ -107,8 +104,8 @@ xc   = LinRange(dx/2, Lx-dx/2, nx)
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 #nb # > 💡 hint:
-#nb # > type `?` in the Julia REPL followed by the function you want to know more about to display infos
-#md # \note{type `?` in the Julia REPL followed by the function you want to know more about to display infos}
+#nb # > Type `?` in the Julia REPL followed by the function you want to know more about to display infos
+#md # \note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -122,8 +119,8 @@ Ci   =  copy(C)
 dCdt = zeros(Float64, nx)
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: note we here work with double precision arithmetic `Float64`
-#md # \note{note we here work with double precision arithmetic `Float64`}
+#nb # > 💡 hint: Note we here work with double precision arithmetic `Float64`
+#md # \note{We here work with double precision arithmetic `Float64`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -250,7 +247,7 @@ So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## PDEs
+## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
 """
@@ -456,7 +453,7 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Advection
+## PDEs - Advection
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
 """
