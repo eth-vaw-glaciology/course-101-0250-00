@@ -30,6 +30,10 @@ showall = false
 
 [⤴ _**back to Content**_](#content)
 
+\literate{/_literate/l2_2-git_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
 # Exercises - lecture 2
 
 \literate{/_literate/lecture2_ex1_web.jl}
