@@ -8,7 +8,7 @@ showall = false
 # Lecture 2
 
 > **Agenda**\
-> :books: ODEs & PDEs - advection, diffusion, reaction\
+> :books: ODEs & PDEs - reaction, diffusion, advection\
 > :computer: Get started on GitHub\
 > :construction: Exercises:
 > - basic code structure & vectorisation
