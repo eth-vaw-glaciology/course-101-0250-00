@@ -35,9 +35,9 @@ version = "0.1.0"
 
 [[CPUSummary]]
 deps = ["Hwloc", "IfElse", "Static"]
-git-tree-sha1 = "ed720e2622820bf584d4ad90e6fcb93d95170b44"
+git-tree-sha1 = "38d0941d2ce6dd96427fd033d45471e1f26c3865"
 uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.1.3"
+version = "0.1.5"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
@@ -184,9 +184,9 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
-git-tree-sha1 = "7f6ad1a7f4621b4ab8e554133dade99ebc6e7221"
+git-tree-sha1 = "29890dfbc427afa59598b8cfcc10034719bd7744"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.12.5"
+version = "0.12.6"
 
 [[FiniteDiff]]
 deps = ["ArrayInterface", "LinearAlgebra", "Requires", "SparseArrays", "StaticArrays"]
@@ -223,9 +223,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[HTTP]]
 deps = ["Base64", "Dates", "IniFile", "Logging", "MbedTLS", "NetworkOptions", "Sockets", "URIs"]
-git-tree-sha1 = "60ed5f1643927479f845b0135bb369b031b541fa"
+git-tree-sha1 = "24675428ca27678f003414a98c9e473e45fe6a21"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "0.9.14"
+version = "0.9.15"
 
 [[HostCPUFeatures]]
 deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
@@ -301,9 +301,9 @@ version = "0.21.2"
 
 [[LabelledArrays]]
 deps = ["ArrayInterface", "LinearAlgebra", "MacroTools", "StaticArrays"]
-git-tree-sha1 = "bdde43e002847c34c206735b1cf860bc3abd35e7"
+git-tree-sha1 = "8f5fd068dfee92655b79e0859ecad8b492dfe8b1"
 uuid = "2ee39098-c373-598a-b85f-a56591580800"
-version = "1.6.4"
+version = "1.6.5"
 
 [[LayoutPointers]]
 deps = ["ArrayInterface", "LinearAlgebra", "ManualMemory", "SIMDTypes", "Static"]
@@ -369,9 +369,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "4804192466f4d370ca19c9957dfb3d919e6ef77e"
+git-tree-sha1 = "23b22559423dbf0217f28ea58ac05242a7770194"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.77"
+version = "0.12.79"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -498,9 +498,9 @@ uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[Polyester]]
 deps = ["ArrayInterface", "BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "ManualMemory", "PolyesterWeave", "Requires", "Static", "StrideArraysCore", "ThreadingUtilities"]
-git-tree-sha1 = "74d358e649e0450cb5d3ff54ca7c8d806ed62765"
+git-tree-sha1 = "7d5f510622439729f13662a492f9977e7797ea6e"
 uuid = "f517fe37-dbe3-4b94-8317-1923a5111588"
-version = "0.5.1"
+version = "0.5.2"
 
 [[PolyesterWeave]]
 deps = ["BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "Static", "ThreadingUtilities"]
