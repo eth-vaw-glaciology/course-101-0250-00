@@ -11,11 +11,8 @@ Reaction - Diffusion - Advection gifs
 - Explicit solutions
 - Multi-process (physics) coupling
 
-> A partial differential equation (PDE) is an equation which imposes relations between the various partial derivatives of a multivariable function.
-
-> Ordinary differential equations form a subclass of partial differential equations, corresponding to functions of a single variable".
-
-[_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function.\
+> **Ordinary differential equations (ODE)** form a subclass of partial differential equations, corresponding to functions of a single variable. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 
 ## ODEs
 Simple reaction equation, finite-difference method and explicit solution
@@ -58,7 +55,7 @@ nt   = cld(ttot, dt)
 xc   = LinRange(dx/2, Lx-dx/2, nx)
 ```
 
-\note{type `?` in the Julia REPL followed by the function you want to know more about to display infos}
+\note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos}
 
 We now need to initialise 3 1D arrays to hold information about concentration `C`, initial concentration distribution `Ci`, and rate of change of concentration `dCdt`.
 
@@ -69,7 +66,7 @@ Ci   =  copy(C)
 dCdt = zeros(Float64, nx)
 ```
 
-\note{note we here work with double precision arithmetic `Float64`}
+\note{We here work with double precision arithmetic `Float64`}
 
 Remains the most important part, the `# Time loop` where _predictive_ action should take place. We will loop from `it=1` to `nt` computing the rate of change of `C`, `dCdt`, and then updating `C`. We also want to visualise the evolution of the concentration distribution.
 
@@ -147,7 +144,7 @@ reaction_1D()
 
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 
-## PDEs
+## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
 
@@ -292,7 +289,7 @@ if it % nout == 0
 end
 ```
 
-## Advection
+## PDEs - Advection
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
 
