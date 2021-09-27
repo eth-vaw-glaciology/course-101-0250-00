@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 1 - **Many volcanic bomb**
 
-👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture2_ex1.ipynb)
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture2_ex1.ipynb)
 
 The goal of this exercise is to consolidate:
 - vectorisation and element-wise operations using `.`

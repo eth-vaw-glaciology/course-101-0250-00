@@ -146,6 +146,8 @@ Let's execute it and visualise output
 
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 
+👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+
 ## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
@@ -287,6 +289,8 @@ if it % nout == 0
 end
 ```
 
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+
 ## PDEs - advection
 
 > Advection is a partial differential equation that governs the motion of a conserved scalar field as it is advected by a known velocity vector field. [_Wikipedia_](https://en.wikipedia.org/wiki/Advection)
@@ -347,6 +351,8 @@ Here we go, an upwind approach is needed to implement a stable advection algorit
 C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
 C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
+
+👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Wrapping-up
 
