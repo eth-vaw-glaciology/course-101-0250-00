@@ -17,6 +17,7 @@ showall = false
 
 --- 
 
+\label{content}
 **Content**
 
 \toc
@@ -25,4 +26,14 @@ showall = false
 
 ---
 
+\literate{/_literate/l2_1-physics_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
 # Exercises - lecture 2
+
+\literate{/_literate/lecture2_ex1_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+---

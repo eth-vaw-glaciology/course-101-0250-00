@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **n Volcanic bomb**
+## Exercise 1 - **Many volcanic bomb**
 """
 
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture2_ex1.ipynb)
