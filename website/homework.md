@@ -7,5 +7,5 @@ hascode = false
 
 |  Assignment  |  Due date  |  Submission  |  Notes  |
 | :----------: | :--------: | :----------: | :-----: |
-| Lect. 1 exercise 1-4,(5) | 30.09.2021 - 23h59 CET| [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-1) | See [here](/software_install/#exercises_and_homework) for additional details |
-| Lect. 2 exercise 1-xx    | 07.10.2021 - 23h59 CET| [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-2) | See [here](/software_install/#exercises_and_homework) for additional details |
+| Lect. 1 [exercises](/lecture1/#exercises_-_lecture_1) 1-4,(5) | 30.09.2021 - 23h59 CET| [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-1) | See [here](/software_install/#exercises_and_homework) for additional details |
+| Lect. 2 [exercises](/lecture2/#exercises_-_lecture_2) 1-3     | 07.10.2021 - 23h59 CET| [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-2) | See [here](/software_install/#exercises_and_homework) for additional details |
