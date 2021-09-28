@@ -2,6 +2,7 @@ using Literate
 
 ## include Literate scripts starting with following 2 letters in the deploy
 incl = "l2"
+sol = false
 ##
 
 """
@@ -46,7 +47,11 @@ for fl in readdir()
     println("File: $fl")
 
     # create ipynb
-    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true)
+    if sol
+        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_hint)
+    else
+        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_hint)
+    end
 
     # duplicate .jl scripts and rename them for web deploy
     tmp = splitext(fl)[1] * "_web.jl"
