@@ -2,6 +2,8 @@ using Literate
 
 ## include Literate scripts starting with following 2 letters in the deploy
 incl = "l2"
+## Set `sol=true` to produce output with solutions contained and hints stripts.  Otherwise
+#  the other way around.
 sol = false
 ##
 
@@ -34,10 +36,19 @@ function process_hashtag(str, hashtag, fn; striptag=true)
     return out
 end
 
-"Use as `preproces` function to remove `#sol`-lines"
-rm_sol(str) = process_hashtag(str, "#sol", line->"")
-"Use as `preproces` function to remove `#hint`-lines"
-rm_hint(str) = process_hashtag(str, "#hint", line->"")
+"Use as `preproces` function to remove `#sol`-lines & just remote `#tag`-tag"
+function rm_sol(str)
+    str = process_hashtag(str, "#sol", line->"")
+    str = process_hashtag(str, "#hint", line->line)
+    return str
+end
+"Use as `preproces` function to remove `#hint`-lines & just remote `#sol`-tag"
+function rm_hint(str)
+    str = process_hashtag(str, "#sol", line->line)
+    str = process_hashtag(str, "#hint", line->"")
+    return str
+end
+
 
 for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || !occursin(incl, fl)
