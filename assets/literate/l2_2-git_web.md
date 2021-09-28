@@ -6,7 +6,7 @@ Git is a version control software, useful to
 - to collaborate on code
 - to distribute code, to onself (on other computers) and others
 
-# Previous experience
+## Previous experience
 
 You are familiar with git already:
 
@@ -19,11 +19,11 @@ Questions:
 - do you use: `branch`, `merge`, `rebase`?
 - github/gitlab etc?
 
-# A brief git demo session
+## A brief git demo session
 
 Please follow along!
 
-If you don't have git installed, head to https://achtzack01.ethz.ch and open a terminal.
+If you don't have git installed, head to [https://achtzack01.ethz.ch](https://achtzack01.ethz.ch) and open a terminal.
 (and do install it on your computer!)
 
 - git setup:
@@ -38,20 +38,20 @@ If you don't have git installed, head to https://achtzack01.ethz.ch and open a t
 - merge branch (`merge`)
 - tag (`tag`)
 
-# Further reading
+## Further reading
 
 There are (too) many resources on the web...
-- book: https://git-scm.com/book/en/v2
-- videos: https://git-scm.com/doc
-- cheat sheet (click on boxes) https://git-scm.com/doc
-- get out of a git mess: http://justinhileman.info/article/git-pretty/git-pretty.png
+- book: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
+- videos: [https://git-scm.com/doc](https://git-scm.com/doc)
+- cheat sheet (click on boxes) [https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;](https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
+- get out of a git mess: [http://justinhileman.info/article/git-pretty/git-pretty.png](http://justinhileman.info/article/git-pretty/git-pretty.png)
 
 ## Other tools for git
 There is plenty of software to interact with git, graphical, command line, etc.  Feel free to use those.
 
 But we will only be able to help you with vanilla, command-line git.
 
-# Getting started on GitHub (similar on Gitlab, or elsewhere)
+## Getting started on GitHub (similar on Gitlab, or elsewhere)
 
 Github and Gitlab are social coding websites
   - they host code
@@ -59,15 +59,15 @@ Github and Gitlab are social coding websites
   - they provide infrastructure for software testing, deployment, etc
 
 Note: ETH has a Gitlab instance which you can use with your NETHZ credentials
-https://gitlab.ethz.ch/
+[https://gitlab.ethz.ch/](https://gitlab.ethz.ch/)
 
 Question: who has a Github account?
 
 Let's make one (because most of Julia development happens on Github)
 
-https://github.com/ -> "Sign up"
+[https://github.com/](https://github.com/) -> "Sign up"
 
-# Github setup
+## Github setup
 
 Make such that you can push and pull without entering a password
 
@@ -81,7 +81,7 @@ Make such that you can push and pull without entering a password
     - I selected "repo only" to facilitate pull, push, clone, and commit actions
   - -> "Generate token" and copy it (keep that website open for now)
 
-# Let's get our repo onto github
+## Let's get our repo onto github
 
 ![github-bar](../assets/literate_figures/github-bar.png)
 
@@ -90,13 +90,13 @@ Make such that you can push and pull without entering a password
 - local: `git push`
   - here enter your username + the **token** generated before
 
-# Work with other peoples code: fork
+## Work with other peoples code: fork
 
 ![github-bar](../assets/literate_figures/github-bar.png)
 
 - fork a repository on github.com (top right)
 
-# Git: questions?
+## Git: questions?
 
 
 ![git-me](../assets/literate_figures/git-me.png)
