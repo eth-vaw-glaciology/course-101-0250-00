@@ -643,7 +643,7 @@ md"""
 #nb ## Time loop
 #nb for it = 1:nt
 #nb     dCdt     .= .-vx.*diff(C)./dx
-#nb     # add solution
+#nb     ## add solution
 #nb     if it % nout == 0
 #nb         IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
 #nb         display(plot!(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(round(it*dt, sigdigits=3))", framestyle=:box, label="C"))
