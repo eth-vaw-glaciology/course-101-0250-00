@@ -534,7 +534,7 @@ md"""
 md"""
 We will here briefly discuss advection of a quantity $C$ by a constant velocity $v_x$ in the one-dimensional x-direction.
 
-$$ \frac{∂C}{∂t} = -\frac{v_x ~ ∂C}{∂x} ~.$$
+$$ \frac{∂C}{∂t} = -\frac{∂(v_x~C)}{∂x} ~.$$
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
