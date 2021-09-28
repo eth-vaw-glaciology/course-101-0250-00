@@ -1,11 +1,19 @@
 using Literate
-
 ## include Literate scripts starting with following 2 letters in the deploy
 incl = "l2"
 ## Set `sol=true` to produce output with solutions contained and hints stripts.  Otherwise
 #  the other way around.
 sol = false
 ##
+
+
+function replace_string(str)
+        strn = str
+        for st in ["./figures/" => "../assets/literate_figures/"]
+            strn = replace(strn, st)
+        end
+    return strn
+end
 
 """
     process_hashtag(str, hashtag, fn; striptag=true)
@@ -61,7 +69,7 @@ for fl in readdir()
     if sol
         Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_hint)
     else
-        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_hint)
+        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_sol)
     end
 
     # duplicate .jl scripts and rename them for web deploy
@@ -69,7 +77,7 @@ for fl in readdir()
     cp("$fl", tmp, force=true)
 
     str  = read(tmp, String)
-    strn = replace.(Ref(str), ["./figures/" => "../assets/literate_figures/"])
+    strn = replace_string(str)
     write(tmp, strn)
 
     mv("$tmp", "../website/_literate/$tmp", force=true)
