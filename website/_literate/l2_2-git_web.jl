@@ -38,7 +38,7 @@ md"""
 
 Please follow along!
 
-If you don't have git installed, head to https://achtzack01.ethz.ch and open a terminal.
+If you don't have git installed, head to [https://achtzack01.ethz.ch](https://achtzack01.ethz.ch) and open a terminal.
 (and do install it on your computer!)
 
 - git setup:
@@ -59,10 +59,10 @@ md"""
 # Further reading
 
 There are (too) many resources on the web...
-- book: https://git-scm.com/book/en/v2
-- videos: https://git-scm.com/doc
-- cheat sheet (click on boxes) https://git-scm.com/doc
-- get out of a git mess: http://justinhileman.info/article/git-pretty/git-pretty.png
+- book: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
+- videos: [https://git-scm.com/doc](https://git-scm.com/doc)
+- cheat sheet (click on boxes) [https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;](https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
+- get out of a git mess: [http://justinhileman.info/article/git-pretty/git-pretty.png](http://justinhileman.info/article/git-pretty/git-pretty.png)
 
 ## Other tools for git
 There is plenty of software to interact with git, graphical, command line, etc.  Feel free to use those.
@@ -82,7 +82,7 @@ Github and Gitlab are social coding websites
   - they provide infrastructure for software testing, deployment, etc
 
 Note: ETH has a Gitlab instance which you can use with your NETHZ credentials
-https://gitlab.ethz.ch/
+[https://gitlab.ethz.ch/](https://gitlab.ethz.ch/)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -91,7 +91,7 @@ Question: who has a Github account?
 
 Let's make one (because most of Julia development happens on Github)
 
-https://github.com/ -> "Sign up"
+[https://github.com/](https://github.com/) -> "Sign up"
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
