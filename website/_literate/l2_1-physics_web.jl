@@ -138,8 +138,8 @@ using Plots
 
 # Time loop
 for it = 1:nt
-  dCdt = ...
-  C    = ...
+  dCdt .= .-(C .- Ceq)./ξ
+  C    .= C .+ dt.*dCdt
   display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
                xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
                framestyle=:box, label="Concentration"))
@@ -209,18 +209,18 @@ We may want to write a single "monolithic" `reaction_1D.jl` code to perform thes
 #!nb     dCdt = zeros(Float64, nx)
 #!nb     ## Time loop
 #!nb     for it = 1:nt
-#!nb         #dCdt = ...
-#!nb         #C    = ...
-#!nb         #display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-#!nb                      #xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-#!nb                      #framestyle=:box, label="Concentration"))
+#!nb         dCdt .= .-(C .- Ceq)./ξ
+#!nb         C    .= C .+ dt.*dCdt
+#!nb         display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
+#!nb                      xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
+#!nb                      framestyle=:box, label="Concentration"))
 #!nb     end
-#!nb     #plot!(xc, Ci, lw=2, label="C initial")
-#!nb     #display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
+#!nb     plot!(xc, Ci, lw=2, label="C initial")
+#!nb     display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
 #!nb     return
 #!nb end
 #!nb 
-#!nb reaction_1D()
+#!nb #reaction_1D()
 
 #nb using Plots
 #nb @views function reaction_1D()
@@ -242,8 +242,8 @@ We may want to write a single "monolithic" `reaction_1D.jl` code to perform thes
 #nb     dCdt = zeros(Float64, nx)
 #nb     ## Time loop
 #nb     for it = 1:nt
-#nb         dCdt .= # add solution
-#nb         C    .= # add solution
+#nb         dCdt .= .-(C .- Ceq)./ξ
+#nb         C    .= C .+ dt.*dCdt
 #nb         IJulia.clear_output(true); display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)", framestyle=:box, label="Concentration"))
 #nb         sleep(0.1)
 #nb     end
@@ -263,7 +263,7 @@ md"""
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 """
 
-#src #md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -382,8 +382,8 @@ md"""
 In the `# Array initialisation` section, we need a new object to hold the diffusive flux in x direction `qx`
 
 ```julia
-dCdt = zeros(Float64, nx) # wrong size - will fail because of staggering
-qx   = zeros(Float64, nx) # wrong size - will fail because of staggering
+dCdt = zeros(Float64, nx-2) # wrong size - will fail because of staggering
+qx   = zeros(Float64, nx-1) # wrong size - will fail because of staggering
 ```
 """
 
@@ -431,8 +431,8 @@ Followed by the 3 physics computations (lines) in the time loop
 
 ## Time loop
 for it = 1:nt
-    #qx         .= # add solution
-    #dCdt       .= # add solution
+    qx         .= .-D.*diff(C)./dx
+    dCdt       .= .-diff(qx)./dx
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     ## Visualisation
 end
@@ -486,8 +486,8 @@ plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markersha
 #nb     qx   = zeros(Float64, nx-1)
 #nb     ## Time loop
 #nb     for it = 1:nt
-#nb         qx         .= # add solution
-#nb         dCdt       .= # add solution
+#nb         qx         .= .-D.*diff(C)./dx
+#nb         dCdt       .= .-diff(qx)./dx
 #nb         C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
 #nb         if it % nout == 0
 #nb             IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
@@ -515,7 +515,7 @@ end
 ```
 """
 
-#src #md # 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#md # 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -578,13 +578,13 @@ md"""
 In the `# Array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 Lx$.
 
 ```julia
-C = exp.( ... )
+C = exp.(.-(xc .- 0.3*Lx).^2)
 ```
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(xc - c)^2 $
-#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(xc - c)^2 $}
+#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $
+#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -643,6 +643,7 @@ md"""
 #nb ## Time loop
 #nb for it = 1:nt
 #nb     dCdt     .= .-vx.*diff(C)./dx
+#nb     C[2:end] .= C[2:end] .+ dt.*dCdt
 #nb     ## add solution
 #nb     if it % nout == 0
 #nb         IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
@@ -662,7 +663,7 @@ C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
 """
 
-#src #md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -681,3 +682,5 @@ md"""
 md"""
 Note that this is far from being the only way to tackle numerical solutions to these PDEs. In this course, we will stick to those concepts as they will allow for efficient GPU (parallel) implementations.
 """
+
+

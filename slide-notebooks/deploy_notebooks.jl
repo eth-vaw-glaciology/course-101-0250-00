@@ -2,7 +2,7 @@ using Literate
 ## include Literate scripts starting with following 2 letters in the deploy
 incl = "l2_1"
 ## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
-sol = false
+sol = true
 ##
 
 function replace_string(str)
@@ -33,13 +33,11 @@ function process_hashtag(str, hashtag, fn; striptag=true)
     for line in split(str, '\n')
         # line = if startswith(lstrip(line), hashtag)
         line = if occursin(regex, line)
-            fn(striptag ?
-                replace(line, hashtag=>"") :
-                line)
+            fn(striptag ? replace(line, hashtag=>"") : line)
         else
-            line
+            line = line * "\n"
         end
-        out = out * line * "\n"
+        out = out * line
     end
     return out
 end
@@ -47,12 +45,12 @@ end
 "Use as `preproces` function to remove `#sol`-lines & just remote `#tag`-tag"
 function rm_sol(str)
     str = process_hashtag(str, "#sol", line->"")
-    str = process_hashtag(str, "#hint", line->line)
+    str = process_hashtag(str, "#hint", line->line * "\n")
     return str
 end
 "Use as `preproces` function to remove `#hint`-lines & just remote `#sol`-tag"
 function rm_hint(str)
-    str = process_hashtag(str, "#sol", line->line)
+    str = process_hashtag(str, "#sol", line->line * "\n")
     str = process_hashtag(str, "#hint", line->"")
     return str
 end
@@ -78,7 +76,12 @@ for fl in readdir()
 
     str  = read(tmp, String)
     strn = replace_string(str)
-    write(tmp, strn)
+    if sol
+        strn2 = rm_hint(strn)
+    else
+        strn2 = rm_sol(strn)
+    end
+    write(tmp, strn2)
 
     mv("$tmp", "../website/_literate/$tmp", force=true)
 end
