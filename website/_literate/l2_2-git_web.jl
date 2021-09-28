@@ -39,6 +39,7 @@ md"""
 Please follow along!
 
 If you don't have git installed, head to https://achtzack01.ethz.ch and open a terminal.
+(and do install it on your computer!)
 
 - git setup:
   ```
@@ -66,7 +67,7 @@ There are (too) many resources on the web...
 ## Other tools for git
 There is plenty of software to interact with git, graphical, command line, etc.  Feel free to use those.
 
-But we will only be able to help you with vanilla git.
+But we will only be able to help you with vanilla, command-line git.
 """
 
 #src ###################################################################
