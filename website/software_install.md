@@ -21,9 +21,9 @@ The first two lecture's homework assignments will be [Jupyter notebooks](https:/
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
-\warn{The `achtzack01` is **not** backed up. Make sure to keep local copy of your data!}
+Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private git repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
-Starting from lecture 3, exercise scripts will have to be uploaded to your private git repo (shared with the teaching staff only) named `course-101-0250-00-<lastname>`, where `<lastname>` has to be replaced by your last name. The git commit hash (or SHA) of the push has to be uploaded on Moodle and will serve to control the material was pushed on time.
+\warn{The `achtzack01` is **not** backed up. Make sure to keep local copy of your data!}
 
 ## Installing Julia v1.6 (or later)
 Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
