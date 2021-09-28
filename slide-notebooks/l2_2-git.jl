@@ -14,7 +14,7 @@ Git is a version control software, useful to
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Previous experience
+## Previous experience
 
 You are familiar with git already:
 
@@ -34,7 +34,7 @@ Questions:
 #src ###################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# A brief git demo session
+## A brief git demo session
 
 Please follow along!
 
@@ -56,7 +56,7 @@ If you don't have git installed, head to [https://achtzack01.ethz.ch](https://ac
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Further reading
+## Further reading
 
 There are (too) many resources on the web...
 - book: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
@@ -74,7 +74,7 @@ But we will only be able to help you with vanilla, command-line git.
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Getting started on GitHub (similar on Gitlab, or elsewhere)
+## Getting started on GitHub (similar on Gitlab, or elsewhere)
 
 Github and Gitlab are social coding websites
   - they host code
@@ -96,7 +96,7 @@ Let's make one (because most of Julia development happens on Github)
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Github setup
+## Github setup
 
 Make such that you can push and pull without entering a password
 
@@ -114,7 +114,7 @@ Make such that you can push and pull without entering a password
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Let's get our repo onto github
+## Let's get our repo onto github
 
 ![github-bar](./figures/github-bar.png)
 
@@ -126,7 +126,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Work with other peoples code: fork
+## Work with other peoples code: fork
 
 ![github-bar](./figures/github-bar.png)
 
@@ -135,7 +135,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-# Git: questions?
+## Git: questions?
 
 
 ![git-me](./figures/git-me.png)
