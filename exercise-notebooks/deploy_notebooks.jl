@@ -8,7 +8,9 @@ function replace_string(str)
     return strn
 end
 
+## include Literate scripts starting with following letters in the deploy
 incl = "lecture2"
+##
 
 for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || !occursin(incl, fl)
