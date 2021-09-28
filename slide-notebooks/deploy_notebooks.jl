@@ -33,7 +33,9 @@ function process_hashtag(str, hashtag, fn; striptag=true)
     return out
 end
 
+"Use as `preproces` function to remove `#sol`-lines"
 rm_sol(str) = process_hashtag(str, "#sol", line->"")
+"Use as `preproces` function to remove `#hint`-lines"
 rm_hint(str) = process_hashtag(str, "#hint", line->"")
 
 for fl in readdir()
