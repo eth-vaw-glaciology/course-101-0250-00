@@ -293,7 +293,7 @@ end
 
 We will here briefly discuss advection of a quantity $C$ by a constant velocity $v_x$ in the one-dimensional x-direction.
 
-$$ \frac{∂C}{∂t} = -\frac{v_x ~ ∂C}{∂x} ~.$$
+$$ \frac{∂C}{∂t} = -\frac{∂(v_x~C)}{∂x} ~.$$
 
 In case the flow is incompressible ($∇⋅v = 0$ -- here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
 
