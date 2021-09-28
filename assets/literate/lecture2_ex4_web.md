@@ -27,7 +27,7 @@ Once you have your GitHub account ready, create a private repository you will _*
 
 ### GitHub task
 For this week, edit the `README.md` of your private repository:
-- add one or two sentence description in there (to familiarise with markdown syntax).
-- then `commit` the change and `push` it.
-- copy the commit hash (or HSA) and past it to Moodle in the _git commit hash (HSA)_ activity.
+- Add one or two description sentences in there (to get familiar with the Markdown syntax).
+- Then `commit` the change and `push` it.
+- Copy the commit hash (or HSA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) in the _git commit hash (HSA)_ activity.
 

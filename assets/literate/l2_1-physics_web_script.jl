@@ -21,18 +21,18 @@ using Plots
     dCdt = zeros(Float64, nx)
     # Time loop
     for it = 1:nt
-        #dCdt = ...
-        #C    = ...
-        #display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-                     #xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-                     #framestyle=:box, label="Concentration"))
+        dCdt .= .-(C .- Ceq)./ξ
+        C    .= C .+ dt.*dCdt
+        display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
+                     xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
+                     framestyle=:box, label="Concentration"))
     end
-    #plot!(xc, Ci, lw=2, label="C initial")
-    #display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
+    plot!(xc, Ci, lw=2, label="C initial")
+    display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
     return
 end
 
-reaction_1D()
+#reaction_1D()
 
 # Physics
 Lx   = 10.0
@@ -54,8 +54,8 @@ qx   = zeros(Float64, nx-1);
 
 # Time loop
 for it = 1:nt
-    #qx         .= # add solution
-    #dCdt       .= # add solution
+    qx         .= .-D.*diff(C)./dx
+    dCdt       .= .-diff(qx)./dx
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     # Visualisation
 end

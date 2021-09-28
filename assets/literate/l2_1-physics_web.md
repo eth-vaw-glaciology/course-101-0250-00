@@ -75,8 +75,8 @@ using Plots
 
 # Time loop
 for it = 1:nt
-  dCdt = ...
-  C    = ...
+  dCdt .= .-(C .- Ceq)./ξ
+  C    .= C .+ dt.*dCdt
   display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
                xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
                framestyle=:box, label="Concentration"))
@@ -128,23 +128,25 @@ using Plots
     dCdt = zeros(Float64, nx)
     # Time loop
     for it = 1:nt
-        #dCdt = ...
-        #C    = ...
-        #display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-                     #xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-                     #framestyle=:box, label="Concentration"))
+        dCdt .= .-(C .- Ceq)./ξ
+        C    .= C .+ dt.*dCdt
+        display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
+                     xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
+                     framestyle=:box, label="Concentration"))
     end
-    #plot!(xc, Ci, lw=2, label="C initial")
-    #display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
+    plot!(xc, Ci, lw=2, label="C initial")
+    display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
     return
 end
 
-reaction_1D()
+#reaction_1D()
 ```
 
 Let's execute it and visualise output
 
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
+
+👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## PDEs - diffusion
 
@@ -216,8 +218,8 @@ dt   = dx^2/D/2.1
 In the `# Array initialisation` section, we need a new object to hold the diffusive flux in x direction `qx`
 
 ```julia
-dCdt = zeros(Float64, nx) # wrong size - will fail because of staggering
-qx   = zeros(Float64, nx) # wrong size - will fail because of staggering
+dCdt = zeros(Float64, nx-2) # wrong size - will fail because of staggering
+qx   = zeros(Float64, nx-1) # wrong size - will fail because of staggering
 ```
 
 Wait... what about the staggering ?
@@ -253,8 +255,8 @@ Followed by the 3 physics computations (lines) in the time loop
 ```julia:ex3
 # Time loop
 for it = 1:nt
-    #qx         .= # add solution
-    #dCdt       .= # add solution
+    qx         .= .-D.*diff(C)./dx
+    dCdt       .= .-diff(qx)./dx
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     # Visualisation
 end
@@ -286,6 +288,8 @@ if it % nout == 0
     plot()
 end
 ```
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## PDEs - advection
 
@@ -320,10 +324,10 @@ dt   = dx/vx
 In the `# Array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 Lx$.
 
 ```julia
-C = exp.( ... )
+C = exp.(.-(xc .- 0.3*Lx).^2)
 ```
 
-\note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(xc - c)^2 $}
+\note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
 
 One should also pay attention regarding the correct initialisation of `dCdt` in terms of vector dimension, since the rate of change of `C`, `dCdt`, is the derivative of `C`.
 
@@ -347,6 +351,8 @@ Here we go, an upwind approach is needed to implement a stable advection algorit
 C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
 C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
+
+👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Wrapping-up
 
