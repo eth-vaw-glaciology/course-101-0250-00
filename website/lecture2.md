@@ -51,5 +51,3 @@ showall = false
 \literate{/_literate/lecture2_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
-
----
