@@ -54,8 +54,8 @@ qx   = zeros(Float64, nx-1);
 
 # Time loop
 for it = 1:nt
-    qx         .= .-D.*diff(C )./dx
-    dCdt       .= .-   diff(qx)./dx
+    #qx         .= # add solution
+    #dCdt       .= # add solution
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     # Visualisation
 end

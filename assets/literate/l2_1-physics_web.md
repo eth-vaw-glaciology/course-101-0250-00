@@ -146,8 +146,6 @@ Let's execute it and visualise output
 
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 
-👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
-
 ## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
@@ -255,8 +253,8 @@ Followed by the 3 physics computations (lines) in the time loop
 ```julia:ex3
 # Time loop
 for it = 1:nt
-    qx         .= .-D.*diff(C )./dx
-    dCdt       .= .-   diff(qx)./dx
+    #qx         .= # add solution
+    #dCdt       .= # add solution
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     # Visualisation
 end
@@ -288,8 +286,6 @@ if it % nout == 0
     plot()
 end
 ```
-
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## PDEs - advection
 
@@ -351,8 +347,6 @@ Here we go, an upwind approach is needed to implement a stable advection algorit
 C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
 C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
-
-👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Wrapping-up
 
