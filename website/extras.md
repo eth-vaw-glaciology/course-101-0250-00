@@ -13,6 +13,7 @@ hascode = false
 - [MATLAB-Julia-Python comparative](https://cheatsheets.quantecon.org/) cheatsheet (by [QuantEcon group](https://quantecon.org/))
 - [Plots.jl](https://github.com/sswatson/cheatsheets/blob/master/plotsjl-cheatsheet.pdf) cheatsheet
 - [7 rules of a great `git commit` message](https://chris.beams.io/posts/git-commit/)
+- [git-cheatsheet](https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
 
 
 ## Extra material 
