@@ -242,8 +242,8 @@ We may want to write a single "monolithic" `reaction_1D.jl` code to perform thes
 #nb     dCdt = zeros(Float64, nx)
 #nb     ## Time loop
 #nb     for it = 1:nt
-#nb         dCdt .= .- (C .- Ceq)./ξ
-#nb         C    .= C .+ dt.*dCdt
+#nb         dCdt .= # add solution
+#nb         C    .= # add solution
 #nb         IJulia.clear_output(true); display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)", framestyle=:box, label="Concentration"))
 #nb         sleep(0.1)
 #nb     end
@@ -263,7 +263,7 @@ md"""
 So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 """
 
-#md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#src #md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -431,8 +431,8 @@ Followed by the 3 physics computations (lines) in the time loop
 
 ## Time loop
 for it = 1:nt
-    qx         .= .-D.*diff(C )./dx
-    dCdt       .= .-   diff(qx)./dx
+    #qx         .= # add solution
+    #dCdt       .= # add solution
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     ## Visualisation
 end
@@ -486,8 +486,8 @@ plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markersha
 #nb     qx   = zeros(Float64, nx-1)
 #nb     ## Time loop
 #nb     for it = 1:nt
-#nb         qx         .= .-D.*diff(C )./dx
-#nb         dCdt       .= .-   diff(qx)./dx
+#nb         qx         .= # add solution
+#nb         dCdt       .= # add solution
 #nb         C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
 #nb         if it % nout == 0
 #nb             IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
@@ -515,7 +515,7 @@ end
 ```
 """
 
-#md # 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#src #md # 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -643,7 +643,7 @@ md"""
 #nb ## Time loop
 #nb for it = 1:nt
 #nb     dCdt     .= .-vx.*diff(C)./dx
-#nb     C[2:end] .= C[2:end] .+ dt.*dCdt
+#nb     # add solution
 #nb     if it % nout == 0
 #nb         IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
 #nb         display(plot!(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(round(it*dt, sigdigits=3))", framestyle=:box, label="C"))
@@ -662,7 +662,7 @@ C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
 """
 
-#md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+#src #md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
