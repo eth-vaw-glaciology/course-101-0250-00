@@ -1,11 +1,9 @@
 using Literate
 ## include Literate scripts starting with following 2 letters in the deploy
-incl = "l2_3"
-## Set `sol=true` to produce output with solutions contained and hints stripts.  Otherwise
-#  the other way around.
+incl = "l2_1"
+## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
 sol = false
 ##
-
 
 function replace_string(str)
         strn = str
@@ -31,8 +29,10 @@ function process_hashtag(str, hashtag, fn; striptag=true)
     hashtag = strip(hashtag) * " "
     occursin("\r\n", str) && error("""DOS line endings "\r"n" not supported""")
     out = ""
+    regex = Regex(hashtag)
     for line in split(str, '\n')
-        line = if startswith(line, hashtag)
+        # line = if startswith(lstrip(line), hashtag)
+        line = if occursin(regex, line)
             fn(striptag ?
                 replace(line, hashtag=>"") :
                 line)
@@ -67,9 +67,9 @@ for fl in readdir()
 
     # create ipynb
     if sol
-        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_hint)
+        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preprocess=rm_hint)
     else
-        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preproces=rm_sol)
+        Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true, preprocess=rm_sol)
     end
 
     # duplicate .jl scripts and rename them for web deploy
