@@ -26,17 +26,17 @@ for fl in readdir()
     tmp = splitext(fl)[1] * "_web.jl"
     cp("$fl", tmp, force=true)
 
-    # str  = read(tmp, String)
-    # strn = replace_string(str)
-    # write(tmp, strn)
+    str  = read(tmp, String)
+    strn = replace_string(str)
+    write(tmp, strn)
 
     mv("$tmp", "../website/_literate/$tmp", force=true)
 end
 
-# # copy figures for ipynb
-# mkpath("notebooks/figures")
-# [cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
+# copy figures for ipynb
+mkpath("notebooks/figures")
+[cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
 
-# # copy literate figures
-# mkpath("../website/_assets/literate_figures")
-# [cp("figures/$fl", "../website/_assets/literate_figures/$fl", force=true) for fl in readdir("figures/")]
+# copy literate figures
+mkpath("../website/_assets/literate_figures")
+[cp("figures/$fl", "../website/_assets/literate_figures/$fl", force=true) for fl in readdir("figures/")]

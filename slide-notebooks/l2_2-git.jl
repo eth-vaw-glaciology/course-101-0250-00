@@ -42,10 +42,10 @@ If you don't have git installed, head to [https://achtzack01.ethz.ch](https://ac
 (and do install it on your computer!)
 
 - git setup:
-  ```
-  git config --global user.name "Your Name"
-  git config --global user.email "youremail@yourdomain.com"
-  ```
+```
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+```
 - make a repo
 - add some files (`add`, `commit`)
 - do some changes (`commit` some more)
