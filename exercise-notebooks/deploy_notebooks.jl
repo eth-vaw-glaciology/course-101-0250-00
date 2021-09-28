@@ -8,15 +8,17 @@ function replace_string(str)
     return strn
 end
 
+incl = "lecture2"
+
 for fl in readdir()
-    if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl
+    if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || !occursin(incl, fl)
         continue
     end
 
     println("File: $fl")
 
     # create ipynb
-    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true) #, preprocess=include2nbinclude)
+    Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true)
 
     # duplicate .jl scripts and rename them for web deploy
     tmp = splitext(fl)[1] * "_web.jl"
