@@ -1,24 +1,48 @@
 using Literate
 
-function replace_string(str)
-        strn = str
-        for st in ["./figures/" => "../assets/literate_figures/"]
-            strn = replace(strn, st)
-        end
-    return strn
-end
-
 ## include Literate scripts starting with following 2 letters in the deploy
 incl = "l2"
 ##
+
+"""
+    process_hashtag(str, hashtag, fn; striptag=true)
+
+Process all lines in str which start with a hashtag by the
+function `fn` (`line->newline`).
+
+```
+# drop lines starting with "#sol"
+drop_sol = str -> process_hashtag(str, "#sol", line -> "")
+Literate.notebook(fl, "notebooks", preproces=drop_sol)
+```
+"""
+function process_hashtag(str, hashtag, fn; striptag=true)
+    hashtag = strip(hashtag) * " "
+    occursin("\r\n", str) && error("""DOS line endings "\r"n" not supported""")
+    out = ""
+    for line in split(str, '\n')
+        line = if startswith(line, hashtag)
+            fn(striptag ?
+                replace(line, hashtag=>"") :
+                line)
+        else
+            line
+        end
+        out = out * line * "\n"
+    end
+    return out
+end
+
+rm_sol(str) = process_hashtag(str, "#sol", line->"")
+rm_hint(str) = process_hashtag(str, "#hint", line->"")
 
 for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || !occursin(incl, fl)
         continue
     end
-    
+
     println("File: $fl")
-    
+
     # create ipynb
     Literate.notebook(fl, "notebooks", credit=false, execute=false, mdstrings=true)
 
@@ -27,7 +51,7 @@ for fl in readdir()
     cp("$fl", tmp, force=true)
 
     str  = read(tmp, String)
-    strn = replace_string(str)
+    strn = replace.(Ref(str), ["./figures/" => "../assets/literate_figures/"])
     write(tmp, strn)
 
     mv("$tmp", "../website/_literate/$tmp", force=true)
