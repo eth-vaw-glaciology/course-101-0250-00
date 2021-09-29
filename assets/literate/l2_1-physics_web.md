@@ -1,8 +1,6 @@
 <!--This file was generated, do not modify it.-->
 # ODEs & PDEs: reaction - diffusion - advection
 
-Reaction - Diffusion - Advection gifs
-
 ### The goal of this lecture 2 is to familiarise (or refresh) with
 - Ordinary differential equations - ODEs (e.g. reaction equation)
 - Partial differential equations - PDEs (e.g. diffusion and advection equations)
@@ -16,6 +14,8 @@ Reaction - Diffusion - Advection gifs
 
 ## ODEs - reaction
 Simple reaction equation, finite-difference method and explicit solution
+
+![reaction](../assets/literate_figures/reaction3.gif)
 
 Let's take-off 🚀
 
@@ -151,6 +151,8 @@ So, excellent, we have our first 1D ODE solver up and running in Julia :-)
 ## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
+
+![diffusion](../assets/literate_figures/diffusion1.gif)
 
 Starting from the reaction script that we just finalised, we will now do as few as possible changes to solve the diffusion equation.
 
@@ -292,6 +294,8 @@ end
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## PDEs - advection
+
+![advection](../assets/literate_figures/advection3.gif)
 
 > Advection is a partial differential equation that governs the motion of a conserved scalar field as it is advected by a known velocity vector field. [_Wikipedia_](https://en.wikipedia.org/wiki/Advection)
 
