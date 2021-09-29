@@ -1,4 +1,7 @@
 using Literate
+## include Literate scripts starting with following letters in the deploy
+incl = "lecture2"
+##
 
 function replace_string(str)
         strn = str
@@ -7,10 +10,6 @@ function replace_string(str)
         end
     return strn
 end
-
-## include Literate scripts starting with following letters in the deploy
-incl = "lecture2"
-##
 
 for fl in readdir()
     if splitext(fl)[end]!=".jl" || splitpath(@__FILE__)[end]==fl || !occursin(incl, fl)

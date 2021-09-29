@@ -7,12 +7,6 @@ md"""
 # ODEs & PDEs: reaction - diffusion - advection
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Reaction - Diffusion - Advection gifs
-"""
-
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -40,6 +34,12 @@ md"""
 md"""
 ## ODEs - reaction
 Simple reaction equation, finite-difference method and explicit solution
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+![reaction](./figures/reaction3.gif)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -277,6 +277,12 @@ md"""
 ## PDEs - diffusion
 
 From reactions to diffusion and advection - involving gradients (neighbouring cells).
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+![diffusion](./figures/diffusion1.gif)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -533,7 +539,12 @@ end
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## PDEs - advection
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+![advection](./figures/advection3.gif)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
