@@ -14,7 +14,11 @@ As final homework task for this second lecture, you will have to
 2. Create a private git repository on GitHub and share it only with the teaching staff
 
 ### Julia install
-Ensure you have access to latest version of Julia, access and a fully functional REPL (command window) and you can visualise script output graphically when, e.g., plotting something
+Ensure you have access to
+- the latest version of Julia (>= v1.6)
+- a fully functional REPL (command window)
+
+You should be able to visualise scripts' output graphically when, e.g., plotting something
 
 ```julia
 using Plots
@@ -24,10 +28,14 @@ display(heatmap(rand(10,10)))
 ![random-noise](./figures/random-noise.png)
 
 ### Git repository
-Once you have your GitHub account ready, create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
-1. Create a private GitHub repository named `course-101-0250-00-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an MIT License and add a README.
-2. Share this private repository with the teaching staff on GitHub ([luraess](https://github.com/luraess), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins))
-3. **At each homework submission**, copy the git commit hash (or SHA) of the final push and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755). It will serve to control the material was pushed on time.
+Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
+1. Create a private GitHub repository named `course-101-0250-00-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
+2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
+3. **For each homework submission**, you will:
+    - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes onto;
+    - copy the git commit hash (or SHA) of the final push and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755). It will serve to control the material was pushed on time.
+
+👉 See here [Logistics](/logistics/#submission) for details
 
 ### GitHub task
 For this week, edit the `README.md` of your private repository:
