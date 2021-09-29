@@ -13,7 +13,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
 
-@@img-med ![Acoustic wave 2-D](/assets/acoustic2D.gif) @@
+@@img-med ![Acoustic wave 2-D](/assets/acoustic2D_2.gif) @@
 
 ### Objective
 The goal of this course is to offer a practical approach to solve systems of differential equations in parallel on GPUs using the [Julia programming language](http://www.julialang.org/). Julia combines high-level language conciseness to low-level language performance which enables efficient code development. The Julia GPU applications will be hosted on a git-platform and implement modern software development practices.
