@@ -17,7 +17,7 @@ Questions:
 - who has git installed on their laptop?
 - do you use: `commit`, `push`, `pull`, `clone`?
 - do you use: `branch`, `merge`, `rebase`?
-- github/gitlab etc?
+- GitHub/GitLab etc?
 
 ## A brief git demo session
 
@@ -51,23 +51,22 @@ There is plenty of software to interact with git, graphical, command line, etc. 
 
 But we will only be able to help you with vanilla, command-line git.
 
-## Getting started on GitHub (similar on Gitlab, or elsewhere)
+## Getting started on GitHub (similar on GitLab, or elsewhere)
 
-Github and Gitlab are social coding websites
+GitHub and GitLab are social coding websites
   - they host code
   - they facilitate for developers to interact
   - they provide infrastructure for software testing, deployment, etc
 
-Note: ETH has a Gitlab instance which you can use with your NETHZ credentials
-[https://gitlab.ethz.ch/](https://gitlab.ethz.ch/)
+\note{ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/)}
 
-Question: who has a Github account?
+Question: who has a GitHub account?
 
-Let's make one (because most of Julia development happens on Github)
+Let's make one (because most of Julia development happens on GitHub)
 
 [https://github.com/](https://github.com/) -> "Sign up"
 
-## Github setup
+## GitHub setup
 
 Make such that you can push and pull without entering a password
 
@@ -81,7 +80,7 @@ Make such that you can push and pull without entering a password
     - I selected "repo only" to facilitate pull, push, clone, and commit actions
   - -> "Generate token" and copy it (keep that website open for now)
 
-## Let's get our repo onto github
+## Let's get our repo onto GitHub
 
 ![github-bar](../assets/literate_figures/github-bar.png)
 

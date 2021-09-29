@@ -369,9 +369,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "23b22559423dbf0217f28ea58ac05242a7770194"
+git-tree-sha1 = "c8b07a7608833fef5deab03f4e2c6cd01bedd9c6"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.79"
+version = "0.12.80"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -746,9 +746,9 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "Hwloc", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static"]
-git-tree-sha1 = "3e2385f4ec895e694c24a1d5aba58cb6d27cf8b6"
+git-tree-sha1 = "db6b7be98c7641caed63ba8e8b3fffdc4212f8a6"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.10"
+version = "0.21.11"
 
 [[VertexSafeGraphs]]
 deps = ["LightGraphs"]
