@@ -107,8 +107,6 @@ The [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) permits y
 
 
 
-
-
 <!-- 
 ## Running the scripts
 To get started with the workshop,
