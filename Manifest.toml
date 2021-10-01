@@ -202,9 +202,9 @@ version = "0.10.19"
 
 [[Franklin]]
 deps = ["Dates", "DelimitedFiles", "DocStringExtensions", "ExprTools", "FranklinTemplates", "HTTP", "Literate", "LiveServer", "Logging", "Markdown", "NodeJS", "OrderedCollections", "Pkg", "REPL", "Random"]
-git-tree-sha1 = "85c3934124729aabc03c0cca76cacbc33f0609ab"
+git-tree-sha1 = "ca57f7e99cb91d90fa8f969bbc7ffda3b7e09a12"
 uuid = "713c75ef-9fc9-4b05-94a9-213340da978e"
-version = "0.10.58"
+version = "0.10.59"
 
 [[FranklinTemplates]]
 deps = ["LiveServer"]
@@ -762,9 +762,9 @@ uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
 
 [[ZygoteRules]]
 deps = ["MacroTools"]
-git-tree-sha1 = "9e7a1e8ca60b742e508a315c17eef5211e7fbfd7"
+git-tree-sha1 = "8c1a8e4dfacb1fd631745552c8db35d0deb09ea0"
 uuid = "700de1a5-db45-46bc-99cf-38207098b444"
-version = "0.2.1"
+version = "0.2.2"
 
 [[nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
