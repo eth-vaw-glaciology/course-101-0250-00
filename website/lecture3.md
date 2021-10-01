@@ -9,7 +9,7 @@ showall = false
 
 > **Agenda**\
 > :books: acoustic wave propagation, 1D to 2D\
-> :computer: Personal Julia instal, Julia's `Project` environment, Git\
+> :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
 > - acoustic vs diffusion
 > - 1D vs 2D

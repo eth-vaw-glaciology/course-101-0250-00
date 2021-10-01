@@ -30,9 +30,9 @@ Check you have an active internet connexion and [download Julia v1.6](https://ju
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.2-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.2-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.2-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.3-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.3-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_64.tar.gz # Linux x86
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
@@ -52,6 +52,62 @@ to make sure that the Julia REPL (aka terminal) starts. Then you should ba able 
 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
+
+
+## Running Julia
+
+### First steps
+Now that you have a running Julia install, launch Julia (e.g. by typing `julia` in the shell since it should be on path)
+```sh
+julia
+```
+
+Welcome in the [Julia REPL](https://docs.julialang.org/en/v1/stdlib/REPL/) (command window). There, you have 3 "modes", the standard
+```julia-repl
+[user@comp ~]$ julia
+               _
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.6.3 (2021-09-23)
+ _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
+|__/                   |
+
+julia> 
+```
+the shell mode by hitting `;`, where you can enter Unix commands,
+```julia-repl
+shell> 
+```
+and the [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) (package manager) by hitting `]`, that will be used to add and manage packages, and environments,
+```julia-repl
+(@v1.6) pkg> 
+```
+
+You can interactively execute commands in the REPL, like adding two numbers
+```julia-repl
+julia> 2+2
+4
+
+julia>
+```
+Within this class, we will mainly work with Julia scripts. You can run them using the `include()` function in the REPL
+```julia-repl
+julia> include("my_script.jl")
+```
+Alternatively, you can also execute a Julia script from the shell
+```sh
+julia -O3 --check-bounds=no my_script.jl
+```
+here passing the `-O3` optimisation flag, and the Julia `--check-bounds` flag set to `no` in order to deactivate out-of-bound checking.
+
+### Package manager
+The [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) permits you to install and manage Julia packages, and control the project's environment.
+
+
+
+
 
 <!-- 
 ## Running the scripts
