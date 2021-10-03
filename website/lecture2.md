@@ -40,13 +40,19 @@ showall = false
 
 [⤴ _**back to Content**_](#content)
 
+---
+
 \literate{/_literate/lecture2_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
+---
+
 \literate{/_literate/lecture2_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)
+
+---
 
 \literate{/_literate/lecture2_ex4_web.jl}
 
