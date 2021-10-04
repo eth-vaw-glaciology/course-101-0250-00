@@ -53,7 +53,7 @@ where
 md"""
 The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
 
-![hook](../assets/literate_figures/hook.png)
+![hook](../assets/literate_figures/hooke.png)
 
 $$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
 

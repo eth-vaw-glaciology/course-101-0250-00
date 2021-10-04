@@ -13,7 +13,6 @@ showall = false
 > :construction: Exercises:
 > - acoustic 2D (3 implementations)
 > - Earthquakes and seismic inversion
-> - ...
 
 --- 
 
