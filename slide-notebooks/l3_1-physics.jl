@@ -154,7 +154,6 @@ This formulation is very similar to the diffusion equation, as the only addition
 $$ \frac{∂V_x}{∂t} = q_x,$$
 """
 
-#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 Let's get started with this. We will do this exercise in a Julia standalone script and run it in from REPL using your local Julia install.
@@ -165,7 +164,7 @@ It's time to launch Julia on your computer 🚀
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We can start modifying the diffusion code's, changing `ttot=20` in `# Physics`, and taking a Gaussian (centred in `Lx/2`, `σ=1`) as initial condition for the pressure `P`
+We can start modifying the diffusion code's, adding `ρ` and `K` and changing `ttot=20` in `# Physics`, and taking a Gaussian (centred in `Lx/2`, `σ=1`) as initial condition for the pressure `P`
 
 ```julia
 # Physics
@@ -208,7 +207,7 @@ Should be modified to account for pressure `P` instead of concentration `C`, the
 ```
 """
 
-#sol #md # 👉 [Download the `diffusion_1D.jl` `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
+#sol #md # 👉 [Download the `diffusion_1D.jl` and `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -216,9 +215,106 @@ md"""
 Comparing diffusive and wave physics, we can summarise following:
 
 |  Physics        |  1D formulation |
-| :------------:  | :-------------: |
-| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂q}{∂x}$$ |
+|  ------------:  | :-------------  |
+| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ |
 | Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## From 1D to 2D
+
+Let's discuss how to implement the acoustic wave equation (and the diffusion equation from last week's material) in 2D.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+We want the $x$ and $y$ axis to represent spatial extend, and solve in each grid point for the pressure or the concentration, for the acoustic and diffusion process, respectively.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+But let's first look at the equation, augmenting the Table we just started to fill
+
+|  Physics       |  1D formulation |  2D formulation |
+| ------------:  | :-------------- | :-------------- |
+| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ | $$qx = -D\frac{∂C}{∂x}$$  $$qy = -D\frac{∂C}{∂y}$$  $$\frac{∂C}{∂t} = -\left(\frac{∂qx}{∂x} + \frac{∂qy}{∂y} \right)$$ |
+| Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |$$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$$  $$\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$$ |
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+For both physics
+- The fluxes which are directional or vector quantities have a new $y$-direction component
+- The balance equation or divergence, now include the sum of the flux balance from all dimensions
+
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Let's get started first with the diffusion equation, then the wave equation (as homework).
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+To dos:
+- Add $y$-direction physics and numerics
+- Update time step definition
+- Update initial Gaussian condition
+- Initialise all new arrays
+- Update physics calculations in the time loop
+- Update plotting
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### $y$-direction physics and numerics
+
+You can make multi-statement lines for scalars:
+
+```julia
+Lx, Ly = 10.0, 10.0
+```
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+### Time step definition
+
+Take now the most restrictive condition, e.g.:
+
+```julia
+dt = min(dx, dy)/...
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### 2D plotting
+
+You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
+
+```julia
+heatmap(xc, yc, C')
+```
+_note the transpose `'`_
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+More advanced implementation, one can define the plotting options and apply them in the `heatmap` call:
+
+```julia
+opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
+display(heatmap(xc, yc, C'; opts...))
+```
+"""
+
+#sol #md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
