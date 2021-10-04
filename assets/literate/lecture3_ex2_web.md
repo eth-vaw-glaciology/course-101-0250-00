@@ -10,7 +10,7 @@ The goal of this exercise is to:
 
 In this second exercise, you will implement a more concise version of the 2D wave equation.
 
-Start from the 2D wave equation code from exercise 1, and reformulat the physics calculation without the explicit definition of the $q_x, q_y$ terms; only use velocities and pressure.
+Start from the 2D wave equation code from exercise 1, and reformulat the physics calculation without the explicit definition of the $q_x, q_y$ terms; only use velocities $V_x, V_y$ and pressure $P$.
 
 ### Task 1
 
