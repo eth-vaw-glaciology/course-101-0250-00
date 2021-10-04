@@ -29,9 +29,9 @@ showall = false
 
 [⤴ _**back to Content**_](#content)
 
-\literate{/_literate/l3_2-repl-pkg.jl}
+<!-- \literate{/_literate/l3_2-repl-pkg_web.jl} -->
 
-[⤴ _**back to Content**_](#content)
+<!-- [⤴ _**back to Content**_](#content) -->
 
 # Exercises - lecture 3
 
