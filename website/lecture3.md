@@ -11,8 +11,9 @@ showall = false
 > :books: acoustic wave propagation, 1D to 2D\
 > :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
-> - acoustic vs diffusion
-> - 1D vs 2D
+> - acoustic 2D (3 implementations)
+> - Earthquakes and seismic inversion
+> - ...
 
 --- 
 
@@ -25,9 +26,9 @@ showall = false
 
 ---
 
-<!-- \literate{/_literate/l3_1-physics_web.jl} -->
+\literate{/_literate/l3_1-physics_web.jl}
 
-<!-- [⤴ _**back to Content**_](#content) -->
+[⤴ _**back to Content**_](#content)
 
 <!-- \literate{/_literate/l3_2-repl-pkg.jl} -->
 

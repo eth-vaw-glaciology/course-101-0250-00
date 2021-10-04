@@ -249,7 +249,7 @@ For both physics
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Let's get started first with the diffusion equation, then the wave equation.
+Let's get started first with the diffusion equation, then the wave equation (as homework).
 """
 
 #src #########################################################################
@@ -309,15 +309,6 @@ opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0
 display(heatmap(xc, yc, C'; opts...))
 ```
 """
-
-
-
-
-
-
-
-
-
 
 
 

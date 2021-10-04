@@ -1,8 +1,8 @@
 using Literate
 ## include Literate scripts starting with following 2 letters in the deploy
-incl = "l2"
+incl = "l3_1"
 ## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
-sol = true
+sol = false
 ##
 
 function replace_string(str)
