@@ -98,7 +98,7 @@ where
 md"""
 Our first task will be to modify the diffusion equation from lecture 2 ...
 
-![diffusion](../assets/literate_figures/diffusion1D.gif)
+![diffusion](../assets/literate_figures/diffusion_0.gif)
 """
 
 #src #########################################################################
@@ -106,7 +106,7 @@ Our first task will be to modify the diffusion equation from lecture 2 ...
 md"""
 ... in order to obtain and implement the acoustic wave equation
 
-![diffusion](../assets/literate_figures/acoustic1D.gif)
+![acoustic](../assets/literate_figures/acoustic_1.gif)
 """
 
 #src #########################################################################
@@ -311,5 +311,12 @@ display(heatmap(xc, yc, C'; opts...))
 """
 
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+That's how the 2D diffusion looks like:
+
+![diffusion](../assets/literate_figures/diffusion_2D_0.gif)
+"""
 
 

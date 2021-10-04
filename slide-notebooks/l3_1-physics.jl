@@ -98,7 +98,7 @@ where
 md"""
 Our first task will be to modify the diffusion equation from lecture 2 ...
 
-![diffusion](./figures/diffusion1D.gif)
+![diffusion](./figures/diffusion_0.gif)
 """
 
 #src #########################################################################
@@ -106,7 +106,7 @@ Our first task will be to modify the diffusion equation from lecture 2 ...
 md"""
 ... in order to obtain and implement the acoustic wave equation
 
-![diffusion](./figures/acoustic1D.gif)
+![acoustic](./figures/acoustic_1.gif)
 """
 
 #src #########################################################################
@@ -316,5 +316,12 @@ display(heatmap(xc, yc, C'; opts...))
 ```
 """
 
-#sol #md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
+#sol #md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+That's how the 2D diffusion looks like:
+
+![diffusion](./figures/diffusion_2D_0.gif)
+"""
