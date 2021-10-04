@@ -93,7 +93,7 @@ $$ \frac{∂V_x}{∂t} = q_x,$$
 
 Let's get started with this. We will do this exercise in a Julia standalone script and run it in from REPL using your local Julia install.
 
-It's time to launch Julia on your computer 🚀
+**It's time to launch Julia on your computer** 🚀
 
 We can start modifying the diffusion code's, adding `ρ` and `K` and changing `ttot=20` in `# Physics`, and taking a Gaussian (centred in `Lx/2`, `σ=1`) as initial condition for the pressure `P`
 
@@ -130,9 +130,11 @@ P[2:end-1] .= P[2:end-1] ...
 Comparing diffusive and wave physics, we can summarise following:
 
 |  Physics        |  1D formulation |
-|  ------------:  | :-------------  |
-| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ |
-| Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |
+| :------------:  | :-------------: |
+| Diffusion      | $q_x = -D\frac{∂C}{∂x}$ |
+|                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ |
+| Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
+|                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$ |
 
 ## From 1D to 2D
 
@@ -142,10 +144,14 @@ We want the $x$ and $y$ axis to represent spatial extend, and solve in each grid
 
 But let's first look at the equation, augmenting the Table we just started to fill
 
-|  Physics       |  1D formulation |  2D formulation |
-| ------------:  | :-------------- | :-------------- |
-| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ | $$qx = -D\frac{∂C}{∂x}$$  $$qy = -D\frac{∂C}{∂y}$$  $$\frac{∂C}{∂t} = -\left(\frac{∂qx}{∂x} + \frac{∂qy}{∂y} \right)$$ |
-| Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |$$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$$  $$\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$$ |
+|  Physics       |  1D formulation  |  2D formulation  |
+| :------------: | :--------------: | :--------------: |
+| Diffusion      | $q_x = -D\frac{∂C}{∂x}$            | $q_x = -D\frac{∂C}{∂x}$ |
+|                |                                    | $q_y = -D\frac{∂C}{∂y}$ |
+|                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ | $\frac{∂C}{∂t} = -\left(\frac{∂q_x}{∂x} + \frac{∂q_y}{∂y} \right)$ |
+| Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
+|                |                                                | $\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$ |
+|                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$           | $\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$ |
 
 For both physics
 - The fluxes which are directional or vector quantities have a new $y$-direction component
@@ -153,7 +159,7 @@ For both physics
 
 Let's get started first with the diffusion equation, then the wave equation (as homework).
 
-To dos:
+### To dos:
 - Add $y$-direction physics and numerics
 - Update time step definition
 - Update initial Gaussian condition
@@ -161,7 +167,7 @@ To dos:
 - Update physics calculations in the time loop
 - Update plotting
 
-### $y$-direction physics and numerics
+#### $y$-direction physics and numerics
 
 You can make multi-statement lines for scalars:
 
@@ -169,7 +175,7 @@ You can make multi-statement lines for scalars:
 Lx, Ly = 10.0, 10.0
 ```
 
-### Time step definition
+#### Time step definition
 
 Take now the most restrictive condition, e.g.:
 
@@ -177,7 +183,7 @@ Take now the most restrictive condition, e.g.:
 dt = min(dx, dy)/...
 ```
 
-### 2D plotting
+#### 2D plotting
 
 You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
 
