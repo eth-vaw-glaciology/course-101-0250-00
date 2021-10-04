@@ -35,12 +35,26 @@ showall = false
 
 # Exercises - lecture 3
 
-<!-- \literate{/_literate/lecture3_ex1_web.jl} -->
+\warn{Starting from this week's lecture 3, all exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
-<!-- [⤴ _**back to Content**_](#content) -->
+\literate{/_literate/lecture3_ex1_web.jl}
+
+[⤴ _**back to Content**_](#content)
 
 ---
 
-<!-- \literate{/_literate/lecture3_ex2_web.jl} -->
+\literate{/_literate/lecture3_ex2_web.jl}
 
-<!-- [⤴ _**back to Content**_](#content) -->
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture3_ex3_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture3_ex4_web.jl}
+
+[⤴ _**back to Content**_](#content)

@@ -314,6 +314,18 @@ dt = min(dx, dy)/...
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+#### Initialise arrays
+
+Recall that we are using conservative finite-differences and thus a _staggered grid_.
+
+For 2D grids, we will have to handle scalar quantity and two fluxes as depicted below, taking care about correct staggering:
+
+![staggered-grid](./figures/stagg_2D.png)
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 #### 2D plotting
 
 You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
