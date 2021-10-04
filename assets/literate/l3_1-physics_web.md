@@ -55,11 +55,11 @@ where
 
 Our first task will be to modify the diffusion equation from lecture 2 ...
 
-![diffusion](../assets/literate_figures/diffusion1D.gif)
+![diffusion](../assets/literate_figures/diffusion_0.gif)
 
 ... in order to obtain and implement the acoustic wave equation
 
-![diffusion](../assets/literate_figures/acoustic1D.gif)
+![acoustic](../assets/literate_figures/acoustic_1.gif)
 
 ### From diffusion to acoustic wave
 
@@ -192,4 +192,8 @@ More advanced implementation, one can define the plotting options and apply them
 opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
 display(heatmap(xc, yc, C'; opts...))
 ```
+
+That's how the 2D diffusion looks like:
+
+![diffusion](../assets/literate_figures/diffusion_2D_0.gif)
 
