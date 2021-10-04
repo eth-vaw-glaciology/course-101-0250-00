@@ -59,7 +59,7 @@ $$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
 
 $$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
 
-where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances).
+where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances). The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
 """
 
 #src #########################################################################
@@ -114,12 +114,12 @@ md"""
 md"""
 ### From diffusion to acoustic wave
 
-We won't implement first the hyperbolic equation as introduced, but rather start from a flux / update formulation, as we used to implement for the diffusion equation.
+We won't implement first the hyperbolic equation as introduced, but rather start from a flux/update formulation, as we used to implement for the diffusion equation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-To this end, we can thus rewrite the second order wave equation
+To this end, we can rewrite the second order wave equation
 
 $$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
 
@@ -156,7 +156,7 @@ $$ \frac{∂V_x}{∂t} = q_x,$$
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Let's get started with this. We will do this exercise in a Julia standalone script and run it in from REPL using your local Julia install.
+Let's get started with this. We will do this exercise in a Julia standalone script and run it in from the REPL using the local Julia install.
 
 **It's time to launch Julia on your computer** 🚀
 """
@@ -261,7 +261,7 @@ But let's first look at the equation, augmenting the Table we just started to fi
 md"""
 For both physics
 - The fluxes which are directional or vector quantities have a new $y$-direction component
-- The balance equation or divergence, now include the sum of the flux balance from all dimensions
+- The balance equation or divergence, now balances the sum of the fluxes from all dimensions
 
 """
 
@@ -328,11 +328,13 @@ You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function o
 heatmap(xc, yc, C')
 ```
 _note the transpose `'`_
+
+Use `display()` to force the display of the plot, e.g., in the time loop every `nout`.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-More advanced implementation, one can define the plotting options and apply them in the `heatmap` call:
+More advanced implementation, one can define the plotting options and apply them in the `heatmap()` call:
 
 ```julia
 opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
