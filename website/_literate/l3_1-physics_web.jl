@@ -158,7 +158,7 @@ $$ \frac{∂V_x}{∂t} = q_x,$$
 md"""
 Let's get started with this. We will do this exercise in a Julia standalone script and run it in from REPL using your local Julia install.
 
-It's time to launch Julia on your computer 🚀
+**It's time to launch Julia on your computer** 🚀
 """
 
 #src #########################################################################
@@ -207,12 +207,19 @@ P[2:end-1] .= P[2:end-1] ...
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Comparing diffusive and wave physics, we can summarise following:
-
-|  Physics        |  1D formulation |
-|  ------------:  | :-------------  |
-| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ |
-| Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |
 """
+
+#!nb # |  Physics        |  1D formulation |
+#!nb # | :------------:  | :-------------: |
+#!nb # | Diffusion      | $q_x = -D\frac{∂C}{∂x}$ |
+#!nb # |                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ |
+#!nb # | Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
+#!nb # |                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$ |
+
+#nb # |  Physics        |  1D formulation |
+#nb # |  ------------:  | :-------------  |
+#nb # | Diffusion      | $$q_x = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$$ |
+#nb # | Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -231,12 +238,23 @@ We want the $x$ and $y$ axis to represent spatial extend, and solve in each grid
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 But let's first look at the equation, augmenting the Table we just started to fill
-
-|  Physics       |  1D formulation |  2D formulation |
-| ------------:  | :-------------- | :-------------- |
-| Diffusion      | $$qx = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂qx}{∂x}$$ | $$qx = -D\frac{∂C}{∂x}$$  $$qy = -D\frac{∂C}{∂y}$$  $$\frac{∂C}{∂t} = -\left(\frac{∂qx}{∂x} + \frac{∂qy}{∂y} \right)$$ |
-| Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |$$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$$  $$\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$$ |
 """
+
+#!nb # |  Physics       |  1D formulation  |  2D formulation  |
+#!nb # | :------------: | :--------------: | :--------------: |
+#!nb # | Diffusion      | $q_x = -D\frac{∂C}{∂x}$            | $q_x = -D\frac{∂C}{∂x}$ |
+#!nb # |                |                                    | $q_y = -D\frac{∂C}{∂y}$ |
+#!nb # |                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ | $\frac{∂C}{∂t} = -\left(\frac{∂q_x}{∂x} + \frac{∂q_y}{∂y} \right)$ |
+#!nb # | Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
+#!nb # |                |                                                | $\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$ |
+#!nb # |                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$           | $\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$ |
+
+
+#nb # |  Physics       |  1D formulation |  2D formulation |
+#nb # | ------------:  | :-------------- | :-------------- |
+#nb # | Diffusion      | $$q_x = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$$ | $$q_x = -D\frac{∂C}{∂x}$$  $$q_y = -D\frac{∂C}{∂y}$$  $$\frac{∂C}{∂t} = -\left(\frac{∂q_x}{∂x} + \frac{∂q_y}{∂y} \right)$$ |
+#nb # | Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |$$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$$  $$\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$$ |
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -255,7 +273,7 @@ Let's get started first with the diffusion equation, then the wave equation (as 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To dos:
+### To dos:
 - Add $y$-direction physics and numerics
 - Update time step definition
 - Update initial Gaussian condition
@@ -267,7 +285,7 @@ To dos:
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### $y$-direction physics and numerics
+#### $y$-direction physics and numerics
 
 You can make multi-statement lines for scalars:
 
@@ -278,7 +296,7 @@ Lx, Ly = 10.0, 10.0
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-### Time step definition
+#### Time step definition
 
 Take now the most restrictive condition, e.g.:
 
@@ -290,7 +308,7 @@ dt = min(dx, dy)/...
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### 2D plotting
+#### 2D plotting
 
 You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
 
