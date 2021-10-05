@@ -25,8 +25,7 @@ md"""
 The wave equation is a second-order partial differential equation.
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 ![acoustic wave](../assets/literate_figures/acoustic2D_2.gif)
 """
@@ -349,6 +348,13 @@ md"""
 That's how the 2D diffusion looks like:
 
 ![diffusion](../assets/literate_figures/diffusion_2D_1.gif)
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Let's get started with 2D.
+
+**It's time to launch Julia on your computer** 🚀
 """
 
 
