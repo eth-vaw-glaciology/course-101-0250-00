@@ -107,7 +107,7 @@ K     = 1.0
 ttot  = 20.0
 
 # Derived numerics
-P     =  exp.(.-(xc .- Lx/2).^2)
+P     =  exp.(...)
 ```
 
 Note that the time step needs a new definition: `dt = dx/sqrt(K/ρ)/2.1`
@@ -123,13 +123,11 @@ C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
 Should be modified to account for pressure `P` instead of concentration `C`, the flux update (`Vx`) added, and the coefficients modified:
 
 ```julia
-qx         .= .-1.0/ρ.*diff(P )./dx
-Vx         .= Vx         .+ dt.*qx
-dPdt       .= .-    K.*diff(Vx)./dx
-P[2:end-1] .= P[2:end-1] .+ dt.*dPdt
+qx         .= .-1.0/ρ.*diff(...)./dx
+Vx         .= ...
+dPdt       .= ...
+P[2:end-1] .= P[2:end-1] ...
 ```
-
-👉 [Download the `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
 Comparing diffusive and wave physics, we can summarise following:
 
@@ -222,6 +220,4 @@ Let's get started with 2D.
 **It's time to launch Julia on your computer** 🚀
 
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
-
-👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
