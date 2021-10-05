@@ -158,6 +158,8 @@ md"""
 Let's get started with this. We will do this exercise in a Julia standalone script and run it in from the REPL using the local Julia install.
 
 **It's time to launch Julia on your computer** 🚀
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
 
 #src #########################################################################
@@ -341,7 +343,6 @@ display(heatmap(xc, yc, C'; opts...))
 ```
 """
 
-
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -355,6 +356,9 @@ md"""
 Let's get started with 2D.
 
 **It's time to launch Julia on your computer** 🚀
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
+
 
 
