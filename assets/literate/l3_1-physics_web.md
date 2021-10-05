@@ -193,7 +193,7 @@ For 2D grids, we will have to handle scalar quantity and two fluxes as depicted 
 
 #### 2D plotting
 
-You can use `heatmap()` function from `PLots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
+You can use `heatmap()` function from `Plots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
 
 ```julia
 heatmap(xc, yc, C')

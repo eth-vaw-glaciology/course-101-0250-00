@@ -19,7 +19,7 @@ P[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span c
 <p>For 2D grids, we will have to handle scalar quantity and two fluxes as depicted below, taking care about correct staggering:</p>
 <p><img src="../assets/literate_figures/stagg_2D.png" alt=staggered-grid  /></p>
 <h4 id=2d_plotting ><a href="#2d_plotting" class=header-anchor >2D plotting</a></h4>
-<p>You can use <code>heatmap&#40;&#41;</code> function from <code>PLots.jl</code>, to plot e.g. <code>C</code> as function of the spatial coordinates <code>xc</code> and <code>yc</code>:</p>
+<p>You can use <code>heatmap&#40;&#41;</code> function from <code>Plots.jl</code>, to plot e.g. <code>C</code> as function of the spatial coordinates <code>xc</code> and <code>yc</code>:</p>
 <pre><code class="julia hljs">heatmap(xc, yc, C&#x27;)</code></pre>
 <p><em>note the transpose <code>&#39;</code></em></p>
 <p>Use <code>display&#40;&#41;</code> to force the display of the plot, e.g., in the time loop every <code>nout</code>.</p>
