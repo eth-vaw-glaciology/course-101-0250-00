@@ -40,7 +40,7 @@ md"""
 md"""
 The hyperbolic equation reads
 
-$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~, $$
+$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~,$$
 
 where
 - $u$ is pressure, displacement (or another scalar quantity)
