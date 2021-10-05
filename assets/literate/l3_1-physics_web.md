@@ -213,3 +213,7 @@ That's how the 2D diffusion looks like:
 
 ![diffusion](../assets/literate_figures/diffusion_2D_1.gif)
 
+Let's get started with 2D.
+
+**It's time to launch Julia on your computer** 🚀
+
