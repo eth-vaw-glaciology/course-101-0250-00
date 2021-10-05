@@ -65,13 +65,13 @@ where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillation
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-_Note on classification of PDEs:_
-- **Elliptic:**\
-  $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
-- **Parabolic:**\
-  $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
-- **Hyperbolic:**\
-  $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
+> _**Note on classification of PDEs:**_
+> - **Elliptic:**\
+>   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+> - **Parabolic:**\
+>   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+> - **Hyperbolic:**\
+>   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
 """
 
 #src #########################################################################
