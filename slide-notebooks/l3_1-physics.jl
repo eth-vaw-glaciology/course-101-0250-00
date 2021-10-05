@@ -355,5 +355,5 @@ display(heatmap(xc, yc, C'; opts...))
 md"""
 That's how the 2D diffusion looks like:
 
-![diffusion](./figures/diffusion_2D_0.gif)
+![diffusion](./figures/diffusion_2D_1.gif)
 """

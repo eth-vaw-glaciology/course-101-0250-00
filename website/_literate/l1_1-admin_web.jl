@@ -90,3 +90,5 @@ _This is the first time we run this course, things will be missing!_  Help is ap
 > **Suggestion:**\
 > Bookmark [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 """
+
+
