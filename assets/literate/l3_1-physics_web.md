@@ -33,13 +33,13 @@ $$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
 
 where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances). The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
 
-_Note on classification of PDEs:_
-- **Elliptic:**\
-  $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
-- **Parabolic:**\
-  $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
-- **Hyperbolic:**\
-  $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
+> _**Note on classification of PDEs:**_
+> - **Elliptic:**\
+>   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+> - **Parabolic:**\
+>   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+> - **Hyperbolic:**\
+>   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
 
 ### Back to the wave equation
 
