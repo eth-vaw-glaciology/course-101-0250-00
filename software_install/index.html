@@ -37,6 +37,53 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
 <p>here passing the <code>-O3</code> optimisation flag, and the Julia <code>--check-bounds</code> flag set to <code>no</code> in order to deactivate out-of-bound checking.</p>
 <h3 id=package_manager ><a href="#package_manager" class=header-anchor >Package manager</a></h3>
 <p>The <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode">Pkg mode</a> permits you to install and manage Julia packages, and control the project&#39;s environment.</p>
+<p>Environments or Projects are an efficient way that enable portability and reproducibility. Upon activating a local environment, you generate a local <code>Project.toml</code> file that stores the packages and version you are using within a specific project &#40;code-s&#41;, and a <code>Manifest.toml</code> file that keeps track locally of the state of the environment. </p>
+<p>To activate an project-specific environment, navigate to your targeted project folder, launch Julia</p>
+<pre><code class="sh hljs">mkdir my_cool_project
+<span class=hljs-built_in >cd</span> my_cool_project 
+julia</code></pre>
+<p>and activate it</p>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(@v1.6) pkg&gt;</span> 
+
+<span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
+  Activating new environment at `~/my_cool_project/Project.toml`
+
+<span class=hljs-metap>(my_cool_project) pkg&gt;</span></code></pre>
+<p>Then, let&#39;s install the <code>Plots.jl</code> package</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(my_cool_project) pkg&gt;</span> add Plots</code></pre>
+<p>and check the status</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(my_cool_project) pkg&gt;</span> st
+      Status `~/my_cool_project/Project.toml`
+  [91a5bcdd] Plots v1.22.3</code></pre>
+<p>as well as the <code>.toml</code> files</p>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ;
+</span>
+<span class=hljs-metas>shell&gt;</span> ls
+Manifest.toml Project.toml</code></pre>
+<p>We can now load <code>Plots.jl</code> and plot some random noise</p>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> Plots
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=language-julia > heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number >10</span>))</span></code></pre>
+<p>Let&#39;s assume you&#39;re handed your <code>my_cool_project</code> to someone to reproduce your cool random plot. To do so, you can open julia from the <code>my_cool_project</code> folder with the <code>--project</code> option</p>
+<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> my_cool_project 
+julia --project</code></pre>
+<p>Or you can rather activate it afterwards</p>
+<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> my_cool_project 
+julia</code></pre>
+<p>and then,</p>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
+  Activating environment at `~/my_cool_project/Project.toml`
+
+<span class=hljs-metap>(my_cool_project) pkg&gt;</span> 
+
+<span class=hljs-metap>(my_cool_project) pkg&gt;</span> st
+      Status `~/my_cool_project/Project.toml`
+  [91a5bcdd] Plots v1.22.3</code></pre>
+<p>Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environemnt 🙂</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>

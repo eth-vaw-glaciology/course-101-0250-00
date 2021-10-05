@@ -17,7 +17,7 @@ The wave equation is a second-order partial differential equation.
 
 The hyperbolic equation reads
 
-$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~, $$
+$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~,$$
 
 where
 - $u$ is pressure, displacement (or another scalar quantity)
@@ -94,6 +94,8 @@ $$ \frac{∂V_x}{∂t} = q_x,$$
 Let's get started with this. We will do this exercise in a Julia standalone script and run it in from the REPL using the local Julia install.
 
 **It's time to launch Julia on your computer** 🚀
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 
 We can start modifying the diffusion code's, adding `ρ` and `K` and changing `ttot=20` in `# Physics`, and taking a Gaussian (centred in `Lx/2`, `σ=1`) as initial condition for the pressure `P`
 
@@ -216,4 +218,6 @@ That's how the 2D diffusion looks like:
 Let's get started with 2D.
 
 **It's time to launch Julia on your computer** 🚀
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 
