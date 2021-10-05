@@ -87,3 +87,5 @@ I have installed in my global environment:
 - [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
   To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
 """
+
+
