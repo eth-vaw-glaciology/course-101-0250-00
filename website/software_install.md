@@ -105,7 +105,77 @@ here passing the `-O3` optimisation flag, and the Julia `--check-bounds` flag se
 ### Package manager
 The [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) permits you to install and manage Julia packages, and control the project's environment.
 
+Environments or Projects are an efficient way that enable portability and reproducibility. Upon activating a local environment, you generate a local `Project.toml` file that stores the packages and version you are using within a specific project (code-s), and a `Manifest.toml` file that keeps track locally of the state of the environment. 
 
+To activate an project-specific environment, navigate to your targeted project folder, launch Julia
+```sh
+mkdir my_cool_project
+cd my_cool_project 
+julia
+```
+and activate it
+
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> 
+
+(@v1.6) pkg> activate .
+  Activating new environment at `~/my_cool_project/Project.toml`
+
+(my_cool_project) pkg> 
+```
+
+Then, let's install the `Plots.jl` package
+```julia-repl
+(my_cool_project) pkg> add Plots
+```
+and check the status
+```julia-repl
+(my_cool_project) pkg> st
+      Status `~/my_cool_project/Project.toml`
+  [91a5bcdd] Plots v1.22.3
+```
+as well as the `.toml` files
+```julia-repl
+julia> ;
+
+shell> ls
+Manifest.toml Project.toml
+```
+We can now load `Plots.jl` and plot some random noise
+```julia-repl
+julia> using Plots
+
+julia> heatmap(rand(10,10))
+```
+
+Let's assume you're handed your `my_cool_project` to someone to reproduce your cool random plot. To do so, you can open julia from the `my_cool_project` folder with the `--project` option
+```sh
+cd my_cool_project 
+julia --project
+```
+
+Or you can rather activate it afterwards
+```sh
+cd my_cool_project 
+julia
+```
+and then,
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> activate .
+  Activating environment at `~/my_cool_project/Project.toml`
+
+(my_cool_project) pkg> 
+
+(my_cool_project) pkg> st
+      Status `~/my_cool_project/Project.toml`
+  [91a5bcdd] Plots v1.22.3
+```
+
+Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environemnt 🙂
 
 <!-- 
 ## Running the scripts
