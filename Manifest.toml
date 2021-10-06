@@ -280,9 +280,9 @@ version = "0.10.20"
 
 [[Franklin]]
 deps = ["Dates", "DelimitedFiles", "DocStringExtensions", "ExprTools", "FranklinTemplates", "HTTP", "Literate", "LiveServer", "Logging", "Markdown", "NodeJS", "OrderedCollections", "Pkg", "REPL", "Random"]
-git-tree-sha1 = "ca57f7e99cb91d90fa8f969bbc7ffda3b7e09a12"
+git-tree-sha1 = "6a4239afb856b0316afecd948c81677cfdd00673"
 uuid = "713c75ef-9fc9-4b05-94a9-213340da978e"
-version = "0.10.59"
+version = "0.10.60"
 
 [[FranklinTemplates]]
 deps = ["LiveServer"]
@@ -593,10 +593,10 @@ version = "0.3.3"
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
-deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "c2c1a765d943267ffc01fd6a127fcb482e80f63a"
+deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
+git-tree-sha1 = "5ffe9240d653a6ff8696f13a37d9b5bd361b3394"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.82"
+version = "0.12.83"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -770,9 +770,9 @@ version = "1.0.15"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "cfbd033def161db9494f86c5d18fbf874e09e514"
+git-tree-sha1 = "6841db754bd01a91d281370d9a0f8787e220ae08"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.22.3"
+version = "1.22.4"
 
 [[Polyester]]
 deps = ["ArrayInterface", "BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "ManualMemory", "PolyesterWeave", "Requires", "Static", "StrideArraysCore", "ThreadingUtilities"]
@@ -870,6 +870,12 @@ version = "0.3.0+0"
 
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+
+[[SIMDDualNumbers]]
+deps = ["ForwardDiff", "IfElse", "SLEEFPirates", "VectorizationBase"]
+git-tree-sha1 = "62c2da6eb66de8bb88081d20528647140d4daa0e"
+uuid = "3cdde19b-5bb0-4aaf-8931-af3e248e098b"
+version = "0.1.0"
 
 [[SIMDTypes]]
 git-tree-sha1 = "330289636fb8107c5f32088d2741e9fd7a061a5c"
