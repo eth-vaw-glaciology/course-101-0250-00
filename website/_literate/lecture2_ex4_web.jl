@@ -41,5 +41,5 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 For this week, edit the `README.md` of your private repository:
 - Add one or two description sentences in there (to get familiar with the Markdown syntax).
 - Then `commit` the change and `push` it.
-- Copy the commit hash (or HSA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) in the _git commit hash (HSA)_ activity.
+- Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) in the _git commit hash (SHA)_ activity.
 """
