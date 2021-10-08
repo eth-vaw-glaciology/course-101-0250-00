@@ -10,7 +10,6 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 > ⚠️ The requirement for a Covid certificate applies from Monday, 20 September 2021 for teachers and students. For further questions, please see the [Coronavirus FAQs for Students](https://ethz.ch/services/en/news-and-events/coronavirus/students.html).
 
-> ⚠️ The JupyterHub running on `achtzack01` will be disabled coming Thursday 7 Oct!
 
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
