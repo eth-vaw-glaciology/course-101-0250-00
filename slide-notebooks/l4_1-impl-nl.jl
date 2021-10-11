@@ -133,7 +133,7 @@ Let's assume we are interested in a steady-state reached by a time-dependent dif
 
 $$\frac{∂C}{∂t}=D~∇^2C~,$$
 
-for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turn into an elliptic PDE as $∂C/∂t → 0$,
+for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂C/∂t → 0$,
 
 $$0=D~∇^2C~.$$
 """
