@@ -60,6 +60,9 @@ display(plot(p1,p2, dpi=<span class=hljs-number >150</span>))</code></pre>
 <p>A non-damped wave equation &#40;hyperbolic PDE&#41; has the advantage of information travelling at <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant=normal >/</mi><mi>d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">1/dx</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mord >1</span><span class=mord >/</span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span></span></span></span>, and thus the method scales <strong>linearly</strong> with numerical resolution increase. However, it would never converge.</p>
 <p>The second order method is actually a damped wave equation; the damping introduces a dissipative term that will make it reach a steady state.</p>
 <p>We can now tune the damping parameter to minimise the iteration count, finding the sweet spot between slowly converging diffusion and non-dissipative waves.</p>
+<blockquote>
+<p>One classical reference to this method can be found in <a href="https://doi.org/10.2307/2002770">Frankel &#40;1950&#41;</a>, reported as <em><strong>the second order Richardson method</strong></em>.<br />In the coming weeks, a preprint will be available that further discuss the second-order method, also named <em><strong>pseudo-transient method</strong></em>.</p>
+</blockquote>
 <p>💻 Let&#39;s try it out. Starting from the <code>Laplacian.jl</code> script we just made, we&#39;ll turn it into a <code>Laplacian_damped.jl</code>.</p>
 <p>Changes include now the addition of an <code>order</code> flag, damping term, a wave-like time step definition</p>
 <pre><code class="julia hljs">order   = <span class=hljs-number >2</span>

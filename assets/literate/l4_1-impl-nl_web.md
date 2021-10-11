@@ -227,6 +227,9 @@ The second order method is actually a damped wave equation; the damping introduc
 
 We can now tune the damping parameter to minimise the iteration count, finding the sweet spot between slowly converging diffusion and non-dissipative waves.
 
+> One classical reference to this method can be found in [Frankel (1950)](https://doi.org/10.2307/2002770), reported as _**the second order Richardson method**_.\
+> In the coming weeks, a preprint will be available that further discuss the second-order method, also named _**pseudo-transient method**_.
+
 💻 Let's try it out. Starting from the `Laplacian.jl` script we just made, we'll turn it into a `Laplacian_damped.jl`.
 
 Changes include now the addition of an `order` flag, damping term, a wave-like time step definition
