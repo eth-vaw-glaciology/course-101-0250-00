@@ -72,7 +72,7 @@ Let's assume we are interested in a steady-state reached by a time-dependent dif
 
 $$\frac{∂C}{∂t}=D~∇^2C~,$$
 
-for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turn into an elliptic PDE as $∂C/∂t → 0$,
+for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂C/∂t → 0$,
 
 $$0=D~∇^2C~.$$
 
@@ -228,7 +228,7 @@ The second order method is actually a damped wave equation; the damping introduc
 We can now tune the damping parameter to minimise the iteration count, finding the sweet spot between slowly converging diffusion and non-dissipative waves.
 
 > One classical reference to this method can be found in [Frankel (1950)](https://doi.org/10.2307/2002770), reported as _**the second order Richardson method**_.\
-> In the coming weeks, a preprint will be available that further discuss the second-order method, also named _**pseudo-transient method**_.
+> In the coming weeks, a preprint will be available that further discusses the second-order method, also named _**pseudo-transient method**_, and the optimal damping parameter selection.
 
 💻 Let's try it out. Starting from the `Laplacian.jl` script we just made, we'll turn it into a `Laplacian_damped.jl`.
 
