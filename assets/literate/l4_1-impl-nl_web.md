@@ -260,3 +260,13 @@ Finally, we can verify that the second order method iteration count scales linea
 
 A couple of words about implicit, which is actually minimising all terms in the residual such that one has a "steady-state" to converge.
 
+# Julia's Project environment
+
+On GitHub, make sure to upload each of the exercises into a new folder specific to each week.
+
+This folder should be a Julia project, i.e. contain a `Project.toml` file.
+
+The `Manifest.toml` file could be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo.
+
+Any question?
+
