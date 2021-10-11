@@ -33,6 +33,8 @@ showall = false
 
 # Exercises - lecture 4
 
+\warn{Exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+
 <!-- \literate{/_literate/lecture4_ex1_web.jl}
 
 [⤴ _**back to Content**_](#content)
