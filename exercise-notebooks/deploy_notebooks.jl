@@ -1,6 +1,6 @@
 using Literate
 ## include Literate scripts starting with following letters in the deploy
-incl = "lecture3"
+incl = "lecture4"
 ##
 
 function replace_string(str)

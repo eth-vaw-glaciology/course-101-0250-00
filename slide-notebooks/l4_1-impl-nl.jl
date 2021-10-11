@@ -95,14 +95,18 @@ md"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#hint #nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
-#hint #md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
+#nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
+#md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
 #sol #md # The effective diffusion coefficient and time step definition can be implement as
 #sol #md #  ```julia
-#sol #md #  D .= (D0.*H).^n
-#sol #md #  dt = dx^2/maximum(D)/2.1
+#sol #md #  D  .= (D0.*H).^n
+#sol #md #  dt  = dx^2/maximum(D)/2.1
+#sol #md #  qx .= .-av(D)
 #sol #md #  ```
-#sol #md #  where `dt` must be placed inside the time loop.
+#sol #md #  where `dt` must be placed inside the time loop and `av` is the averaging function defined as
+#sol #md #  ```julia
+#sol #md #  @views av(A) = 0.5.*(A[1:end-1].+A[2:end])
+#sol #md #  ```
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
