@@ -11,8 +11,9 @@ showall = false
 > :books: Implicit and nonlinear solutions\
 > :computer: Julia's `Project` environment\
 > :construction: Exercises:
-> - ...
-> - ...
+> - nonlinear diffusion 2D
+> - Laplacian vs damped Laplacian
+> - steady-state implicit nonlinear diffusion 1D & 2D
 
 --- 
 
@@ -25,9 +26,9 @@ showall = false
 
 ---
 
-<!-- \literate{/_literate/l4_1-l4_1-impl-nl_web.jl}
+\literate{/_literate/l4_1-impl-nl_web.jl}
 
-[⤴ _**back to Content**_](#content) -->
+[⤴ _**back to Content**_](#content)
 
 
 # Exercises - lecture 4

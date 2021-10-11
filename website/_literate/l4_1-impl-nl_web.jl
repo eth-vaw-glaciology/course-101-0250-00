@@ -43,7 +43,7 @@ where $H$ could be the ice thickness and $n$ power-law exponent, as in depth-int
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![SIA](./figures/diffusion_nl_1D_1.gif)
+![SIA](../assets/literate_figures/diffusion_nl_1D_1.gif)
 
 > So-called depth-integrated or shallow approximation equations are, e.g., the shallow ice equations or the [shallow water equations](https://en.wikipedia.org/wiki/Shallow_water_equations)
 """
@@ -95,14 +95,8 @@ md"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#hint #nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
-#hint #md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
-#sol #md # The effective diffusion coefficient and time step definition can be implement as
-#sol #md #  ```julia
-#sol #md #  D .= (D0.*H).^n
-#sol #md #  dt = dx^2/maximum(D)/2.1
-#sol #md #  ```
-#sol #md #  where `dt` must be placed inside the time loop.
+#nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
+#md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -243,12 +237,9 @@ md"""
 and
 ```julia
 # Initial conditions
-#sol A       = zeros(Float64, nx,ny)
-#sol dAdt    = zeros(Float64, nx,ny)
-#sol A[2:end-1,2:end-1] .= rand(nx-2,ny-2)
-#hint A       = ...
-#hint dAdt    = ...
-#hint A[...] .= rand(...)
+A       = ...
+dAdt    = ...
+A[...] .= rand(...)
 ```
 """
 
@@ -260,7 +251,7 @@ To display the initial condition:
 display(heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny)))
 ```
 
-![init_rnd](./figures/init_rnd.png)
+![init_rnd](../assets/literate_figures/init_rnd.png)
 """
 
 #src #########################################################################
@@ -287,48 +278,38 @@ md"""
 errv = [] # storage for error
 # iteration loop
 for it = 1:niter
-#sol    dAdt[2:end-1,2:end-1] .= ( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 +
-#sol                               diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
-#sol    A                     .= A + dt*dAdt
-#hint    dAdt[...] .= ...
-#hint    A                     .= ...
+   dAdt[...] .= ...
+   A                     .= ...
     if it % nx == 0
         err = maximum(abs.(A)); push!(errv, err)
-#hint        # visualisation (error evol plot + heatmap(A))
-#sol        p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
-#sol                markershape=:circle, framestyle=:box, legend=false,
-#sol                xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
-#sol        p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
-#sol                   title="max(|A|)=$(round(err,sigdigits=3))")
-#sol        display(plot(p1,p2, dpi=150))
+       # visualisation (error evol plot + heatmap(A))
     end
 end
 ```
 """
 
 #src #########################################################################
-#hint #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#hint md"""
-#hint Hint for visualisation
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Hint for visualisation
 
-#hint ```julia
-#hint p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
-#hint         markershape=:circle, framestyle=:box, legend=false,
-#hint         xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
-#hint p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
-#hint            title="max(|A|)=$(round(err,sigdigits=3))")
-#hint display(plot(p1,p2, dpi=150))
-#hint ```
-#hint """
+```julia
+p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
+        markershape=:circle, framestyle=:box, legend=false,
+        xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
+p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
+           title="max(|A|)=$(round(err,sigdigits=3))")
+display(plot(p1,p2, dpi=150))
+```
+"""
 
-#sol #md # 👉 [Download the `Laplacian.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Running the `Laplacian.jl` code with `nx, ny = 50, 50` (thus `niter = 1000`) produces the following output
 
-![Laplacian2D](./figures/Laplacian2D.png)
+![Laplacian2D](../assets/literate_figures/Laplacian2D.png)
 """
 
 #src #########################################################################
@@ -412,23 +393,18 @@ dt      = dx/sqrt(D)/2.1
 
 and the second order pseudo-physics
 ```julia
-#sol dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1]*(1-dmp)*(order-1) + 
-#sol                          dt*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 +
-#sol                               diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
-#sol A                     .= A + dt*dAdt
-#hint dAdt[2:end-1,2:end-1] .= ... *(1-dmp)*(order-1) +
-#hint A                     .= ...
+dAdt[2:end-1,2:end-1] .= ... *(1-dmp)*(order-1) +
+A                     .= ...
 ```
 """
 
-#sol #md # 👉 [Download the `Laplacian_damped.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Running the `Laplacian_damped.jl` code with `nx, ny = 50, 50` (thus `niter = 1000`) produces the following output
 
-![Laplacian2D damped](./figures/Laplacian2D_damped.png)
+![Laplacian2D damped](../assets/literate_figures/Laplacian2D_damped.png)
 """
 
 #src #########################################################################
@@ -459,4 +435,6 @@ md"""
 
 A couple of words about implicit, which is actually minimising all terms in the residual such that one has a "steady-state" to converge.
 """
+
+
 
