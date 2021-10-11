@@ -380,7 +380,10 @@ We can now tune the damping parameter to minimise the iteration count, finding t
 
 > One classical reference to this method can be found in [Frankel (1950)](https://doi.org/10.2307/2002770), reported as _**the second order Richardson method**_.\
 > In the coming weeks, a preprint will be available that further discuss the second-order method, also named _**pseudo-transient method**_.
+"""
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 💻 Let's try it out. Starting from the `Laplacian.jl` script we just made, we'll turn it into a `Laplacian_damped.jl`.
 """
 
