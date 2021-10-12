@@ -461,6 +461,10 @@ $$C^{t+∆t}=C^{t} + ∆t~D~∇^2C^{t+∆t}~.$$
 md"""
 In the iterative framework we previously discussed, a solution of this physical time-dependent diffusion equation can be achieved by:
 - collecting all physical terms in the right-hand-side (spatial and temporal derivatives),
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 - augmenting the system, on the left-hand-side, by a numerical or pseudo-time integration $∂C/∂τ$:
 
 $$\frac{∂C}{∂τ}=-\frac{∂C}{∂t} + D~∇^2C~.$$
@@ -476,6 +480,16 @@ $$C^{τ+∆τ}=C^{τ} + ∆τ~\left( -\frac{C^{τ}-C^{t}}{∆t} + ~D~∇^2C^{τ}
 where $C^{τ} = C^{τ+∆τ} = C^{t+∆t}$ upon convergence, i.e., upon $∂C/∂τ → 0$.
 """
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+This approach is also known as the "dual-time stepping".
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # ### That's it for the "intro" part on iterative approaches to solve PDEs.
+#nb #
+#nb # 💻 Starting next week, we will port codes for (multi-) GPUs implementations
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -494,7 +508,5 @@ The `Manifest.toml` file could be kept local. An automated way of doing so is to
 
 Any question?
 """
-
-
 
 
