@@ -82,7 +82,7 @@ How to solve $0=D~∇^2C$ ?
 Use a direct sparse solver approach: build a system of linear equations in the form $A~x=b$, then apply the inverse of $A$, $A^{-1}$, on $b$ to retrieve $x$, the solution vector (you may be familiar with `x = A \ b`).
 
 #### Solution 2
-Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂A/∂t$ such that $∂A/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂A/∂t→0$.
+Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂x/∂t$ such that $∂x/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂x/∂t→0$.
 
 #### Pros and cons Solution 1 _(non-exhaustive)_
 
@@ -193,7 +193,7 @@ Running the `Laplacian.jl` code with `nx, ny = 50, 50` (thus `niter = 1000`) pro
 
 ![Laplacian2D](../assets/literate_figures/Laplacian2D.png)
 
-So over 2000 iterations, the magnitude of the error ($\max(|A|)$) only dropped about 1/2 an order of magnitude.
+So over 1000 iterations, the magnitude of the error ($\max(|A|)$) only dropped about 1/2 an order of magnitude.
 
 How can we improve this?
 
