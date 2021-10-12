@@ -18,13 +18,13 @@ where
 
 Cross-check that $c=\sqrt(K/ρ)$ and add `c` as new parameter to a `# Derived physics` section in the code.
 
-The challenge here is to implement the second order time derivtive of the pressure $P$. The second order time derivative expands as
+The challenge here is to implement the second order time derivative of the pressure $P$, which expands as
 
 $$  \frac{∂^2P}{∂t^2} = P^{t+∆t} - 2~P^{t} + P^{t-∆t}~,$$
 
-reason you actually need 3 explicit time integration layer, $P_\mathrm{new},~P_\mathrm{current},~P_\mathrm{old}$, updating $P_\mathrm{new}$ as from the two others and having your spatial derivatives done on $P_\mathrm{current}$.
+reason you actually need 3 explicit time integration layer, $P_\mathrm{new},~P_\mathrm{current},~P_\mathrm{old}$, updating $P_\mathrm{new}$ as from the two others and using $P_\mathrm{current}$ in the spatial derivatives.
 
-Also, initialise all 3 pressure arrays with the same Gaussian initial condition.
+Also, make sure to initialise all 3 pressure arrays with the same Gaussian initial condition.
 
 \note{You may need to use 3 arrays for the pressure update, `Pold`, `P` and `Pnew`; in `Pold` you can store the values at time `(it-1)`, while you can use the array `P` for holding current `(it)` pressure values and finally use `Pnew` for prediction at `(it+1)`. Don't forget to assign the appropriate updates at the end of the time loop.}
 
