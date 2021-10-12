@@ -275,6 +275,7 @@ $$C^{t+∆t}=C^{t} + ∆t~D~∇^2C^{t+∆t}~.$$
 
 In the iterative framework we previously discussed, a solution of this physical time-dependent diffusion equation can be achieved by:
 - collecting all physical terms in the right-hand-side (spatial and temporal derivatives),
+
 - augmenting the system, on the left-hand-side, by a numerical or pseudo-time integration $∂C/∂τ$:
 
 $$\frac{∂C}{∂τ}=-\frac{∂C}{∂t} + D~∇^2C~.$$
@@ -284,6 +285,8 @@ This system can now be solved using the second order method we previously introd
 $$C^{τ+∆τ}=C^{τ} + ∆τ~\left( -\frac{C^{τ}-C^{t}}{∆t} + ~D~∇^2C^{τ} \right)~,$$
 
 where $C^{τ} = C^{τ+∆τ} = C^{t+∆t}$ upon convergence, i.e., upon $∂C/∂τ → 0$.
+
+This approach is also known as the "dual-time stepping".
 
 # Julia's Project environment
 

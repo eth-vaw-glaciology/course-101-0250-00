@@ -26,9 +26,7 @@ Use these "radius" functions to set values of `D0` to 1.5 when smaller then 1.0.
 
 As boundary conditions, set `C=0.5` at $x=dx/2$ and `C=0.1` at $x=Lx-dx/2$. Implement a "no-flux" boundary condition ($∆C$ vanishes in the direction orthogonal to the boundary) at $y=dy/2$ and $y=Ly-dy/2$.
 
-You will adapt the parameters and the implementation. For the `# Physics`, set the total simulation time `ttot=200.0` and move the `D0` initialisation to the `# Array initialisation` section.
-
-\note{Take care to adapt the iterative time step condition for 2D diffusion and think about how to modify the `maxloc` function for 2D purposes.}
+\note{Take care to adapt the iterative time step condition for 2D diffusion and think about how to modify the `maxloc` function for 2D purposes, taking the local maximum amongst all 8 neighbours for each grid point.}
 
 Report graphically the distribution of concentration `C` as function of `x` and `y` using a heatmap plot, adding axes labels and title reporting time, iteration count and current error.
 
