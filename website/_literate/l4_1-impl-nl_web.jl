@@ -437,8 +437,45 @@ Finally, we can verify that the second order method iteration count scales linea
 md"""
 ## Implicit solutions
 
-A couple of words about implicit, which is actually minimising all terms in the residual such that one has a "steady-state" to converge.
+The usage of _implicit_ may be confusing as it often lacks of clear definition and context.
+
+In a physics-based PDE world, an _implicit solution_ most often refers to:
+- a time-independent solution (steady-state), or
+- a time-dependant solution where the spatial derivatives are evaluated for the new time integration layer one is actually solving for.
 """
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Achieving an implicit solution of following time-dependent diffusive (parabolic) PDE,
+
+$$\frac{∂C}{∂t}=D~∇^2C~,$$
+
+implies a time discretisation as
+
+$$C^{t+∆t}=C^{t} + ∆t~D~∇^2C^{t+∆t}~.$$
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+In the iterative framework we previously discussed, a solution of this physical time-dependent diffusion equation can be achieved by:
+- collecting all physical terms in the right-hand-side (spatial and temporal derivatives),
+- augmenting the system, on the left-hand-side, by a numerical or pseudo-time integration $∂C/∂τ$:
+
+$$\frac{∂C}{∂τ}=-\frac{∂C}{∂t} + D~∇^2C~.$$
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+This system can now be solved using the second order method we previously introduced, the physical time derivative acting as a reaction term with $∆t$ the physical time-step acting as a "reaction rate" analogous:
+
+$$C^{τ+∆τ}=C^{τ} + ∆τ~\left( -\frac{C^{τ}-C^{t}}{∆t} + ~D~∇^2C^{τ} \right)~,$$
+
+where $C^{τ} = C^{τ+∆τ} = C^{t+∆t}$ upon convergence, i.e., upon $∂C/∂τ → 0$.
+"""
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
