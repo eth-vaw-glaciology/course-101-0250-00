@@ -98,15 +98,17 @@ md"""
 #nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
 #md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
 #sol #md # The effective diffusion coefficient and time step definition can be implement as
-#sol #md #  ```julia
-#sol #md #  D  .= (D0.*H).^n
-#sol #md #  dt  = dx^2/maximum(D)/2.1
-#sol #md #  qx .= .-av(D)
-#sol #md #  ```
-#sol #md #  where `dt` must be placed inside the time loop and `av` is the averaging function defined as
-#sol #md #  ```julia
-#sol #md #  @views av(A) = 0.5.*(A[1:end-1].+A[2:end])
-#sol #md #  ```
+#sol #md # ```julia
+#sol #md # D  .= (D0.*H).^n
+#sol #md # dt  = dx^2/maximum(D)/2.1
+#sol #md # qx .= .-av(D)
+#sol #md # ```
+#sol #md # where `dt` must be placed inside the time loop and `av` is the averaging function defined as
+#sol #md # ```julia
+#sol #md # @views av(A) = 0.5.*(A[1:end-1].+A[2:end])
+#sol #md # ```
+
+#sol #md # 👉 [Download the `diffusion_nl_1D.jl` script.](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -135,29 +137,29 @@ md"""
 
 Let's assume we are interested in a steady-state reached by a time-dependent diffusive processes 
 
-$$\frac{∂C}{∂t}=D~∇^2C~,$$
+$$\frac{∂A}{∂t}=D~∇^2A~,$$
 
-for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂C/∂t → 0$,
+for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂A/∂t → 0$,
 
-$$0=D~∇^2C~.$$
+$$0=D~∇^2A~.$$
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-How to solve $0=D~∇^2C$ ?
+How to solve $0=D~∇^2 A$ ?
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### Solution 1
-Use a direct sparse solver approach: build a system of linear equations in the form $A~x=b$, then apply the inverse of $A$, $A^{-1}$, on $b$ to retrieve $x$, the solution vector (you may be familiar with `x = A \ b`).
+Use a direct sparse solver approach: build a system of linear equations in the form $K~a=b$, where $a$ is the solution vector ($A$ from the Laplacian notation) and $K$ the finite-difference coefficient matrix ($D~∇^2$), then apply the inverse of $K$, $K^{-1}$, on $b$ to retrieve $a$ (you may be familiar with `a = K \ b`).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 #### Solution 2
-Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂x/∂t$ such that $∂x/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂x/∂t→0$.
+Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂a/∂t$ such that $∂a/∂t=b - K~a$ and use it to iteratively reach the steady state, i.e. when $∂a/∂t→0$.
 """
 
 #src #########################################################################
@@ -421,7 +423,7 @@ dt      = dx/sqrt(D)/2.1
 and the second order pseudo-physics
 ```julia
 #sol dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1]*(1-dmp)*(order-1) .+ 
-#sol                          dt.*D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 +
+#sol                          dt.*D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
 #sol                                   diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
 #sol A                     .= A .+ dt.*dAdt
 #hint dAdt[2:end-1,2:end-1] .= ... .*(1-dmp).*(order-1) .+

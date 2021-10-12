@@ -97,6 +97,18 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
 #md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
+#md # The effective diffusion coefficient and time step definition can be implement as
+#md # ```julia
+#md # D  .= (D0.*H).^n
+#md # dt  = dx^2/maximum(D)/2.1
+#md # qx .= .-av(D)
+#md # ```
+#md # where `dt` must be placed inside the time loop and `av` is the averaging function defined as
+#md # ```julia
+#md # @views av(A) = 0.5.*(A[1:end-1].+A[2:end])
+#md # ```
+
+#md # 👉 [Download the `diffusion_nl_1D.jl` script.](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -125,29 +137,29 @@ md"""
 
 Let's assume we are interested in a steady-state reached by a time-dependent diffusive processes 
 
-$$\frac{∂C}{∂t}=D~∇^2C~,$$
+$$\frac{∂A}{∂t}=D~∇^2A~,$$
 
-for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂C/∂t → 0$,
+for time $t→∞$ (or $∂t→∞$). This parabolic PDE then turns into an elliptic PDE as $∂A/∂t → 0$,
 
-$$0=D~∇^2C~.$$
+$$0=D~∇^2A~.$$
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-How to solve $0=D~∇^2C$ ?
+How to solve $0=D~∇^2 A$ ?
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### Solution 1
-Use a direct sparse solver approach: build a system of linear equations in the form $A~x=b$, then apply the inverse of $A$, $A^{-1}$, on $b$ to retrieve $x$, the solution vector (you may be familiar with `x = A \ b`).
+Use a direct sparse solver approach: build a system of linear equations in the form $K~a=b$, where $a$ is the solution vector ($A$ from the Laplacian notation) and $K$ the finite-difference coefficient matrix ($D~∇^2$), then apply the inverse of $K$, $K^{-1}$, on $b$ to retrieve $a$ (you may be familiar with `a = K \ b`).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 #### Solution 2
-Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂x/∂t$ such that $∂x/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂x/∂t→0$.
+Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂a/∂t$ such that $∂a/∂t=b - K~a$ and use it to iteratively reach the steady state, i.e. when $∂a/∂t→0$.
 """
 
 #src #########################################################################
@@ -235,9 +247,9 @@ md"""
 and initial conditions
 ```julia
 # Initial conditions
-A       = ...
-dAdt    = ...
-A[...] .= rand(...)
+A       = zeros(Float64, nx,ny)
+dAdt    = zeros(Float64, nx,ny)
+A[2:end-1,2:end-1] .= rand(nx-2,ny-2)
 ```
 """
 
@@ -276,31 +288,26 @@ md"""
 errv = [] # storage for error
 # iteration loop
 for it = 1:niter
-   dAdt[...] .= ...
-   A         .= ...
+   dAdt[2:end-1,2:end-1] .= D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
+                                 diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
+   A                     .= A .+ dt.*dAdt
     if it % nx == 0
         err = maximum(abs.(A)); push!(errv, err)
-       # visualisation (error evol plot + heatmap(A))
+       p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
+               markershape=:circle, framestyle=:box, legend=false,
+               xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
+       p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
+                  title="max(|A|)=$(round(err,sigdigits=3))")
+       display(plot(p1,p2, dpi=150))
     end
 end
 ```
 """
 
 #src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Hint for visualisation
 
-```julia
-p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
-        markershape=:circle, framestyle=:box, legend=false,
-        xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
-p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
-           title="max(|A|)=$(round(err,sigdigits=3))")
-display(plot(p1,p2, dpi=150))
-```
-"""
 
+#md # 👉 [Download the `Laplacian.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -397,11 +404,14 @@ dt      = dx/sqrt(D)/2.1
 
 and the second order pseudo-physics
 ```julia
-dAdt[2:end-1,2:end-1] .= ... .*(1-dmp).*(order-1) .+
-A                     .= ...
+dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1]*(1-dmp)*(order-1) .+ 
+                         dt.*D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
+                                  diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
+A                     .= A .+ dt.*dAdt
 ```
 """
 
+#md # 👉 [Download the `Laplacian_damped.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
