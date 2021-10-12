@@ -18,15 +18,15 @@ However many interesting application may exhibit nonlinear behaviours, e.g.,
 
 $$\frac{∂H}{∂t}=\frac{∂}{∂x}\left(H^n\frac{∂H}{∂x}\right)~,$$
 
-where $H$ could be the ice thickness and $n$ power-law exponent, as in depth-integrated or shallow approximation (SIA).
+where $H$ could be the ice thickness and $n$ a power-law exponent ($n=3-5$), as in depth-integrated or shallow ice approximation (SIA) models:
 
 ![SIA](../assets/literate_figures/diffusion_nl_1D_1.gif)
 
 > So-called depth-integrated or shallow approximation equations are, e.g., the shallow ice equations or the [shallow water equations](https://en.wikipedia.org/wiki/Shallow_water_equations)
 
-Adding nonlinearities in the explicit time integration approach discussed until now is fairly straight forward.
+Adding nonlinearities in the explicit time integration approach is fairly straight forward.
 
-So let's turn the [linear 1D diffusion from lecture 2](/lecture2/#pdes_-_diffusion) into a shallow ice-like as push-up exercise.
+Let's turn the [linear 1D diffusion from lecture 2](/lecture2/#pdes_-_diffusion) into a shallow ice-like solver as push-up exercise.
 
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started.
 
@@ -38,9 +38,9 @@ into
 
 $$\frac{∂H}{∂t}=-\frac{∂}{∂x}\left(-D_H\frac{∂H}{∂x}\right)~,$$
 
-where $D_H = (D_0~H)^n$, the effective diffusion coefficient, and $H$ the, e.g., ice thickness.
+where $D_H = (D_0~H)^n$ is the effective diffusion coefficient, and $H$ the, e.g., the ice thickness.
 
-Starting from the linear 1D diffusion code, we need to
+Starting from the linear 1D diffusion code, we need to:
 - change `C` to `H`
 - implement the `H`-dependent diffusion coefficient
 - update `dt` definition
@@ -60,11 +60,11 @@ n    = 5
 
 Let's now discuss how to implement steady-state and implicit iterative solvers.
 
-But why ?
+_But why?_
 
-- One may only be interested in the final distribution, the "steady-state"
+- One may only be interested in the final distribution, or "steady-state".
 
-- Strong nonlinearities may not be captured with sufficient accuracy in explicit time integration
+- Strong nonlinearities may not be captured with sufficient accuracy in explicit time integration.
 
 ## Steady-state
 
@@ -84,9 +84,8 @@ Use a direct sparse solver approach: build a system of linear equations in the f
 #### Solution 2
 Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂A/∂t$ such that $∂A/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂A/∂t→0$.
 
-### Pros and cons (non-exhaustive)
+#### Pros and cons Solution 1 _(non-exhaustive)_
 
-#### Solution 1
 - +unconditionally stable
 - +insensitive to variation in material parameters (e.g. $D$)
 - +fast for "few" degrees of freedom (dofs)
@@ -94,9 +93,8 @@ Use an iterative matrix-free approach: introduce (or bring back) the transient t
 - -slow or impossible to apply to large systems (many dofs)
 - -complex to implement
 
-### Pros and cons (non-exhaustive)
+#### Pros and cons Solution 2 _(non-exhaustive)_
 
-#### Solution 2
 - +unconditionally stable for physical time (in the residual)
 - +simple to implement
 - +low memory usage linearly growing with problem size
@@ -104,8 +102,8 @@ Use an iterative matrix-free approach: introduce (or bring back) the transient t
 - -needs tuning of numerical parameters ($∂t$)
 - 👉 **needs second order implementation**
 
-### Investigating **solution 2**:
-- the limitations from the "naive" first order implementation and,
+### Investigating _Solution 2_:
+- the limitations from the "naive" first order implementation
 - the second order implementation and its benefits.
 
 We will first implement
@@ -128,7 +126,7 @@ end
 @time laplacian2D()
 ```
 
-We can add the following model configuration
+We can use the following model configuration
 
 ```julia
 fact    = 1
@@ -142,7 +140,7 @@ niter   = 20*nx
 dt      = dx^2/D/4.1
 ```
 
-and
+and initial conditions
 ```julia
 # Initial conditions
 A       = ...
@@ -172,7 +170,7 @@ errv = [] # storage for error
 # iteration loop
 for it = 1:niter
    dAdt[...] .= ...
-   A                     .= ...
+   A         .= ...
     if it % nx == 0
         err = maximum(abs.(A)); push!(errv, err)
        # visualisation (error evol plot + heatmap(A))
@@ -197,15 +195,15 @@ Running the `Laplacian.jl` code with `nx, ny = 50, 50` (thus `niter = 1000`) pro
 
 So over 2000 iterations, the magnitude of the error ($\max(|A|)$) only dropped about 1/2 an order of magnitude.
 
-How can we improve this ?
+How can we improve this?
 
 👉 **One needs a second order implementation**
 
-The goal is to reach a steady-state, we seek the left-hand-side of the "numerical" parabolic equation
+The goal is to reach a steady-state, we thus seek the left-hand-side of the "numerical" parabolic equation
 
 $$\frac{∂A}{∂t}=D~∇^2A~,$$
 
-to vanish upon convergence, i.e., $∂A/∂t→0$. To this end, we are free to any additional terms as long as they will also tend towards 0 with iterations.
+to vanish upon convergence, i.e., $∂A/∂t→0$. To this end, we are free to add any additional terms as long as they will also tend towards 0 with iterations.
 
 We could thus add a second order term:
 
@@ -213,26 +211,26 @@ $$\frac{∂^2A}{∂t^2} + α \frac{∂A}{∂t}=D~∇^2A~,$$
 
 where $α$ is a numerical parameter to optimise.
 
-Adding specifically this second order term makes the parabolic PDE to switch to an hyperbolic system, i.e., as for acoustic wave propagation.
+Adding specifically this second order term makes the parabolic PDE to switch to an hyperbolic system, e.g., the acoustic wave propagation.
 
 Even better, we actually have now a **damped wave equation**!
 
 _So what's exciting about it?_
 
-The first order method, a diffusion-like process (parabolic PDE), converges really slowly because the speed at which information travels during smoothing steps is limited by the diffusive CFL, $1/dx^2$. This limitation will also make the method scale **quadratically** with numerical resolution increase.
+The first order method, a diffusion-like process (parabolic PDE), converges really slowly because the speed at which information travels during smoothing steps is limited by the diffusive CFL, function of $1/dx^2$. This limitation will also make the method scale **quadratically** with numerical resolution increase.
 
-A non-damped wave equation (hyperbolic PDE) has the advantage of information travelling at $1/dx$, and thus the method scales **linearly** with numerical resolution increase. However, it would never converge.
+A non-damped wave equation (hyperbolic PDE) features information travelling using the wave CFL, functrion of $1/dx$, and thus the method could scale **linearly** with numerical resolution increase. However, it would never converge.
 
-The second order method is actually a damped wave equation; the damping introduces a dissipative term that will make it reach a steady state.
+The second order method is actually a damped wave equation; the damping introduces a dissipative term that allows to reach a steady state.
 
 We can now tune the damping parameter to minimise the iteration count, finding the sweet spot between slowly converging diffusion and non-dissipative waves.
 
 > One classical reference to this method can be found in [Frankel (1950)](https://doi.org/10.2307/2002770), reported as _**the second order Richardson method**_.\
-> In the coming weeks, a preprint will be available that further discusses the second-order method, also named _**pseudo-transient method**_, and the optimal damping parameter selection.
+> In the coming weeks, a preprint will be made available that further discusses the second-order method, also named _**pseudo-transient method**_, and the optimal damping parameter selection.
 
 💻 Let's try it out. Starting from the `Laplacian.jl` script we just made, we'll turn it into a `Laplacian_damped.jl`.
 
-Changes include now the addition of an `order` flag, damping term, a wave-like time step definition
+Changes include now the addition of an `order` flag, damping term `dmp`, a wave-like time step definition,
 ```julia
 order   = 2
 dmp     = 2.0/nx
@@ -241,7 +239,7 @@ dt      = dx/sqrt(D)/2.1
 
 and the second order pseudo-physics
 ```julia
-dAdt[2:end-1,2:end-1] .= ... *(1-dmp)*(order-1) +
+dAdt[2:end-1,2:end-1] .= ... .*(1-dmp).*(order-1) .+
 A                     .= ...
 ```
 
@@ -249,11 +247,11 @@ Running the `Laplacian_damped.jl` code with `nx, ny = 50, 50` (thus `niter = 100
 
 ![Laplacian2D damped](../assets/literate_figures/Laplacian2D_damped.png)
 
-So over 2000 iterations, the magnitude of the error ($\max(|A|)$) now dropped about 8 orders of magnitude.
+Yay, over the same 1000 iterations, the magnitude of the error ($\max(|A|)$) now dropped about 8 orders of magnitude.
 
-This is massive improvement over the first order method for minor changes in code 🙂
+This is a massive improvement over the first order method for minor changes in code 🙂
 
-Also the second order method
+Also the second order method:
 - only adds 1 array read (`dAdt`), and
 - is fully local (no global reduction is needed)
 
