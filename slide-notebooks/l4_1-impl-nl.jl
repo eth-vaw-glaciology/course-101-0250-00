@@ -157,7 +157,7 @@ Use a direct sparse solver approach: build a system of linear equations in the f
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 #### Solution 2
-Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂A/∂t$ such that $∂A/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂A/∂t→0$.
+Use an iterative matrix-free approach: introduce (or bring back) the transient term (from explicit time integration) $∂x/∂t$ such that $∂x/∂t=b - A~x$ and use it to iteratively reach the steady state, i.e. when $∂x/∂t→0$.
 """
 
 #src #########################################################################
@@ -336,7 +336,7 @@ Running the `Laplacian.jl` code with `nx, ny = 50, 50` (thus `niter = 1000`) pro
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-So over 2000 iterations, the magnitude of the error ($\max(|A|)$) only dropped about 1/2 an order of magnitude.
+So over 1000 iterations, the magnitude of the error ($\max(|A|)$) only dropped about 1/2 an order of magnitude.
 
 How can we improve this?
 """
