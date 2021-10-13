@@ -57,7 +57,7 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
 3. **For each homework submission**, you will:
     - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes onto;
-    - copy the git commit hash (or SHA) of the final push and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755). It will serve to control the material was pushed on time.
+    - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755). It will serve to control the material was pushed on time.
 
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
