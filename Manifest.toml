@@ -53,9 +53,9 @@ version = "1.16.1+0"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "a325370b9dd0e6bf5656a6f1a7ae80755f8ccc46"
+git-tree-sha1 = "74e8234fb738c45e2af55fdbcd9bfbe00c2446fa"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.7.2"
+version = "1.8.0"
 
 [[CloseOpenIntervals]]
 deps = ["ArrayInterface", "Static"]
@@ -319,9 +319,9 @@ version = "3.3.5+0"
 
 [[GR]]
 deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Printf", "Random", "Serialization", "Sockets", "Test", "UUIDs"]
-git-tree-sha1 = "c2178cfbc0a5a552e16d097fae508f2024de61a3"
+git-tree-sha1 = "d189c6d2004f63fd3c91748c458b09f26de0efaa"
 uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
-version = "0.59.0"
+version = "0.61.0"
 
 [[GR_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Pkg", "Qt5Base_jll", "Zlib_jll", "libpng_jll"]
@@ -415,9 +415,9 @@ deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[IrrationalConstants]]
-git-tree-sha1 = "f76424439413893a832026ca355fe273e93bce94"
+git-tree-sha1 = "7fd44fd4ff43fc60815f8e764c0f352b83c49151"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
-version = "0.1.0"
+version = "0.1.1"
 
 [[IterTools]]
 git-tree-sha1 = "05110a2ab1fc5f932622ffea2a003221f4782c18"
@@ -594,9 +594,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "b97b8bcf653acaae65a9b57a3a129786c98a0907"
+git-tree-sha1 = "ddfa211872c77938eeec52c2268271d87c9bc30c"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.84"
+version = "0.12.85"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -770,9 +770,9 @@ version = "1.0.15"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "6841db754bd01a91d281370d9a0f8787e220ae08"
+git-tree-sha1 = "bc70e31a04f22780b57ad399ff94f9b78a1e7b39"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.22.4"
+version = "1.22.5"
 
 [[Polyester]]
 deps = ["ArrayInterface", "BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "ManualMemory", "PolyesterWeave", "Requires", "Static", "StrideArraysCore", "ThreadingUtilities"]
@@ -890,9 +890,9 @@ version = "0.6.27"
 
 [[SciMLBase]]
 deps = ["ArrayInterface", "CommonSolve", "ConstructionBase", "Distributed", "DocStringExtensions", "IteratorInterfaceExtensions", "LinearAlgebra", "Logging", "RecipesBase", "RecursiveArrayTools", "StaticArrays", "Statistics", "Tables", "TreeViews"]
-git-tree-sha1 = "2577b69c151374cc505543b1ee3df98b1ac3abb0"
+git-tree-sha1 = "f280844f86d97f5759bdb7a18721583a80cfbe5b"
 uuid = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
-version = "1.19.1"
+version = "1.19.2"
 
 [[Scratch]]
 deps = ["Dates"]
