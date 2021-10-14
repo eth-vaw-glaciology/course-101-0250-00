@@ -8,7 +8,7 @@ showall = false
 # Lecture 5
 
 > **Agenda**\
-> :books: CPU HPC \& perf. metric $T_\mathrm{eff}$\
+> :books: CPU HPC & performance assessment, the $T_\mathrm{eff}$ metric\
 > :computer: Automatic code testing\
 > :construction: Exercises:
 > - Dual-time stepping
