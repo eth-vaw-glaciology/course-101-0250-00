@@ -23,7 +23,7 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-#### Basic unit tests
+## Basic unit tests
 
 Simple unit testing can be performed with the `@test` and `@test_throws` macros:
 """
@@ -63,7 +63,7 @@ If the condition is false, then a `Fail` is returned and an exception is thrown:
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-#### Working with a test set
+## Working with a test sets
 
 The `@testset` macro can be used to group [tests into sets](https://docs.julialang.org/en/v1/stdlib/Test/#Working-with-Test-Sets).
 
