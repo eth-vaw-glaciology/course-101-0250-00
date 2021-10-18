@@ -8,8 +8,8 @@ showall = false
 # Lecture 5
 
 > **Agenda**\
-> :books: CPU HPC & performance assessment, the $T_\mathrm{eff}$ metric\
-> :computer: Automatic code testing\
+> :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
+> :computer: Unit testing in Julia\
 > :construction: Exercises:
 > - Dual-time stepping
 > - CPU HPC for acoustic
@@ -26,7 +26,11 @@ showall = false
 
 ---
 
-\literate{/_literate/l5_1-cpu-hpc_web.jl}
+\literate{/_literate/l5_1-cpu-parallel_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+\literate{/_literate/l5_2-unit-test_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
