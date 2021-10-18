@@ -10,7 +10,7 @@
 - Can be used when developing
 - Should be used in package for CI
 
-#### Basic unit tests
+## Basic unit tests
 
 Simple unit testing can be performed with the `@test` and `@test_throws` macros:
 
@@ -50,7 +50,7 @@ If the condition is false, then a `Fail` is returned and an exception is thrown:
 @test square!(5) == 20
 ```
 
-#### Working with a test set
+## Working with a test sets
 
 The `@testset` macro can be used to group [tests into sets](https://docs.julialang.org/en/v1/stdlib/Test/#Working-with-Test-Sets).
 
