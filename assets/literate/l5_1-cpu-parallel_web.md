@@ -11,8 +11,9 @@
 ## Performance limiters
 
 ### Hardware
-- Multi-core CPUs (and GPUs) are throughput-oriented systems
-- They use their massive parallelism to hide latency
+- GPUs are throughput-oriented systems
+- GPUs use their parallelism to hide latency
+- Some multi-core CPUs have many cores nowadays - similar challenges ?
 
 *Recall from [lecture 1](lecture1/#why_we_do_it) ...*
 
@@ -28,7 +29,7 @@ GPUs are massively parallel devices
 
 ![cpu_gpu_evo](../assets/literate_figures/cpu_gpu_evo.png)
 
-If we look at an
+Taking a look at recent GPU and CPU:
 - Nvidia Tesla A100 GPU
 - AMD EPYC "Rome" 7282 (16 cores) CPU
 
@@ -46,7 +47,7 @@ If we look at an
 
 First derivative example
 
-If we "naively" compare the "cost" of evaluating a finite-difference first derivative, e.g., computing a flux $q$:
+If we "naively" compare the "cost" of an isolated evaluation of a finite-difference first derivative, e.g., computing a flux $q$:
 
 $$q = -D~\frac{∂A}{∂x}~,$$
 
@@ -54,7 +55,7 @@ which in the discrete form reads `q[ix] = -D*(A[ix+1]-A[ix])/dx`.
 
 The cost of evaluating `q[ix] = -D*(A[ix+1]-A[ix])/dx`:
 
-2 reads + 1 write => $3 × 8$ = **24 bytes transferred**
+1 reads + 1 write => $2 × 8$ = **16 bytes transferred**
 
 1 (fused) addition and division => **1 (2) floating point operations**
 
@@ -68,13 +69,13 @@ Comparing to the machine balances:
 | :------: | :-----: | :------: | :------: |
 | Tesla A100 | 9.7 | 1.55 | 6.23 |
 | AMD EPYC 7282 | 0.7 | 0.085 | 8.23 |
-| $∂A/∂x$ | 1 ($×10^{-12}$) | 24 ($×10^{-12}$) | 0.041 |
+| $∂A/∂x$ | 1 ($×10^{-12}$) | 16 ($×10^{-12}$) | 0.063 |
 
-0.041 << 6.23 or 8.23, and so we are memory-bound
+0.063 << 6.23 or 8.23, and so we are memory-bound
 
 The Flop/s metric is no longer the most adequate for reporting the application performance of many modern applications.
 
-## Effective memory throughput metric
+## Effective memory throughput metric $T_\mathrm{eff}$
 
 Need for a memory throughput-based performance evaluation metric: $T_\mathrm{eff}$ [GB/s]
 
@@ -94,7 +95,7 @@ $$ T_\mathrm{eff} = \frac{A_\mathrm{eff}}{t_\mathrm{it}} $$
 
 The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured, e.g., by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue.
 
-Defining the $T_\mathrm{eff}$ metric, we assume that
+Defining the $T_\mathrm{eff}$ metric, we assume that:
 1. we evaluate an iterative stencil-based solver,
 2. the problem size is much larger than the cache sizes and
 3. the usage of time blocking is not feasible or advantageous (reasonable for real-world applications).
@@ -103,7 +104,7 @@ Defining the $T_\mathrm{eff}$ metric, we assume that
 
 As first task, we'll compute the $T_\mathrm{eff}$ for the 2D diffusion code [`diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) we are already familiar with (download the script if needed to get started).
 
-We'll have to:
+**To-do list:**
 - copy `diffusion_2D.jl` and rename it to `diffusion_2D_Teff.jl`
 - add a timer
 - include the performance metric formulas
@@ -254,7 +255,9 @@ compute!(...)
 
 This last implementation executes a bit faster as previous one, as functions allow Julia to further optimise during just-ahead-of-time compilation.
 
-Let's now see how to implement multi-threading and advanced vector instructions (AVX)
+Let's now see how to implement multi-threading and use [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions).
+
+## Shared memory parallelisation
 
 ### Multi-threading (native)
 
@@ -269,7 +272,7 @@ The only 2 modifications needed to enable it in our code are:
 
 ### Multi-threading and AVX
 
-Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with AVX optimisations to further exploit shared memory parallelisation capabilities of x86 type of CPUs.
+Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with AVX optimisations, relying on extensions to the x86 instruction set architecture.
 
 To enable it in our code:
 
@@ -285,6 +288,4 @@ And here we go 🚀
 - We discussed main performance limiters
 - We implemented the effective memory throughput metric $T_\mathrm{eff}$
 - We optimised the Julia 2D diffusion code (multi-threading and AVX)
-
-Note that for problem sizes fitting in the cache, [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl)'s `@tturbo` permits to achieve effective memory throughput close to memory copy rates ($T_\mathrm{peak}$).
 
