@@ -29,23 +29,43 @@ GPUs are massively parallel devices
 
 ![cpu_gpu_evo](../assets/literate_figures/cpu_gpu_evo.png)
 
-Taking a look at recent GPU and CPU:
+Taking a look at a recent GPU and CPU:
 - Nvidia Tesla A100 GPU
 - AMD EPYC "Rome" 7282 (16 cores) CPU
 
-| Device | TFLOPS (FP64) | Memory BW TB/s | Ratio |
-| :------: | :-----: | :------: | :------: |
-| Tesla A100 | 9.7 | 1.55 | 6.23
-| AMD EPYC 7282 | 0.7 | 0.085 | 8.23
+| Device         | TFLOP/s (FP64) | Memory BW TB/s |
+| :------------: | :------------: | :------------: |
+| Tesla A100     | 9.7            | 1.55           |
+| AMD EPYC 7282  | 0.7            | 0.085          |
 
-➡ Memory bound: requires to re-think the numerical implementation and solution strategies
+Current GPUs (and CPUs) can do many more computations in a given amount of time than they can access numbers from main memory.
+
+Quantify the imbalance:
+
+$$ \frac{\mathrm{computation\;peak\;performance\;[TFLOP/s]}}{\mathrm{memory\;access\;peak\;performance\;[GB/s]}} × \mathrm{size\;of\;a\;number\;[Bytes]} $$
+
+_(Theoretical peak performance values as specified by the vendors can be used)._
+
+Back to our hardware:
+
+| Device         | TFLOP/s (FP64) | Memory BW TB/s | Imbalance (FP64)     |
+| :------------: | :------------: | :------------: | :------------------: |
+| Tesla A100     | 9.7            | 1.55           | 9.7 / 1.55  × 8 = 50 |
+| AMD EPYC 7282  | 0.7            | 0.085          | 0.7 / 0.085 × 8 = 66 |
+
+
+_(here computed with double precision values)_
+
+**Meaning:** we can do 50 (GPU) and 66 (CPU) floating point operations per number accessed from main memory. Floating point operations are "for free" when we work in memory-bounded regimes
+
+➡ Requires to re-think the numerical implementation and solution strategies
 
 ### On the scientific application side
 
 - Most algorithms require only a few operations or flops ...
 - ... compared to the amount of numbers or bytes accessed from main memory.
 
-First derivative example
+First derivative example $∂A / ∂x$:
 
 If we "naively" compare the "cost" of an isolated evaluation of a finite-difference first derivative, e.g., computing a flux $q$:
 
@@ -55,25 +75,19 @@ which in the discrete form reads `q[ix] = -D*(A[ix+1]-A[ix])/dx`.
 
 The cost of evaluating `q[ix] = -D*(A[ix+1]-A[ix])/dx`:
 
-1 reads + 1 write => $2 × 8$ = **16 bytes transferred**
+1 reads + 1 write => $2 × 8$ = **16 Bytes transferred**
 
-1 (fused) addition and division => **1 (2) floating point operations**
+1 (fused) addition and division => **1 floating point operations**
 
 assuming:
 - $D$, $∂x$ are scalars
-- $q$ and $A$ are arrays of `Float64` (read from global memory)
+- $q$ and $A$ are arrays of `Float64` (read from main memory)
 
-Comparing to the machine balances:
+GPUs and CPUs perform 50 - 60 FLOP pro number accessed from main memory
 
-| Device | TFLOPS (FP64) | Memory BW TB/s | Ratio |
-| :------: | :-----: | :------: | :------: |
-| Tesla A100 | 9.7 | 1.55 | 6.23 |
-| AMD EPYC 7282 | 0.7 | 0.085 | 8.23 |
-| $∂A/∂x$ | 1 ($×10^{-12}$) | 16 ($×10^{-12}$) | 0.063 |
+First derivative evaluation requires to transfer 2 numbers per FLOP
 
-0.063 << 6.23 or 8.23, and so we are memory-bound
-
-The Flop/s metric is no longer the most adequate for reporting the application performance of many modern applications.
+The FLOP/s metric is no longer the most adequate for reporting the application performance of many modern applications on modern hardware.
 
 ## Effective memory throughput metric $T_\mathrm{eff}$
 
