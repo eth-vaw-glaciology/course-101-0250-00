@@ -2,7 +2,7 @@
 title = "Lecture 5"
 hascode = true
 literate_mds = true
-showall = false
+showall = true
 +++
 
 # Lecture 5
@@ -55,3 +55,8 @@ showall = false
 
 [⤴ _**back to Content**_](#content)
 
+---
+
+\literate{/_literate/lecture5_ex4_web.jl}
+
+[⤴ _**back to Content**_](#content)

@@ -13,8 +13,6 @@ The goal of this exercise is to:
 
 md"""
 For this exercise, you will write a code to assess the peak memory throughput of your CPU and run a strong scaling benchmark using the diffusion 2D codes and report performance.
-
-
 """
 
 md"""
@@ -36,11 +34,11 @@ In the `diffusion2D` folder, create a new script names `memcopy.jl`. You can use
 3. Modify the `compute!()` function to perform the following operation `C2 = C + A`
 4. Update the `A_eff` formula
 
-Then, create a README.md file in the `diffusion2D` folder to report the results for each of the following tasks (including a .png of the figure when instructed)
+Then, create a `README.md` file in the `diffusion2D` folder to report the results for each of the following tasks (including a .png of the figure when instructed)
 """
 
-#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the README.md.
-#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the README.md.}
+#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
+#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
 
 md"""
 ### Task 2

@@ -58,7 +58,16 @@ If the condition is true, a `Pass` is returned:
 md"""
 If the condition is false, then a `Fail` is returned and an exception is thrown:
 """
-@test square!(5) == 20
+#nb @test square!(5) == 20
+#md # ```julia
+#md # @test square!(5) == 20
+#md # ```
+#md # ```julia
+#md # Test Failed at none:1
+#md #   Expression: square!(5) == 20
+#md #    Evaluated: 25 == 20
+#md # Test.FallbackTestSetException("There was an error during testing")
+#md # ```
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -97,14 +106,34 @@ end;
 md"""
 If we now introduce a bug
 """
-square!(x) = x^2
-
-@testset "Square Tests" begin
-    @test square!(5) == 25
-    @test square!("a") == "aa"
-    @test square!("bb") == "bbbb"
-    @test square!(5) == 20
-end;
+#nb square!(x) = x^2
+#nb 
+#nb @testset "Square Tests" begin
+#nb     @test square!(5) == 25
+#nb     @test square!("a") == "aa"
+#nb     @test square!("bb") == "bbbb"
+#nb     @test square!(5) == 20
+#nb end;
+#md # ```julia
+#md # square!(x) = x^2
+#md # 
+#md # @testset "Square Tests" begin
+#md #     @test square!(5) == 25
+#md #     @test square!("a") == "aa"
+#md #     @test square!("bb") == "bbbb"
+#md #     @test square!(5) == 20
+#md # end;
+#md # ```
+#md # ```julia
+#md # Square Tests: Test Failed at none:6
+#md #   Expression: square!(5) == 20
+#md #    Evaluated: 25 == 20
+#md # Stacktrace:
+#md #  [...]
+#md # Test Summary: | Pass  Fail  Total
+#md # Square Tests  |    3     1      4
+#md # Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.
+#md # ```
 
 md"""
 Then then the reporting tells us a test failed.
