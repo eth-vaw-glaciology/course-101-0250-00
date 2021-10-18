@@ -12,8 +12,6 @@ square!(x) = x^2
 
 @test square!(5) == 25
 
-@test square!(5) == 20
-
 @testset "trigonometric identities" begin
     θ = 2/3*π
     @test sin(-θ) ≈ -sin(θ)
@@ -28,14 +26,5 @@ square!(x) = x^2
     @test square!(5) == 25
     @test square!("a") == "aa"
     @test square!("bb") == "bbbb"
-end;
-
-square!(x) = x^2
-
-@testset "Square Tests" begin
-    @test square!(5) == 25
-    @test square!("a") == "aa"
-    @test square!("bb") == "bbbb"
-    @test square!(5) == 20
 end;
 

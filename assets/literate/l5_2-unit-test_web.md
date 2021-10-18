@@ -45,9 +45,14 @@ If the condition is true, a `Pass` is returned:
 ```
 
 If the condition is false, then a `Fail` is returned and an exception is thrown:
-
-```julia:ex6
+```julia
 @test square!(5) == 20
+```
+```julia
+Test Failed at none:1
+  Expression: square!(5) == 20
+   Evaluated: 25 == 20
+Test.FallbackTestSetException("There was an error during testing")
 ```
 
 ## Working with a test sets
@@ -58,7 +63,7 @@ All the tests in a test set will be run, and at the end of the test set a summar
 
 If any of the tests failed, or could not be evaluated due to an error, the test set will then throw a `TestSetException`.
 
-```julia:ex7
+```julia:ex6
 @testset "trigonometric identities" begin
     θ = 2/3*π
     @test sin(-θ) ≈ -sin(θ)
@@ -70,7 +75,7 @@ end;
 
 Let's try it with our `square!()` function
 
-```julia:ex8
+```julia:ex7
 square!(x) = x^2
 
 @testset "Square Tests" begin
@@ -81,8 +86,7 @@ end;
 ```
 
 If we now introduce a bug
-
-```julia:ex9
+```julia
 square!(x) = x^2
 
 @testset "Square Tests" begin
@@ -91,6 +95,16 @@ square!(x) = x^2
     @test square!("bb") == "bbbb"
     @test square!(5) == 20
 end;
+```
+```julia
+Square Tests: Test Failed at none:6
+  Expression: square!(5) == 20
+   Evaluated: 25 == 20
+Stacktrace:
+ [...]
+Test Summary: | Pass  Fail  Total
+Square Tests  |    3     1      4
+Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.
 ```
 
 Then then the reporting tells us a test failed.
