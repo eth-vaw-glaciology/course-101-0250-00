@@ -461,8 +461,8 @@ Create a `compute!()` function that takes input and output arrays and needed sca
 ```
 """
 
-#nb # > 💡 note: Function that modify arguments take a `!` in their name, a Julia convention.
-#md # \note{Function that modify arguments take a `!` in their name, a Julia convention.}
+#nb # > 💡 note: Functions that modify arguments take a `!` in their name, a Julia convention.
+#md # \note{Functions that modify arguments take a `!` in their name, a Julia convention.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
