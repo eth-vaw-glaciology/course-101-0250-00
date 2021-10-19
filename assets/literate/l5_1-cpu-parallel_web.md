@@ -259,7 +259,7 @@ function compute!(...)
 end
 ```
 
-\note{Function that modify arguments take a `!` in their name, a Julia convention.}
+\note{Functions that modify arguments take a `!` in their name, a Julia convention.}
 
 The `compute!()` function can then be called within the time loop
 
