@@ -252,7 +252,7 @@ A                     .= A .+ dt.*dAdt</code></pre>
 
 </ul>
 <p>In this exercise you will transform the explicit nonlinear 1D diffusion solver to achieve a steady state solution, and, in a second step, achieve a fast solution relying on the second-order implementation. The model could be applied, e.g., to predict spatial distribution of pollutant in the subsurface.</p>
-<p>To get started, save a copy of the <code>diffusion_1D.jl</code> script we did in class &#40;also available <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> after the lecture&#41;, name it <code>diffusion_nl_1D_steady_1.jl</code>, and implement the changes tasked below.</p>
+<p>To get started, save a copy of the <code>diffusion_nl_1D.jl</code> script we did in class &#40;also available <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> after the lecture&#41;, name it <code>diffusion_nl_1D_steady_1.jl</code>, and implement the changes tasked below.</p>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
 <p>As first task, adapt the parameters and the implementation. In the <code># Physics</code> section, set the total simulation time <code>ttot&#61;200.0</code> and move the <code>D0</code> initialisation to the <code># Array initialisation</code> section.</p>
 <p>In the <code># Numerics</code> section, add the nonlinear tolerance the solver should converge to, <code>epsi &#61; 1e-10</code>.</p>
