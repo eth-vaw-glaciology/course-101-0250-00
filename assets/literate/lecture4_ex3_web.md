@@ -39,13 +39,13 @@ In the time or iteration loop, implement the relaxation (or continuation) on the
 
 Because we are only interested in the final distribution of `C`, at steady-state, the time step `dt` turns in a numerical parameter that no longer needs to be a scalar. Adapt `dt` to use the local maximum amongst direct neighbouring grid points, in every point of the domain
 
-\note{In 1D, a `maxloc` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end])`}
+\note{In 1D, a `maxloc()` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end])`}
 
 Finally, modify the `dCdt` update operation to incorporate the damping term applied to the values of `dCdt` from the previous iteration.
 
 \note{Look up the `Laplacian_damped.jl` implementation from lecture 4 if you need inspiration.}
 
-Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting time, iteration count and current error.
+Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting time, iteration count and current error. Use `mean(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
 
 Reflect on the speed-up obtained by the second-order method and feel free to add a comment about it.
 
