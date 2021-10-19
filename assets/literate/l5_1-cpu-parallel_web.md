@@ -303,3 +303,5 @@ And here we go 🚀
 - We implemented the effective memory throughput metric $T_\mathrm{eff}$
 - We optimised the Julia 2D diffusion code (multi-threading and AVX)
 
+\note{Various timing and benchmarking tools are available in Julia's ecosystem to [track performance issues](https://docs.julialang.org/en/v1/manual/performance-tips/). Julia's base exposes the `@time` macro which returns timing and allocation estimation. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package provides finer grained timing and benchmarking tooling, namely the `@btime` and `@benchmark` macros, among others.}
+

@@ -141,6 +141,8 @@ end</code></pre>
 <li><p>We optimised the Julia 2D diffusion code &#40;multi-threading and AVX&#41;</p>
 
 </ul>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Various timing and benchmarking tools are available in Julia&#39;s ecosystem to <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">track performance issues</a>. Julia&#39;s base exposes the <code>@time</code> macro which returns timing and allocation estimation. <a href="https://github.com/JuliaCI/BenchmarkTools.jl">BenchmarkTools.jl</a> package provides finer grained timing and benchmarking tooling, namely the <code>@btime</code> and <code>@benchmark</code> macros, among others.</div></div>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=unit_testing_in_julia ><a href="#unit_testing_in_julia" class=header-anchor >Unit testing in Julia</a></h1>
@@ -387,7 +389,7 @@ ytest &#61; Int&#40;cld&#40;0.5*Ly/dy&#41;&#41;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 18, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 19, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
