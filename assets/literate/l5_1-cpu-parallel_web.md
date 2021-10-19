@@ -42,7 +42,7 @@ Current GPUs (and CPUs) can do many more computations in a given amount of time 
 
 Quantify the imbalance:
 
-$$ \frac{\mathrm{computation\;peak\;performance\;[TFLOP/s]}}{\mathrm{memory\;access\;peak\;performance\;[GB/s]}} × \mathrm{size\;of\;a\;number\;[Bytes]} $$
+$$ \frac{\mathrm{computation\;peak\;performance\;[TFLOP/s]}}{\mathrm{memory\;access\;peak\;performance\;[TB/s]}} × \mathrm{size\;of\;a\;number\;[Bytes]} $$
 
 _(Theoretical peak performance values as specified by the vendors can be used)._
 
@@ -139,7 +139,7 @@ t_it  = ...          # Execution time per iteration [s]
 T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
 ```
 
-- Report `t_toc`, `T_Eff` and `niter` at the end of the code, formatting output using `@printf()` macro.
+- Report `t_toc`, `T_eff` and `niter` at the end of the code, formatting output using `@printf()` macro.
 - Round `T_eff` to the 3rd significant digit.
 
 ```julia
