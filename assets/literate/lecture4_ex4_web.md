@@ -12,7 +12,7 @@ In this exercise you will transform the fast implicit nonlinear diffusion 1D sol
 To get started, save a copy of the `diffusion_nl_1D_steady_2.jl` script from [Exercise 3 - Task 2](#task_2__3), and name it `diffusion_nl_2D_steady_2.jl`.
 
 ### Task 1
-You will port the 1D code to 2D, duplicating, if needed, all parameters from the $x$-dimension to the $y$-dimension.
+You will port the 1D code to 2D, duplicating, if needed, all parameters from the $x$-dimension to the $y$-dimension. *(You can keep the definition of the damping term only function of `nx` since your domain is square.)*
 
 In the `# Array initialisation`, use following functions to initialise 3 ellipses where the subsurface permeability is reduced from 5.0 to 1.5:
 
@@ -28,5 +28,11 @@ As boundary conditions, set `C=0.5` at $x=dx/2$ and `C=0.1` at $x=Lx-dx/2$. Impl
 
 \note{Take care to adapt the iterative time step condition for 2D diffusion and think about how to modify the `maxloc()` function for 2D purposes, taking the local maximum amongst all 8 neighbours for each grid point.}
 
-Report graphically the distribution of concentration `C` as function of `x` and `y` using a heatmap plot, adding axes labels and title reporting time, iteration count and current error. Use `mean(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
+Report graphically the distribution of concentration `C` as function of `x` and `y` using a heatmap plot, adding axes labels and title reporting time, iteration count and current error. Use, e.g., `maximum(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
+
+\note{The iteration count for the accelerated 2D code should be in the order of 4500.}
+
+Here is a sample output the code should produce:
+
+![steady_2D_ex4](../assets/literate_figures/steady_2D_ex4.png)
 

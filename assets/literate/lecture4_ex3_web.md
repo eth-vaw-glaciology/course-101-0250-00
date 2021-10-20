@@ -16,7 +16,9 @@ As first task, adapt the parameters and the implementation. In the `# Physics` s
 
 In the `# Numerics` section, add the nonlinear tolerance the solver should converge to, `epsi = 1e-10`.
 
-Since we are interested in a concentration, rename the quantity to be diffused from `H` to `C`, and initialise it as a Gaussian profile centred in $L_x/2$ with standard deviation $σ=1$ and amplitude of 0.5. Initialise the diffusivity `D0=5` in every grid point of the domain. In the region $[0.6~L_x - 0.8~L_x]$, the subsurface is less permeable thus the value of `D0=1.5` there. Also, initialise all array that would require it.
+Since we are interested in a concentration, rename the quantity to be diffused from `H` to `C`, and initialise it as a Gaussian profile centred in $x = 0$ with standard deviation $σ=1$ and amplitude of 0.5.
+
+Initialise the diffusivity `D0=5` in every grid point of the domain. In the region $[0.6~L_x - 0.8~L_x]$, the subsurface is less permeable thus the value of `D0=1.5` there. Also, initialise all arrays that would require it.
 
 Finally, as boundary conditions, fix the concentration in the left ($dx/2$) and right ($L_x-dx/2$) cell centre to 0.5 and 0.1, respectively.
 
@@ -37,17 +39,21 @@ Initialise the effective diffusion coefficient array `D` to 1, the initial guess
 
 In the time or iteration loop, implement the relaxation (or continuation) on the effective diffusion coefficient array `D`, such that at each iteration, `(1-rel)` from the previous values of `D` is being added to `rel` times the new value, computed as `(D0.*C).^n` (the physical expression of `D`).
 
-Because we are only interested in the final distribution of `C`, at steady-state, the time step `dt` turns in a numerical parameter that no longer needs to be a scalar. Adapt `dt` to use the local maximum amongst direct neighbouring grid points, in every point of the domain
+Because we are only interested in the final distribution of `C`, at steady-state, the time step `dt` turns in a numerical parameter that no longer needs to be a scalar; it can be defined locally to each grid point. Adapt `dt` to use the local maximum amongst direct neighbouring grid points, in every point of the domain.
 
-\note{In 1D, a `maxloc()` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end])`}
+\note{In 1D, a `maxloc()` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end])`.}
 
-Finally, modify the `dCdt` update operation to incorporate the damping term applied to the values of `dCdt` from the previous iteration.
+Finally, and most important, modify the `dCdt` update operation to incorporate the damping term applied to the values of `dCdt` from the previous iteration.
 
-\note{Look up the `Laplacian_damped.jl` implementation from lecture 4 if you need inspiration.}
+\note{To implement the second order scheme, turn the `dCdt` assignment to an update, where you add to current definition of `dCdt` previous values of `dCdt*dmp`.}
 
-Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting time, iteration count and current error. Use `mean(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
+Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting time, iteration count and current error. Use, e.g., `maximum(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
 
 Reflect on the speed-up obtained by the second-order method and feel free to add a comment about it.
 
-🎉 Well-done! This was a long one.
+\note{The iteration count for the accelerated 1D code should be in the order of 3400.}
+
+🎉 Well-done! This was a long one. Here is a sample output the code should produce:
+
+![steady_1D_ex4](../assets/literate_figures/steady_1D_ex4.png)
 
