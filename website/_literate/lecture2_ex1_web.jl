@@ -27,8 +27,8 @@ md"""
 Then, replace the vertical angle of ejection α to randomly vary between 60° and 120° with respect to the horizon for each bomb. Keep the magnitude of the ejection velocity as before, i.e. $V=120$ m/s.
 """
 
-#nb # > 💡 hint: Use the `randn()` function to generate random numbers normally distributed
-#md # \note{Use the `randn()` function to generate random numbers normally distributed}
+#nb # > 💡 hint: Use the `randn()` function to generate random numbers normally distributed.
+#md # \note{Use the `randn()` function to generate random numbers normally distributed.}
 
 md"""
 All bombs have the same initial location $(x=0, y=480)$ as before.

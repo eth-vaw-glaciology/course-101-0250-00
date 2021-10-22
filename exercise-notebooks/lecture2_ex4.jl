@@ -18,7 +18,7 @@ Ensure you have access to
 - the latest version of Julia (>= v1.6)
 - a fully functional REPL (command window)
 
-You should be able to visualise scripts' output graphically when, e.g., plotting something
+You should be able to visualise scripts' output graphically when, e.g., plotting something:
 
 ```julia
 using Plots
@@ -35,7 +35,7 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
     - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes onto;
     - copy the git commit hash (or SHA) of the final push and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755). It will serve to control the material was pushed on time.
 
-👉 See here [Logistics](/logistics/#submission) for details
+👉 See [Logistics](/logistics/#submission) for details.
 
 ### GitHub task
 For this week, edit the `README.md` of your private repository:

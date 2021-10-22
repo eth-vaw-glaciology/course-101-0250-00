@@ -445,6 +445,20 @@ Finally, we can verify that the second order method iteration count scales linea
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Note that various formulations of the second-order implementation exist and lead to a linear scaling of iteration count with resolution increase.
+A useful and more concise one may be the following one:
+
+```julia
+dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1].*(1-dmp) .+ 
+                         D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
+                              diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
+A                     .= A .+ dt.*dAdt
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 ## Implicit solutions
 
 The usage of _implicit_ may be confusing as it often lacks of clear definition and context.
@@ -510,13 +524,44 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-On GitHub, make sure to upload each of the exercises into a new folder specific to each week.
+On GitHub, make sure to create a new folder for each week's exercises.
 
-This folder should be a Julia project, i.e. contain a `Project.toml` file.
+Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
+"""
 
-The `Manifest.toml` file could be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo.
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+This can be achieved by typing entering the Pkg mode from the Julia REPL in the tatrget folder
 
-Any question?
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> activate .
+
+(lectureXX) pkg> add Plots
+```
+
+and adding at least one package.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+In addition, it is recommended to have the following structure and content:
+- lectureXX
+  - `README.md`
+  - `Project.toml`
+  - `Manifest.toml`
+  - docs/
+  - scripts/
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Codes could be placed in the `scripts/` folder. Output material to be displayed in the `README.md` could be placed in the `docs/` folder.
+
+The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`.
 """
 
 

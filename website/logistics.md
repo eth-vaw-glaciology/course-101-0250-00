@@ -61,6 +61,9 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
+> ⚠️ **Note:** Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.
+
+
 ## Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) (& GitHub):
 1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.

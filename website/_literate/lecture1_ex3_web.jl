@@ -22,15 +22,15 @@ Starting from the 1D code done in [Exercise 2](#exercise_2_-_car_travel), work t
 """
 
 #nb # > 💡 hint:
-#nb # > - split velocity magnitude $V$ into $x$ and $y$ component
-#nb # > - use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
-#nb # > - use two vectors or an array to store the car's coordinates
-#nb # > - define the y-axis extend in the plot `ylims=(0, ttot*Vy)`
+#nb # > - Split velocity magnitude $V$ into $x$ and $y$ component
+#nb # > - Use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
+#nb # > - Use two vectors or an array to store the car's coordinates
+#nb # > - Define the y-axis extend in the plot `ylims=(0, ttot*Vy)`
 
-#md # \note{- split velocity magnitude $V$ into $x$ and $y$ component
-#md # - use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
-#md # - use two vectors or an array to store the car's coordinates
-#md # - define the y-axis extend in the plot `ylims=(0, ttot*Vy)`}
+#md # \note{- Split velocity magnitude $V$ into $x$ and $y$ component
+#md # - Use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
+#md # - Use two vectors or an array to store the car's coordinates
+#md # - Define the y-axis extend in the plot `ylims=(0, ttot*Vy)`}
 
 md"""
 ### Question 1

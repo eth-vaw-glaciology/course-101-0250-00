@@ -39,10 +39,10 @@ The 3 equations above represent the discretised form of the 3 first equations an
 """
 
 #nb # > 💡 hint:
-#nb # > - modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
-#nb # > - use e.g. a `break` statement to exit the loop once the bomb hits the ground
-#md # \note{- modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
-#md # - use e.g. a `break` statement to exit the loop once the bomb hits the ground}
+#nb # > - Modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
+#nb # > - Use e.g. a `break` statement to exit the loop once the bomb hits the ground
+#md # \note{- Modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
+#md # - Use e.g. a `break` statement to exit the loop once the bomb hits the ground}
 
 md"""
 ### Question 1

@@ -20,7 +20,7 @@ md"""
 ### Task 1
 You will port the 1D code to 2D, duplicating, if needed, all parameters from the $x$-dimension to the $y$-dimension. *(You can keep the definition of the damping term only function of `nx` since your domain is square.)*
 
-In the `# Array initialisation`, use following functions to initialise 3 ellipses where the subsurface permeability is reduced from 5.0 to 1.5:
+In the `# Array initialisation`, use following functions to initialise 3 ellipses where the background subsurface permeability is reduced from `D0 = 5.0` to `D0 = 1.5`:
 
 ```julia
 rad2_1 = (xc .- 2*Lx/3).^2 .* 3 .+ (yc' .-   Ly/3).^2 ./ 4
@@ -28,16 +28,16 @@ rad2_2 = (xc .- 2*Lx/3).^2 ./ 4 .+ (yc' .- 2*Ly/3).^2 .* 3
 rad2_3 = (xc .-   Lx/3).^2 .* 1 .+ (yc' .-   Ly/2).^2 ./ 1
 ```
 
-Use these "radius" functions to set values of `D0` to 1.5 when smaller then 1.0.
+Use these "radius" functions to set the values of `D0 = 1.5` when the radius is smaller then 1.0 (for all 3 cases).
 
-As boundary conditions, set `C=0.5` at $x=dx/2$ and `C=0.1` at $x=Lx-dx/2$. Implement a "no-flux" boundary condition ($∆C$ vanishes in the direction orthogonal to the boundary) at $y=dy/2$ and $y=Ly-dy/2$.
+As boundary conditions, set `C = 0.5` at $x=dx/2$ and `C = 0.1` at $x=Lx-dx/2$. Implement a "no-flux" boundary condition ($∆C$ vanishes in the direction orthogonal to the boundary) at $y=dy/2$ and $y=Ly-dy/2$.
 """
 
 #nb # > 💡 hint: Take care to adapt the iterative time step condition for 2D diffusion and think about how to modify the `maxloc()` function for 2D purposes, taking the local maximum amongst all 8 neighbours for each grid point.`
 #md # \note{Take care to adapt the iterative time step condition for 2D diffusion and think about how to modify the `maxloc()` function for 2D purposes, taking the local maximum amongst all 8 neighbours for each grid point.}
 
 md"""
-Report graphically the distribution of concentration `C` as function of `x` and `y` using a heatmap plot, adding axes labels and title reporting time, iteration count and current error. Use, e.g., `maximum(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
+Report graphically the distribution of concentration `C` as function of `x` and `y` using a heatmap plot, adding axes labels and title reporting time, iteration count and current error.
 """
 
 #nb # > 💡 hint: The iteration count for the accelerated 2D code should be in the order of 4500.

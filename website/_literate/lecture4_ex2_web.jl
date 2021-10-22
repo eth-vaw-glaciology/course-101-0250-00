@@ -19,7 +19,7 @@ Start from the `Laplacian_damped.jl` script we realised in class, which should c
 
 👉 Download the `Laplacian_damped.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 
-Add a copy of the `Laplacian_damped.jl` script we did in class to your exercise folder. Modify that script to perform systematics assessing the scalability of the damped versus the non-damped Laplacian 2D implementation.
+Add a copy of the `Laplacian_damped.jl` script we did in class to your exercise folder. Modify that script to perform systematics to assess the scalability of the damped versus the non-damped Laplacian 2D implementation.
 """
 
 md"""
@@ -30,8 +30,13 @@ As first task, modify the iteration exit criteria such that the you can report t
 Using this modified code, realise a scaling experiment where you report the total number of iterations needed to reach `ε` as function of the number of grid points `nx`, for `nx = 25 * 2 .^ (1:8)`. Repeat the experiment for both the damped and non-damped implementation (using e.g. the `order` flag).
 
 ### Task 3
-Report your scaling results on a plot and comment the trends you observe (the comment could be, e.g., displayed in the REPL upon execution or as text included to the figure).
+Report your scaling results on a figure, plotting the number of iterations as function of the number of grid points. Save the figure as `png` and include it to the lecture 4 `README.md`. Comment the trends you observe.
+"""
 
+#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
+#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
+
+md"""
 ### Task 4 *(optional)*
-Investigate the effect of varying the damping parameter `dmp` on the iteration count, thus on the scaling.
+Investigate the effect of varying the damping parameter `dmp` on the iteration count, thus on the scaling. Add an additional figure to the `README.md` and comment about it.
 """

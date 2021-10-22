@@ -22,7 +22,7 @@ Starting from the 1D nonlinear diffusion equation we discussed in lecture 4, ext
 md"""
 ### Task 1
 
-Create a new folder in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script `diffusion_nl_2D.jl` for this homework. The script should produce a `heatmap()` plot that update upon time steps, with labelled axes and physical time displayed as title.
+Create a new folder in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script `diffusion_nl_2D.jl` for this homework. The script should produce a `heatmap()` plot that updates upon time steps, with labelled axes and physical time displayed as title.
 
 Use `nx = 128` and `ny = 129` grid points.
 """

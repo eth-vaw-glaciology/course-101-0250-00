@@ -107,9 +107,8 @@ xc   = LinRange(dx/2, Lx-dx/2, nx)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint:
-#nb # > Type `?` in the Julia REPL followed by the function you want to know more about to display infos
-#md # \note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos}
+#nb # > 💡 hint: Type `?` in the Julia REPL followed by the function you want to know more about to display infos.
+#md # \note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -125,8 +124,8 @@ dCdt = zeros(Float64, nx)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Note we here work with double precision arithmetic `Float64`
-#md # \note{We here work with double precision arithmetic `Float64`}
+#nb # > 💡 hint: Note we here work with double precision arithmetic `Float64`.
+#md # \note{We here work with double precision arithmetic `Float64`.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -266,7 +265,7 @@ We may want to write a single "monolithic" `reaction_1D.jl` code to perform thes
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-So, excellent, we have our first 1D ODE solver up and running in Julia :-)
+So, excellent, we have our first 1D ODE solver up and running in Julia 🙂
 """
 
 #sol #md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)

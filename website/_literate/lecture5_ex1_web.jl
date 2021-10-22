@@ -6,7 +6,7 @@ md"""
 
 md"""
 The goal of this exercise is to:
-- Finalise the script elaborated in class
+- Finalise the script discussed in class
 """
 
 md"""

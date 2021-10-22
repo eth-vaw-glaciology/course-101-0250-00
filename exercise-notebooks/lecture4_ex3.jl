@@ -24,11 +24,11 @@ In the `# Numerics` section, add the nonlinear tolerance the solver should conve
 
 Since we are interested in a concentration, rename the quantity to be diffused from `H` to `C`, and initialise it as a Gaussian profile centred in $x = 0$ with standard deviation $σ=1$ and amplitude of 0.5.
 
-Initialise the diffusivity `D0=5` in every grid point of the domain. In the region $[0.6~L_x - 0.8~L_x]$, the subsurface is less permeable thus the value of `D0=1.5` there. Also, initialise all arrays that would require it.
+Initialise the diffusivity `D0=5` in every grid point of the domain. In the region $[0.6~L_x - 0.8~L_x]$, the subsurface is less permeable thus the values of `D0=1.5`. Also, initialise all arrays that would require it.
 
 Finally, as boundary conditions, fix the concentration in the left ($dx/2$) and right ($L_x-dx/2$) cell centre to 0.5 and 0.1, respectively.
 
-Define the time or iteration loop to, e.g., run from `t=0` until `t=ttot`, and to abort if the error drops below `epsi`. Note that another implementation of your choice of the loop is fine too. Define the error as the `maximum(abs.(∆C))`, where `∆C` is the difference between the values of concentration before and after the update at every iteration or time step.
+Define the time or iteration loop to, e.g., run from `t=0` until `t=ttot`, and to abort if the error drops below `epsi`. Note that another implementation of your choice of the loop is fine too. Define the error as the `maximum(abs.(∆C))`, where `∆C` is the difference between the values of concentration before and after the update at every iteration or time step (you can use unicode characters in Julia).
 
 Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and a title reporting time, iteration count and current error.
 """
@@ -43,25 +43,28 @@ Then, add to the `# Numerics` section a relaxation factor `rel = 0.1` that we wi
 
 In the `# Derived numerics` section, add the damping factor `dmp  = 1.0 - 2π/nx`, which is the value that will most optimally damp the damped-wave equation we will solve using the second order method.
 
-Initialise the effective diffusion coefficient array `D` to 1, the initial guess for the relaxation.
+Initialise the effective diffusion coefficient array `D` to 1, setting the initial guess for the relaxation.
 
 In the time or iteration loop, implement the relaxation (or continuation) on the effective diffusion coefficient array `D`, such that at each iteration, `(1-rel)` from the previous values of `D` is being added to `rel` times the new value, computed as `(D0.*C).^n` (the physical expression of `D`).
 
-Because we are only interested in the final distribution of `C`, at steady-state, the time step `dt` turns in a numerical parameter that no longer needs to be a scalar; it can be defined locally to each grid point. Adapt `dt` to use the local maximum amongst direct neighbouring grid points, in every point of the domain.
+Because we are only interested in the final distribution of `C`, at steady-state, the time step `dt` turns in a numerical parameter that no longer needs to be a scalar; it should be defined locally to each grid point; we do no longer need the global reduction `maximum.(D)`. Adapt the `dt` formula to use the _**local maximum**_ amongst direct neighbouring grid points for `D` (in every point of the domain).
 """
 
 #nb # > 💡 hint: In 1D, a `maxloc()` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end]).`
 #md # \note{In 1D, a `maxloc()` function could be defined as such `@views maxloc(A) = max.(A[1:end-2],A[2:end-1],A[3:end])`.}
 
 md"""
-Finally, and most important, modify the `dCdt` update operation to incorporate the damping term applied to the values of `dCdt` from the previous iteration.
+Finally, and most important, modify the `dCdt` update operation to incorporate the damping term applied to the values of `dCdt` from the previous iteration. To implement the second order scheme, turn the `dCdt` assignment to an update, where you add to current definition of `dCdt` previous values of `dCdt*dmp`:
+
+```julia
+dCdt .= dCdt.*dmp .+ ...
+```
 """
 
-#nb # > 💡 hint: To implement the second order scheme, turn the `dCdt` assignment to an update, where you add to current definition of `dCdt` previous values of `dCdt*dmp`.
-#md # \note{To implement the second order scheme, turn the `dCdt` assignment to an update, where you add to current definition of `dCdt` previous values of `dCdt*dmp`.}
-
 md"""
-Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting time, iteration count and current error. Use, e.g., `maximum(dt)` to cumulate numerical time *(note that this measure is no longer relevant)*.
+### Task 3
+
+Report graphically the distribution of the concentration `C` as function of `x`, adding axes labels and title reporting iteration count and current error.
 
 Reflect on the speed-up obtained by the second-order method and feel free to add a comment about it.
 """

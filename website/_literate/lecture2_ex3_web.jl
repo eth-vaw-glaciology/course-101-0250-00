@@ -37,13 +37,13 @@ As initial condition, define a Gaussian profile of concentration `C` of amplitud
 Keep the concentration at the boundaries at `C=0`.
 """
 
-#nb # > 💡 hint: Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations
-#md # \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations}
+#nb # > 💡 hint: Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.
+#md # \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
 
 md"""
 ### Question 1
 
-Report the initial and final distribution of concentration on a figure with axis-label, title, and plotted line labels. Also, report on the figure (as text in one label of your choice) the maximal final concentration value and its x location.
+Report the initial and final distribution of concentration on a figure with axis-label, title, and plotted line labels. Also, report on the figure (as text in one label of your choice) the maximal final concentration value and its $x$ location.
 
 ### Question 2
 

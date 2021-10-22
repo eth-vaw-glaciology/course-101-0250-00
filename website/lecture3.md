@@ -8,7 +8,7 @@ showall = false
 # Lecture 3
 
 > **Agenda**\
-> :books: acoustic wave propagation, 1D to 2D\
+> :books: Acoustic wave propagation, 1D to 2D\
 > :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
 > - acoustic 2D (3 implementations)
