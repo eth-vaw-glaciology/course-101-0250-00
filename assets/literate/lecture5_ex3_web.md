@@ -4,7 +4,7 @@
 👉 See [Logistics](/logistics/#submission) for submission details.
 
 The goal of this exercise is to:
-- Create a script to assess $T_\mathrm{peak}$, aka memory-copy
+- Create a script to assess $T_\mathrm{peak}$, using memory-copy
 - Assess $T_\mathrm{peak}$ of your CPU
 - Perform a strong-scaling test: assess $T_\mathrm{eff}$ for the diffusion 2D as function of number of grid points and implementation
 
@@ -38,7 +38,7 @@ Report on a figure $T_\mathrm{eff}$ of your memcopy code as function of number o
 
 _($T_\mathrm{eff}$ of your memcopy code represents $T_\mathrm{peak}$, the peak memory throughput you can achieve on your CPU for a given implementation.)_
 
-Add that figure in a new section of the README, provide a minimal description of 1) the performed test, and 2) short description of the result. Figure out the vendor-announced peak memory bandwidth of your CPU, add it to the figure and use it to discuss your results.
+Add that figure in a new section of the `README.md`, provide a minimal description of 1) the performed test, and 2) short description of the result. Figure out the vendor-announced peak memory bandwidth of your CPU, add it to the figure and use it to discuss your results.
 
 ### Task 3
 
@@ -48,5 +48,5 @@ Report on a figure $T_\mathrm{eff}$ of the 5 implementations of the diffusion 2D
 
 Report also on the same figure the memory copy values for the `for`, `Threads.@threads`, `@tturbo` implementation (as, e.g, dashed lines).
 
-Add this second figure in a new section of the README, provide a minimal description of 1) the performed test, and 2) short description of the result.
+Add this second figure in a new section of the `README.md`, provide a minimal description of 1) the performed test, and 2) short description of the result.
 

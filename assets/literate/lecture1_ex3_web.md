@@ -15,10 +15,10 @@ Based on the experience you acquired solving the [Exercise 2](#exercise_2_-_car_
 
 Starting from the 1D code done in [Exercise 2](#exercise_2_-_car_travel), work towards adding the second spatial dimension. Now, the car's position $(x,y)$ as function of time $t$ has two components.
 
-\note{- split velocity magnitude $V$ into $x$ and $y$ component
-- use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
-- use two vectors or an array to store the car's coordinates
-- define the y-axis extend in the plot `ylims=(0, ttot*Vy)`}
+\note{- Split velocity magnitude $V$ into $x$ and $y$ component
+- Use `sind()` or `cosd()` functions if passing the angle in _deg_ instead of _rad_
+- Use two vectors or an array to store the car's coordinates
+- Define the y-axis extend in the plot `ylims=(0, ttot*Vy)`}
 
 ### Question 1
 

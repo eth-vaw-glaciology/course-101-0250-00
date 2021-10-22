@@ -4,7 +4,7 @@
 👉 See [Logistics](/logistics/#submission) for submission details.
 
 The goal of this exercise is to:
-- Finalise the script elaborated in class
+- Finalise the script discussed in class
 
 In this first exercise, you will terminate the performance oriented implementation of the 2D diffusion scripts from lecture 5.
 

@@ -55,7 +55,7 @@ nt   = cld(ttot, dt)
 xc   = LinRange(dx/2, Lx-dx/2, nx)
 ```
 
-\note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos}
+\note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos.}
 
 We now need to initialise 3 1D arrays to hold information about concentration `C`, initial concentration distribution `Ci`, and rate of change of concentration `dCdt`.
 
@@ -66,7 +66,7 @@ Ci   =  copy(C)
 dCdt = zeros(Float64, nx)
 ```
 
-\note{We here work with double precision arithmetic `Float64`}
+\note{We here work with double precision arithmetic `Float64`.}
 
 Remains the most important part, the `# Time loop` where _predictive_ action should take place. We will loop from `it=1` to `nt` computing the rate of change of `C`, `dCdt`, and then updating `C`. We also want to visualise the evolution of the concentration distribution.
 
@@ -144,7 +144,7 @@ end
 
 Let's execute it and visualise output
 
-So, excellent, we have our first 1D ODE solver up and running in Julia :-)
+So, excellent, we have our first 1D ODE solver up and running in Julia 🙂
 
 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 

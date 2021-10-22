@@ -32,8 +32,8 @@ $$
 
 The 3 equations above represent the discretised form of the 3 first equations and should be used to solve the problem numerically. The initial position of the volcanic bomb $(x_0, y_0)=(0,480)$ m. The magnitude of the ejection speed is of 120 m/s and the angle $\alpha = 60°$. The simulation stops when the volcanic bomb touches the ground ($y=0$).
 
-\note{- modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
-- use e.g. a `break` statement to exit the loop once the bomb hits the ground}
+\note{- Modify the code from exercise 3 to, in addition, account for the change of `Vy` with time
+- Use e.g. a `break` statement to exit the loop once the bomb hits the ground}
 
 ### Question 1
 

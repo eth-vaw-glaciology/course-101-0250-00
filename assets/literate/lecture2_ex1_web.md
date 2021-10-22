@@ -23,7 +23,7 @@ nb = 5 # number of volcanic bombs
 
 Then, replace the vertical angle of ejection α to randomly vary between 60° and 120° with respect to the horizon for each bomb. Keep the magnitude of the ejection velocity as before, i.e. $V=120$ m/s.
 
-\note{Use the `randn()` function to generate random numbers normally distributed}
+\note{Use the `randn()` function to generate random numbers normally distributed.}
 
 All bombs have the same initial location $(x=0, y=480)$ as before.
 

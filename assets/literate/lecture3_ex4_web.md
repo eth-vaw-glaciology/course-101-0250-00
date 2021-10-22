@@ -28,9 +28,9 @@ You should obtain a similar output for your figure (try saving it as .png from w
 
 ### Task 2
 In a second step,
-- Add 5 monitoring station located at $y_\mathrm{monit}$ ~$20$ m below the ground between $x=500$ and $900$ m, distant from each other by $100$ m.
+- Add 5 monitoring stations located at $y_\mathrm{monit}$ ~$20$ m below the ground between $x=500$ and $900$ m, distant from each other by $100$ m.
 - Record and store the pressure in each monitoring station throughout the entire simulation
-- For the first station (located at $x=500$ m), find the arrival time for which the pressure > 0.02 Pa
+- For the first station (located at $x=500$ m), find the arrival time for which the pressure $P > 0.02$ Pa
 - Knowing at which time the wave hit the first station, you can post-process and **report following (as formatted output in the REPL or on a figure)**:
   - First wave arrival time (in s) at station $x_s=500$ m
   - Distance (`∆_dist`) the wave travelled

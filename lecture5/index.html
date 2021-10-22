@@ -222,11 +222,11 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <p>Then then the reporting tells us a test failed.</p>
 <h3 id=wrapping-up__2 ><a href="#wrapping-up__2" class=header-anchor >Wrapping-up</a></h3>
 <ul>
-<li><p>The <code>Test</code> module provides simple <em>unit testing</em> functionality</p>
+<li><p>The <code>Test</code> module provides simple <em>unit testing</em> functionality.</p>
 
-<li><p>Tests can be grouped into sets using <code>@testset</code></p>
+<li><p>Tests can be grouped into sets using <code>@testset</code>.</p>
 
-<li><p>We&#39;ll later see how tests can be used in CI</p>
+<li><p>We&#39;ll later see how tests can be used in CI.</p>
 
 </ul>
 
@@ -238,7 +238,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <p>👉 See <a href="/course-101-0250-00/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Finalise the script elaborated in class</p>
+<li><p>Finalise the script discussed in class</p>
 
 </ul>
 <p>In this first exercise, you will terminate the performance oriented implementation of the 2D diffusion scripts from lecture 5.</p>
@@ -318,7 +318,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <p>👉 See <a href="/course-101-0250-00/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Create a script to assess \(T_\mathrm{peak}\), aka memory-copy</p>
+<li><p>Create a script to assess \(T_\mathrm{peak}\), using memory-copy</p>
 
 <li><p>Assess \(T_\mathrm{peak}\) of your CPU</p>
 
@@ -353,12 +353,12 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
 <p>Report on a figure \(T_\mathrm{eff}\) of your memcopy code as function of number of grid points <code>nx × ny</code> for the simple <code>for</code> loop, the <code>Threads.@threads</code>, and the <code>@tturbo</code> implementations. Vary <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
 <p><em>&#40;\(T_\mathrm{eff}\) of your memcopy code represents \(T_\mathrm{peak}\), the peak memory throughput you can achieve on your CPU for a given implementation.&#41;</em></p>
-<p>Add that figure in a new section of the README, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result. Figure out the vendor-announced peak memory bandwidth of your CPU, add it to the figure and use it to discuss your results.</p>
+<p>Add that figure in a new section of the <code>README.md</code>, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result. Figure out the vendor-announced peak memory bandwidth of your CPU, add it to the figure and use it to discuss your results.</p>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
 <p>Repeat the strong scaling benchmark you just realised using the memcopy.jl code on the various diffusion 2D codes &#40;<code>perf2</code>, <code>perf_loop</code>, <code>perf_loop_fun</code> - <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> for the latter&#41;.</p>
 <p>Report on a figure \(T_\mathrm{eff}\) of the 5 implementations of the diffusion 2D code as function of number of grid points <code>nx × ny</code>. Vary <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
 <p>Report also on the same figure the memory copy values for the <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> implementation &#40;as, e.g, dashed lines&#41;.</p>
-<p>Add this second figure in a new section of the README, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result.</p>
+<p>Add this second figure in a new section of the <code>README.md</code>, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -389,7 +389,7 @@ ytest &#61; Int&#40;cld&#40;0.5*Ly/dy&#41;&#41;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 20, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 22, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

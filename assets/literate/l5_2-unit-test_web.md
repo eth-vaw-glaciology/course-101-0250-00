@@ -111,7 +111,7 @@ Then then the reporting tells us a test failed.
 
 ### Wrapping-up
 
-- The `Test` module provides simple _unit testing_ functionality
-- Tests can be grouped into sets using `@testset`
-- We'll later see how tests can be used in CI
+- The `Test` module provides simple _unit testing_ functionality.
+- Tests can be grouped into sets using `@testset`.
+- We'll later see how tests can be used in CI.
 

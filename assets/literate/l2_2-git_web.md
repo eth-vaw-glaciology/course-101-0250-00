@@ -23,14 +23,13 @@ Questions:
 
 Please follow along!
 
-If you don't have git installed, head to [https://achtzack01.ethz.ch](https://achtzack01.ethz.ch) and open a terminal.
-(and do install it on your computer!)
+If you don't have git installed, head to [https://achtzack01.ethz.ch](https://achtzack01.ethz.ch) and open a terminal. (And do install it on your computer!)
 
 - git setup:
-```
-git config --global user.name "Your Name"
-git config --global user.email "youremail@yourdomain.com"
-```
+  ```sh
+  git config --global user.name "Your Name"
+  git config --global user.email "youremail@yourdomain.com"
+  ```
 - make a repo
 - add some files (`add`, `commit`)
 - do some changes (`commit` some more)
@@ -58,7 +57,7 @@ GitHub and GitLab are social coding websites
   - they facilitate for developers to interact
   - they provide infrastructure for software testing, deployment, etc
 
-\note{ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/)}
+\note{ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).}
 
 Question: who has a GitHub account?
 
@@ -96,7 +95,6 @@ Make such that you can push and pull without entering a password
 - fork a repository on github.com (top right)
 
 ## Git: questions?
-
 
 ![git-me](../assets/literate_figures/git-me.png)
 

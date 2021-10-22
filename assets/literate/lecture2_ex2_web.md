@@ -33,7 +33,7 @@ As initial condition, define a Gaussian profile of concentration `C` of amplitud
 
 Keep the concentration at the boundaries at `C=0`.
 
-\note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations}
+\note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
 
 ### Question 1
 
