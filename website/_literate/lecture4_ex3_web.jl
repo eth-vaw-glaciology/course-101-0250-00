@@ -18,7 +18,7 @@ To get started, save a copy of the `diffusion_nl_1D.jl` script we did in class (
 
 md"""
 ### Task 1
-As first task, adapt the parameters and the implementation. In the `# Physics` section, set the total simulation time `ttot = 2e4.0` and move the `D0` initialisation to the `# Array initialisation` section.
+As first task, adapt the parameters and the implementation. In the `# Physics` section, set the total simulation time `ttot = 2e4` and move the `D0` initialisation to the `# Array initialisation` section.
 
 In the `# Numerics` section, add the nonlinear tolerance the solver should converge to, `epsi = 1e-10`.
 
