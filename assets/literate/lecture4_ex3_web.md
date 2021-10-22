@@ -12,7 +12,7 @@ In this exercise you will transform the explicit nonlinear 1D diffusion solver t
 To get started, save a copy of the `diffusion_nl_1D.jl` script we did in class (also available [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) after the lecture), name it `diffusion_nl_1D_steady_1.jl`, and implement the changes tasked below.
 
 ### Task 1
-As first task, adapt the parameters and the implementation. In the `# Physics` section, set the total simulation time `ttot = 2e4.0` and move the `D0` initialisation to the `# Array initialisation` section.
+As first task, adapt the parameters and the implementation. In the `# Physics` section, set the total simulation time `ttot = 2e4` and move the `D0` initialisation to the `# Array initialisation` section.
 
 In the `# Numerics` section, add the nonlinear tolerance the solver should converge to, `epsi = 1e-10`.
 
