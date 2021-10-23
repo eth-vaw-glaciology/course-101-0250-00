@@ -11,9 +11,8 @@ showall = true
 > :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
 > :computer: Unit testing in Julia\
 > :construction: Exercises:
-> - Dual-time stepping
-> - CPU HPC for acoustic
-> - Test set implementation
+> - CPU perf. codes for diffusion and acoustic waves
+> - Unit tests and testset implementation
 
 --- 
 
