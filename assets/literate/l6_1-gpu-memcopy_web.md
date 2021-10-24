@@ -59,6 +59,8 @@ B = CUDA.rand(Float64, nx, ny);
 
 \note{Previously defined variables are interpolated with `$` into the benchmarked expression.}
 
+\warn{If not specified otherwise, `CUDA.zeros(nx, ny)` allocates `Float32`.}
+
 Time samples resulting from benchmarking as just performed follow normally a right skewed distribution.
 
 For such distribution, the median is the most robust of the commonly used estimators of the central tendency; the minimum is in general also a good estimator as hardware cannot by accident run faster than with the ideal and it is as a result commonly used for reporting performance (for more information on estimators see [here](https://juliaci.github.io/BenchmarkTools.jl/stable/manual/#Which-estimator-should-I-use?)).
