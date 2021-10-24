@@ -1,0 +1,177 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/course-101-0250-00/libs/katex/katex.min.css"> <link rel=stylesheet  href="/course-101-0250-00/libs/highlight/github.min.css"> <link rel=stylesheet  href="/course-101-0250-00/css/franklin.css"> <link rel=stylesheet  href="/course-101-0250-00/css/poole_hyde.css"> <link rel=stylesheet  href="/course-101-0250-00/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/course-101-0250-00/assets/favicon.png"> <title>Lecture 6</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/course-101-0250-00/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/course-101-0250-00/"> Fall 2021</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/course-101-0250-00/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a> & <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9"> <a class="sidebar-nav-item " href="/course-101-0250-00/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/course-101-0250-00/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/course-101-0250-00/homework/">Homework</a> <a class="sidebar-nav-item " href="/course-101-0250-00/software_install/">Software install</a> <a class="sidebar-nav-item " href="/course-101-0250-00/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture1/">Lecture 1</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture2/">Lecture 2</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture3/">Lecture 3</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture4/">Lecture 4</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture5/">Lecture 5</a> <div class=course-section >Part 3 - Projects</div> </nav> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_6 ><a href="#lecture_6" class=header-anchor >Lecture 6</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 GPU computing &amp; performance assessment &#40;continued&#41;<br />💻 Unit testing and continuous integration &#40;CI&#41;<br />🚧 Exercises:</p> <ul> <li><p>GPU codes for diffusion and acoustic waves</p> <li><p>Dual-time stepping</p> <li><p>Deploy GitHub CI</p> </ul> </blockquote> <p><hr /> </p> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_6">Lecture 6</a><li><a href="#gpu_computing_and_performance_assessment">GPU computing and performance assessment</a><ol><li><a href="#scientific_applications_performance">Scientific applications&#39; performance</a><li><a href="#gpu_array_programming">GPU array programming</a><li><a href="#gpu_kernel_programming">GPU kernel programming</a></ol><li><a href="#exercises_-_lecture_6">Exercises - lecture 6</a></ol></div> <p><a href="#exercises_-_lecture_6"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=gpu_computing_and_performance_assessment ><a href="#gpu_computing_and_performance_assessment" class=header-anchor >GPU computing and performance assessment</a></h1> <h3 id=the_goal_of_this_lecture_6_is_to ><a href="#the_goal_of_this_lecture_6_is_to" class=header-anchor >The goal of this lecture 6 is to:</a></h3> <ol> <li><p>Learn about</p> </ol> <ul> <li><p>how to establish the peak memory throughput of your GPU</p> <li><p>GPU array and kernel programming</p> </ul> <ol start=2 > <li><p>Consolidate</p> </ol> <ul> <li><p>the basics of benchmarking</p> <li><p>how to compute achieved memory throughput</p> </ul> <p>TODO: directions on getting started &#40;octopus, node40 only for this lecture &#43; exercise 1, then TitanXm nodes, notebook vs REPL, CUDA set device, VNC remote desktop...&#41;</p> <p>Replace all XX in this lecture, and add final text for ix, iy indices...</p> <p>We will use the packages <code>CUDA</code>, <code>BenchmarkTools</code> and <code>Plots</code> to create a little performance laboratory:</p> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> CUDA
+<span class=hljs-keyword >using</span> BenchmarkTools</code></pre> <h2 id=scientific_applications_performance ><a href="#scientific_applications_performance" class=header-anchor >Scientific applications&#39; performance</a></h2> <p>The performance of most scientific applications nowadays is bound by memory access speed &#40;<em>memory-bound</em>&#41; rather than by the speed computations can be done &#40;<em>compute-bound</em>&#41;.</p> <p>The reason is that current GPUs &#40;and CPUs&#41; can do many more computations in a given amount of time than they can access numbers from main memory.</p> <p>This imbalance can be quantified by dividing the computation peak performance &#91;GFLOP/s&#93; by the memory access peak performance &#91;GB/s&#93; and multiplied by the size of a number in Bytes &#40;for simplicity, theoretical peak performance values as specified by the vendors can be used&#41;. For example for the Tesla V100 GPU, it is:</p> <span class=katex-display ><span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML" display=block ><semantics><mrow><mfrac><mrow><mn>7500</mn><mtext> </mtext><mrow><mo stretchy=false >[</mo><mi mathvariant=normal >G</mi><mi mathvariant=normal >F</mi><mi mathvariant=normal >l</mi><mi mathvariant=normal >o</mi><mi mathvariant=normal >p</mi><mi mathvariant=normal >/</mi><mi mathvariant=normal >s</mi><mo stretchy=false >]</mo></mrow></mrow><mrow><mn>900</mn><mtext> </mtext><mrow><mo stretchy=false >[</mo><mi mathvariant=normal >G</mi><mi mathvariant=normal >B</mi><mi mathvariant=normal >/</mi><mi mathvariant=normal >s</mi><mo stretchy=false >]</mo></mrow></mrow></mfrac><mtext> </mtext><mo>×</mo><mtext> </mtext><mn>8</mn><mo>=</mo><mn>67</mn></mrow><annotation encoding="application/x-tex"> \frac{7500 ~\mathrm{[GFlop/s]}}{900 ~\mathrm{[GB/s]}}~×~8 = 67 </annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:2.363em;vertical-align:-0.936em;"></span><span class=mord ><span class="mopen nulldelimiter"></span><span class=mfrac ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:1.427em;"><span style="top:-2.314em;"><span class=pstrut  style="height:3em;"></span><span class=mord ><span class=mord >9</span><span class=mord >0</span><span class=mord >0</span><span class="mspace nobreak"> </span><span class=mord ><span class=mopen >[</span><span class="mord mathrm">G</span><span class="mord mathrm">B</span><span class="mord mathrm">/</span><span class="mord mathrm">s</span><span class=mclose >]</span></span></span></span><span style="top:-3.23em;"><span class=pstrut  style="height:3em;"></span><span class=frac-line  style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class=pstrut  style="height:3em;"></span><span class=mord ><span class=mord >7</span><span class=mord >5</span><span class=mord >0</span><span class=mord >0</span><span class="mspace nobreak"> </span><span class=mord ><span class=mopen >[</span><span class="mord mathrm">G</span><span class="mord mathrm">F</span><span class="mord mathrm">l</span><span class="mord mathrm">o</span><span class="mord mathrm">p</span><span class="mord mathrm">/</span><span class="mord mathrm">s</span><span class=mclose >]</span></span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace nobreak"> </span><span class=mspace  style="margin-right:0.2222222222222222em;"></span><span class=mbin >×</span><span class="mspace nobreak"> </span><span class=mspace  style="margin-right:0.2222222222222222em;"></span><span class=mord >8</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span><span class=mrel >=</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span></span><span class=base ><span class=strut  style="height:0.64444em;vertical-align:0em;"></span><span class=mord >6</span><span class=mord >7</span></span></span></span></span> <p>&#40;here computed with double precision values taken from <a href="https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf">the vendor&#39;s product specification sheet</a>&#41;</p> <p>So we can do 67 floating point operations per number read from main memory or written to it.</p> <p>As a consequence, we can consider <strong>floating point operations be &quot;for free&quot;</strong> when we work in the memory-bounded regime as in this lecture.</p> <p>Therefore, let us start with investigating the performance of different ways to express and launch GPU memory copies. We will wrap all of these memory copies in functions, to enable the Julia compiler to optimize them best.</p> <p>There exists already the function <code>copyto&#33;</code>, which permits to copy data from one pre-allocated array to another; thus, we start with analysing this function&#39;s performance.</p> <p>But first, let us list what GPUs are available and make sure we assign no more than one user per GPU:</p> <pre><code class="julia hljs">collect(devices())
+device!(<span class=hljs-number >7</span>) <span class=hljs-comment ># select a GPU between 0-7</span></code></pre> <p>To this purpose, we allocate two arrays and benchmark the function using <code>BenchmarkTools</code>:</p> <pre><code class="julia hljs">nx = ny = <span class=hljs-number >32</span>
+A = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx, ny);
+B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);
+<span class=hljs-meta >@benchmark</span> <span class=hljs-keyword >begin</span> copyto!($A, $B); synchronize() <span class=hljs-keyword >end</span></code></pre> <div class=note ><div class=title >💡 Note</div> <div class=messg >Previously defined variables are interpolated with <code>&#36;</code> into the benchmarked expression.</div></div> <p>Time samples resulting from benchmarking as just performed follow normally a right skewed distribution.</p> <p>For such distribution, the median is the most robust of the commonly used estimators of the central tendency; the minimum is in general also a good estimator as hardware cannot by accident run faster than with the ideal and it is as a result commonly used for reporting performance &#40;for more information on estimators see <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/manual/#Which-estimator-should-I-use?">here</a>&#41;.</p> <p>Using <code>@belapsed</code> instead of <code>@benchmark</code>, we directly obtain the minimum of the taken time samples:</p> <pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> copyto!($A, $B); synchronize() <span class=hljs-keyword >end</span></code></pre>
+<p>Now, we know that it does not take &quot;an awful lot of time&quot;. Of course, we do not want to stop here, but figure out how good the achieved performance was.</p>
+<p>To this aim, we compute the <em>total memory throughput</em>, <code>T_tot</code> &#91;GB/s&#93;, which is defined as the volume of the copied data &#91;GB&#93; divided by the time spent &#91;s&#93;:</p>
+<pre><code class="julia hljs">T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >The factor <code>2</code> comes from the fact that the data is read and written &#40;<code>2</code> operations&#41;.</div></div>
+<p>Compare now <code>T_tot</code> with the known peak memory throughput, <code>T_peak</code>, which is found e.g. in scientific or vendor publications &#40;for the Nvidia Tesla V100 GPUs, it is 837 GB/s, according to <a href="https://doi.org/10.1109/P3HPC51967.2020.00006">this source</a>&#41;.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Achievable peak memory throughput is usually significantly lower than the <em>theoretical peak bandwidth</em> announced by the vendor &#40;for the <a href="https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf">Tesla V100 GPUs</a>, the latter is 900 GB/s as noted already earlier&#41;.</div></div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Here 1 GB is 1e9 Bytes as in the publication, where the peak memory throughput of the Tesla P100 GPU was obtained from.</div></div>
+<p>You have surely found <code>T_tot</code> to be orders of magnitude below <code>T_peak</code>. This is to be expected when copying a small array.</p>
+<p>Let us determine how <code>T_tot</code> behaves with increasing array sizes:</p>
+<pre><code class="julia hljs">array_sizes = []
+throughputs = []
+<span class=hljs-keyword >for</span> pow = <span class=hljs-number >0</span>:<span class=hljs-number >11</span>
+    nx = ny = <span class=hljs-number >32</span>*<span class=hljs-number >2</span>^pow
+    <span class=hljs-keyword >if</span> (<span class=hljs-number >3</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>) &gt; CUDA.available_memory()) <span class=hljs-keyword >break</span>; <span class=hljs-keyword >end</span>
+    A = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx, ny);
+    B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);
+    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> copyto!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+    T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+    push!(array_sizes, nx)
+    push!(throughputs, T_tot)
+    println(<span class=hljs-string >&quot;(nx=ny=<span class=hljs-variable >$nx</span>) T_tot = <span class=hljs-subst >$(T_tot)</span>&quot;</span>)
+    CUDA.unsafe_free!(A)
+    CUDA.unsafe_free!(B)
+<span class=hljs-keyword >end</span></code></pre>
+<p>You can observe that the best performance is on pair with <code>T_peak</code> or a bit lower &#40;measured 784 GB/s with the Tesla V100 GPU&#41; as <code>copyto&#33;</code> is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.</p>
+<p>Furthermore, we note that best performance is obtained for large arrays &#40;in the order of Gigabytes&#41;.</p>
+<p>We will use the array size for which we obtained the best result for the remainder of the performance experiments:</p>
+<pre><code class="julia hljs">T_tot_max, index = findmax(throughputs)
+nx = ny = array_sizes[index]
+A = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx, ny);
+B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);</code></pre>
+<h2 id=gpu_array_programming ><a href="#gpu_array_programming" class=header-anchor >GPU array programming</a></h2>
+<p>Let us now create our own memory copy function using GPU <em>Array Programming</em> &#40;AP&#41;.</p>
+<p>We can write a memory copy simply as <code>A .&#61; B</code>; and wrap it in a function using Julia&#39;s concise notation, it looks as follows:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> memcopy_AP!(A, B) = (A .= B)</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >We use <code>@inbounds</code> macro to make sure no array bounds checking is performed, which would slow down significantly. Note, furthermore, that outside of these exercises it can be more convenient not to use the <code>@inbounds</code> macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : <code>julia --check-bounds&#61;no ...</code></div></div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><code>A &#61; B</code> would not do a memcopy, but make <code>A</code> an alias of <code>B</code>, i.e. make <code>A</code> point to the same data in memory as <code>B</code>.</div></div>
+<p>We also benchmark it and compute <code>T_tot</code>:</p>
+<pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> memcopy_AP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<p>The performance you observe might be a little lower than with the <code>copyto&#33;</code> function &#40;measured 734 GB/s with the Tesla V100 GPU&#41;.</p>
+<p>The few experiments that we have done together so far have shown you already that performing memory copy with maximal possible performance &#40;T_peak&#41; is not a completely trivial task.</p>
+<h2 id=gpu_kernel_programming ><a href="#gpu_kernel_programming" class=header-anchor >GPU kernel programming</a></h2>
+<p>We will now use GPU <em>Kernel Programming</em> &#40;KP&#41; to try to get closer to <code>T_peak</code>.</p>
+<p>A memory copy kernel can be written e.g. as follows:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy_KP!(A, B)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy]
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Indices <code>ix</code> and <code>iy</code> ... TODO &#33;&#33;</div></div>
+<p>Then, in order to copy the &#40;entire&#41; array <code>B</code> to <code>A</code>, we need to launch the kernel such that the above indices <code>ix</code> and <code>iy</code> map exactly to each array cell.</p>
+<p>Therefore, we need to have <code>blocks&#91;1&#93;*threads&#91;1&#93; &#61;&#61; nx</code> and <code>blocks&#91;2&#93;*threads&#91;2&#93; &#61;&#61; ny</code>.</p>
+<p>We will try first with the simplest possible option using only one thread per block:</p>
+<pre><code class="julia hljs">threads = (<span class=hljs-number >1</span>, <span class=hljs-number >1</span>)
+blocks  = (nx, ny)
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<p><code>T_tot</code> is certainly orders of magnitude below <code>T_peak</code> with this kernel launch parameters.</p>
+<p>We need to take into account that single threads cannot run completely independently, but threads are launched in small groups within a block, called <em>warps</em>; a warp consists of 32 threads on current GPUs.</p>
+<p>Furthermore, warps should access contiguous memory for best performance.</p>
+<p>We therefore retry using 32 threads &#40;one warp&#41; per block as follows:</p>
+<pre><code class="julia hljs">threads = (<span class=hljs-number >32</span>, <span class=hljs-number >1</span>)
+blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny)
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >For simplicity, the number of threads was set here explicitly to 32; more future proof would be to retrieve the warp size from the corresponding CUDA attribute by doing: <code>attribute&#40;device&#40;&#41;,CUDA.DEVICE_ATTRIBUTE_WARP_SIZE&#41;</code>.</div></div>
+<p><code>T_tot</code> is now probably in the order of magnitude of <code>T_peak</code>, yet depending on the used GPU it can be still significantly below &#40;measured 362 GB/s with the Tesla V100 GPU&#41;.</p>
+<p>If <code>T_tot</code> is significantly below <code>T_peak</code>, then we need to set the numbers of threads per block closer to the maximum the GPU allows.</p>
+<p>Let us determine how <code>T_tot</code> behaves with an increasing number of threads per blocks:</p>
+<pre><code class="julia hljs">max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+thread_count = []
+throughputs  = []
+<span class=hljs-keyword >for</span> pow = <span class=hljs-built_in >Int</span>(log2(<span class=hljs-number >32</span>)):<span class=hljs-built_in >Int</span>(log2(max_threads))
+    threads = (<span class=hljs-number >2</span>^pow, <span class=hljs-number >1</span>)
+    blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny)
+    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+    T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+    push!(thread_count, prod(threads))
+    push!(throughputs, T_tot)
+    println(<span class=hljs-string >&quot;(threads=<span class=hljs-variable >$threads</span>) T_tot = <span class=hljs-subst >$(T_tot)</span>&quot;</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<p>You should observe now that beyond a certain minimum number of threads per block &#40;128 with the Tesla V100 GPU&#41;, <code>T_tot</code> is quite close to <code>T_peak</code> &#40;which exact thread/block configuration leads to the best <code>T_tot</code> depends on the used GPU architecture&#41;.</p>
+<p>Instead of increasing the number of threads only in the x dimension, we can also do so in the y dimension.</p>
+<p>We keep though 32 threads in the x dimension in order to let the warps access contiguous memory:</p>
+<pre><code class="julia hljs">thread_count = []
+throughputs  = []
+<span class=hljs-keyword >for</span> pow = <span class=hljs-number >0</span>:<span class=hljs-built_in >Int</span>(log2(max_threads/<span class=hljs-number >32</span>))
+    threads = (<span class=hljs-number >32</span>, <span class=hljs-number >2</span>^pow)
+    blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny÷threads[<span class=hljs-number >2</span>])
+    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
+    T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+    push!(thread_count, prod(threads))
+    push!(throughputs, T_tot)
+    println(<span class=hljs-string >&quot;(threads=<span class=hljs-variable >$threads</span>) T_tot = <span class=hljs-subst >$(T_tot)</span>&quot;</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<p><code>T_tot</code> is even slightly better in general. Much more important is though that a thread block accesses now not a 1D-line of the arrays, but a 2D block.</p>
+<p>We will see later that this is of great benefit when, e.g., computing finite difference derivatives in x and y direction.</p>
+<p>So far, we experimented with memory copy in the strict sense: copy an array from one place to the other. When doing computations, we often read more data than we write.</p>
+<p>We will therefore also do a few experiments on another commonly benchmarked case: read two arrays and write only one.</p>
+<p>We modify therefore the previous kernel to take a third array <code>C</code> as input and add it to <code>B</code> &#40;the rest is identical&#41;:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy2_KP!(A, B, C)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy] + C[ix,iy]
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>Then, we test exactly as for the previous kernel how <code>T_tot</code> behaves with an increasing number of threads per blocks in y dimension, keeping it fixed to 32 in x dimension:</p>
+<pre><code class="julia hljs">C = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);
+thread_count = []
+throughputs  = []
+<span class=hljs-keyword >for</span> pow = <span class=hljs-number >0</span>:<span class=hljs-built_in >Int</span>(log2(max_threads/<span class=hljs-number >32</span>))
+    threads = (<span class=hljs-number >32</span>, <span class=hljs-number >2</span>^pow)
+    blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny÷threads[<span class=hljs-number >2</span>])
+    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy2_KP!($A, $B, $C); synchronize() <span class=hljs-keyword >end</span>
+    T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+    push!(thread_count, prod(threads))
+    push!(throughputs, T_tot)
+    println(<span class=hljs-string >&quot;(threads=<span class=hljs-variable >$threads</span>) T_tot = <span class=hljs-subst >$(T_tot)</span>&quot;</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >There is now a factor <code>3</code> instead of <code>2</code> in the computation of <code>T_tot</code>: <code>2</code> arrays are read and <code>1</code> written &#40;<code>3</code> operations&#41;.</div></div>
+<p>Compare now the best measured <code>T_tot</code> to the <code>T_peak</code> obtained from the publication and if it is higher, then it means we need to correct <code>T_peak</code> to take the value of the <code>T_tot</code> measured &#40;<code>T_tot</code> measured with the Tesla V100 GPU is 807 GB/s, i.e., 30 GB/s lower than the <code>T_peak</code> obtained from the publication mentioned earlier&#41;.</p>
+<p>Note that the <code>T_peak</code> reported in the publication was obtained with a slightly different kernel which multiplies C with a scalar in addition; it is usually referred to as <em>triad</em>.</p>
+<p>For completeness, we will also quickly benchmark a <em>triad</em> kernel.</p>
+<p>To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy_triad_KP!(A, B, C, s)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy] + s*C[ix,iy]
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span>
+
+s = rand()
+
+T_tot_max, index = findmax(throughputs)
+threads = (<span class=hljs-number >32</span>, thread_count[index]÷<span class=hljs-number >32</span>)
+blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny÷threads[<span class=hljs-number >2</span>])
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy_triad_KP!($A, $B, $C, $s); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<p>There should be no significant difference between <code>T_tot</code> of this triad kernel and of the previous kernel &#40;with the Tesla V100 GPU, it is 807 GB/s with both kernels&#41;.</p>
+<p>Finally, let us also check the triad performance we obtain with GPU array programming:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
+
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> memcopy_triad_AP!($A, $B, $C, $s); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<p><code>T_tot</code> is probably a bit lower than in the above experiment, but still rather close to <code>T_peak</code>.</p>
+<p>Congratulations&#33; You have successfully made it through the memory copy kernel optimization experiments and learn about the fundamental parameters determining memory throughput. From now on you will get your hands dirty&#33;</p>
+<p>One moment&#33; For the following exercises you will need the parameters we have established here for best memory access:</p>
+<pre><code class="julia hljs">println(<span class=hljs-string >&quot;nx=ny=<span class=hljs-variable >$nx</span>; threads=<span class=hljs-variable >$threads</span>; blocks=<span class=hljs-variable >$blocks</span>&quot;</span>)</code></pre>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<h1 id=exercises_-_lecture_6 ><a href="#exercises_-_lecture_6" class=header-anchor >Exercises - lecture 6</a></h1>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Exercises have to be handed in as monolithic Julia scripts &#40;one code per script&#41; and uploaded to your private &#40;shared&#41; GitHub repository, in a <strong>specific folder for each lecture</strong>. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/course-101-0250-00/homework">more</a>&#41;.</div></div>
+<div class=page-foot >
+  <div class=copyright >
+    <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+    Last modified: October 24, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+    </div>

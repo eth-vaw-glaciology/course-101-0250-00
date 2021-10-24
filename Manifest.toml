@@ -179,9 +179,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
 deps = ["ChainRulesCore", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
-git-tree-sha1 = "9809cf6871ca006d5a4669136c09e77ba08bf51a"
+git-tree-sha1 = "15dad92b6a36400c988de3fc9490a372599f5b4c"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.20"
+version = "0.25.21"
 
 [[DocStringExtensions]]
 deps = ["LibGit2"]
@@ -280,9 +280,9 @@ version = "0.10.21"
 
 [[Franklin]]
 deps = ["Dates", "DelimitedFiles", "DocStringExtensions", "ExprTools", "FranklinTemplates", "HTTP", "Literate", "LiveServer", "Logging", "Markdown", "NodeJS", "OrderedCollections", "Pkg", "REPL", "Random"]
-git-tree-sha1 = "6a4239afb856b0316afecd948c81677cfdd00673"
+git-tree-sha1 = "eb6d950d24eecdc971d0f803b17bd33a1b4e509b"
 uuid = "713c75ef-9fc9-4b05-94a9-213340da978e"
-version = "0.10.60"
+version = "0.10.61"
 
 [[FranklinTemplates]]
 deps = ["LiveServer"]
