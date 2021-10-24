@@ -102,6 +102,10 @@ B = CUDA.rand(Float64, nx, ny);
 #nb # > 💡 note: Previously defined variables are interpolated with `$` into the benchmarked expression.
 #md # \note{Previously defined variables are interpolated with `$` into the benchmarked expression.}
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # > 💡 note: If not specified otherwise, `CUDA.zeros(nx, ny)` allocates `Float32`.
+#md # \warn{If not specified otherwise, `CUDA.zeros(nx, ny)` allocates `Float32`.}
+
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
