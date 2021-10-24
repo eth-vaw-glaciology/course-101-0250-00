@@ -32,7 +32,9 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 
 Using `Literate.jl` permit to write a single `.jl` source file that can contain Julia code and markdown comments and can be transformed into a markdown page, a notebook and notebook-based slides. The website build with `Franklin.jl` has native support to integrate `.jl` scripts ready to me processed by `Literate.jl` in markdown.
 
-To allow `mdstring` to render correctly in Franklin, one need to set the page variable `literate_mds = true`.
+To allow `mdstring` to render correctly in Franklin, one need to set the page variable `literate_mds = true`. See [here](https://github.com/tlienart/Franklin.jl/pull/882) for details.
+
+To disable code execution but allow rendering on the website, one needs to set the page variable `noeval = true`. See [here](https://github.com/tlienart/Franklin.jl/commit/63d757f7eb7e96e7b9112f8a1dca7d1be54d487d) for details.
 
 #### Display Julia script as Markdown page on the website
 
