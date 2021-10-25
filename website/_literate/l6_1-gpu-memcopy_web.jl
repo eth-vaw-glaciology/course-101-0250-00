@@ -21,8 +21,10 @@ md"""
 2. Consolidate
   - the basics of benchmarking
   - how to compute achieved memory throughput
-"""
 
+
+*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*
+"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
