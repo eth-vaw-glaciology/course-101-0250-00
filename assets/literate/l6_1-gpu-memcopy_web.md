@@ -92,7 +92,7 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006), for the Nvidia Tesla V100 GPUs, it is 837 GB/s).
 
-\note{Achievable peak memory throughput is usually significantly lower than the *theoretical peak bandwidth* announced by the vendor (for the [Tesla V100 GPUs](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf), the latter is 900 GB/s as noted already earlier).}
+\note{Achievable peak memory throughput is usually significantly lower than the *theoretical peak bandwidth* announced by the vendor (for the [Tesla P100 GPUs](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf), the latter is 900 GB/s as noted already earlier).}
 
 \note{Here 1 GB is 1e9 Bytes as in the publication, where the peak memory throughput of the Tesla P100 GPU was obtained from.}
 

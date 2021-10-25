@@ -11,7 +11,7 @@ B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);
 <div class=messg >The factor <code>2</code> comes from the fact that the data is read and written &#40;<code>2</code> operations&#41;.</div></div>
 <p>Compare now <code>T_tot</code> with the known peak memory throughput, <code>T_peak</code>, which is found e.g. in scientific or vendor publications &#40;for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to <a href="https://doi.org/10.1109/P3HPC51967.2020.00006">this source</a>, for the Nvidia Tesla V100 GPUs, it is 837 GB/s&#41;.</p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >Achievable peak memory throughput is usually significantly lower than the <em>theoretical peak bandwidth</em> announced by the vendor &#40;for the <a href="https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf">Tesla V100 GPUs</a>, the latter is 900 GB/s as noted already earlier&#41;.</div></div>
+<div class=messg >Achievable peak memory throughput is usually significantly lower than the <em>theoretical peak bandwidth</em> announced by the vendor &#40;for the <a href="https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf">Tesla P100 GPUs</a>, the latter is 900 GB/s as noted already earlier&#41;.</div></div>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Here 1 GB is 1e9 Bytes as in the publication, where the peak memory throughput of the Tesla P100 GPU was obtained from.</div></div>
 <p>You have surely found <code>T_tot</code> to be orders of magnitude below <code>T_peak</code>. This is to be expected when copying a small array.</p>
