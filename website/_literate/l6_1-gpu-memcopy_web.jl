@@ -10,7 +10,38 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The goal of this lecture 6 is to:
+### The goal of this lecture 6 is to tackle:
+
+- GPU architecture and kernel programming
+- GPU computing and performance assessment
+- Unit testing and reference tests in Julia
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## GPU architecture and kernel programming
+
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+A brief overview of GPU architecture and how to program it.
+"""
+
+
+
+#src ######################################################################### 
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## GPU computing and performance assessment
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### The goal of this part is to:
 1. Learn about
   - how to establish the peak memory throughput of your GPU
   - GPU array and kernel programming
@@ -57,7 +88,7 @@ using BenchmarkTools
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Scientific applications' performance
+### Scientific applications' performance
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -218,7 +249,7 @@ B = CUDA.rand(Float64, nx, ny);
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## GPU array programming
+### GPU array programming
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -262,7 +293,7 @@ The few experiments that we have done together so far have shown you already tha
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## GPU kernel programming
+### GPU kernel programming
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -512,21 +543,6 @@ md"""
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 """
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
-
-
-
-#src ######################################################################### 
-#src ######################################################################### 
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 6_
-md"""
-# GPU computing and kernel programming
-"""
-
-
-
-
 
 
 
