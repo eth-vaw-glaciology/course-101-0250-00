@@ -48,9 +48,9 @@ _**Playing with GPUs: the rules**_
 - The maximum number of blocks allowed is huge; computing the largest possible array on the GPU will make you run out of device memory (currently 16-80 GB) before hitting the maximal number of blocks when selecting sensible kernel launch parameters (usually threads per block > 256).
 - Threads, blocks and grid have 3D "Cartesian" topology, which is very useful for 1D, 2D and 3D Cartesian finite-difference domains.
 
-With short overview we should have the important concepts in mind to get started with GPU computing 🚀
+With this short overview we should have the important concepts in mind to get started with GPU computing 🚀
 
-\note{A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/).}
+\note{A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/). Julia GPU resources can be accessed at [https://juliagpu.org](https://juliagpu.org).}
 
 ## GPU computing and performance assessment
 
