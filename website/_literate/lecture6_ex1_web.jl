@@ -152,7 +152,7 @@ There is, however, no obvious way to compute values on-the-fly when needed or to
 
 $$ T_\mathrm{new} = T_\mathrm{old} + ∂t~\frac{1}{c_p} \left( -\frac{∂}{∂x} \left(-λ~\frac{∂T}{∂x}\right) -\frac{∂}{∂y} \left(-λ~\frac{∂T}{∂y}\right) \right) $$
 
-Note that this would obviously be mathematically equivalent to the temperature update rule that we would obtain based on the commonly used heat diffusion equation **for constant and scalar** $λ$ and $c_p$:
+Note that this would obviously be mathematically equivalent to the temperature update rule that we would obtain based on the commonly used heat diffusion equation **for constant and scalar** $λ$:
 
 $$ T_\mathrm{new} = T_\mathrm{old} + ∂t~\frac{λ}{c_p} \left( \frac{∂^2T}{∂x^2} + \frac{∂^2T}{∂y^2} \right) $$
 
