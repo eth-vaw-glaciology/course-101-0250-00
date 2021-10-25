@@ -13,7 +13,7 @@ noeval = true
 > :computer: Unit testing and reference tests\
 > :construction: Exercises:
 > - Data transfer optimisations on GPUs
-> - GPU codes for diffusion / acoustic waves
+> - GPU codes for diffusion / acoustic waves 2D
 > - Reference testing in Julia
 
 --- 
