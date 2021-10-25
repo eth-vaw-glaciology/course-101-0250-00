@@ -21,7 +21,6 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## GPU architecture and kernel programming
-
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -91,7 +90,31 @@ One block gets executed per SMX (yellow box); all threads within this block (yel
 We'll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Writing a Julia GPU function (aka kernel) copying array `A` to array `B` with the layout from the above figure looks as follow
+"""
+using CUDA
+
+function copy!(A, B)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy]
+    return
+end
+
+threads = (4, 3)
+blocks  = (2, 2)
+nx, ny  = threads[1]*blocks[1], threads[2]*blocks[2]
+A       = CUDA.zeros(Float64, nx, ny)
+B       =  CUDA.rand(Float64, nx, ny)
+
+@cuda blocks=blocks threads=threads copy!(A, B)
+synchronize()
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 _**Playing with GPUs: the rules**_
 - No more than 1024 threads per block are allowed.

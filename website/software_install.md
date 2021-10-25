@@ -233,7 +233,7 @@ cd /scratch/<username>/lecture06
 ```sh
 julia
 ```
-6. Activate and instantiate the project (this should download all packages that are needed 🙂)
+6. Activate and instantiate the project (this should download all packages you need 🙂)
 ```julia-repl
 julia> ]
 
