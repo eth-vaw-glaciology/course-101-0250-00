@@ -44,6 +44,6 @@ Other exercises have to be handed in, as usual, as monolithic Julia scripts (one
 
 ---
 
-<!-- \literate{/_literate/lecture5_ex2_web.jl}
+<!-- \literate{/_literate/lecture6_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content) -->
