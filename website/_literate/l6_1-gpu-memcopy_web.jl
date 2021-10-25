@@ -102,11 +102,11 @@ _**Playing with GPUs: the rules**_
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-With short overview we should have the important concepts in mind to get started with GPU computing 🚀
+With this short overview we should have the important concepts in mind to get started with GPU computing 🚀
 """
 
-#nb # > 💡 note: A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/).
-#md # \note{A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/).}
+#nb # > 💡 note: A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/). Julia GPU resources can be accessed at [https://juliagpu.org](https://juliagpu.org).
+#md # \note{A more complete introduction to CUDA (or refresher) can be accessed [here](https://developer.nvidia.com/blog/tag/cuda-refresher/). Julia GPU resources can be accessed at [https://juliagpu.org](https://juliagpu.org).}
 
 #src ######################################################################### 
 #src ######################################################################### 
