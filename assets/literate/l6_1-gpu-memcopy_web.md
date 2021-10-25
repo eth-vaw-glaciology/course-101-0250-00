@@ -1,7 +1,19 @@
 <!--This file was generated, do not modify it.-->
 # GPU computing and performance assessment
 
-### The goal of this lecture 6 is to:
+### The goal of this lecture 6 is to tackle:
+
+- GPU architecture and kernel programming
+- GPU computing and performance assessment
+- Unit testing and reference tests in Julia
+
+## GPU architecture and kernel programming
+
+A brief overview of GPU architecture and how to program it.
+
+## GPU computing and performance assessment
+
+### The goal of this part is to:
 1. Learn about
   - how to establish the peak memory throughput of your GPU
   - GPU array and kernel programming
@@ -30,7 +42,7 @@ using CUDA
 using BenchmarkTools
 ```
 
-## Scientific applications' performance
+### Scientific applications' performance
 
 The performance of most scientific applications nowadays is bound by memory access speed (*memory-bound*) rather than by the speed computations can be done (*compute-bound*).
 
@@ -131,7 +143,7 @@ A = CUDA.zeros(Float64, nx, ny);
 B = CUDA.rand(Float64, nx, ny);
 ```
 
-## GPU array programming
+### GPU array programming
 
 Let us now create our own memory copy function using GPU *Array Programming* (AP).
 
@@ -156,7 +168,7 @@ The performance you observe might be a little lower than with the `copyto!` func
 
 The few experiments that we have done together so far have shown you already that performing memory copy with maximal possible performance (T_peak) is not a completely trivial task.
 
-## GPU kernel programming
+### GPU kernel programming
 
 We will now use GPU *Kernel Programming* (KP) to try to get closer to `T_peak`.
 
@@ -327,6 +339,4 @@ One moment! For the following exercises you will need the parameters we have est
 ```julia:ex19
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
 ```
-
-# GPU computing and kernel programming
 
