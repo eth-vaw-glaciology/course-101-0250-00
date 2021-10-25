@@ -12,6 +12,8 @@ The goal of this exercise is to:
 Prerequisites:
 - the lecture 6 *Benchmarking memory copy and establishing peak memory access performance* ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb))
 
+*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*
+
 ### Getting started
 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it *(you should have a copy on it in your `lecture06` folder on octopus)*.
 

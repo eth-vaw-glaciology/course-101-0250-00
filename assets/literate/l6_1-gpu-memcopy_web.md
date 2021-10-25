@@ -10,6 +10,8 @@
   - the basics of benchmarking
   - how to compute achieved memory throughput
 
+
+*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*
 In order to get started, we need to connect to a machine which has GPU(s).
 
 Let's take a few minutes to get started.
