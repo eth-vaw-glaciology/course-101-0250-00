@@ -10,11 +10,11 @@ noeval = true
 
 > **Agenda**\
 > :books: GPU computing & performance assessment (continued)\
-> :computer: Unit testing and continuous integration (CI)\
+> :computer: Unit testing and reference tests\
 > :construction: Exercises:
 > - Data transfer optimisations on GPUs
 > - GPU codes for diffusion and acoustic waves
-> - Deploy GitHub CI
+> - Reference testing in Julia
 
 --- 
 
