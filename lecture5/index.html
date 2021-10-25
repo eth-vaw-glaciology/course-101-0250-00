@@ -274,7 +274,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>In the folder in your GitHub repository for this week&#39;s &#40;lecture 5&#41; exercises, create a new subfolder <code>acoustic2D</code> where you will add following script:</p>
 <ul>
-<li><p><code>acousitc_2D_Teff.jl</code></p>
+<li><p><code>acoustic_2D_Teff.jl</code></p>
 <ul>
 <li><p>Implement the <code>T_eff</code> metric to the acoustic wave in 2D. Since we are using the velocity-pressure formulation, think about how many arrays are updated at every iterations and define <code>A_Eff</code> accordingly.</p>
 
@@ -286,7 +286,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 
 </ul>
 
-<li><p><code>acousitc_2D_perf.jl</code></p>
+<li><p><code>acoustic_2D_perf.jl</code></p>
 <ul>
 <li><p>Replace divisions by multiplications.</p>
 
@@ -294,13 +294,13 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 
 </ul>
 
-<li><p><code>acousitc_2D_loop.jl</code></p>
+<li><p><code>acoustic_2D_loop.jl</code></p>
 <ul>
 <li><p>Perform the computations of <code>Vx</code>, <code>Vy</code> and <code>P</code> in nested loops. Take care of the staggering and loop range.</p>
 
 </ul>
 
-<li><p><code>acousitc_2D_loop_fun.jl</code></p>
+<li><p><code>acoustic_2D_loop_fun.jl</code></p>
 <ul>
 <li><p>Move the physics computations into functions &#40;kernels&#41; and call them within the time loop. Use the minimal amount of functions that would ensure correct results.</p>
 

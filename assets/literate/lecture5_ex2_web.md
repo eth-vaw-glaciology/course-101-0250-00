@@ -13,17 +13,17 @@ For this second exercise, you will implement a performance oriented implementati
 ### Task 1
 
 In the folder in your GitHub repository for this week's (lecture 5) exercises, create a new subfolder `acoustic2D` where you will add following script:
-- `acousitc_2D_Teff.jl`
+- `acoustic_2D_Teff.jl`
   - Implement the `T_eff` metric to the acoustic wave in 2D. Since we are using the velocity-pressure formulation, think about how many arrays are updated at every iterations and define `A_Eff` accordingly.
   - Use `@printf()` to report `t_toc`, `T_eff` and `niter`.
   - Boost number of grid points to `nx = ny = 512`.
   - Implement a flag to deactivate visualisation using kwargs.
-- `acousitc_2D_perf.jl`
+- `acoustic_2D_perf.jl`
   - Replace divisions by multiplications.
   - When possible, fuse scalar computations as preprocessing.
-- `acousitc_2D_loop.jl`
+- `acoustic_2D_loop.jl`
   - Perform the computations of `Vx`, `Vy` and `P` in nested loops. Take care of the staggering and loop range.
-- `acousitc_2D_loop_fun.jl`
+- `acoustic_2D_loop_fun.jl`
   - Move the physics computations into functions (kernels) and call them within the time loop. Use the minimal amount of functions that would ensure correct results.
   - Implement multi-threading using both `Threads.@threads` and `@tturbo` (the latter from [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl)).
 
