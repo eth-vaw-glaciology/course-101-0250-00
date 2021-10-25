@@ -13,7 +13,7 @@ noeval = true
 > :computer: Unit testing and reference tests\
 > :construction: Exercises:
 > - Data transfer optimisations on GPUs
-> - GPU codes for diffusion and acoustic waves
+> - GPU codes for diffusion / acoustic waves
 > - Reference testing in Julia
 
 --- 
@@ -31,6 +31,9 @@ noeval = true
 
 [⤴ _**back to Content**_](#content)
 
+\literate{/_literate/l6_2-julia-tests_web.jl}
+
+[⤴ _**back to Content**_](#content)
 
 # Exercises - lecture 6
 
@@ -44,6 +47,12 @@ Other exercises have to be handed in, as usual, as monolithic Julia scripts (one
 
 ---
 
-<!-- \literate{/_literate/lecture6_ex2_web.jl}
+\literate{/_literate/lecture6_ex2_web.jl}
 
-[⤴ _**back to Content**_](#content) -->
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture6_ex3_web.jl}
+
+[⤴ _**back to Content**_](#content)
