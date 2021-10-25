@@ -43,6 +43,28 @@ One block gets executed per SMX (yellow box); all threads within this block (yel
 
 We'll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.
 
+Writing a Julia GPU function (aka kernel) copying array `A` to array `B` with the layout from the above figure looks as follow
+
+```julia:ex1
+using CUDA
+
+function copy!(A, B)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy]
+    return
+end
+
+threads = (4, 3)
+blocks  = (2, 2)
+nx, ny  = threads[1]*blocks[1], threads[2]*blocks[2]
+A       = CUDA.zeros(Float64, nx, ny)
+B       =  CUDA.rand(Float64, nx, ny)
+
+@cuda blocks=blocks threads=threads copy!(A, B)
+synchronize()
+```
+
 _**Playing with GPUs: the rules**_
 - No more than 1024 threads per block are allowed.
 - The maximum number of blocks allowed is huge; computing the largest possible array on the GPU will make you run out of device memory (currently 16-80 GB) before hitting the maximal number of blocks when selecting sensible kernel launch parameters (usually threads per block > 256).
@@ -78,7 +100,7 @@ Let's take a few minutes to get started.
 
 We will use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
-```julia:ex1
+```julia:ex2
 using CUDA
 using BenchmarkTools
 ```
@@ -105,14 +127,14 @@ There exists already the function `copyto!`, which permits to copy data from one
 
 But first, let us list what GPUs are available and make sure we assign no more than one user per GPU:
 
-```julia:ex2
+```julia:ex3
 collect(devices())
 device!(0) # select a GPU between 0-7
 ```
 
 To this purpose, we allocate two arrays and benchmark the function using `BenchmarkTools`:
 
-```julia:ex3
+```julia:ex4
 nx = ny = 32
 A = CUDA.zeros(Float64, nx, ny);
 B = CUDA.rand(Float64, nx, ny);
@@ -129,7 +151,7 @@ For such distribution, the median is the most robust of the commonly used estima
 
 Using `@belapsed` instead of `@benchmark`, we directly obtain the minimum of the taken time samples:
 
-```julia:ex4
+```julia:ex5
 t_it = @belapsed begin copyto!($A, $B); synchronize() end
 ```
 
@@ -137,7 +159,7 @@ Now, we know that it does not take "an awful lot of time". Of course, we do not 
 
 To this aim, we compute the *total memory throughput*, `T_tot` [GB/s], which is defined as the volume of the copied data [GB] divided by the time spent [s]:
 
-```julia:ex5
+```julia:ex6
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 ```
 
@@ -153,7 +175,7 @@ You have surely found `T_tot` to be orders of magnitude below `T_peak`. This is 
 
 Let us determine how `T_tot` behaves with increasing array sizes:
 
-```julia:ex6
+```julia:ex7
 array_sizes = []
 throughputs = []
 for pow = 0:11
@@ -177,7 +199,7 @@ Furthermore, we note that best performance is obtained for large arrays (in the 
 
 We will use the array size for which we obtained the best result for the remainder of the performance experiments:
 
-```julia:ex7
+```julia:ex8
 T_tot_max, index = findmax(throughputs)
 nx = ny = array_sizes[index]
 A = CUDA.zeros(Float64, nx, ny);
@@ -190,7 +212,7 @@ Let us now create our own memory copy function using GPU *Array Programming* (AP
 
 We can write a memory copy simply as `A .= B`; and wrap it in a function using Julia's concise notation, it looks as follows:
 
-```julia:ex8
+```julia:ex9
 @inbounds memcopy_AP!(A, B) = (A .= B)
 ```
 
@@ -200,7 +222,7 @@ We can write a memory copy simply as `A .= B`; and wrap it in a function using J
 
 We also benchmark it and compute `T_tot`:
 
-```julia:ex9
+```julia:ex10
 t_it = @belapsed begin memcopy_AP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 ```
@@ -215,7 +237,7 @@ We will now use GPU *Kernel Programming* (KP) to try to get closer to `T_peak`.
 
 A memory copy kernel can be written e.g. as follows:
 
-```julia:ex10
+```julia:ex11
 @inbounds function memcopy_KP!(A, B)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -232,7 +254,7 @@ Therefore, we need to have `blocks[1]*threads[1] == nx` and `blocks[2]*threads[2
 
 We will try first with the simplest possible option using only one thread per block:
 
-```julia:ex11
+```julia:ex12
 threads = (1, 1)
 blocks  = (nx, ny)
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() end
@@ -247,7 +269,7 @@ Furthermore, warps should access contiguous memory for best performance.
 
 We therefore retry using 32 threads (one warp) per block as follows:
 
-```julia:ex12
+```julia:ex13
 threads = (32, 1)
 blocks  = (nx÷threads[1], ny)
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() end
@@ -262,7 +284,7 @@ If `T_tot` is significantly below `T_peak`, then we need to set the numbers of t
 
 Let us determine how `T_tot` behaves with an increasing number of threads per blocks:
 
-```julia:ex13
+```julia:ex14
 max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 thread_count = []
 throughputs  = []
@@ -283,7 +305,7 @@ Instead of increasing the number of threads only in the x dimension, we can also
 
 We keep though 32 threads in the x dimension in order to let the warps access contiguous memory:
 
-```julia:ex14
+```julia:ex15
 thread_count = []
 throughputs  = []
 for pow = 0:Int(log2(max_threads/32))
@@ -307,7 +329,7 @@ We will therefore also do a few experiments on another commonly benchmarked case
 
 We modify therefore the previous kernel to take a third array `C` as input and add it to `B` (the rest is identical):
 
-```julia:ex15
+```julia:ex16
 @inbounds function memcopy2_KP!(A, B, C)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -318,7 +340,7 @@ end
 
 Then, we test exactly as for the previous kernel how `T_tot` behaves with an increasing number of threads per blocks in y dimension, keeping it fixed to 32 in x dimension:
 
-```julia:ex16
+```julia:ex17
 C = CUDA.rand(Float64, nx, ny);
 thread_count = []
 throughputs  = []
@@ -343,7 +365,7 @@ For completeness, we will also quickly benchmark a *triad* kernel.
 
 To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:
 
-```julia:ex17
+```julia:ex18
 @inbounds function memcopy_triad_KP!(A, B, C, s)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -364,7 +386,7 @@ There should be no significant difference between `T_tot` of this triad kernel a
 
 Finally, let us also check the triad performance we obtain with GPU array programming:
 
-```julia:ex18
+```julia:ex19
 @inbounds memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
 
 t_it = @belapsed begin memcopy_triad_AP!($A, $B, $C, $s); synchronize() end
@@ -377,7 +399,7 @@ Congratulations! You have successfully made it through the memory copy kernel op
 
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 
-```julia:ex19
+```julia:ex20
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
 ```
 

@@ -1,6 +1,24 @@
 # This file was generated, do not modify it.
 
 using CUDA
+
+function copy!(A, B)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    A[ix,iy] = B[ix,iy]
+    return
+end
+
+threads = (4, 3)
+blocks  = (2, 2)
+nx, ny  = threads[1]*blocks[1], threads[2]*blocks[2]
+A       = CUDA.zeros(Float64, nx, ny)
+B       =  CUDA.rand(Float64, nx, ny)
+
+@cuda blocks=blocks threads=threads copy!(A, B)
+synchronize()
+
+using CUDA
 using BenchmarkTools
 
 collect(devices())
