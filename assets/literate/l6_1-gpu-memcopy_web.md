@@ -11,16 +11,15 @@
   - how to compute achieved memory throughput
 
 
-*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*
+[*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md)
+
 In order to get started, we need to connect to a machine which has GPU(s).
 
 Let's take a few minutes to get started.
 
-Head to:
+👉 Head to:
 - [Software insatall](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
 - [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) for some secret infos.
-
-Replace all XX in this lecture, and add final text for ix, iy indices...
 
 \note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
 
