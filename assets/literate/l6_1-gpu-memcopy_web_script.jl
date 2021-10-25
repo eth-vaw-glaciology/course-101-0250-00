@@ -4,7 +4,7 @@ using CUDA
 using BenchmarkTools
 
 collect(devices())
-device!(7) # select a GPU between 0-7
+device!(0) # select a GPU between 0-7
 
 nx = ny = 32
 A = CUDA.zeros(Float64, nx, ny);

@@ -29,9 +29,9 @@ uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[BitTwiddlingConvenienceFunctions]]
 deps = ["Static"]
-git-tree-sha1 = "652aab0fc0d6d4db4cc726425cadf700e9f473f1"
+git-tree-sha1 = "bc1317f71de8dce26ea67fcdf7eccc0d0693b75b"
 uuid = "62783981-4cbd-42fc-bca8-16325de8dc4b"
-version = "0.1.0"
+version = "0.1.1"
 
 [[Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -41,9 +41,9 @@ version = "1.0.8+0"
 
 [[CPUSummary]]
 deps = ["Hwloc", "IfElse", "Static"]
-git-tree-sha1 = "38d0941d2ce6dd96427fd033d45471e1f26c3865"
+git-tree-sha1 = "87b0c9c6ee0124d6c1f4ce8cb035dcaf9f90b803"
 uuid = "2a0fbf3d-bb9c-48f3-b0a9-814d99fd7ab9"
-version = "0.1.5"
+version = "0.1.6"
 
 [[Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
@@ -53,15 +53,15 @@ version = "1.16.1+0"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "d9e40e3e370ee56c5b57e0db651d8f92bce98fea"
+git-tree-sha1 = "0541d306de71e267c1a724f84d44bbc981f287b4"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.10.1"
+version = "1.10.2"
 
 [[CloseOpenIntervals]]
 deps = ["ArrayInterface", "Static"]
-git-tree-sha1 = "80eeab249deff1024ad827982ead7dd3192d332b"
+git-tree-sha1 = "7b8f09d58294dc8aa13d91a8544b37c8a1dcbc06"
 uuid = "fb6a15b2-703c-40df-9091-08a04967cfa9"
-version = "0.1.3"
+version = "0.1.4"
 
 [[ColorSchemes]]
 deps = ["ColorTypes", "Colors", "FixedPointNumbers", "Random"]
@@ -372,9 +372,9 @@ version = "2.8.1+0"
 
 [[HostCPUFeatures]]
 deps = ["BitTwiddlingConvenienceFunctions", "IfElse", "Libdl", "Static"]
-git-tree-sha1 = "3169c8b31863f9a409be1d17693751314241e3eb"
+git-tree-sha1 = "8f0dc80088981ab55702b04bba38097a44a1a3a9"
 uuid = "3e5b6fbb-0976-4d2c-9146-d79de83f2fb0"
-version = "0.1.4"
+version = "0.1.5"
 
 [[Hwloc]]
 deps = ["Hwloc_jll"]
@@ -600,9 +600,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "148efdd0766119f6961c4e4a3d172975dc868a66"
+git-tree-sha1 = "b47e84e10d69b8c254ccdded458ab1061b279300"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.88"
+version = "0.12.89"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -776,21 +776,21 @@ version = "1.0.15"
 
 [[Plots]]
 deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "GeometryBasics", "JSON", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs"]
-git-tree-sha1 = "e7523dd03eb3aaac09f743c23c1a553a8c834416"
+git-tree-sha1 = "68a8a1f4d5763271d38847f0e22d67a7a61b6565"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.22.7"
+version = "1.23.0"
 
 [[Polyester]]
 deps = ["ArrayInterface", "BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "ManualMemory", "PolyesterWeave", "Requires", "Static", "StrideArraysCore", "ThreadingUtilities"]
-git-tree-sha1 = "97794179584fbb0336821d6c03c93682f19803bf"
+git-tree-sha1 = "892b8d9dd3c7987a4d0fd320f0a421dd90b5d09d"
 uuid = "f517fe37-dbe3-4b94-8317-1923a5111588"
-version = "0.5.3"
+version = "0.5.4"
 
 [[PolyesterWeave]]
 deps = ["BitTwiddlingConvenienceFunctions", "CPUSummary", "IfElse", "Static", "ThreadingUtilities"]
-git-tree-sha1 = "2e55cd092ebe39fb77f158d8ffe5012966823075"
+git-tree-sha1 = "a3ff99bf561183ee20386aec98ab8f4a12dc724a"
 uuid = "1d0040c9-8b98-4ee7-8388-3f51789ca0ad"
-version = "0.1.1"
+version = "0.1.2"
 
 [[PreallocationTools]]
 deps = ["ArrayInterface", "ForwardDiff", "LabelledArrays"]
@@ -991,9 +991,9 @@ version = "0.9.12"
 
 [[StrideArraysCore]]
 deps = ["ArrayInterface", "CloseOpenIntervals", "IfElse", "LayoutPointers", "ManualMemory", "Requires", "SIMDTypes", "Static", "ThreadingUtilities"]
-git-tree-sha1 = "346ffe1e827b39e42aa8a78e4b07377358a02bbb"
+git-tree-sha1 = "4bed70d731792750aa2a71cc424db90917d588d3"
 uuid = "7792a7ef-975c-4747-a70f-980b88e8d1da"
-version = "0.2.6"
+version = "0.2.7"
 
 [[StructArrays]]
 deps = ["Adapt", "DataAPI", "StaticArrays", "Tables"]
