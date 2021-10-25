@@ -30,3 +30,5 @@ Create a new folder in your GitHub repository for this week's (lecture 5) exerci
 
 #nb # > 💡 hint: Refer to [this section](#timer_and_performance) in lecture 5 to capture the starting point describing which features are specific to each version of the diffusion 2D codes.
 #md # \note{Refer to [this section](#timer_and_performance) in lecture 5 to capture the starting point describing which features are specific to each version of the diffusion 2D codes.}
+
+

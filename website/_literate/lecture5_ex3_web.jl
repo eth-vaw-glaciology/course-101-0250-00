@@ -31,7 +31,7 @@ In the `diffusion2D` folder, create a new script names `memcopy.jl`. You can use
   C2      = copy(C)
   A       = copy(C)
   ```
-3. Modify the `compute!()` function to perform the following operation `C2 = C + A`
+3. Modify the `compute!()` function to perform the following operation `C2 = C + A`, replacing the previous calculations.
 4. Update the `A_eff` formula
 
 Then, create a `README.md` file in the `diffusion2D` folder to report the results for each of the following tasks (including a .png of the figure when instructed)
@@ -61,3 +61,5 @@ Report also on the same figure the memory copy values for the `for`, `Threads.@t
 
 Add this second figure in a new section of the `README.md`, provide a minimal description of 1) the performed test, and 2) short description of the result.
 """
+
+

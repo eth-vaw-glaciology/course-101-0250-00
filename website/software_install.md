@@ -175,7 +175,110 @@ julia> ]
   [91a5bcdd] Plots v1.22.3
 ```
 
-Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environemnt 🙂
+Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environment 🙂
+
+
+## Accessing the GPU resources on `octopus`
+
+The following steps will permit you to access the GPU resources, the [octopus supercomputer](https://wp.unil.ch/geocomputing/octopus/).
+
+Look-up your username (`<username>`) and assigned node (`node`), both listed in [Moodle - General](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) under `Connecting to the GPU resources (octopus)`. Your password was sent via email.
+
+### Connect to the machine via ssh
+```sh
+ssh <username>@octopus.unil.ch
+```
+
+### Initialise your remote desktop (first time only)
+1. On your local machine (laptop), head to [RealVNC's download page](https://www.realvnc.com/en/connect/download/viewer/) to download the **VNC viewer**.
+2. On _octopus_, trigger the remote desktop creation typing in the terminal
+    ```sh
+    vncserver :<VNC screen>
+    ```
+    where `<VNC screen>` refers to the screen number.
+3. You will get prompted a line
+    ```sh
+    New 'octopus.unil.ch:<VNC screen> (<username>)' desktop is octopus.unil.ch:<VNC screen>
+    ```
+
+### Connect to remote desktop
+1. On your local machine (laptop), open **VNCviewer** and paste the address you got prompted at remote desktop creation, i.e., `octopus.unil.ch:<VNC screen>` in the search bar - hit `enter`.
+2. Type in the VNC password your received by email and you should be all set.
+3. You can open a terminal (upper left corner menu) and follow the next steps:
+    - [Login to `node40`](#login_to_node40) (only during lecture 6 and for exercise 1)
+    - [Login to your node](#login_to_your_node) (all other coming classes)
+
+\warn{Never "logout" from your remote desktop, just close the VNC viewer window!}
+
+#### Login to node40
+This node should only be accessed during lecture 6 and for the exercise 1 (lecture 6).
+
+1. **In your remote desktop**, open a terminal, `ssh` to `node40` enabling graphics redirecting `-YC`
+```sh
+ssh -YC node40
+```
+2. Load the required modules:
+```sh
+module load julia cuda/11.4
+```
+3. List the available GPU resources:
+```sh
+nvidia-smi
+```
+4. Navigate to `/scratch/<username>/lecture06`
+```sh
+cd /scratch/<username>/lecture06
+```
+5. Launch Julia
+```sh
+julia
+```
+6. Activate and instantiate the project (this should download all packages that are needed 🙂)
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> activate .
+
+(lecture06) pkg> instantiate
+```
+7. Launch Jupyter
+```julia-repl
+julia> using IJulia
+
+julia> notebook(dir=pwd())
+```
+You should see Firefox opening a Jupyter tab (make sure you connected using `-YC` to `node40`).
+8. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
+
+\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...}
+
+#### Login to your node
+Except for doing the hands-on in lecture 6 and for exercise 1 (lecture 6), you should connect to your corresponding GPU node according to the node list available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0):
+1. From the _octopus_ login node, you can access your compute node typing
+```sh
+ssh node<node>
+```
+in your local terminal or in the terminal within the remote desktop (e.g. `ssh node39`).
+2. Typing `pwd()` should confirm you are in your `/home` folder.
+
+\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space.}
+
+3. Navigate to your scratch-space
+```sh
+cd /scratch/<username>
+```
+as this is the place where you should work from, save data, etc...
+4. Load the required modules:
+```sh
+module load julia cuda/11.4
+```
+5. Launch Julia
+```sh
+julia
+```
+and you are all set 🚀
+
+
 
 <!-- 
 ## Running the scripts

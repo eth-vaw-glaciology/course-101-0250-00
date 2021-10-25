@@ -12,8 +12,8 @@ noeval = true
 > :books: GPU computing & performance assessment (continued)\
 > :computer: Unit testing and continuous integration (CI)\
 > :construction: Exercises:
+> - Data transfer optimisations on GPUs
 > - GPU codes for diffusion and acoustic waves
-> - Dual-time stepping
 > - Deploy GitHub CI
 
 --- 

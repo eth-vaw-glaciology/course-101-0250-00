@@ -26,10 +26,24 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-TODO: directions on getting started (octopus, node40 only for this lecture + exercise 1, then TitanXm nodes, notebook vs REPL, CUDA set device, VNC remote desktop...)
+In order to get started, we need to connect to a machine which has GPU(s).
+
+Let's take a few minutes to get started.
+
+Head to:
+- [Software insatall](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
+- [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) for some secret infos.
 
 Replace all XX in this lecture, and add final text for ix, iy indices...
+"""
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # > 💡 note: Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.
+#md # \note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 We will use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 """
 
@@ -54,17 +68,17 @@ The reason is that current GPUs (and CPUs) can do many more computations in a gi
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the Tesla V100 GPU, it is:
+This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the Tesla P100 GPU, it is:
 
-$$ \frac{7500 ~\mathrm{[GFlop/s]}}{900 ~\mathrm{[GB/s]}}~×~8 = 67 $$
+$$ \frac{5300 ~\mathrm{[GFlop/s]}}{732 ~\mathrm{[GB/s]}}~×~8 = 58 $$
 
-(here computed with double precision values taken from [the vendor's product specification sheet](https://images.nvidia.com/content/technologies/volta/pdf/437317-Volta-V100-DS-NV-US-WEB.pdf))
+(here computed with double precision values taken from [the vendor's product specification sheet](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf))
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-So we can do 67 floating point operations per number read from main memory or written to it.
+So we can do 58 floating point operations per number read from main memory or written to it.
 
 As a consequence, we can consider **floating point operations be "for free"** when we work in the memory-bounded regime as in this lecture.
 """
@@ -85,7 +99,7 @@ md"""
 But first, let us list what GPUs are available and make sure we assign no more than one user per GPU:
 """
 collect(devices())
-device!(7) # select a GPU between 0-7
+device!(0) # select a GPU between 0-7
 
 
 #src ######################################################################### 
@@ -140,7 +154,7 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla V100 GPUs, it is 837 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006)).
+Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006), for the Nvidia Tesla V100 GPUs, it is 837 GB/s).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -184,7 +198,7 @@ end
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-You can observe that the best performance is on pair with `T_peak` or a bit lower (measured 784 GB/s with the Tesla V100 GPU) as `copyto!` is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.
+You can observe that the best performance is on pair with `T_peak` or a bit lower (measured 522 GB/s with the Tesla P100 GPU) as `copyto!` is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.
 
 Furthermore, we note that best performance is obtained for large arrays (in the order of Gigabytes).
 """
@@ -235,7 +249,7 @@ t_it = @belapsed begin memcopy_AP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 md"""
-The performance you observe might be a little lower than with the `copyto!` function (measured 734 GB/s with the Tesla V100 GPU).
+The performance you observe might be a little lower than with the `copyto!` function (measured 496 GB/s with the Tesla P100 GPU).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -268,8 +282,8 @@ end
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Indices `ix` and `iy` ... TODO !!
-#md # \note{Indices `ix` and `iy` ... TODO !!}
+#nb # > 💡 note: Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
+#md # \note{Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -316,7 +330,7 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-`T_tot` is now probably in the order of magnitude of `T_peak`, yet depending on the used GPU it can be still significantly below (measured 362 GB/s with the Tesla V100 GPU).
+`T_tot` is now probably in the order of magnitude of `T_peak`, yet depending on the used GPU it can be still significantly below (measured 302 GB/s with the Tesla P100 GPU).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -347,7 +361,7 @@ end
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-You should observe now that beyond a certain minimum number of threads per block (128 with the Tesla V100 GPU), `T_tot` is quite close to `T_peak` (which exact thread/block configuration leads to the best `T_tot` depends on the used GPU architecture).
+You should observe now that beyond a certain minimum number of threads per block (64 with the Tesla P100 GPU), `T_tot` is quite close to `T_peak` (which exact thread/block configuration leads to the best `T_tot` depends on the used GPU architecture).
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -430,7 +444,7 @@ end
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Compare now the best measured `T_tot` to the `T_peak` obtained from the publication and if it is higher, then it means we need to correct `T_peak` to take the value of the `T_tot` measured (`T_tot` measured with the Tesla V100 GPU is 807 GB/s, i.e., 30 GB/s lower than the `T_peak` obtained from the publication mentioned earlier).
+Compare now the best measured `T_tot` to the `T_peak` obtained from the publication and if it is higher, then it means we need to correct `T_peak` to take the value of the `T_tot` measured (`T_tot` measured with the Tesla P100 GPU is 561 GB/s, i.e., 2 GB/s higher than the `T_peak` obtained from the publication mentioned earlier).
 """
 
 #src ######################################################################### 
@@ -464,7 +478,7 @@ T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-There should be no significant difference between `T_tot` of this triad kernel and of the previous kernel (with the Tesla V100 GPU, it is 807 GB/s with both kernels).
+There should be no significant difference between `T_tot` of this triad kernel and of the previous kernel (with the Tesla P100 GPU, it is 561 GB/s with both kernels).
 """
 
 #src ######################################################################### 
@@ -496,3 +510,18 @@ md"""
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 """
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
+
+
+#src ######################################################################### 
+#src ######################################################################### 
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # _Lecture 6_
+md"""
+# GPU computing and kernel programming
+"""
+
+
+
+
+
