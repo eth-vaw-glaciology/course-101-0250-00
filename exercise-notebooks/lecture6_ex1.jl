@@ -20,6 +20,9 @@ md"""
 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it *(you should have a copy on it in your `lecture06` folder on octopus)*.
 """
 
+#nb # > 💡 note: Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.
+#md # \note{Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
+
 md"""
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 """
@@ -126,7 +129,7 @@ lam = _dx = _dy = dt = rand();
 #hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
 
 md"""
-Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do not need anymore later in order to save space:
+Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do no longer need in order to save space:
 """
 t_it_task1 = t_it
 T_tot_lb_task1 = T_tot_lb
@@ -135,12 +138,12 @@ CUDA.unsafe_free!(qTy)
 CUDA.unsafe_free!(dTdt)
 
 md"""
-`T_tot_lb` should be relatively close to `T_peak`. Nevertheless could one do these computations probably at least three times faster. You may wonder why it is possible to predict that just looking at the code. It is because three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the Temperature array (`T`) needs inevitably be read from main memory and written to it at every iteration as is computed based on its values in the previous iteration (and the entire temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be entirely read at every iteration. To sum up, only three of eleven full array memory reads or writes cannot be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
+`T_tot_lb` should be relatively close to `T_peak`. Nevertheless, one could do these computations at least three times faster. You may wonder why it is possible to predict that just looking at the code. It is because three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the temperature array (`T`) needs inevitably to be read from main memory and written to it at every iteration as is computed based on its values from the previous iteration (and the entire temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be entirely read at every iteration. To sum up, only three of eleven full array memory reads or writes cannot be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
 
-As a consequence, `T_tot` and `T_tot_lb` are often not good metrics to evaluate the optimality of an implementation. Based on these reflections, we will come up with a better metric for the performance evaluation of solvers as the above. But first, let us verify that we can indeed speed up these computations by a factor three or more.
+As a consequence, `T_tot` and `T_tot_lb` are often not good metrics to evaluate the optimality of an implementation. Based on these reflections, we will introduce a better metric for the performance evaluation of solvers as the above. But first, let us verify that we can indeed speed up these computations by a factor three or more.
 """
 
-#md # #TODO: note this here with latex eqs and original probably as well - above or here - to see
+#src #TODO: note this here with latex eqs and original probably as well - above or here - to see
 md"""
 With GPU kernel programming, we could do that as just described, fusing the four kernels that correspond to the four GPU array programming statements into one. However, we want to try an easier solution using GPU array programming at this point.
 
@@ -225,103 +228,147 @@ md"""
 
 Benchmark the new function `diffusion2D_step!` and compute the runtime speed-up compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 """
-#solution:
-T2 = CUDA.zeros(Float64, nx, ny);
-t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-speedup = t_it_task1/t_it
-T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#-
+## solution
+#sol T2 = CUDA.zeros(Float64, nx, ny);
+#sol t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+#sol speedup = t_it_task1/t_it
+#sol T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#hint T2 = ...
+#hint t_it = @belapsed begin ...; synchronize() end
+#hint speedup = t_it_task1/t_it
+#hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+#hint ratio_T_tot_lb = ...
 
 md"""
-Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do not need anymore later in order to save space:
+Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!):
 """
 t_it_task3 = t_it
 T_tot_lb_task3 = T_tot_lb
 
 md"""
-You should have observed a significant speedup (a speedup of factor 2 measured with the Tesla P100 GPU) even though `T_tot_lb` has probably decreased (to 214 GB/s with the Tesla P100 GPU, i.e about 56% of `T_tot_lb` measured in task 1). This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the optimality of an implementation.
+You should have observed a significant speedup (a speedup of factor 2 measured with the Tesla P100 GPU) even though `T_tot_lb` has probably decreased (to 214 GB/s with the Tesla P100 GPU, i.e about 56% of `T_tot_lb` measured in task 1). This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the **optimality** of an implementation.
+
 A good metric should certainly be tightly linked to observed runtime. We will now try to further speedup the function `diffusion2D_step!` using straightforward GPU kernel programming.
 """
 
 md"""
 ### Task 4 (GPU kernel programming)
 
-Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates of the temperature using update rule (1) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introdution (`1_memorycopy.ipynb`) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2()` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
+Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates the temperature using update rule (2) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introduction (`l6_1-gpu-memcopy.ipynb`) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2()` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
 """
-#nb # > 💡 Hint: you can base yourself on the kernel `memcopy_triad_KP!` from the introdution notebook to help you remember the very basics of GPU kernel programming.
-#nb # > 💡 Hint: in this kind of kernels, the computations are described for one array cell (here `T2[ix,iy]`) rather than for whole arrays - just like in a for loop; moreover, if-statements allow to ensure to remain within the array boundaries (in for loop this is achieved with the loop ranges).
-#nb # > 💡 Hint: to verify that it does the right computations, you can launch `diffusion2D()` (as in task 2).
-#nb # > 💡 Hint: add the `@inbounds` macro direcly in front of the Temperature assignement (`T2[ix,iy]`) as else it does not propagate to the computations (more information on the propagation of @inbounds can be found [here](https://docs.julialang.org/en/v1/devdocs/boundscheck/); however, as noted earlier, outside of these exercises, it is often more convenient to activate and deactivate bounds-checking globally instead of using the `@inbounds` macro).
-#nb # > 💡 Hint: only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).
+#nb # > 💡 hint: You can base yourself on the kernel `memcopy_triad_KP!` from the introdution notebook to help you remember the very basics of GPU kernel programming.
+#md # \note{You can base yourself on the kernel `memcopy_triad_KP!` from the introdution notebook to help you remember the very basics of GPU kernel programming.}
 
-#solution:
-function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    threads = (32, 8)
-    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
-    @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-end
+#nb # > 💡 hint: In this kind of kernels, the computations are described for one array cell (here `T2[ix,iy]`) rather than for whole arrays - just like in a for loop; moreover, if-statements allow to ensure to remain within the array boundaries (in for loop this is achieved with the loop ranges).
+#md # \note{In this kind of kernels, the computations are described for one array cell (here `T2[ix,iy]`) rather than for whole arrays - just like in a for loop; moreover, if-statements allow to ensure to remain within the array boundaries (in for loop this is achieved with the loop ranges).}
 
-function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
-        @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
-                              - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
-                              - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
-                              ))
-    end
-    return
-end
+#nb # > 💡 hint: To verify that it does the right computations, you can launch `diffusion2D()` (as in task 2).
+#md # \note{To verify that it does the right computations, you can launch `diffusion2D()` (as in task 2).}
+
+#nb # > 💡 hint: Add the `@inbounds` macro direcly in front of the Temperature assignement (`T2[ix,iy]`) as else it does not propagate to the computations (more information on the propagation of `@inbounds` can be found [here](https://docs.julialang.org/en/v1/devdocs/boundscheck/); however, as noted earlier, outside of these exercises, it is often more convenient to activate and deactivate bounds-checking globally instead of using the `@inbounds` macro).
+#md # \note{Add the `@inbounds` macro direcly in front of the Temperature assignement (`T2[ix,iy]`) as else it does not propagate to the computations (more information on the propagation of `@inbounds` can be found [here](https://docs.julialang.org/en/v1/devdocs/boundscheck/); however, as noted earlier, outside of these exercises, it is often more convenient to activate and deactivate bounds-checking globally instead of using the `@inbounds` macro).}
+
+#nb # > 💡 hint: Only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).
+#md # \note{Only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).}
+
+#-
+## solution
+#sol function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol     threads = (32, 8)
+#sol     blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
+#sol     @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol end
+#sol 
+#sol function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+#sol         @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
+#sol                               - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
+#sol                               - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
+#sol                               ))
+#sol     end
+#sol     return
+#sol end
+#hint function diffusion2D_step!(...)
+#hint     threads = (..., ...)
+#hint     blocks  = (size(...)÷threads[1], size(...)÷threads[2])
+#hint     @cuda ...
+#hint end
+#hint 
+#hint function update_temperature!(...)
+#hint     ix = ...
+#hint     iy = ...
+#hint     if (ix... && iy... )
+#hint         @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*( ... ))
+#hint     end
+#hint     return
+#hint end
 
 md"""
 ### Task 5 (Benchmarking)
 
 Just like in Task 3, benchmark the new function `diffusion2D_step!` and compute the runtime speedup compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 """
-#solution:
-t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-speedup = t_it_task1/t_it
-T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#-
+## solution
+#sol t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+#sol speedup = t_it_task1/t_it
+#sol T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#hint t_it = @belapsed begin ...; synchronize() end
+#hint speedup = ...
+#hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+#hint ratio_T_tot_lb = ...
 
 md"""
-You should have observed a significant speedup (a speedup of factor 2 measured with the Tesla P100 GPU) even though `T_tot_lb` has probably decreased (to 214 GB/s with the Tesla P100 GPU, i.e about 56% of `T_tot_lb` measured in task 1). This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the optimality of an implementation.
-A good metric should certainly be tightly linked to observed runtime. We will now try to further speedup the function `diffusion2D_step!` using straightforward GPU kernel programming.
-"""
+The runtime speedup is probably even higher (a speedup of factor 4.9 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
 
-md"""
-The runtime speedup is probably even higher (a speedup of factor 4.9 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers as like as the above, which is always proportional to observed runtime.
 To this aim, let us recall first the reflections made after benchmarking the original GPU array programming code in Task 1:
-> three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the Temperature array (`T`) needs inevitably be read from main memory and written to it at every iteration as is computed based on its values in the previous iteration (and the whole temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be read in its entirety at every iteration. To sum up, only three of eleven full array memory reads or writes cannot be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
-With this in mind, we will now define the metric, which we call the *effective memory throughput*, `T_eff`.
-"""
-md"""
-The effective memory access, A_eff [GB], is the the sum of twice the memory footprint of the unknown fields, D_u, (fields that depend on their own history and that need to be updated every iteration) and the known fields, D_k, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, T_eff [GB/s].
+> three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the temperature array (`T`) needs inevitably to be read from main memory and written to it at every iteration as is computed based on its values from the previous iteration (and the entire temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be entirely read at every iteration. To sum up, only three of eleven full array memory reads or writes cannot be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
 
-The upper bound of T_eff is T_peak as measured e.g. by the [7] for CPUs or a GPU analogue. Defining the T_eff metric, we assume that 1) we evaluate an iterative stencil-based solver, 2) the problem size is much larger than the cache sizes and 3) the usage of time blocking is not feasible or advantageous (which is a reasonable assumption for real-world applications). An important concept is not to include fields within the effective memory access that do not depend on their own history (e.g. fluxes); such fields can be re-computed on the fly or stored on-chip. Defining a theoretical upper bound for T_eff that is closer to the real upper bound is work in progress.
+With this in mind, we will now define the metric, which we call the *effective memory throughput*, $T_\mathrm{eff}$.
+"""
+
+md"""
+The effective memory access, $A_\mathrm{eff}$ [GB], is the the sum of twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration) and the known fields, $D_\mathrm{k}$, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, $T_\mathrm{eff}$ [GB/s].
+
+The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured e.g. by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue. Defining the $T_\mathrm{eff}$ metric, we assume that 1) we evaluate an iterative stencil-based solver, 2) the problem size is much larger than the cache sizes and 3) the usage of time blocking is not feasible or advantageous (which is a reasonable assumption for real-world applications). An important concept is not to include fields within the effective memory access that do not depend on their own history (e.g. fluxes); such fields can be re-computed on the fly or stored on-chip. Defining a theoretical upper bound for $T_\mathrm{eff}$ that is closer to the real upper bound is work in progress.
 """
 
 md"""
 ### Task 6 (Benchmarking)
 
-Compute the effective memory throughput, T_eff, for the solvers benchmarked in Task 1, 3 and 5 (you do not need to redo any benchmarking, but you can compute it based on the saved measured runtimes in these three tasks) and compute recompute the speedups achieved in Task 3 and 5 based on T_eff instead of based on the runtime; compare the newly computed speedups with the previous.
+Compute the effective memory throughput, $T_\mathrm{eff}$, for the solvers benchmarked in Task 1, 3 and 5 (you do not need to redo any benchmarking, but you can compute it based on the saved measured runtimes in these three tasks) and recompute the speedup achieved in Task 3 and 5 based on $T_\mathrm{eff}$ instead of based on the runtime; compare the newly computed speedups with the previous.
 """
-#solution:
-T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
-T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
-T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
-speedup_Teff_task3 = T_eff_task3/T_eff_task1
-speedup_Teff_task5 = T_eff_task5/T_eff_task1
+#-
+## solution
+#sol T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
+#sol T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
+#sol T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol speedup_Teff_task3 = T_eff_task3/T_eff_task1
+#sol speedup_Teff_task5 = T_eff_task5/T_eff_task1
+#hint T_eff_task1 = .../t_it_task1
+#hint T_eff_task3 = .../t_it_task3
+#hint T_eff_task5 = .../t_it
+#hint speedup_Teff_task3 = T_eff_task3/T_eff_task1
+#hint speedup_Teff_task5 = T_eff_task5/T_eff_task1
 
 md"""
-Did the speedups you recomputed differ from the previous ones? If yes, then you made a mistake. Due to the way `T_eff` is defined, it is always proportional to observed runtime and it reflects therefore any runtime speedup by 100% while the problem size and the number data type are keept fixed. If, however, you increase these parameters, then T_eff will reflect the additionally performed work and it therefore enables the comparison of the performance achieved in function of the problem size (or number data type). It even allows to compare the performance of different solvers or implementations to a certain point. Most importantly though, comparing a measured `T_eff` with `T_peak` tells us how much room for performance improvement could there be at most.
+Did the speedups you recomputed differ from the previous ones?
+
+If yes, then you made a mistake. Due to the way $T_\mathrm{eff}$ is defined, it is always proportional to observed runtime and it reflects therefore any runtime speedup by 100% while the problem size and the number data type are kept fixed. If, however, you increase these parameters, then T_eff will reflect the additionally performed work and it therefore enables the comparison of the performance achieved in function of the problem size (or number data type). It even allows to compare the performance of different solvers or implementations to a certain point.
+
+Most importantly though, comparing a measured $T_\mathrm{eff}$ with $T_\mathrm{peak}$ informs us about room for performance improvement.
 """
 
 md"""
 ### Task 7 (Benchmarking)
 
-Compute by how much percent you can improve the performance of the solver at most.
+Compute by how much percent you can improve the performance of the solver at most:
 """
-#solution for P100
-T_peak = 561 # Peak memory throughput of the Tesla P100 GPU
-T_eff/T_peak
+#solution for V100
+T_peak = ... # Peak memory throughput of the Tesla V100 GPU
+@show T_eff/T_peak
