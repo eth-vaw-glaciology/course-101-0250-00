@@ -5,4 +5,4 @@ The material in this repository is licensed as follows:
 - The **text** is under the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0).
 
 
-Copyright Ludovic Räss, Mauro Werder, 2021
+Copyright Ludovic Räss, Mauro Werder, Samuel Omlin, 2021
