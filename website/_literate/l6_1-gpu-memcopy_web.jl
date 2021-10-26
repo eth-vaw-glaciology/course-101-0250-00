@@ -632,7 +632,7 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
+Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
