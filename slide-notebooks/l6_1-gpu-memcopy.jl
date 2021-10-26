@@ -72,6 +72,12 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 In the CUDA programming model, `blocks` (red) of `threads` compose the `grid` (green).
 
 In our implementations, we will map one thread (red box) to each cell of the 2D Cartesian domain (blue). Other mappings are possible, of course.
@@ -177,7 +183,7 @@ Let's take a few minutes to get started.
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We will use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
+We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 """
 
 using CUDA
@@ -415,11 +421,6 @@ end
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
-#md # \note{Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.}
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, in order to copy the (entire) array `B` to `A`, we need to launch the kernel such that the above indices `ix` and `iy` map exactly to each array cell.
 
@@ -635,7 +636,7 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learn about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
+Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
