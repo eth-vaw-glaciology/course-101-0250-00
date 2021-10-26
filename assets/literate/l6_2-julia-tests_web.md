@@ -22,7 +22,7 @@ Terms:
 
 (How to setup CI as part of a project of yours will be taught later)
 
-## Registered Packages: CI tests & using as documentation
+### Registered Packages: CI tests & using as documentation
 
 Let's look at a simple package: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
@@ -34,7 +34,7 @@ Let's look at a simple package: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
 -> "demo"
 
-## Registered Packages: test locally
+### Registered Packages: test locally
 
 Using: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
@@ -59,7 +59,7 @@ In package mode run the tests:
 ```
 If you edit the source, e.g. to fix a bug, re-run the tests before submitting a PR.
 
-## Write your own tests
+### Write your own tests
 
 Start easy:
 - add test just to a script
@@ -78,7 +78,7 @@ julia> ℯ + π - ℯ == π
 false
 ```
 
-## Write your own tests: demo with "car_travel.jl" from Lecture 1
+### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 ```julia:ex1
 using Plots
@@ -114,7 +114,7 @@ end
 T, X = car_travel_1D()
 ```
 
-## Write your own tests: demo with "car_travel.jl" from Lecture 1
+### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 Steps:
 - `generate` a project and add `scripts/car_travel.jl` (1)
@@ -125,7 +125,7 @@ Steps:
 **Note**: to make the `pkg> test` run, you have to have a file `src/MyPkg.jl`,
 even if it is just empty.
 
-## Write your own tests: demo with "car_travel.jl" from Lecture 1
+### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 Step 1: generate a package
 ```
