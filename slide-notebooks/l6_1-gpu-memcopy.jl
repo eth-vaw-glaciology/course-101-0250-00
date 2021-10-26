@@ -73,11 +73,7 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
-"""
 
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
 In the CUDA programming model, `blocks` (red) of `threads` compose the `grid` (green).
 
 In our implementations, we will map one thread (red box) to each cell of the 2D Cartesian domain (blue). Other mappings are possible, of course.
