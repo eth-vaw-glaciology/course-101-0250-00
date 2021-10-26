@@ -203,8 +203,9 @@ ssh <username>@octopus.unil.ch
 
 ### Connect to remote desktop
 1. On your local machine (laptop), open **VNCviewer** and paste the address you got prompted at remote desktop creation, i.e., `octopus.unil.ch:<VNC screen>` in the search bar - hit `enter`.
-2. Type in the VNC password your received by email and you should be all set.
-3. You can open a terminal (upper left corner menu) and follow the next steps:
+2. Type in the VNC password your received by email and you should be connected.
+3. **Make sure to disable screensaver** when connecting for the first time to the remote desktop. You can do so accessing the `Applications` menu in the upper left corner and selecting: `Applications > Settings > Screensaver` and turning it `off`.
+4. You can open a terminal (`Applications` menu in the upper left corner) and follow the next steps:
     - [Login to `node40`](#login_to_node40) (only during lecture 6 and for exercise 1)
     - [Login to your node](#login_to_your_node) (all other coming classes)
 
@@ -247,7 +248,10 @@ julia> using IJulia
 
 julia> notebook(dir=pwd())
 ```
+You will get prompted to `install jupyter [y/N]` the first time running the `notebook()` command. Type `Yes` or `y`.
+
 You should see Firefox opening a Jupyter tab (make sure you connected using `-YC` to `node40`).
+
 8. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
 
 \warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...}

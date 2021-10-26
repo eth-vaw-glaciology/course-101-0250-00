@@ -25,7 +25,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We'll get started wuth a brief overview of the Nvidia GPU architecture and how to program it.
+We'll get started with a brief overview of the Nvidia GPU architecture and how to program it.
 """
 
 #src ######################################################################### 
@@ -50,7 +50,7 @@ The _**host**_ is the system CPU. The system memory (DRAM) linked to the CPU is 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The GPU hardware is composed of Global (DRAM) memory, L2 cache and many streaming multi-processors (SMs). Each SM contains many compute units (called "CUDA cores" by Nvidida), registers, L1 cache (can be repurposed as shared memory depending on the architecture) and read-only memory. 
+The GPU hardware is composed of Global (DRAM) memory, L2 cache and many streaming multi-processors (SMs). Each SM contains many compute units (called "CUDA cores" by Nvidia), registers, L1 cache (can be repurposed as shared memory depending on the architecture) and read-only memory. 
 
 > The CUDA programming model provides an abstraction of GPU architecture that acts as a bridge between an application and its possible implementation on GPU hardware. [*[ref]*](https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/)
 """
@@ -85,7 +85,7 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-All threads of a block are guaranteed to be executed concurrently on an SM (yellow box) and therefore share SM resources such as registers, L1 cache (shared memory) and read-only memory. 
+All threads of a block are guaranteed to be executed concurrently on an SM (yellow box) and therefore share SM resources such as registers, L1 cache (/shared memory) and read-only memory. 
 
 We'll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.
 """
@@ -165,7 +165,7 @@ In order to get started, we need to connect to a machine which has GPU(s).
 Let's take a few minutes to get started.
 
 👉 Head to:
-- [Software insatall](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
+- [Software install](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
 - [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) for some secret infos.
 
 """

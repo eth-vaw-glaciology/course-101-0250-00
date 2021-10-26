@@ -35,6 +35,17 @@ using BenchmarkTools
 using Plots
 
 md"""
+Before we go further, make sure we select the GPU we want to run on (if running on a multi-GPU node). In the terminal or Julia REPL in shell mode (typing `;`), type `nvidia-smi` command to list visible GPUs. Remember the GPU_ID you want to use.
+
+Then, in Julia, add following if you decide to, e.g., use GPU 7:
+"""
+GPU_ID = 7 # select a GPU between 0-7
+device!(GPU_ID)
+
+#nb # > 💡 note: Having multiple users accessing the same GPU will result in severe performance deprecation.
+#md # \warn{Having multiple users accessing the same GPU will result in severe performance deprecation.}
+
+md"""
 Let us consider the following 2-D heat diffusion solver (the comments explain the code):
 """
 function diffusion2D()
@@ -336,7 +347,11 @@ With this in mind, we will now define the metric, which we call the *effective m
 """
 
 md"""
-The effective memory access, $A_\mathrm{eff}$ [GB], is the the sum of twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration) and the known fields, $D_\mathrm{k}$, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, $T_\mathrm{eff}$ [GB/s].
+The effective memory access, $A_\mathrm{eff}$ [GB], is the the sum of twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration) and the known fields, $D_\mathrm{k}$, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, $T_\mathrm{eff}$ [GB/s]:
+
+$$ A_\mathrm{eff} = 2~D_\mathrm{u} + D_\mathrm{k} $$
+
+$$ T_\mathrm{eff} = \frac{A_\mathrm{eff}}{t_\mathrm{it}} $$
 
 The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured e.g. by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue. Defining the $T_\mathrm{eff}$ metric, we assume that 1) we evaluate an iterative stencil-based solver, 2) the problem size is much larger than the cache sizes and 3) the usage of time blocking is not feasible or advantageous (which is a reasonable assumption for real-world applications). An important concept is not to include fields within the effective memory access that do not depend on their own history (e.g. fluxes); such fields can be re-computed on the fly or stored on-chip. Defining a theoretical upper bound for $T_\mathrm{eff}$ that is closer to the real upper bound is work in progress.
 """
