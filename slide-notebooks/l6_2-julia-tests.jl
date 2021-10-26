@@ -111,7 +111,7 @@ md"""
 using Plots
 pyplot()
 
-@views function car_travel_1D()
+function car_travel_1D()
     ## Physical parameters
     V     = 113.0          # speed, km/h
     L     = 200.0          # length of segment, km
@@ -140,12 +140,37 @@ end
 
 T, X = car_travel_1D()
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 Steps:
-- make it a project
-- add some unit tests in-line
-- move tests to `test/`
-- use ReferenceTests.jl
+- `generate` a project and add `scripts/car_travel.jl` (1)
+- add some unit tests in-line (2)
+- move tests to `test/` (3)
+- use ReferenceTests.jl (4)
+
+**Note**: to make the `pkg> test` run, you have to have a file `src/MyPkg.jl`,
+even if it is just empty.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Write your own tests: demo with "car_travel.jl" from Lecture 1
+
+Step 1: generate a package
+```
+$ cd to-some-dir
+$ julia --project
+
+julia> using Pkg; Pkg.generate("L6Testing")
+```
+
+Steps 3--4 is in the repository [course-101-0250-00-L6Testing.jl](https://github.com/mauro3/course-101-0250-00-L6Testing.jl);
+note that this steps are encoded in the git history which the README links into.
+
+Note that for outputs from big simulations, such as ours, it make sense to
+only reference-test at a few 10s of indices.
 """
