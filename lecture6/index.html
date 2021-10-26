@@ -1,4 +1,4 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/course-101-0250-00/libs/katex/katex.min.css"> <link rel=stylesheet  href="/course-101-0250-00/libs/highlight/github.min.css"> <link rel=stylesheet  href="/course-101-0250-00/css/franklin.css"> <link rel=stylesheet  href="/course-101-0250-00/css/poole_hyde.css"> <link rel=stylesheet  href="/course-101-0250-00/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/course-101-0250-00/assets/favicon.png"> <title>Lecture 6</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/course-101-0250-00/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/course-101-0250-00/"> Fall 2021</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/course-101-0250-00/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a> & <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9"> <a class="sidebar-nav-item " href="/course-101-0250-00/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/course-101-0250-00/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/course-101-0250-00/homework/">Homework</a> <a class="sidebar-nav-item " href="/course-101-0250-00/software_install/">Software install</a> <a class="sidebar-nav-item " href="/course-101-0250-00/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture1/">Lecture 1</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture2/">Lecture 2</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture3/">Lecture 3</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture4/">Lecture 4</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture5/">Lecture 5</a> <a class="sidebar-nav-item active" href="/course-101-0250-00/lecture6/">Lecture 6</a> <div class=course-section >Part 3 - Projects</div> </nav> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_6 ><a href="#lecture_6" class=header-anchor >Lecture 6</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 GPU computing &amp; performance assessment &#40;continued&#41;<br />💻 Unit testing and reference tests<br />🚧 Exercises:</p> <ul> <li><p>Data transfer optimisations on GPUs</p> <li><p>GPU codes for diffusion / acoustic waves 2D</p> <li><p>Reference testing in Julia</p> </ul> </blockquote> <p><hr /> </p> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_6">Lecture 6</a><li><a href="#gpu_computing_and_performance_assessment">GPU computing and performance assessment</a><ol><li><a href="#gpu_architecture_and_kernel_programming">GPU architecture and kernel programming</a><li><a href="#gpu_computing_and_performance_assessment__2">GPU computing and performance assessment</a></ol><li><a href="#unit_testing_and_reference_tests_in_julia">Unit testing and reference tests in Julia</a><li><a href="#exercises_-_lecture_6">Exercises - lecture 6</a><ol><li><a href="#excercise_1_-_data_transfer_optimisations">Excercise 1 - <strong>Data transfer optimisations</strong></a><li><a href="#excercise_2_-_solving_pdes_on_gpus">Excercise 2 - <strong>Solving PDEs on GPUs</strong></a><li><a href="#excercise_3_-_unit_and_reference_tests">Excercise 3 - <strong>Unit and reference tests</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_6"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=gpu_computing_and_performance_assessment ><a href="#gpu_computing_and_performance_assessment" class=header-anchor >GPU computing and performance assessment</a></h1> <h3 id=the_goal_of_this_lecture_6_is_to_tackle ><a href="#the_goal_of_this_lecture_6_is_to_tackle" class=header-anchor >The goal of this lecture 6 is to tackle:</a></h3> <ul> <li><p>GPU architecture and kernel programming</p> <li><p>GPU computing and performance assessment</p> <li><p>Unit testing and reference tests in Julia</p> </ul> <h2 id=gpu_architecture_and_kernel_programming ><a href="#gpu_architecture_and_kernel_programming" class=header-anchor >GPU architecture and kernel programming</a></h2> <p>A brief overview of the Nvidia GPU architecture and how to program it.</p> <p>The Nvidia general purpose GPUs we will use in this course can be programmed using the <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA language extension</a>.</p> <p>CUDA is accessible in Julia via <a href="https://cuda.juliagpu.org/stable/">CUDA.jl</a>, which exposes most of the native CUDA features to the Julia ecosystem.</p> <p>Note, however, that CUDA.jl does not use <code>nvcc</code>, the Nvidia compiler, but compiles like other Julia code just ahead of time with <a href="https://llvm.org">LLVM</a>.</p> <p>First, let&#39;s distinguish among CPU, GPU, hardware, application and CUDA.</p> <p>What are <em><strong>host</strong></em> and <em><strong>device</strong></em>?</p> <p>The <em><strong>host</strong></em> is the system CPU. The system memory &#40;DRAM&#41; linked to the CPU is the host memory. The GPU is called a <em><strong>device</strong></em> and GPU memory is device memory.</p> <p>The GPU hardware is composed of Global &#40;DRAM&#41; memory, L2 cache and a compute processor. The processor is subdivided in streaming multi-processors &#40;SMX&#41;. Each SMX contains many compute units &#40;cores&#41;, registers, shared memory &#40;L1 cache&#41; and read-only memory.</p> <blockquote> <p>The CUDA programming model provides an abstraction of GPU architecture that acts as a bridge between an application and its possible implementation on GPU hardware. <a href="https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/"><em>&#91;ref&#93;</em></a></p> </blockquote> <p>In the CUDA programming model, <code>blocks</code> of <code>threads</code> compose the <code>grid</code>. In our implementation, we ideally want to map one thread to each finite-difference cell of the 2D Cartesian domain.</p> <p>The figure hereafter depicts the relation between the CUDA domain and the finite-difference domain:</p> <p><img src="../assets/literate_figures/cuda_grid.png" alt=cuda_grid  /></p> <p>In the CUDA programming model, <code>blocks</code> &#40;red&#41; of <code>threads</code> compose the <code>grid</code> &#40;green&#41;.</p> <p>In our implementation, we ideally want to map one thread &#40;red box&#41; to each finite-difference cell of our, here 2D, Cartesian domain &#40;blue&#41;.</p> <p><em>How does it relates to the GPU hardware?</em></p> <p>One block gets executed per SMX &#40;yellow box&#41;; all threads within this block &#40;yellow box&#41; thus share SMX resources such as registers, shared memory &#40;L1&#41; and read-only memory.</p> <p>We&#39;ll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.</p> <p>Writing a Julia GPU function &#40;aka kernel&#41; copying array <code>A</code> to array <code>B</code> with the layout from the above figure looks as follow</p> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> CUDA
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <link rel=stylesheet  href="/course-101-0250-00/libs/katex/katex.min.css"> <link rel=stylesheet  href="/course-101-0250-00/libs/highlight/github.min.css"> <link rel=stylesheet  href="/course-101-0250-00/css/franklin.css"> <link rel=stylesheet  href="/course-101-0250-00/css/poole_hyde.css"> <link rel=stylesheet  href="/course-101-0250-00/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/course-101-0250-00/assets/favicon.png"> <title>Lecture 6</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/course-101-0250-00/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/course-101-0250-00/"> Fall 2021</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/course-101-0250-00/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a> & <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9"> <a class="sidebar-nav-item " href="/course-101-0250-00/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/course-101-0250-00/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/course-101-0250-00/homework/">Homework</a> <a class="sidebar-nav-item " href="/course-101-0250-00/software_install/">Software install</a> <a class="sidebar-nav-item " href="/course-101-0250-00/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture1/">Lecture 1</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture2/">Lecture 2</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture3/">Lecture 3</a> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture4/">Lecture 4</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/course-101-0250-00/lecture5/">Lecture 5</a> <a class="sidebar-nav-item active" href="/course-101-0250-00/lecture6/">Lecture 6</a> <div class=course-section >Part 3 - Projects</div> </nav> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_6 ><a href="#lecture_6" class=header-anchor >Lecture 6</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 GPU computing &amp; performance assessment &#40;continued&#41;<br />💻 Unit testing and reference tests<br />🚧 Exercises:</p> <ul> <li><p>Data transfer optimisations on GPUs</p> <li><p>GPU codes for diffusion / acoustic waves 2D</p> <li><p>Reference testing in Julia</p> </ul> </blockquote> <p><hr /> </p> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_6">Lecture 6</a><li><a href="#gpu_computing_and_performance_assessment">GPU computing and performance assessment</a><ol><li><a href="#gpu_architecture_and_kernel_programming">GPU architecture and kernel programming</a><li><a href="#gpu_computing_and_performance_assessment__2">GPU computing and performance assessment</a></ol><li><a href="#unit_testing_and_reference_tests_in_julia">Unit testing and reference tests in Julia</a><ol><li><a href="#registered_packages_ci_tests_using_as_documentation">Registered Packages: CI tests &amp; using as documentation</a><li><a href="#registered_packages_test_locally">Registered Packages: test locally</a><li><a href="#write_your_own_tests">Write your own tests</a><li><a href="#write_your_own_tests_demo_with_car_traveljl_from_lecture_1">Write your own tests: demo with &quot;car_travel.jl&quot; from Lecture 1</a><li><a href="#write_your_own_tests_demo_with_car_traveljl_from_lecture_1__2">Write your own tests: demo with &quot;car_travel.jl&quot; from Lecture 1</a></ol><li><a href="#exercises_-_lecture_6">Exercises - lecture 6</a><ol><li><a href="#excercise_1_-_data_transfer_optimisations">Excercise 1 - <strong>Data transfer optimisations</strong></a><li><a href="#excercise_2_-_solving_pdes_on_gpus">Excercise 2 - <strong>Solving PDEs on GPUs</strong></a><li><a href="#excercise_3_-_unit_and_reference_tests">Excercise 3 - <strong>Unit and reference tests</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_6"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=gpu_computing_and_performance_assessment ><a href="#gpu_computing_and_performance_assessment" class=header-anchor >GPU computing and performance assessment</a></h1> <h3 id=the_goal_of_this_lecture_6_is_to_tackle ><a href="#the_goal_of_this_lecture_6_is_to_tackle" class=header-anchor >The goal of this lecture 6 is to tackle:</a></h3> <ul> <li><p>GPU architecture and kernel programming</p> <li><p>GPU computing and performance assessment</p> <li><p>Unit testing and reference tests in Julia</p> </ul> <h2 id=gpu_architecture_and_kernel_programming ><a href="#gpu_architecture_and_kernel_programming" class=header-anchor >GPU architecture and kernel programming</a></h2> <p>A brief overview of the Nvidia GPU architecture and how to program it.</p> <p>The Nvidia general purpose GPUs we will use in this course can be programmed using the <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA language extension</a>.</p> <p>CUDA is accessible in Julia via <a href="https://cuda.juliagpu.org/stable/">CUDA.jl</a>, which exposes most of the native CUDA features to the Julia ecosystem.</p> <p>Note, however, that CUDA.jl does not use <code>nvcc</code>, the Nvidia compiler, but compiles like other Julia code just ahead of time with <a href="https://llvm.org">LLVM</a>.</p> <p>First, let&#39;s distinguish among CPU, GPU, hardware, application and CUDA.</p> <p>What are <em><strong>host</strong></em> and <em><strong>device</strong></em>?</p> <p>The <em><strong>host</strong></em> is the system CPU. The system memory &#40;DRAM&#41; linked to the CPU is the host memory. The GPU is called a <em><strong>device</strong></em> and GPU memory is device memory.</p> <p>The GPU hardware is composed of Global &#40;DRAM&#41; memory, L2 cache and a compute processor. The processor is subdivided in streaming multi-processors &#40;SMX&#41;. Each SMX contains many compute units &#40;cores&#41;, registers, shared memory &#40;L1 cache&#41; and read-only memory.</p> <blockquote> <p>The CUDA programming model provides an abstraction of GPU architecture that acts as a bridge between an application and its possible implementation on GPU hardware. <a href="https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/"><em>&#91;ref&#93;</em></a></p> </blockquote> <p>In the CUDA programming model, <code>blocks</code> of <code>threads</code> compose the <code>grid</code>. In our implementation, we ideally want to map one thread to each finite-difference cell of the 2D Cartesian domain.</p> <p>The figure hereafter depicts the relation between the CUDA domain and the finite-difference domain:</p> <p><img src="../assets/literate_figures/cuda_grid.png" alt=cuda_grid  /></p> <p>In the CUDA programming model, <code>blocks</code> &#40;red&#41; of <code>threads</code> compose the <code>grid</code> &#40;green&#41;.</p> <p>In our implementation, we ideally want to map one thread &#40;red box&#41; to each finite-difference cell of our, here 2D, Cartesian domain &#40;blue&#41;.</p> <p><em>How does it relates to the GPU hardware?</em></p> <p>One block gets executed per SMX &#40;yellow box&#41;; all threads within this block &#40;yellow box&#41; thus share SMX resources such as registers, shared memory &#40;L1&#41; and read-only memory.</p> <p>We&#39;ll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.</p> <p>Writing a Julia GPU function &#40;aka kernel&#41; copying array <code>A</code> to array <code>B</code> with the layout from the above figure looks as follow</p> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> CUDA
 
 <span class=hljs-keyword >function</span> copy!(A, B)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
@@ -181,9 +181,126 @@ T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<spa
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=unit_testing_and_reference_tests_in_julia ><a href="#unit_testing_and_reference_tests_in_julia" class=header-anchor >Unit testing and reference tests in Julia</a></h1>
-<h3 id=the_goal ><a href="#the_goal" class=header-anchor >The goal</a></h3>
+<p>&#40;Unit&#41; testing is pervasive in the Julia ecosystem thanks to efficient built-in tools and a culture encouraging testing.</p>
+<p>This <a href="https://live.juliacon.org/talk/HVSAW9">JuliaCon 2021 talk</a> gives a nice overview: more than 90&#37; of all registered packages have at least some tests, with the median package having about 25&#37; of the code being tests.</p>
+<p>Terms:</p>
 <ul>
-<li>
+<li><p>&quot;unit test&quot;: small tests, usually on a per-function basis</p>
+
+<li><p>&quot;integration test&quot;: test large part of the code base</p>
+
+<li><p>&quot;reference test&quot;: test against a previous output &#40;not necessarily known whether &quot;good&quot; or &quot;bad&quot;&#41;</p>
+
+<li><p>&quot;Continuous Integration&quot; &#40;CI&#41;: running of the tests automatically on push to github/gitlab/etc</p>
+
+</ul>
+<h3 id=the_goals_of_this_lecture_are ><a href="#the_goals_of_this_lecture_are" class=header-anchor >The goals of this lecture are</a></h3>
+<ul>
+<li><p>how to assess CI-run tests for packages of the Julia ecosystem &#40;registered packages&#41;</p>
+
+<li><p>how to run tests for registered packages on your computer</p>
+
+<li><p>how to use tests of packages as &quot;documentation&quot;</p>
+
+<li><p>create a test-suite for a small project of your</p>
+
+<li><p>learn to use <a href="https://github.com/JuliaTesting/ReferenceTests.jl">ReferenceTests.jl</a></p>
+
+</ul>
+<p>&#40;How to setup CI as part of a project of yours will be taught later&#41;</p>
+<h2 id=registered_packages_ci_tests_using_as_documentation ><a href="#registered_packages_ci_tests_using_as_documentation" class=header-anchor >Registered Packages: CI tests &amp; using as documentation</a></h2>
+<p>Let&#39;s look at a simple package: <a href="https://github.com/mauro3/UnPack.jl">UnPack.jl</a></p>
+<p><img src="../assets/literate_figures/l6_UnPack.png" alt=UnPack.jl  /></p>
+<ul>
+<li><p>the CI-results are often displayed in form of <em>badges</em></p>
+
+<li><p>there are different CI-services, most used is GitHub-Actions</p>
+
+<li><p>often the tests are a fairly good source of documentation by example</p>
+
+</ul>
+<p>-&gt; &quot;demo&quot;</p>
+<h2 id=registered_packages_test_locally ><a href="#registered_packages_test_locally" class=header-anchor >Registered Packages: test locally</a></h2>
+<p>Using: <a href="https://github.com/mauro3/UnPack.jl">UnPack.jl</a></p>
+<p><code>dev</code> the package:</p>
+<pre><code class="julia hljs">pkg&gt; dev UnPack</code></pre>
+<p>This will checkout the package to <code>~/.julia/dev/UnPack</code>.</p>
+<p>Re-Start Julia with this package activated:</p>
+<pre><code class="julia hljs">$ cd ~/.julia/dev/UnPack
+$ julia --project</code></pre>
+<p>In package mode run the tests:</p>
+<pre><code class="julia hljs">(UnPack) pkg&gt; test
+    Testing UnPack
+      Status <span class=hljs-string >`/tmp/jl_LgpabA/Project.toml`</span>
+  [<span class=hljs-number >3</span>a884ed6] UnPack v1<span class=hljs-number >.0</span><span class=hljs-number >.2</span> <span class=hljs-string >`~/julia/dot-julia-dev/UnPack`</span>
+...</code></pre>
+<p>If you edit the source, e.g. to fix a bug, re-run the tests before submitting a PR.</p>
+<h2 id=write_your_own_tests ><a href="#write_your_own_tests" class=header-anchor >Write your own tests</a></h2>
+<p>Start easy:</p>
+<ul>
+<li><p>add test just to a script</p>
+
+</ul>
+<p>Step up:</p>
+<ul>
+<li><p>move tests to <code>test/runtests.jl</code>, the standard location</p>
+
+<li><p>include scripts to just run-through</p>
+
+<li><p>use ReferenceTests.jl as integration tests</p>
+
+</ul>
+<p>Another day:</p>
+<ul>
+<li><p>setup CI on Github</p>
+
+</ul>
+<p><strong>NOTE</strong>: floating-point comparisons should only be done approximately:</p>
+<pre><code class="julia hljs">julia&gt; <span class=hljs-literal >ℯ</span> + <span class=hljs-literal >π</span> - <span class=hljs-literal >ℯ</span> == <span class=hljs-literal >π</span>
+<span class=hljs-literal >false</span></code></pre>
+<h2 id=write_your_own_tests_demo_with_car_traveljl_from_lecture_1 ><a href="#write_your_own_tests_demo_with_car_traveljl_from_lecture_1" class=header-anchor >Write your own tests: demo with &quot;car_travel.jl&quot; from Lecture 1</a></h2>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> Plots
+pyplot()
+
+<span class=hljs-meta >@views</span> <span class=hljs-keyword >function</span> car_travel_1D()
+    <span class=hljs-comment ># Physical parameters</span>
+    V     = <span class=hljs-number >113.0</span>          <span class=hljs-comment ># speed, km/h</span>
+    L     = <span class=hljs-number >200.0</span>          <span class=hljs-comment ># length of segment, km</span>
+    dir   = <span class=hljs-number >1</span>              <span class=hljs-comment ># switch 1 = go right, -1 = go left</span>
+    ttot  = <span class=hljs-number >16.0</span>           <span class=hljs-comment ># total time, h</span>
+    <span class=hljs-comment ># Numerical parameters</span>
+    dt    = <span class=hljs-number >0.1</span>            <span class=hljs-comment ># time step, h</span>
+    nt    = <span class=hljs-built_in >Int</span>(cld(ttot, dt))  <span class=hljs-comment ># number of time steps</span>
+    <span class=hljs-comment ># Array initialisation</span>
+    T     = zeros(nt)
+    X     = zeros(nt)
+    <span class=hljs-comment ># Time loop</span>
+    <span class=hljs-keyword >for</span> it = <span class=hljs-number >2</span>:nt
+        T[it] = T[it-<span class=hljs-number >1</span>] + dt
+        X[it] = X[it-<span class=hljs-number >1</span>] + dir*V*dt  <span class=hljs-comment ># move the car</span>
+        <span class=hljs-keyword >if</span> X[it] &gt; L
+            dir = -<span class=hljs-number >1</span>      <span class=hljs-comment ># if beyond L, go back (left)</span>
+        <span class=hljs-keyword >elseif</span> X[it] &lt; <span class=hljs-number >0</span>
+            dir = <span class=hljs-number >1</span>       <span class=hljs-comment ># if beyond 0, go back (right)</span>
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-comment ># Visualisation</span>
+    <span class=hljs-comment ># display(scatter(T, X, markersize=5, xlabel=&quot;time, hrs&quot;, ylabel=&quot;distance, km&quot;, framestyle=:box, legend=:none))</span>
+    <span class=hljs-keyword >return</span> T, X
+<span class=hljs-keyword >end</span>
+
+T, X = car_travel_1D()</code></pre>
+<h2 id=write_your_own_tests_demo_with_car_traveljl_from_lecture_1__2 ><a href="#write_your_own_tests_demo_with_car_traveljl_from_lecture_1__2" class=header-anchor >Write your own tests: demo with &quot;car_travel.jl&quot; from Lecture 1</a></h2>
+<p>Steps:</p>
+<ul>
+<li><p>make it a project</p>
+
+<li><p>add some unit tests in-line</p>
+
+<li><p>move tests to <code>test/</code></p>
+
+<li><p>use ReferenceTests.jl</p>
+
 </ul>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
