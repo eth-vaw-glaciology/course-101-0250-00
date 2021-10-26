@@ -29,9 +29,20 @@ using BenchmarkTools
 using Plots
 ```
 
-Let us consider the following 2-D heat diffusion solver (the comments explain the code):
+Before we go further, make sure we select the GPU we want to run on (if running on a multi-GPU node). In the terminal or Julia REPL in shell mode (typing `;`), type `nvidia-smi` command to list visible GPUs. Remember the GPU_ID you want to use.
+
+Then, in Julia, add following if you decide to, e.g., use GPU 7:
 
 ```julia:ex2
+GPU_ID = 7 # select a GPU between 0-7
+device!(GPU_ID)
+```
+
+\warn{Having multiple users accessing the same GPU will result in severe performance deprecation.}
+
+Let us consider the following 2-D heat diffusion solver (the comments explain the code):
+
+```julia:ex3
 function diffusion2D()
     # Physics
     lam      = 1.0                                          # Thermal conductivity
@@ -71,7 +82,7 @@ end
 
 The function to compute an actual time step is still missing to complete this solver. It can be written, e.g., as follows with finite differences using GPU *array programming* (AP):
 
-```julia:ex3
+```julia:ex4
 @inbounds @views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
 @inbounds @views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
 @inbounds @views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
@@ -94,7 +105,7 @@ end
 
 Run now the 2-D heat diffusion solver to verify that it is working:
 
-```julia:ex4
+```julia:ex5
 diffusion2D()
 ```
 
@@ -107,7 +118,7 @@ Furthermore, use the `nx=ny` found best in the introduction notebook (`1_memoryc
 To help you, there is already some code below to initialize the required arrays and scalars for the benchmarking.
 \note{**hint**: Do not forget to interpolate these predefined variables into the benchmarking expression using `$` and note that you do not need to call the solver itself (`diffusion2D`)!}
 
-```julia:ex5
+```julia:ex6
 nx = ny = # complete!
 T    = CUDA.rand(Float64, nx, ny);
 Ci   = CUDA.rand(Float64, nx, ny);
@@ -117,7 +128,7 @@ dTdt = CUDA.zeros(Float64, nx-2, ny-2);
 lam = _dx = _dy = dt = rand();
 ```
 
-```julia:ex6
+```julia:ex7
 # solution
 t_it = @belapsed begin ... end
 T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
@@ -125,7 +136,7 @@ T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
 
 Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do no longer need in order to save space:
 
-```julia:ex7
+```julia:ex8
 t_it_task1 = t_it
 T_tot_lb_task1 = T_tot_lb
 CUDA.unsafe_free!(qTx)
@@ -151,7 +162,7 @@ We will though use (2) in order not to make limiting assumptions and simplify th
 
 We remove therefore the arrays `qTx`, `qTy` and `dTdt` in the main function of the 2-D heat diffusion solver as they are no longer needed; moreover, we introduce `T2` as a second array for the temperature. `T2` is needed to write newly computed temperature values to a different location then the old temperature values while they are still needed for computations (else we would perform the spatial derivatives partly with new temperature values instead of only with old ones). Here is the resulting main function:
 
-```julia:ex8
+```julia:ex9
 function diffusion2D()
     # Physics
     lam      = 1.0                                          # Thermal conductivity
@@ -196,7 +207,7 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 
 \note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should. Remember that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`}
 
-```julia:ex9
+```julia:ex10
 # solution
 @inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
     T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
@@ -207,7 +218,7 @@ end
 
 Benchmark the new function `diffusion2D_step!` and compute the runtime speed-up compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 
-```julia:ex10
+```julia:ex11
 # solution
 T2 = ...
 t_it = @belapsed begin ...; synchronize() end
@@ -218,7 +229,7 @@ ratio_T_tot_lb = ...
 
 Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!):
 
-```julia:ex11
+```julia:ex12
 t_it_task3 = t_it
 T_tot_lb_task3 = T_tot_lb
 ```
@@ -240,7 +251,7 @@ Rewrite the function `diffusion2D_step!` using GPU kernel programming: from with
 
 \note{Only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).}
 
-```julia:ex12
+```julia:ex13
 # solution
 function diffusion2D_step!(...)
     threads = (..., ...)
@@ -262,7 +273,7 @@ end
 
 Just like in Task 3, benchmark the new function `diffusion2D_step!` and compute the runtime speedup compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 
-```julia:ex13
+```julia:ex14
 # solution
 t_it = @belapsed begin ...; synchronize() end
 speedup = ...
@@ -277,7 +288,11 @@ To this aim, let us recall first the reflections made after benchmarking the ori
 
 With this in mind, we will now define the metric, which we call the *effective memory throughput*, $T_\mathrm{eff}$.
 
-The effective memory access, $A_\mathrm{eff}$ [GB], is the the sum of twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration) and the known fields, $D_\mathrm{k}$, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, $T_\mathrm{eff}$ [GB/s].
+The effective memory access, $A_\mathrm{eff}$ [GB], is the the sum of twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration) and the known fields, $D_\mathrm{k}$, that do not change every iteration. The effective memory access divided by the execution time per iteration, t_it [sec], defines the effective memory throughput, $T_\mathrm{eff}$ [GB/s]:
+
+$$ A_\mathrm{eff} = 2~D_\mathrm{u} + D_\mathrm{k} $$
+
+$$ T_\mathrm{eff} = \frac{A_\mathrm{eff}}{t_\mathrm{it}} $$
 
 The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured e.g. by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue. Defining the $T_\mathrm{eff}$ metric, we assume that 1) we evaluate an iterative stencil-based solver, 2) the problem size is much larger than the cache sizes and 3) the usage of time blocking is not feasible or advantageous (which is a reasonable assumption for real-world applications). An important concept is not to include fields within the effective memory access that do not depend on their own history (e.g. fluxes); such fields can be re-computed on the fly or stored on-chip. Defining a theoretical upper bound for $T_\mathrm{eff}$ that is closer to the real upper bound is work in progress.
 
@@ -285,7 +300,7 @@ The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured e.g. by [Mc
 
 Compute the effective memory throughput, $T_\mathrm{eff}$, for the solvers benchmarked in Task 1, 3 and 5 (you do not need to redo any benchmarking, but you can compute it based on the saved measured runtimes in these three tasks) and recompute the speedup achieved in Task 3 and 5 based on $T_\mathrm{eff}$ instead of based on the runtime; compare the newly computed speedups with the previous.
 
-```julia:ex14
+```julia:ex15
 # solution
 T_eff_task1 = .../t_it_task1
 T_eff_task3 = .../t_it_task3
@@ -304,7 +319,7 @@ Most importantly though, comparing a measured $T_\mathrm{eff}$ with $T_\mathrm{p
 
 Compute by how much percent you can improve the performance of the solver at most:
 
-```julia:ex15
+```julia:ex16
 #solution for V100
 T_peak = ... # Peak memory throughput of the Tesla V100 GPU
 @show T_eff/T_peak

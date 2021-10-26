@@ -107,9 +107,11 @@ julia</code></pre>
 <ol>
 <li><p>On your local machine &#40;laptop&#41;, open <strong>VNCviewer</strong> and paste the address you got prompted at remote desktop creation, i.e., <code>octopus.unil.ch:&lt;VNC screen&gt;</code> in the search bar - hit <code>enter</code>.</p>
 
-<li><p>Type in the VNC password your received by email and you should be all set.</p>
+<li><p>Type in the VNC password your received by email and you should be connected.</p>
 
-<li><p>You can open a terminal &#40;upper left corner menu&#41; and follow the next steps:</p>
+<li><p><strong>Make sure to disable screensaver</strong> when connecting for the first time to the remote desktop. You can do so accessing the <code>Applications</code> menu in the upper left corner and selecting: <code>Applications &gt; Settings &gt; Screensaver</code> and turning it <code>off</code>.</p>
+
+<li><p>You can open a terminal &#40;<code>Applications</code> menu in the upper left corner&#41; and follow the next steps:</p>
 <ul>
 <li><p><a href="#login_to_node40">Login to <code>node40</code></a> &#40;only during lecture 6 and for exercise 1&#41;</p>
 
@@ -163,6 +165,7 @@ julia</code></pre>
 <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
 </span>
 <span class=hljs-meta >julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
+<p>You will get prompted to <code>install jupyter &#91;y/N&#93;</code> the first time running the <code>notebook&#40;&#41;</code> command. Type <code>Yes</code> or <code>y</code>.</p>
 <p>You should see Firefox opening a Jupyter tab &#40;make sure you connected using <code>-YC</code> to <code>node40</code>&#41;.</p>
 <ol start=8 >
 <li><p>Open the <code>l6_1-gpu-memcopy.ipynb</code> notebook. You are all set 🚀</p>

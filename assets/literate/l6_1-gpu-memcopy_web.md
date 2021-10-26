@@ -9,7 +9,7 @@
 
 ## GPU architecture and kernel programming
 
-We'll get started wuth a brief overview of the Nvidia GPU architecture and how to program it.
+We'll get started with a brief overview of the Nvidia GPU architecture and how to program it.
 
 The Nvidia general purpose GPUs we will use in this course can be programmed using the [CUDA language extension](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html).
 
@@ -23,7 +23,7 @@ What are _**host**_ and _**device**_?
 
 The _**host**_ is the system CPU. The system memory (DRAM) linked to the CPU is the host memory. The GPU is called a _**device**_ and GPU memory is device memory.
 
-The GPU hardware is composed of Global (DRAM) memory, L2 cache and many streaming multi-processors (SMs). Each SM contains many compute units (called "CUDA cores" by Nvidida), registers, L1 cache (can be repurposed as shared memory depending on the architecture) and read-only memory.
+The GPU hardware is composed of Global (DRAM) memory, L2 cache and many streaming multi-processors (SMs). Each SM contains many compute units (called "CUDA cores" by Nvidia), registers, L1 cache (can be repurposed as shared memory depending on the architecture) and read-only memory.
 
 > The CUDA programming model provides an abstraction of GPU architecture that acts as a bridge between an application and its possible implementation on GPU hardware. [*[ref]*](https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/)
 
@@ -39,7 +39,7 @@ In our implementations, we will map one thread (red box) to each cell of the 2D 
 
 *How does it relate to the GPU hardware?*
 
-All threads of a block are guaranteed to be executed concurrently on an SM (yellow box) and therefore share SM resources such as registers, L1 cache (shared memory) and read-only memory.
+All threads of a block are guaranteed to be executed concurrently on an SM (yellow box) and therefore share SM resources such as registers, L1 cache (/shared memory) and read-only memory.
 
 We'll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.
 
@@ -93,7 +93,7 @@ In order to get started, we need to connect to a machine which has GPU(s).
 Let's take a few minutes to get started.
 
 👉 Head to:
-- [Software insatall](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
+- [Software install](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
 - [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) for some secret infos.
 
 \note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}

@@ -5,6 +5,9 @@ using CUDA
 using BenchmarkTools
 using Plots
 
+GPU_ID = 7 # select a GPU between 0-7
+device!(GPU_ID)
+
 function diffusion2D()
     # Physics
     lam      = 1.0                                          # Thermal conductivity
