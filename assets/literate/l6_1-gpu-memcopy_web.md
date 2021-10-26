@@ -395,7 +395,7 @@ T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 `T_tot` is probably a bit lower than in the above experiment, but still rather close to `T_peak`.
 
-Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
+Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput.
 
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 

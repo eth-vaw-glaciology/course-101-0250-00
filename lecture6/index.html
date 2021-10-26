@@ -173,7 +173,7 @@ T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<spa
 t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> memcopy_triad_AP!($A, $B, $C, $s); synchronize() <span class=hljs-keyword >end</span>
 T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p><code>T_tot</code> is probably a bit lower than in the above experiment, but still rather close to <code>T_peak</code>.</p>
-<p>Congratulations&#33; You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput. From now on you will get your hands dirty&#33;</p>
+<p>Congratulations&#33; You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput.</p>
 <p>One moment&#33; For the following exercises you will need the parameters we have established here for best memory access:</p>
 <pre><code class="julia hljs">println(<span class=hljs-string >&quot;nx=ny=<span class=hljs-variable >$nx</span>; threads=<span class=hljs-variable >$threads</span>; blocks=<span class=hljs-variable >$blocks</span>&quot;</span>)</code></pre>
 
