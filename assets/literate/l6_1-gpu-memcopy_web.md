@@ -33,6 +33,8 @@ The figure hereafter depicts the relation between the CUDA domain and the finite
 
 ![cuda_grid](../assets/literate_figures/cuda_grid.png)
 
+Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
+
 In the CUDA programming model, `blocks` (red) of `threads` compose the `grid` (green).
 
 In our implementations, we will map one thread (red box) to each cell of the 2D Cartesian domain (blue). Other mappings are possible, of course.
@@ -98,7 +100,7 @@ Let's take a few minutes to get started.
 
 \note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
 
-We will use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
+We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 
 ```julia:ex2
 using CUDA
@@ -245,8 +247,6 @@ A memory copy kernel can be written e.g. as follows:
     return nothing
 end
 ```
-
-\note{Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.}
 
 Then, in order to copy the (entire) array `B` to `A`, we need to launch the kernel such that the above indices `ix` and `iy` map exactly to each array cell.
 
@@ -395,7 +395,7 @@ T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 `T_tot` is probably a bit lower than in the above experiment, but still rather close to `T_peak`.
 
-Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learn about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
+Congratulations! You have successfully made it through the memory copy kernel optimization experiments and learned about the fundamental parameters determining memory throughput. From now on you will get your hands dirty!
 
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 
