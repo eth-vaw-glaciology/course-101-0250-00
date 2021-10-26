@@ -9,7 +9,7 @@
 
 ## GPU architecture and kernel programming
 
-A brief overview of the Nvidia GPU architecture and how to program it.
+We'll get started wuth a brief overview of the Nvidia GPU architecture and how to program it.
 
 The Nvidia general purpose GPUs we will use in this course can be programmed using the [CUDA language extension](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html).
 
@@ -23,11 +23,11 @@ What are _**host**_ and _**device**_?
 
 The _**host**_ is the system CPU. The system memory (DRAM) linked to the CPU is the host memory. The GPU is called a _**device**_ and GPU memory is device memory.
 
-The GPU hardware is composed of Global (DRAM) memory, L2 cache and a compute processor. The processor is subdivided in streaming multi-processors (SMX). Each SMX contains many compute units (cores), registers, shared memory (L1 cache) and read-only memory.
+The GPU hardware is composed of Global (DRAM) memory, L2 cache and many streaming multi-processors (SMs). Each SM contains many compute units (called "CUDA cores" by Nvidida), registers, L1 cache (can be repurposed as shared memory depending on the architecture) and read-only memory.
 
 > The CUDA programming model provides an abstraction of GPU architecture that acts as a bridge between an application and its possible implementation on GPU hardware. [*[ref]*](https://developer.nvidia.com/blog/cuda-refresher-cuda-programming-model/)
 
-In the CUDA programming model, `blocks` of `threads` compose the `grid`. In our implementation, we ideally want to map one thread to each finite-difference cell of the 2D Cartesian domain.
+In the CUDA programming model, `blocks` of `threads` compose the `grid`. In our implementation, we want to map one thread to each finite-difference cell of the 2D Cartesian domain.
 
 The figure hereafter depicts the relation between the CUDA domain and the finite-difference domain:
 
@@ -35,11 +35,11 @@ The figure hereafter depicts the relation between the CUDA domain and the finite
 
 In the CUDA programming model, `blocks` (red) of `threads` compose the `grid` (green).
 
-In our implementation, we ideally want to map one thread (red box) to each finite-difference cell of our, here 2D, Cartesian domain (blue).
+In our implementations, we will map one thread (red box) to each cell of the 2D Cartesian domain (blue). Other mappings are possible, of course.
 
-*How does it relates to the GPU hardware?*
+*How does it relate to the GPU hardware?*
 
-One block gets executed per SMX (yellow box); all threads within this block (yellow box) thus share SMX resources such as registers, shared memory (L1) and read-only memory.
+All threads of a block are guaranteed to be executed concurrently on an SM (yellow box) and therefore share SM resources such as registers, L1 cache (shared memory) and read-only memory.
 
 We'll see later that the performance of a GPU application is highly sensitive to the optimal choice of the thread, block, grid layout, the so-called kernel launch parameters.
 
@@ -66,8 +66,8 @@ synchronize()
 ```
 
 _**Playing with GPUs: the rules**_
-- No more than 1024 threads per block are allowed.
-- The maximum number of blocks allowed is huge; computing the largest possible array on the GPU will make you run out of device memory (currently 16-80 GB) before hitting the maximal number of blocks when selecting sensible kernel launch parameters (usually threads per block > 256).
+- Current GPUs allow typically a maximum of 1024 threads per block.
+- The maximum number of blocks allowed is huge; computing the largest possible array on the GPU will make you run out of device memory (currently 16-80 GB) before hitting the maximal number of blocks when selecting sensible kernel launch parameters (usually threads per block >= 128).
 - Threads, blocks and grid have 3D "Cartesian" topology, which is very useful for 1D, 2D and 3D Cartesian finite-difference domains.
 
 With this short overview we should have the important concepts in mind to get started with GPU computing 🚀
