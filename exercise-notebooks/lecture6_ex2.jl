@@ -1,5 +1,5 @@
 md"""
-## Excercise 2 - **Solving PDEs on GPUs**
+## Exercise 2 - **Solving PDEs on GPUs**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
