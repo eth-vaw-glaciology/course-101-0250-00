@@ -3,7 +3,7 @@
 using Plots
 pyplot()
 
-@views function car_travel_1D()
+function car_travel_1D()
     # Physical parameters
     V     = 113.0          # speed, km/h
     L     = 200.0          # length of segment, km
