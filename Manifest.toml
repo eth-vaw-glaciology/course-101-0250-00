@@ -207,9 +207,9 @@ version = "2.2.10+0"
 
 [[ExponentialUtilities]]
 deps = ["ArrayInterface", "LinearAlgebra", "Printf", "Requires", "SparseArrays"]
-git-tree-sha1 = "54b4bd8f88278fd544a566465c943ce4f8da7b7f"
+git-tree-sha1 = "cb39752c2a1f83bbe0fda393c51c480a296042ad"
 uuid = "d4d017d3-3776-5f7e-afef-a10c40355c18"
-version = "1.10.0"
+version = "1.10.1"
 
 [[ExprTools]]
 git-tree-sha1 = "b7e3d17636b348f005f11040025ae8c6f645fe92"
