@@ -584,8 +584,31 @@ T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla V10
 <p>👉 See <a href="/course-101-0250-00/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li>
+<li><p>revisit the last part of the lecture</p>
+
+<li><p>learn how testing works in Julia</p>
+
 </ul>
+<p><strong>Note</strong>: I had some odd errors caused by <code>@views</code> which I couldn&#39;t get to the bottom of.  If you do to, just remove the <code>@views</code>.</p>
+<p><strong>Note</strong>: I packaged the Demo of the lecture within the repo <a href="https://github.com/mauro3/course-101-0250-00-L6Testing.jl">course-101-0250-00-L6Testing.jl</a>, which should be the blueprint for this exercise.</p>
+<p>Task:</p>
+<ul>
+<li><p>use the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_nl_1D.jl"><code>diffusion_nl_1D.jl</code></a> script as a base.</p>
+
+<li><p>create a Julia project <code>L6TestingExercise</code> within the exercise submission folder of <code>Lecture6</code>.  Use the <code>generate</code> command of the REPL package-mode.</p>
+
+<li><p>add <code>diffusion_nl_1D.jl</code> to a <code>scripts/</code> folder</p>
+
+<li><p>You can remove the plotting.  This will make the tests run faster.  Also return the final <code>H</code> and <code>qx</code> from the function.</p>
+
+<li><p>make a few unit test for <code>av</code> function; wrap them in a <code>@testset</code></p>
+
+<li><p>make a ReferenceTest.jl which tests the value at 20 random indices of <code>H</code> and <code>qx</code> against a truth.</p>
+
+<li><p>make sure that all tests run and pass when called via package-mode <code>test</code></p>
+
+</ul>
+<p>*Remember to check-in all the files into the repo; in particular the reference <code>*.bson</code>.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
