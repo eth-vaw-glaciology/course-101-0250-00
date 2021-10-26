@@ -1,5 +1,5 @@
 md"""
-## Excercise 3 - **Unit and reference tests**
+## Exercise 3 - **Unit and reference tests**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
