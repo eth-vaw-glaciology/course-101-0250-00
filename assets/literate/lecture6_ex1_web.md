@@ -113,7 +113,7 @@ diffusion2D()
 
 Benchmark the function `diffusion2D_step!` using BenchmarkTools and compute a straightforward *lower bound of the total memory throughput*, `T_tot_lb`; then, compare it to the *peak memory throughput*, `T_peak`. You can compute `T_tot_lb` considering only full array reads and writes and knowing that there is no data reuse between different GPU array computation statements as each statement is translated into a separate and independently launched kernel (note that to obtain the actual `T_tot`, one would need to use a profiler).
 
-Furthermore, use the `nx=ny` found best in the introduction notebook (`1_memorycopy.ipynb`) to allocate the necessary arrays if the amount of memory of your GPU allows it (else divide this `nx` and `ny` by 2).
+Furthermore, use the `nx=ny` found best in the introduction notebook ([`1_memorycopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb)) to allocate the necessary arrays if the amount of memory of your GPU allows it (else divide this `nx` and `ny` by 2).
 
 To help you, there is already some code below to initialize the required arrays and scalars for the benchmarking.
 \note{**hint**: Do not forget to interpolate these predefined variables into the benchmarking expression using `$` and note that you do not need to call the solver itself (`diffusion2D`)!}
@@ -240,7 +240,7 @@ A good metric should certainly be tightly linked to observed runtime. We will no
 
 ### Task 4 (GPU kernel programming)
 
-Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates the temperature using update rule (2) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introduction (`l6_1-gpu-memcopy.ipynb`) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2()` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
+Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates the temperature using update rule (2) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introduction ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb)) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
 \note{You can base yourself on the kernel `memcopy_triad_KP!` from the introdution notebook to help you remember the very basics of GPU kernel programming.}
 
 \note{In this kind of kernels, the computations are described for one array cell (here `T2[ix,iy]`) rather than for whole arrays - just like in a for loop; moreover, if-statements allow to ensure to remain within the array boundaries (in for loop this is achieved with the loop ranges).}
