@@ -276,11 +276,11 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <ul>
 <li><p><code>acoustic_2D_Teff.jl</code></p>
 <ul>
-<li><p>Implement the <code>T_eff</code> metric to the acoustic wave in 2D. Since we are using the velocity-pressure formulation, think about how many arrays are updated at every iterations and define <code>A_Eff</code> accordingly.</p>
+<li><p>Implement the <code>T_eff</code> metric to the acoustic wave in 2D. Since we are using the velocity-pressure formulation, think about how many arrays are read / written at every iterations and define <code>A_Eff</code> accordingly.</p>
 
 <li><p>Use <code>@printf&#40;&#41;</code> to report <code>t_toc</code>, <code>T_eff</code> and <code>niter</code>.</p>
 
-<li><p>Boost number of grid points to <code>nx &#61; ny &#61; 512</code>.</p>
+<li><p>Boost the number of grid points to <code>nx &#61; ny &#61; 512</code>.</p>
 
 <li><p>Implement a flag to deactivate visualisation using kwargs.</p>
 
@@ -290,7 +290,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <ul>
 <li><p>Replace divisions by multiplications.</p>
 
-<li><p>When possible, fuse scalar computations as preprocessing.</p>
+<li><p>When possible, fuse scalar computations in preprocessing.</p>
 
 </ul>
 
@@ -302,7 +302,7 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 
 <li><p><code>acoustic_2D_loop_fun.jl</code></p>
 <ul>
-<li><p>Move the physics computations into functions &#40;kernels&#41; and call them within the time loop. Use the minimal amount of functions that would ensure correct results.</p>
+<li><p>Move the physics computations inside functions &#40;kernels&#41; and call them within the time loop. Use the minimal amount of functions that would ensure correct results.</p>
 
 <li><p>Implement multi-threading using both <code>Threads.@threads</code> and <code>@tturbo</code> &#40;the latter from <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a>&#41;.</p>
 
@@ -327,9 +327,9 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 </ul>
 <p>For this exercise, you will write a code to assess the peak memory throughput of your CPU and run a strong scaling benchmark using the diffusion 2D codes and report performance.</p>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
-<p>In the <code>diffusion2D</code> folder, create a new script names <code>memcopy.jl</code>. You can use as starting point the <code>diffusion_2D_loop_fun.jl</code> script from lecture 5 &#40;or exercise 1&#41;.</p>
+<p>In the <code>diffusion2D</code> folder, create a new script named <code>memcopy.jl</code>. You can use as starting point the <code>diffusion_2D_loop_fun.jl</code> script from lecture 5 &#40;or exercise 1&#41;.</p>
 <ol>
-<li><p>Rename the &quot;main&quot; <code>memcopy</code></p>
+<li><p>Rename the &quot;main&quot; function <code>memcopy</code></p>
 
 <li><p>Modify the script to only keep following in the initialisation:</p>
 
@@ -344,21 +344,21 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <ol start=3 >
 <li><p>Modify the <code>compute&#33;&#40;&#41;</code> function to perform the following operation <code>C2 &#61; C &#43; A</code>, replacing the previous calculations.</p>
 
-<li><p>Update the <code>A_eff</code> formula</p>
+<li><p>Update the <code>A_eff</code> formula accordingly.</p>
 
 </ol>
 <p>Then, create a <code>README.md</code> file in the <code>diffusion2D</code> folder to report the results for each of the following tasks &#40;including a .png of the figure when instructed&#41;</p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a figure in the <code>README.md</code>.</div></div>
+<div class=messg >Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a .png figure in the <code>README.md</code>.</div></div>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
-<p>Report on a figure \(T_\mathrm{eff}\) of your memcopy code as function of number of grid points <code>nx × ny</code> for the simple <code>for</code> loop, the <code>Threads.@threads</code>, and the <code>@tturbo</code> implementations. Vary <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
-<p><em>&#40;\(T_\mathrm{eff}\) of your memcopy code represents \(T_\mathrm{peak}\), the peak memory throughput you can achieve on your CPU for a given implementation.&#41;</em></p>
-<p>Add that figure in a new section of the <code>README.md</code>, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result. Figure out the vendor-announced peak memory bandwidth of your CPU, add it to the figure and use it to discuss your results.</p>
+<p>Report on a figure \(T_\mathrm{eff}\) of your <code>memcopy.jl</code> code as function of number of grid points <code>nx × ny</code> for the simple <code>for</code> loop, the <code>Threads.@threads</code>, and the <code>@tturbo</code> implementations. Vary <code>nx</code>and <code>ny</code> such that <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
+<p><em>&#40;\(T_\mathrm{eff}\) of your <code>memcopy.jl</code> code represents \(T_\mathrm{peak}\), the peak memory throughput you can achieve on your CPU for a given implementation.&#41;</em></p>
+<p>Add the above figure in a new section of the <code>diffusion2D/README.md</code>, and provide a minimal description of 1&#41; the performed test, and 2&#41; a short description of the result. Figure out the vendor-announced peak memory bandwidth for your CPU, add it to the figure and use it to discuss your results.</p>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
-<p>Repeat the strong scaling benchmark you just realised using the memcopy.jl code on the various diffusion 2D codes &#40;<code>perf2</code>, <code>perf_loop</code>, <code>perf_loop_fun</code> - <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> for the latter&#41;.</p>
-<p>Report on a figure \(T_\mathrm{eff}\) of the 5 implementations of the diffusion 2D code as function of number of grid points <code>nx × ny</code>. Vary <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
-<p>Report also on the same figure the memory copy values for the <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> implementation &#40;as, e.g, dashed lines&#41;.</p>
-<p>Add this second figure in a new section of the <code>README.md</code>, provide a minimal description of 1&#41; the performed test, and 2&#41; short description of the result.</p>
+<p>Repeat the strong scaling benchmark you just realised in Task 2 using the <code>memcopy.jl</code> code on the various diffusion 2D codes &#40;<code>perf2</code>, <code>perf_loop</code>, <code>perf_loop_fun</code> - <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> for the latter&#41;.</p>
+<p>Report on a figure \(T_\mathrm{eff}\) of the 5 diffusion 2D code implementations as function of number of grid points <code>nx × ny</code>. Vary <code>nx</code>and <code>ny</code> such that <code>nx &#61; ny &#61; 16 * 2 .^ &#40;1:8&#41;</code>.</p>
+<p>On the same figure, report also the memory copy values for the <code>for</code>, <code>Threads.@threads</code>, <code>@tturbo</code> implementation &#40;as, e.g, dashed lines&#41;.</p>
+<p>Add this second figure in a new section of the <code>diffusion2D/README.md</code>, and provide a minimal description of 1&#41; the performed test, and 2&#41; a short description of the result.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -374,13 +374,13 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 <p>For this exercise, you will implement a test set of basic unit tests to verify the implementation of the diffusion and acoustic 2D solvers.</p>
 <h3 id=task_1__4 ><a href="#task_1__4" class=header-anchor >Task 1</a></h3>
 <p>In the <code>diffusion2D</code> folder, duplicate the <code>diffusion_2D_perf_loop_fun.jl</code> script and rename it <code>diffusion_2D_test.jl</code>.</p>
-<p>Implement a test set in order to test <code>C&#91;xtest,ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>.</p>
-<pre><code class=language-julia >xtest &#61; &#91;5, Int&#40;cld&#40;0.6*Lx/dx&#41;&#41;, nx-10&#93;
-ytest &#61; Int&#40;cld&#40;0.5*Ly/dy&#41;&#41;</code></pre>
+<p>Implement a test set in order to test <code>C&#91;xtest, ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>.</p>
+<pre><code class=language-julia >xtest &#61; &#91;5, Int&#40;cld&#40;0.6*Lx, dx&#41;&#41;, nx-10&#93;
+ytest &#61; Int&#40;cld&#40;0.5*Ly, dy&#41;&#41;</code></pre>
 <p>for</p>
 <pre><code class=language-julia >nx &#61; ny &#61; 16 * 2 .^ &#40;2:5&#41;</code></pre>
 <p>should match</p>
-<table><tr><th align=center ><code>nx, ny</code><th align=center ><code>C&#91;xtest,ytest&#93;</code><tr><td align=center ><code>64</code><td align=center ><code>&#91;1.28961441675812e-6  0.3403434055248243  0.000226725154067358&#93;</code><tr><td align=center ><code>128</code><td align=center ><code>&#91;1.42876853096198e-7  0.3606848631942946  2.784022638919167e-6&#93;</code><tr><td align=center ><code>256</code><td align=center ><code>&#91;3.82994869422046e-8  0.3515100977539851  2.070629144549965e-7&#93;</code><tr><td align=center ><code>512</code><td align=center ><code>&#91;1.56975129887789e-8  0.3467239448747831  4.938759153492403e-8&#93;</code></table>
+<table><tr><th align=center ><code>nx, ny</code><th align=center ><code>C&#91;xtest, ytest&#93;</code><tr><td align=center ><code>64</code><td align=center ><code>&#91;1.28961441675812e-6  0.3403434055248243  0.000226725154067358&#93;</code><tr><td align=center ><code>128</code><td align=center ><code>&#91;1.42876853096198e-7  0.3606848631942946  2.784022638919167e-6&#93;</code><tr><td align=center ><code>256</code><td align=center ><code>&#91;3.82994869422046e-8  0.3515100977539851  2.070629144549965e-7&#93;</code><tr><td align=center ><code>512</code><td align=center ><code>&#91;1.56975129887789e-8  0.3467239448747831  4.938759153492403e-8&#93;</code></table>
 <p>Report the output of the test set as code block in a new section of the <code>README.md</code> in the <code>diffusion2D</code> folder.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Use triple backticks to generate code blocks in the <code>README.md</code> &#40;<a href="https://www.markdownguide.org/extended-syntax/#fenced-code-blocks">more</a>&#41;.</div></div>
