@@ -28,7 +28,7 @@ Detailed course description is available on the [**ETHZ course catalogue**](http
 ### Discussion
 We encourage students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat.
 
-Head to the [_course chat space (Element)_](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element.
+Head to the [course chat space (Element)](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element.
 
 ### Homework and Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) (& GitHub):
