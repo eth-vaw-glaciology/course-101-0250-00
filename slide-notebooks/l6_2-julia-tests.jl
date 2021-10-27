@@ -168,7 +168,7 @@ $ julia --project
 julia> using Pkg; Pkg.generate("L6Testing")
 ```
 
-Steps 3--4 is in the repository [course-101-0250-00-L6Testing.jl](https://github.com/mauro3/course-101-0250-00-L6Testing.jl);
+Steps 3--4 is in the repository [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl);
 note that this steps are encoded in the git history which the README links into.
 
 Note that for outputs from big simulations, such as ours, it make sense to

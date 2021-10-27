@@ -13,7 +13,7 @@ The goal of this exercise is to:
 md"""
 **Note**: I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.
 
-**Note**: I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/mauro3/course-101-0250-00-L6Testing.jl), which should be the
+**Note**: I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the
 blueprint for this exercise.
 
 Task:
