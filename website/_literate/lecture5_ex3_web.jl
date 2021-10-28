@@ -46,7 +46,12 @@ md"""
 Report on a figure $T_\mathrm{eff}$ of your `memcopy.jl` code as function of number of grid points `nx × ny` for the simple `for` loop, the `Threads.@threads`, and the `@tturbo` implementations. Vary `nx`and `ny` such that `nx = ny = 16 * 2 .^ (1:8)`.
 
 _($T_\mathrm{eff}$ of your `memcopy.jl` code represents $T_\mathrm{peak}$, the peak memory throughput you can achieve on your CPU for a given implementation.)_
+"""
 
+#nb # > 💡 hint: For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.
+#md # \note{For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.}
+
+md"""
 Add the above figure in a new section of the `diffusion2D/README.md`, and provide a minimal description of 1) the performed test, and 2) a short description of the result. Figure out the vendor-announced peak memory bandwidth for your CPU, add it to the figure and use it to discuss your results.
 """
 
