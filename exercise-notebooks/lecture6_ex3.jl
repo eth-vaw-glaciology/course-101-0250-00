@@ -10,12 +10,13 @@ The goal of this exercise is to:
 - learn how testing works in Julia
 """
 
+#nb # > 💡 note: I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.
+#md # \note{I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.}
+
+#nb # > 💡 note: I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the blueprint for this exercise.
+#md # \note{I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the blueprint for this exercise.}
+
 md"""
-**Note**: I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.
-
-**Note**: I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the
-blueprint for this exercise.
-
 Task:
 - use the [`diffusion_nl_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_nl_1D.jl) script as a base.
 - create a Julia project `L6TestingExercise` within the exercise submission folder `lecture6`.  Use the `generate` command of the REPL package-mode.
