@@ -15,9 +15,39 @@ Create a new folder in your GitHub repository for this week's (lecture 6) exerci
 
 In there, place the `diffusion_2D_loop_fun.jl` and `acoustic_2D_loop_fun.jl` scripts you created for lecture 5 homework. Duplicate both scripts and rename them as `diffusion_2D_gpu.jl` and `acoustic_2D_gpu.jl`.
 
-Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `diffusion_2D_gpu.jl` and `acoustic_2D_gpu.jl` code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned *octopus* node.
+Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `diffusion_2D_gpu.jl` and `acoustic_2D_gpu.jl` code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned *octopus* node. For this task, _**use a kernel programming approach**_.
 
-_**Use a kernel programming approach**_. Define in the `# numerics` section the parameters to set the block and grid size such that the number of threads per blocks are fixed to `cuthreads = (32,4)` and the number of blocks `cublocks` computed to match the number of grid points `nx, ny`.
+Hereafter, a step-wise list of changes you'll need to perform starting from your `...2D_loop_fun.jl` codes.
+
+Define, in the `# Numerics` section, the parameters to set the block and grid size such that the number of threads per blocks are fixed to `cuthreads = (32,4)` (or to a better layout you could figure out repeating the performance assessment you did on node40 on your assigned Titan Xm based node). Define then the number of blocks `cublocks` to be computed such that `nx = cuthreads[1]*cublocks[1]` and similarly for `ny`.
+
+In the `# Array initialisation` section, make sure to now initialise CUDA arrays. You can use `CUDA.zeros(nx,ny)` as the GPU variant of `zeros(nx,ny)`. Also, you can use `CuArray()` to wrap and CPU array turning it into a GPU array; `CUDA.zeros()` would be equivalent to `CuArray(zeros(nx,ny))`. This may be useful to, e.g., define initial conditions using broadcasting operations on CPU arrays and wrapping them in a GPU array for further use.
+
+Going to the compute functions (or "kernels"), remove the nested loop(s) and replace them by the CUDA-related vectorised indices unique to each thread:
+```julia
+ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+```
+Pay attention that you need to enforce array bound checking (this was previously done by the loop bounds). A convenient way of doing so is using `if` conditions:
+```julia
+if (ix<=size(C,1) && iy<=size(C,2))  C[ix,iy] = ...  end
+```
+
+Moving to the `# Time loop`, you'll now have to add information in order to allow the compute function to execute on the GPU. This can be achieved by adding `@cuda blocks=cublocks threads=cuthreads` prior to the function call, turning, e.g.,
+```julia
+compute!(...)
+```
+into
+```julia
+@cuda blocks=cublocks threads=cuthreads compute!(...)
+synchronize()
+```
+
+\warn{Don't forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.}
+
+Finally, for visualisation, you'll need to "gather" information from the GPU array (`CuArray`) back to the CPU array (`Array`) in order to plot it. This can be achieved by calling `Array(C)` in your visualisation routine.
+
+\note{`CuArray()` allows you to "transform" a CPU (or host) array to a GPU (or device) array, while `Array()` allows you to bring back the GPU (device) array to a CPU (host) array.}
 
 ### Task 2
 

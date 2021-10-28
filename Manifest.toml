@@ -179,9 +179,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
 deps = ["ChainRulesCore", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
-git-tree-sha1 = "3fcfb6b34ea303642aee8f85234a0dcd0dc5ce73"
+git-tree-sha1 = "d249ebaa67716b39f91cf6052daf073634013c0f"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.22"
+version = "0.25.23"
 
 [[DocStringExtensions]]
 deps = ["LibGit2"]
@@ -600,9 +600,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "b47e84e10d69b8c254ccdded458ab1061b279300"
+git-tree-sha1 = "54123adb15b8d7da555c94b9450780d2277ccf00"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.89"
+version = "0.12.90"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]

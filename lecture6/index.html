@@ -568,8 +568,25 @@ T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla V10
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
 <p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 6&#41; exercises.</p>
 <p>In there, place the <code>diffusion_2D_loop_fun.jl</code> and <code>acoustic_2D_loop_fun.jl</code> scripts you created for lecture 5 homework. Duplicate both scripts and rename them as <code>diffusion_2D_gpu.jl</code> and <code>acoustic_2D_gpu.jl</code>.</p>
-<p>Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the <code>diffusion_2D_gpu.jl</code> and <code>acoustic_2D_gpu.jl</code> code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned <em>octopus</em> node.</p>
-<p><em><strong>Use a kernel programming approach</strong></em>. Define in the <code># numerics</code> section the parameters to set the block and grid size such that the number of threads per blocks are fixed to <code>cuthreads &#61; &#40;32,4&#41;</code> and the number of blocks <code>cublocks</code> computed to match the number of grid points <code>nx, ny</code>.</p>
+<p>Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the <code>diffusion_2D_gpu.jl</code> and <code>acoustic_2D_gpu.jl</code> code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned <em>octopus</em> node. For this task, <em><strong>use a kernel programming approach</strong></em>.</p>
+<p>Hereafter, a step-wise list of changes you&#39;ll need to perform starting from your <code>...2D_loop_fun.jl</code> codes.</p>
+<p>Define, in the <code># Numerics</code> section, the parameters to set the block and grid size such that the number of threads per blocks are fixed to <code>cuthreads &#61; &#40;32,4&#41;</code> &#40;or to a better layout you could figure out repeating the performance assessment you did on node40 on your assigned Titan Xm based node&#41;. Define then the number of blocks <code>cublocks</code> to be computed such that <code>nx &#61; cuthreads&#91;1&#93;*cublocks&#91;1&#93;</code> and similarly for <code>ny</code>.</p>
+<p>In the <code># Array initialisation</code> section, make sure to now initialise CUDA arrays. You can use <code>CUDA.zeros&#40;nx,ny&#41;</code> as the GPU variant of <code>zeros&#40;nx,ny&#41;</code>. Also, you can use <code>CuArray&#40;&#41;</code> to wrap and CPU array turning it into a GPU array; <code>CUDA.zeros&#40;&#41;</code> would be equivalent to <code>CuArray&#40;zeros&#40;nx,ny&#41;&#41;</code>. This may be useful to, e.g., define initial conditions using broadcasting operations on CPU arrays and wrapping them in a GPU array for further use.</p>
+<p>Going to the compute functions &#40;or &quot;kernels&quot;&#41;, remove the nested loop&#40;s&#41; and replace them by the CUDA-related vectorised indices unique to each thread:</p>
+<pre><code class="julia hljs">ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y</code></pre>
+<p>Pay attention that you need to enforce array bound checking &#40;this was previously done by the loop bounds&#41;. A convenient way of doing so is using <code>if</code> conditions:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >if</span> (ix&lt;=size(C,<span class=hljs-number >1</span>) &amp;&amp; iy&lt;=size(C,<span class=hljs-number >2</span>))  C[ix,iy] = ...  <span class=hljs-keyword >end</span></code></pre>
+<p>Moving to the <code># Time loop</code>, you&#39;ll now have to add information in order to allow the compute function to execute on the GPU. This can be achieved by adding <code>@cuda blocks&#61;cublocks threads&#61;cuthreads</code> prior to the function call, turning, e.g.,</p>
+<pre><code class="julia hljs">compute!(...)</code></pre>
+<p>into</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@cuda</span> blocks=cublocks threads=cuthreads compute!(...)
+synchronize()</code></pre>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Don&#39;t forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.</div></div>
+<p>Finally, for visualisation, you&#39;ll need to &quot;gather&quot; information from the GPU array &#40;<code>CuArray</code>&#41; back to the CPU array &#40;<code>Array</code>&#41; in order to plot it. This can be achieved by calling <code>Array&#40;C&#41;</code> in your visualisation routine.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><code>CuArray&#40;&#41;</code> allows you to &quot;transform&quot; a CPU &#40;or host&#41; array to a GPU &#40;or device&#41; array, while <code>Array&#40;&#41;</code> allows you to bring back the GPU &#40;device&#41; array to a CPU &#40;host&#41; array.</div></div>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
 <p>Ensure the GPU codes produces similar results as the reference CPU loop code for <code>nx &#61; ny &#61; 128</code> number of grid points. To assess this, save the output &#40;pressure <code>P</code> and concentration <code>C</code>&#41; fields for both the CPU and GPU codes and make sure their difference is close to machine precision. You could use Julia&#39;s unit testing functionalities, e.g., <code>testset</code>, for this task as well.</p>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
@@ -614,7 +631,7 @@ T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla V10
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 27, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 28, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
