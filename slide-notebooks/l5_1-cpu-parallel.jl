@@ -219,7 +219,7 @@ As first task, we'll compute the $T_\mathrm{eff}$ for the 2D diffusion code [`di
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 **To-do list:**
-- copy `diffusion_2D.jl` and rename it to `diffusion_2D_Teff.jl` 
+- copy [`diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and rename it to [`diffusion_2D_Teff.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) 
 - add a timer
 - include the performance metric formulas
 - deactivate visualisation
@@ -316,7 +316,7 @@ We'll work it out in 4 steps:
 md"""
 ### 1. Precomputing scalars, removing divisions and casual arrays
 
-As first, duplicate `diffusion_2D_Teff.jl` and rename it as `diffusion_2D_perf.jl`
+As first, duplicate [`diffusion_2D_Teff.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and rename it as [`diffusion_2D_perf.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -381,7 +381,7 @@ Define `C2`, a copy of `C`, modify the physics computation line, and implement a
 md"""
 ### 3. Back to loops I
 
-As first, duplicate `diffusion_2D_perf2.jl` and rename it as `diffusion_2D_perf_loop.jl`
+As first, duplicate [`diffusion_2D_perf2.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and rename it as [`diffusion_2D_perf_loop.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -432,7 +432,7 @@ Let's now implement the final step.
 md"""
 ### 4. Back to loops II
 
-Duplicate `diffusion_2D_perf2_loop.jl` and rename it as `diffusion_2D_perf_loop_fun.jl`
+Duplicate [`diffusion_2D_perf2_loop.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and rename it as [`diffusion_2D_perf_loop_fun.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
