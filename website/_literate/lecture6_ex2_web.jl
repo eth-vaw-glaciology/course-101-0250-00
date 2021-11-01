@@ -19,11 +19,11 @@ md"""
 
 Create a new folder in your GitHub repository for this week's (lecture 6) exercises.
 
-In there, place the `diffusion_2D_loop_fun.jl` and `acoustic_2D_loop_fun.jl` scripts you created for lecture 5 homework. Duplicate both scripts and rename them as `diffusion_2D_gpu.jl` and `acoustic_2D_gpu.jl`.
+In there, place the `diffusion_2D_perf_loop_fun.jl` and `acoustic_2D_perf_loop_fun.jl` scripts you created for lecture 5 homework. Duplicate both scripts and rename them as `diffusion_2D_perf_gpu.jl` and `acoustic_2D_perf_gpu.jl`.
 
-Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `diffusion_2D_gpu.jl` and `acoustic_2D_gpu.jl` code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned *octopus* node. For this task, _**use a kernel programming approach**_.
+Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `diffusion_2D_perf_gpu.jl` and `acoustic_2D_perf_gpu.jl` code in order to enable them to execute on the Nvidia Titan Xm GPU you have on your assigned *octopus* node. For this task, _**use a kernel programming approach**_.
 
-Hereafter, a step-wise list of changes you'll need to perform starting from your `...2D_loop_fun.jl` codes.
+Hereafter, a step-wise list of changes you'll need to perform starting from your `...2D_perf_loop_fun.jl` codes.
 
 Define, in the `# Numerics` section, the parameters to set the block and grid size such that the number of threads per blocks are fixed to `cuthreads = (32,4)` (or to a better layout you could figure out repeating the performance assessment you did on node40 on your assigned Titan Xm based node). Define then the number of blocks `cublocks` to be computed such that `nx = cuthreads[1]*cublocks[1]` and similarly for `ny`.
 
