@@ -52,7 +52,7 @@ function diffusion2D()
     ## Physics
     lam      = 1.0                                          # Thermal conductivity
     c0       = 2.0                                          # Heat capacity
-    lx, ly   = 1.0, 1.0                                     # Length of computational domain in dimension x and y
+    lx, ly   = 10.0, 10.0                                   # Length of computational domain in dimension x and y
 
     ## Numerics
     nx, ny   = 32*2, 32*2                                   # Number of gridpoints in dimensions x and y
@@ -77,8 +77,11 @@ function diffusion2D()
     opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
     for it = 1:nt
         diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy) # Diffusion time step.
-        IJulia.clear_output(true)
-        display(heatmap(Array(T)'; opts...))                # Visualization
+        if it % 10 == 0
+            IJulia.clear_output(true)
+            display(heatmap(Array(T)'; opts...))            # Visualization
+            sleep(0.1)
+        end
     end
 end
 
@@ -179,7 +182,7 @@ function diffusion2D()
     ## Physics
     lam      = 1.0                                          # Thermal conductivity
     c0       = 2.0                                          # Heat capacity
-    lx, ly   = 1.0, 1.0                                     # Length of computational domain in dimension x and y
+    lx, ly   = 10.0, 10.0                                   # Length of computational domain in dimension x and y
 
     ## Numerics
     nx, ny   = 32*2, 32*2                                   # Number of gridpoints in dimensions x and y
@@ -203,8 +206,11 @@ function diffusion2D()
     opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
     for it = 1:nt
         diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)     # Diffusion time step.
-        IJulia.clear_output(true)
-        display(heatmap(Array(T)'; opts...))                # Visualization
+        if it % 10 == 0
+            IJulia.clear_output(true)
+            display(heatmap(Array(T)'; opts...))            # Visualization
+            sleep(0.1)
+        end
         T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)
     end
 end
