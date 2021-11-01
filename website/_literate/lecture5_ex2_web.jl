@@ -28,9 +28,9 @@ In the folder in your GitHub repository for this week's (lecture 5) exercises, c
 - `acoustic_2D_perf.jl`
   - Replace divisions by multiplications.
   - When possible, fuse scalar computations in preprocessing.
-- `acoustic_2D_loop.jl`
+- `acoustic_2D_perf_loop.jl`
   - Perform the computations of `Vx`, `Vy` and `P` in nested loops. Take care of the staggering and loop range.
-- `acoustic_2D_loop_fun.jl`
+- `acoustic_2D_perf_loop_fun.jl`
   - Move the physics computations inside functions (kernels) and call them within the time loop. Use the minimal amount of functions that would ensure correct results.
   - Implement multi-threading using both `Threads.@threads` and `@tturbo` (the latter from [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl)).
 
