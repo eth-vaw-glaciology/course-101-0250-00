@@ -300,13 +300,13 @@ Some tests did not pass: 3 passed, 1 failed, 0 errored, 0 broken.</code></pre>
 
 </ul>
 
-<li><p><code>acoustic_2D_loop.jl</code></p>
+<li><p><code>acoustic_2D_perf_loop.jl</code></p>
 <ul>
 <li><p>Perform the computations of <code>Vx</code>, <code>Vy</code> and <code>P</code> in nested loops. Take care of the staggering and loop range.</p>
 
 </ul>
 
-<li><p><code>acoustic_2D_loop_fun.jl</code></p>
+<li><p><code>acoustic_2D_perf_loop_fun.jl</code></p>
 <ul>
 <li><p>Move the physics computations inside functions &#40;kernels&#41; and call them within the time loop. Use the minimal amount of functions that would ensure correct results.</p>
 
