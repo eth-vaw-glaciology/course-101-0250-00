@@ -48,7 +48,7 @@ Let's look at a simple package: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 - there are different CI-services, most used is GitHub-Actions
 - often the tests are a fairly good source of documentation by example
 
--> "demo"
+💻 -> "demo"
 """
 
 #src #########################################################################
@@ -65,12 +65,12 @@ pkg> dev UnPack
 This will checkout the package to `~/.julia/dev/UnPack`.
 
 Re-Start Julia with this package activated:
-```
+```sh
 $ cd ~/.julia/dev/UnPack
 $ julia --project
 ```
 In package mode run the tests:
-```
+```julia
 (UnPack) pkg> test
     Testing UnPack
       Status `/tmp/jl_LgpabA/Project.toml`
@@ -97,7 +97,7 @@ Another day:
 - setup CI on Github
 
 **NOTE**: floating-point comparisons should only be done approximately:
-```
+```julia
 julia> ℯ + π - ℯ == π
 false
 ```
@@ -146,14 +146,14 @@ md"""
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 Steps:
-- `generate` a project and add `scripts/car_travel.jl` (1)
-- add some unit tests in-line (2)
-- move tests to `test/` (3)
-- use ReferenceTests.jl (4)
-
-**Note**: to make the `pkg> test` run, you have to have a file `src/MyPkg.jl`,
-even if it is just empty.
+1. `generate` a project and add `scripts/car_travel.jl`
+2. add some unit tests in-line
+3. move tests to `test/`
+4. use ReferenceTests.jl
 """
+
+#nb # > 💡 note: To make the `pkg> test` run, you have to have a file `src/MyPkg.jl`, even if it is just empty.
+#md # \note{To make the `pkg> test` run, you have to have a file `src/MyPkg.jl`, even if it is just empty.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -161,16 +161,15 @@ md"""
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 Step 1: generate a package
-```
+```julia
 $ cd to-some-dir
 $ julia --project
 
 julia> using Pkg; Pkg.generate("L6Testing")
 ```
 
-Steps 3--4 is in the repository [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl);
-note that this steps are encoded in the git history which the README links into.
-
-Note that for outputs from big simulations, such as ours, it make sense to
-only reference-test at a few 10s of indices.
+Steps 3--4 are in the repository [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl); note that this steps are encoded in the git history which the README links into.
 """
+
+#nb # > 💡 note: For outputs from big simulations, such as ours, it make sense to only reference-test at a few 10s of indices.
+#md # \note{For outputs from big simulations, such as ours, it make sense to only reference-test at a few 10s of indices.}
