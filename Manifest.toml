@@ -280,9 +280,9 @@ version = "0.10.21"
 
 [[Franklin]]
 deps = ["Dates", "DelimitedFiles", "DocStringExtensions", "ExprTools", "FranklinTemplates", "HTTP", "Literate", "LiveServer", "Logging", "Markdown", "NodeJS", "OrderedCollections", "Pkg", "REPL", "Random"]
-git-tree-sha1 = "eb6d950d24eecdc971d0f803b17bd33a1b4e509b"
+git-tree-sha1 = "c68841bdcdc3d99671603565c26200507d429bbc"
 uuid = "713c75ef-9fc9-4b05-94a9-213340da978e"
-version = "0.10.61"
+version = "0.10.62"
 
 [[FranklinTemplates]]
 deps = ["LiveServer"]
@@ -600,9 +600,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "54123adb15b8d7da555c94b9450780d2277ccf00"
+git-tree-sha1 = "26bdb90844e9fcdc6d86f7a16218ae7801f492cb"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.90"
+version = "0.12.91"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -1043,9 +1043,9 @@ version = "0.3.0"
 
 [[TriangularSolve]]
 deps = ["CloseOpenIntervals", "IfElse", "LayoutPointers", "LinearAlgebra", "LoopVectorization", "Polyester", "Static", "VectorizationBase"]
-git-tree-sha1 = "0b1ebe472e3e682550fcdaeb9bb8856604133353"
+git-tree-sha1 = "ec9a310324dd2c546c07f33a599ded9c1d00a420"
 uuid = "d5829a12-d9aa-46ab-831f-fb7c9ab06edf"
-version = "0.1.7"
+version = "0.1.8"
 
 [[URIs]]
 git-tree-sha1 = "97bbe755a53fe859669cd907f2d96aee8d2c1355"
