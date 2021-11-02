@@ -270,9 +270,9 @@ _This will be material for next lectures._
 
 Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (Navier-Cauchy equations) and fluid mechanics (Navier-Stokes equations).
 
-The goal of this part of the lecture is to explore and elastic wave propagation processes, building upon acoustic waves from lecture 3.
+The goal of this part of the lecture is to explore the elastic wave propagation processes, building upon acoustic waves from lecture 3.
 
-We'll need use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus.
+We'll use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus. (We'll concentrate on the fluid mechanics in a following lecture.)
 
 The [Navier-Cauchy equation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements) we are interested in reads as following, when expressed in terms of velocities ($v=∂^2u/∂t^2$; linearised):
 
@@ -334,7 +334,7 @@ This new addition should now permit to propagate a first elastic wave. However, 
 
 We're soon done.
 
-However, his last part is a [homework task](#exercise_3_-_cauchy-navier_elastic_waves)
+However, his last part is a [homework task](#exercise_3_-_cauchy-navier_elastic_waves).
 
 Now it's time to wrap up this part before moving to more Git workflows. So far, we learned about:
 - How Julia solves the two-language problem
