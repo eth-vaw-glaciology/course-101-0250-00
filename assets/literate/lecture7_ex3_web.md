@@ -16,7 +16,7 @@ In class, we stopped at [**Task 2**](#task_2_-_adding_normal_stresses), adding n
 
 The remaining 2 tasks to achieve a full implementation of the 2D elastic wave solver are:
 - adding shear stresses
-- re-arranging the order of computation and renaming momentum fluxes to stresses
+- re-arranging the order of computation
 
 Create a folder titles `elastic2D` within this week's lecture 7 GitHub parent folder. Copy in there the following codes developed in class (refer to the [course section](#towards_stokes_flow_i_acoustic_to_elastic) for directions regarding details implementing these 3 code versions):
 - `acoustic_2D_elast0.jl`
@@ -27,7 +27,7 @@ Create a folder titles `elastic2D` within this week's lecture 7 GitHub parent fo
 
 Start by making a new duplicate of the latest `acoustic_2D_elast2.jl` script, renaming it `acoustic_2D_elast3.jl`. In this new script, add the shear stress $xy$ component:
 ```julia
-qVxy  .= qVxy .+ ??
+τxy  .= τxy .+ ??
 ```
 
 Note that the strain(-rate) tensor is symmetric, thus $τ_{xy} = τ_{yx}$.
@@ -36,15 +36,13 @@ Make sure to correctly interpret [Einstein's notation](https://en.wikipedia.org/
 
 \note{Transforming [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) into code: rate of change of normal stress $∂τ_{xx}/∂t$ is defined as $2~μ~(∂v_x/∂x -1/3∇v)$, i.e. two $2μ$ times the normal strain-rate. For the rate of change of the shear stress $∂τ_{xy}/∂t$, the shear strain-rate defines as $1/2~(∂v_x/∂y + ∂v_y/∂x)$. Make sure to implement it consistently.}
 
-### Task 4 - rearranging the code and renaming of the stresses
+### Task 4 - rearranging the code
 
 For enhanced stability of the elastic solver, it is important to use the newly computed quantities as soon as possible.
 
 Create a last duplicate of the `acoustic_2D_elast3.jl` script, renaming it `elastic_2D.jl`.
 
 In this final version of the script, move the pressure calculations as the beginning of the time loop, to use update pressure within the velocity update.
-
-Also, rename the "momentum fluxes" `qVxx`, `qVyy` and `qVxy` as stresses `τxx`, `τyy` and `τxy`.
 
 You should now have a 2D elastic solver up and running 🚀
 

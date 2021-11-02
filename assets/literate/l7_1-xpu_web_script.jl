@@ -25,9 +25,9 @@ end
     # Physics
     Lx, Ly  = 10.0, 10.0
     D       = 1.0
-    ttot    = 1e-4
+    ttot    = 1e2
     # Numerics
-    nx, ny  = 32*16, 32*16 # number of grid points
+    nx, ny  = 32*4, 32*4 # number of grid points
     nout    = 50
     # [...]
     return
@@ -36,7 +36,7 @@ end
 # [...]
 # Derived numerics
 dx, dy  = Lx/nx, Ly/ny
-dt      = min(dx, dy)^2/D/4.1
+dt      = min(dx,dy)^2/D/4.1
 nt      = cld(ttot, dt)
 xc, yc  = LinRange(dx/2, Lx-dx/2, nx), LinRange(dy/2, Ly-dy/2, ny)
 # [...]
