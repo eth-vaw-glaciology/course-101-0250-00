@@ -429,11 +429,121 @@ _This will be material for next lectures._
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Towards Stokes I: acoustic to elastic
+## Towards Stokes flow I: acoustic to elastic
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-From acoustic to elastic wave propagation; stress, strain and elastic rheology
+Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (Navier-Cauchy equations) and fluid mechanics (Navier-Stokes equations).
+
+The goal of this part of the lecture is to explore and elastic wave propagation processes, building upon acoustic waves from lecture 3.
+
+We'll need use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus.
 """
 
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+The [Navier-Cauchy equation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements) we are interested in reads as following, when expressed in terms of velocities ($v=∂^2u/∂t^2$; linearised):
+
+$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
+
+$$ \frac{∂τ}{∂t} = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
+
+$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
+
+where $P$ is the pressure, $v$ the velocity, $K$ the bulk modulus, $μ$ the elastic shear modulus, $τ$ the deviatoric stress tensor, $ρ$ the density, and $\delta_{ij}$ the Kronecker delta. 
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+One can recognise the terms from the acoustic wave equation, namely:
+
+$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
+
+$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( - P δ_{ij} \right)~,$$
+
+which suggests only volumetric or bulk effects to be considered in the latter.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### Task 1 - starting from acoustic
+The task is now to implement the Navier-Cauchy equations in 2D starting from the acoustic 2D script realised in lecture 3.
+
+We can start from the [`acoustic_2D_elast0.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) script located in the (available in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder).
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+After running the script to confirm all works as expected, start by:
+- making a new version of the script: `acoustic_2D_elast1.jl`
+- modifying the array dimensions in order to have velocity arrays with appropriate sizes allowing to update all pressure values `(nx, ny)`,
+- renaming `qx` and `qy` to `dVxdt` and `dVydt`, respectively.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### Task 2 - adding normal stresses
+The next task is to add the normal stress, the $xx$ and $yy$ components of the stress tensor.
+
+One can make the analogy of stresses being "fluxes of momentum", the velocity equations (4) being the momentum balance. Since we here consider elastic processes (Cauchy-Navier elasticity), these fluxes will be time dependent (see eq. 3).
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Start by making a new version of the script named `acoustic_2D_elast2.jl`. Then, add for the $xx$ component following flux (that needs to be initialised):
+```julia
+qVxx  .= qVxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx) .- 1.0/3.0 .*∇V)
+```
+
+Note that one has to remove the divergence (volumetric part) of the stress tensor if considering its deviatoric form (removing the trace of the tensor, i.e. the pressure we explicitly define and compute).
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Repeat this for the $yy$ component:
+```julia
+#hint qVyy  .= qVyy .+ ??
+#sol qVyy  .= qVyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
+```
+
+We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
+```julia
+#hint ∇V    .= ???
+#sol ∇V    .= diff(Vx,dims=1)./dx .+ diff(Vy,dims=2)./dy
+```
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Having added elasticity to the acoustic process (elastic stresses instead of only pressure), we need to adapt the time step stability condition:
+```julia
+dt     = min(dx,dy)/sqrt((K + 4/3*μ)/ρ)/2.1
+```
+to take shear modulus $μ$ into account.
+
+This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, with $xy$ components of the tensor.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We're soon done.
+
+However, his last part is a [homework task](#exercise_3_-_cauchy-navier_elastic_waves).
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Now it's time to wrap up this part before moving to more Git workflows. So far, we learned about:
+- How Julia solves the two-language problem 
+- XPU programming with ParallelStencil 
+- Cauchy-Navier elastic wave propagation (solid mechanics)
+"""

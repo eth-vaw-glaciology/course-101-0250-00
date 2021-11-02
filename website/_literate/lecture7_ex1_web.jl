@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Title**
+## Exercise 1 - **Diffusion 2D XPU implementation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

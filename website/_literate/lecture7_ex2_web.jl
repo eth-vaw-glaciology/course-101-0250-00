@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Diffusion 2D XPU implementation**
+## Exercise 2 - **Acoustic 2D XPU implementation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -14,3 +14,5 @@ md"""
 ### Getting started
 
 """
+
+

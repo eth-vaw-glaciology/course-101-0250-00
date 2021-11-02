@@ -45,12 +45,12 @@ noeval = true
 
 ---
 
-<!-- \literate{/_literate/lecture6_ex2_web.jl}
+\literate{/_literate/lecture7_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture6_ex3_web.jl}
+\literate{/_literate/lecture7_ex3_web.jl}
 
-[⤴ _**back to Content**_](#content) -->
+[⤴ _**back to Content**_](#content)
