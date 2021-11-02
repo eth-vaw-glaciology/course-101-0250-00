@@ -79,7 +79,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <pre><code class="julia hljs">dt     = min(dx,dy)/sqrt((K + <span class=hljs-number >4</span>/<span class=hljs-number >3</span>*μ)/ρ)/<span class=hljs-number >2.1</span></code></pre>
 <p>to take shear modulus <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">μ</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">μ</span></span></span></span> into account.</p>
 <p>This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">xy</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">x</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> components of the tensor &#40;see figure below&#41;.</p>
-<div class=img-med ><img src="../assets/literate_figures/l7-elast.png" alt="elastic missing shear" /></div>
+<div class=img-med ><img src="../assets/literate_figures/l7-elast.gif" alt="elastic missing shear" /></div>
 <p>We&#39;re soon done.</p>
 <p>However, his last part is a <a href="#exercise_3_-_cauchy-navier_elastic_waves">homework task</a>.</p>
 <p>Now it&#39;s <strong>time to wrap up</strong> this part before moving to more Git workflows. So far, we learned about:</p>
@@ -95,7 +95,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=continuous_integration_ci_and_github_actions ><a href="#continuous_integration_ci_and_github_actions" class=header-anchor >Continuous Integration &#40;CI&#41; and GitHub Actions</a></h1>
 <p>Last lecture we learned how to make and run tests for a Julia project.</p>
-<p>This lecture we will learn how to run those tests on Github automatically after you push to it.  This will make sure that</p>
+<p>This lecture we will learn how to run those tests on Github automatically after you push to it. This will make sure that</p>
 <ul>
 <li><p>tests are always run</p>
 
@@ -103,7 +103,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 </ul>
 <p><em>You may start to wonder why we&#39;re doing all of these tooling shenanigans...</em></p>
-<p>One requirement for the final project will be that it contains tests, which are run via Github Actions CI.  Additionally, you&#39;ll have to write your project report as &quot;documentation&quot; for the package which will be deployed to its website, again via Github Actions.</p>
+<p>One requirement for the final project will be that it contains tests, which are run via GitHub Actions CI.  Additionally, you&#39;ll have to write your project report as &quot;documentation&quot; for the package which will be deployed to its website, again via GitHub Actions.</p>
 <p><strong>These days it is expected of good numerical software that it is well tested and documented.</strong></p>
 <h3 id=github_actions ><a href="#github_actions" class=header-anchor >GitHub Actions</a></h3>
 <p>GitHub Actions are a generic way to run computations when you interact with the repository. There is extensive <a href="https://docs.github.com/en/actions">documentation</a> for it &#40;no need for you to read it&#41;.</p>
@@ -113,7 +113,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 <li><p>the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml">https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml</a> is the GitHub Actions script which tells it to run Franklin.jl to</p>
 
-<li><p>create the website https://eth-vaw-glaciology.github.io/course-101-0250-00/</p>
+<li><p>create the website <a href="https://eth-vaw-glaciology.github.io/course-101-0250-00/">https://eth-vaw-glaciology.github.io/course-101-0250-00/</a></p>
 
 </ul>
 <h3 id=github_actions_for_ci ><a href="#github_actions_for_ci" class=header-anchor >GitHub Actions for CI</a></h3>
@@ -126,7 +126,8 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <li><p>pushing to GitHub will now run the tests &#40;maybe you need to activate Actions in <code>Setting</code> -&gt; <code>Actions</code> -&gt; <code>Allow all actions</code>&#41;</p>
 
 </ol>
-<p><em>Note</em> that there are other providers of CI, e.g. Travis, Appveyor, etc.  Here we&#39;ll only look at GitHub actions.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >There are other providers of CI, e.g. Travis, Appveyor, etc.  Here we&#39;ll only look at GitHub actions.</div></div>
 <h3 id=example_from_last_lecture_continued ><a href="#example_from_last_lecture_continued" class=header-anchor >Example from last lecture continued</a></h3>
 <p>In the last lecture I setup a <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">project</a> to illustrate how unit-testing works.</p>
 <p>Let&#39;s now add CI to this:</p>
@@ -139,77 +140,78 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 </ol>
 <p>For step 2 we follow the documentation on <a href="https://github.com/julia-actions/julia-runtest">https://github.com/julia-actions/julia-runtest</a>.</p>
-<p>&#40;Note <a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> is a handy package, which can generate a suitable Github Actions file.&#41;</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> is a handy package, which can generate a suitable Github Actions file.</div></div>
 <h3 id=example_from_last_lecture_continued_yml_magic ><a href="#example_from_last_lecture_continued_yml_magic" class=header-anchor >Example from last lecture continued: YML magic</a></h3>
-<p>The YML file, adapted from the README of <a href="https://github.com/julia-actions/julia-runtest">julia-runtest</a>:</p>
-<pre><code class="julia hljs">name: Run tests
+<p>The <code>.yml</code> file, adapted from the <code>README</code> of <a href="https://github.com/julia-actions/julia-runtest">julia-runtest</a>:</p>
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >tests</span>
 
-on: [push, pull_request]
+<span class=hljs-attr >on:</span> [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
 
-jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        julia-version: [&#x27;<span class=hljs-number >1.6</span>&#x27;]
-        julia-arch: [x64]
-        os: [ubuntu-latest]
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >test:</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
+    <span class=hljs-attr >strategy:</span>
+      <span class=hljs-attr >matrix:</span>
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.6&#x27;</span>]
+        <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
+        <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
 
-    steps:
-      - uses: actions/checkout<span class=hljs-meta >@v2</span>
-      - uses: julia-actions/setup-julia<span class=hljs-meta >@v1</span>
-        with:
-          version: ${{ matrix.julia-version }}
-          arch: ${{ matrix.julia-arch }}
-      - uses: julia-actions/julia-buildpkg<span class=hljs-meta >@v1</span>
-      - uses: julia-actions/julia-runtest<span class=hljs-meta >@v1</span></code></pre>
+    <span class=hljs-attr >steps:</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@v1</span></code></pre>
 <h3 id=where_is_my_badge ><a href="#where_is_my_badge" class=header-anchor >Where is my BADGE&#33;&#33;&#33;</a></h3>
-<p>The CI will create a badge &#40;a small picture&#41; which reflects the status of the Action.  Typically added to the README.md:</p>
+<p>The CI will create a badge &#40;a small picture&#41; which reflects the status of the Action.  Typically added to the <code>README.md</code>:</p>
 <p><img src="../assets/literate_figures/ci-badge.png" alt=ci-badge  /></p>
 <p>It can be found under</p>
 <pre><code class="julia hljs">https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg</code></pre>
-<p>and should be added to the near the top of README like so:</p>
+<p>and should be added to the near the top of <code>README</code> like so:</p>
 <pre><code class="julia hljs">[![CI action](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml)</code></pre>
 <p>&#40;this also sets the link to the Actions which gets open upon clicking on it&#41;</p>
 <p><strong>All together</strong> on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl</a></p>
-<h3 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our Github repo...</a></h3>
-<p>This makes the yml a bit more complicated:</p>
-<pre><code class="julia hljs">name: CI
-on:
-  [push, pull_request]
-jobs:
-  test:
-    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }} - ${{ github.event_name }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: <span class=hljs-literal >false</span>
-      matrix:
-        julia-version: [&#x27;<span class=hljs-number >1.6</span>&#x27;]
-        julia-arch: [x64]
-        os: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout<span class=hljs-meta >@v2</span>
-      - uses: julia-actions/setup-julia<span class=hljs-meta >@v1</span>
-        with:
-          version: ${{ matrix.julia-version }}
-          arch: ${{ matrix.julia-arch }}
-      - uses: actions/cache<span class=hljs-meta >@v1</span>
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles(&#x27;**/Project.toml&#x27;) }}
-          restore-keys: |
+<h3 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our GitHub repo...</a></h3>
+<p>This makes the <code>.yml</code> a bit more complicated:</p>
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >CI</span>
+<span class=hljs-attr >on:</span>
+  [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >test:</span>
+    <span class=hljs-attr >name:</span> <span class=hljs-string >Julia</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >github.event_name</span> <span class=hljs-string >}}</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
+    <span class=hljs-attr >strategy:</span>
+      <span class=hljs-attr >fail-fast:</span> <span class=hljs-literal >false</span>
+      <span class=hljs-attr >matrix:</span>
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.6&#x27;</span>]
+        <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
+        <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
+    <span class=hljs-attr >steps:</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v1</span>
+        <span class=hljs-attr >env:</span>
+          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
+          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - uses: julia-actions/julia-buildpkg<span class=hljs-meta >@v1</span>
-      - run: julia --check-bounds=yes --color=yes -e &#x27;cd(<span class=hljs-string >&quot;&lt;subfolder-of-julia-project&gt;&quot;</span>);
-                                                      <span class=hljs-keyword >import</span> Pkg; Pkg.activate(<span class=hljs-string >&quot;.&quot;</span>); Pkg.test()&#x27;</code></pre>
+</span>      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--check-bounds=yes</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;);
+                                                      import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
 <p>Note that you have to <strong>adjust</strong> the bit: <code>cd&#40;&quot;&lt;subfolder-of-julia-project&gt;&quot;&#41;</code>.</p>
 <p>The <strong>example</strong> is in <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">course-101-0250-00-L6Testing-subfolder.jl</a>.</p>
 <h3 id=a_final_note ><a href="#a_final_note" class=header-anchor >A final note</a></h3>
-<p>Note that Github Actions are limited to 2000min per month per user for private repositories</p>
+<p>GitHub Actions are limited to 2000min per month per user for private repositories.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=exercises_-_lecture_7 ><a href="#exercises_-_lecture_7" class=header-anchor >Exercises - lecture 7</a></h1>
@@ -359,18 +361,18 @@ jobs:
 <p>👉 See <a href="/course-101-0250-00/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>setup Continuous Integration with Github Actions</p>
+<li><p>setup Continuous Integration with GitHub Actions</p>
 
 </ul>
 <p>Task:</p>
 <ul>
-<li><p>copy the repository you created for Lecture6-Exercise3 over to your Lecture7 solution folder as <code>L7CIExercise</code> &#40;if you did not complete that exercise, use the package https://github.com/mauro3/SimpleTraits.jl instead, make sure to not copy over the <code>.github</code> and <code>.git</code> folders&#41;</p>
+<li><p>copy the repository you created for Lecture6-Exercise3 over to your Lecture7 solution folder as <code>L7CIExercise</code> &#40;if you did not complete that exercise, use the package <a href="https://github.com/mauro3/SimpleTraits.jl">https://github.com/mauro3/SimpleTraits.jl</a> instead, make sure to not copy over the <code>.github</code> and <code>.git</code> folders&#41;</p>
 
 <li><p>follow/revisit the lecture and in particular look at the example at <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl</a> to setup CI</p>
 
-<li><p>push to github and make sure the CI runs and passes</p>
+<li><p>push to GitHub and make sure the CI runs and passes</p>
 
-<li><p>add the CI-badge to the folder-local README.md</p>
+<li><p>add the CI-badge to the folder-local <code>README.md</code></p>
 
 </ul>
 

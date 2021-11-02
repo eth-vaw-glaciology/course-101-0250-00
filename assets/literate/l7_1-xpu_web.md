@@ -341,7 +341,7 @@ to take shear modulus $μ$ into account.
 This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor (see figure below).
 
 @@img-med
-![elastic missing shear](../assets/literate_figures/l7-elast.png)
+![elastic missing shear](../assets/literate_figures/l7-elast.gif)
 @@
 
 We're soon done.

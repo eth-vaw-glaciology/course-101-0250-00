@@ -4,27 +4,24 @@
 Last lecture we learned how to make and run tests for a Julia project.
 
 This lecture we will learn how to run those tests on Github automatically
-after you push to it.  This will make sure that
+after you push to it. This will make sure that
 - tests are always run
 - you will be alerted by email when a test fails
 
 *You may start to wonder why we're doing all of these tooling shenanigans...*
 
-One requirement for the final project will be that it contains tests, which are run via Github Actions CI.  Additionally, you'll have
-to write your project report as "documentation" for the package which will be deployed to its website, again via Github Actions.
+One requirement for the final project will be that it contains tests, which are run via GitHub Actions CI.  Additionally, you'll have to write your project report as "documentation" for the package which will be deployed to its website, again via GitHub Actions.
 
 **These days it is expected of good numerical software that it is well tested and documented.**
 
 ### GitHub Actions
 
-GitHub Actions are a generic way to run computations when you interact with the repository.
-There is extensive [documentation](https://docs.github.com/en/actions) for it (no need for you to read it).
+GitHub Actions are a generic way to run computations when you interact with the repository. There is extensive [documentation](https://docs.github.com/en/actions) for it (no need for you to read it).
 
 For instance the course's [website](https://eth-vaw-glaciology.github.io/course-101-0250-00/) is generated from the markdown input files upon pushing to the repo:
 - [https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website) contains the source
-- the [https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml)
-  is the GitHub Actions script which tells it to run Franklin.jl to
-- create the website https://eth-vaw-glaciology.github.io/course-101-0250-00/
+- the [https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml) is the GitHub Actions script which tells it to run Franklin.jl to
+- create the website [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
 
 ### GitHub Actions for CI
 
@@ -34,7 +31,7 @@ How do we use GitHub Actions for CI?
 2. make a suitable GitHub Actions scrip (that `.yml` file)
 3. pushing to GitHub will now run the tests (maybe you need to activate Actions in `Setting` -> `Actions` -> `Allow all actions`)
 
-*Note* that there are other providers of CI, e.g. Travis, Appveyor, etc.  Here we'll only look at GitHub actions.
+\note{There are other providers of CI, e.g. Travis, Appveyor, etc.  Here we'll only look at GitHub actions.}
 
 ### Example from last lecture continued
 
@@ -48,12 +45,12 @@ Let's now add CI to this:
 
 For step 2 we follow the documentation on [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest).
 
-(Note [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable Github Actions file.)
+\note{[PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable Github Actions file.}
 
 ### Example from last lecture continued: YML magic
 
-The YML file, adapted from the README of [julia-runtest](https://github.com/julia-actions/julia-runtest):
-```
+The `.yml` file, adapted from the `README` of [julia-runtest](https://github.com/julia-actions/julia-runtest):
+```yml
 name: Run tests
 
 on: [push, pull_request]
@@ -79,7 +76,7 @@ jobs:
 
 ### Where is my BADGE!!!
 
-The CI will create a badge (a small picture) which reflects the status of the Action.  Typically added to the README.md:
+The CI will create a badge (a small picture) which reflects the status of the Action.  Typically added to the `README.md`:
 
 ![ci-badge](../assets/literate_figures/ci-badge.png)
 
@@ -87,7 +84,7 @@ It can be found under
 ```
 https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg
 ```
-and should be added to the near the top of README like so:
+and should be added to the near the top of `README` like so:
 ```
 [![CI action](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg)](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml)
 ```
@@ -95,10 +92,10 @@ and should be added to the near the top of README like so:
 
 **All together** on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
 
-### Wait a second, we submit our homework as subfolders of our Github repo...
+### Wait a second, we submit our homework as subfolders of our GitHub repo...
 
-This makes the yml a bit more complicated:
-```
+This makes the `.yml` a bit more complicated:
+```yml
 name: CI
 on:
   [push, pull_request]
@@ -138,5 +135,5 @@ The **example** is in [course-101-0250-00-L6Testing-subfolder.jl](https://github
 
 ### A final note
 
-Note that Github Actions are limited to 2000min per month per user for private repositories
+GitHub Actions are limited to 2000min per month per user for private repositories.
 
