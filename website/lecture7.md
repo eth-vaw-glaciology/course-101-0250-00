@@ -16,7 +16,7 @@ noeval = true
 > - Cauchy-Navier elasticity (waves)
 > - CI workflows
 
---- 
+---
 
 \label{content}
 **Content**
