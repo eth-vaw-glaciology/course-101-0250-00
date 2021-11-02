@@ -508,7 +508,7 @@ One can make the analogy of stresses being "fluxes of momentum", the velocity eq
 md"""
 Start by making a new version of the script named `acoustic_2D_elast2.jl`. Then, add for the $xx$ component following flux (that needs to be initialised):
 ```julia
-qVxx  .= qVxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx) .- 1.0/3.0 .*∇V)
+qVxx  .= qVxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx .- 1/3 .*∇V))
 ```
 
 Note that one has to remove the divergence (volumetric part) of the stress tensor if considering its deviatoric form (removing the trace of the tensor, i.e. the pressure we explicitly define and compute).
