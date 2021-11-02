@@ -264,7 +264,7 @@ Moreover, ParallelStencil enables hiding communication behind computation with a
 
 _This will be material for next lectures._
 
-\note{Head to ParallelStencil's [miniapp section](https://github.com/omlins/ParallelStencil.jl#concise-singlemulti-xpu-miniapps) if you are curious about various domain science application featrued there.}
+\note{Head to ParallelStencil's [miniapp section](https://github.com/omlins/ParallelStencil.jl#concise-singlemulti-xpu-miniapps) if you are curious about various domain science applications featrued there.}
 
 ## Towards Stokes flow I: acoustic to elastic
 
