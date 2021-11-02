@@ -436,9 +436,9 @@ md"""
 md"""
 Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (Navier-Cauchy equations) and fluid mechanics (Navier-Stokes equations).
 
-The goal of this part of the lecture is to explore and elastic wave propagation processes, building upon acoustic waves from lecture 3.
+The goal of this part of the lecture is to explore the elastic wave propagation processes, building upon acoustic waves from lecture 3.
 
-We'll need use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus.
+We'll use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus. (We'll concentrate on the fluid mechanics in a following lecture.)
 """
 
 #src ######################################################################### 
