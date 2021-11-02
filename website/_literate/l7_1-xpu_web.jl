@@ -549,7 +549,7 @@ This new addition should now permit to propagate a first elastic wave. However, 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 
 #md # @@img-med
-# ![elastic missing shear](../assets/literate_figures/l7-elast.png)
+# ![elastic missing shear](../assets/literate_figures/l7-elast.gif)
 #md # @@
 
 #src ######################################################################### 
