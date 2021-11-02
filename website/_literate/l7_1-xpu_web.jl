@@ -542,7 +542,7 @@ dt     = min(dx,dy)/sqrt((K + 4/3*μ)/ρ)/2.1
 ```
 to take shear modulus $μ$ into account.
 
-This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor.
+This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor (see figure below).
 """
 
 #src ######################################################################### 
