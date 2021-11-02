@@ -28,7 +28,6 @@ md"""
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### GitHub Actions
 
@@ -45,7 +44,6 @@ For instance the course's [website](https://eth-vaw-glaciology.github.io/course-
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### GitHub Actions for CI
 
@@ -59,7 +57,6 @@ How do we use GitHub Actions for CI?
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### Example from last lecture continued
 
@@ -78,7 +75,6 @@ For step 2 we follow the documentation on [https://github.com/julia-actions/juli
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### Example from last lecture continued: YML magic
 
@@ -109,7 +105,6 @@ jobs:
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### Where is my BADGE!!!
 
@@ -131,7 +126,6 @@ and should be added to the near the top of README like so:
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### Wait a second, we submit our homework as subfolders of our Github repo...
 
@@ -177,7 +171,6 @@ The **example** is in [course-101-0250-00-L6Testing-subfolder.jl](https://github
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
 md"""
 ### A final note
 
