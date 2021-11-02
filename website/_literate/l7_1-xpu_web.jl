@@ -65,7 +65,7 @@ Multi-language/software environment leads to:
 md"""
 Good news! Julia is a perfect candidate to solve the **_two-language problem_** as Julia code is:
 - **_simple_**, high-level, interactive (low development costs)
-- **_fast_**, compiled just ahead of time (before one use it for the first time)
+- **_fast_**, compiled just ahead of time (before one uses it for the first time)
 """
 
 #md # @@img-med
@@ -80,7 +80,7 @@ Julia provides a **_portable_** solution in many aspects (beyond performance por
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-As you may have started to experience, GPUs deliver great performance but may not be present in every laptop or workstation. Also, powerful GPUs require servers to run on, especially when multiple GPUs are needed to perform high-resolution calculations.
+As you may have started to experience, GPUs deliver great performance but may not be present in every laptop or workstation. Also, powerful GPUs require to be hosted in servers, especially when multiple GPUs are needed to perform high-resolution calculations.
 """
 
 #src ######################################################################### 
@@ -123,7 +123,7 @@ Let's get started with [`ParallelStencil.jl`](https://github.com/omlins/Parallel
 md"""
 ### Getting started with ParallelStencil
 
-ParallelStencil enables to
+ParallelStencil enables to:
 - Write architecture-agnostic high-level code
 - Parallel high-performance stencil computations on GPUs and CPUs
 
@@ -131,7 +131,7 @@ ParallelStencil enables to
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-ParallelStencil relies on the native kernel programming capabilities of
+ParallelStencil relies on the native kernel programming capabilities of:
 - [CUDA.jl](https://cuda.juliagpu.org/stable/) for high-performance computations on GPUs
 - [Base.Threads](https://docs.julialang.org/en/v1/base/multi-threading/#Base.Threads) for high-performance computations on CPUs
 """
@@ -141,7 +141,7 @@ ParallelStencil relies on the native kernel programming capabilities of
 md"""
 ### Short tour of ParallelStencil's README
 
-Before we start our first push-up exercise, let's have a rapid tour of [`ParallelStencil.jl`](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
+Before we start our push-up exercises, let's have a rapid tour of [`ParallelStencil.jl`](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
 
 """
 
@@ -150,7 +150,7 @@ Before we start our first push-up exercise, let's have a rapid tour of [`Paralle
 md"""
 _So, how does it work?_
 
-As first hands-on for this lecture, let's _**merge**_ the diffusion 2D solver [`diffusion_2D_perf_loop_fun.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) into a single _**XPU**_ code using ParallelStencil.
+As first hands-on for this lecture, let's _**merge**_ the diffusion 2D solvers [`diffusion_2D_perf_loop_fun.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) into a single _**XPU**_ code using ParallelStencil.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -211,7 +211,7 @@ julia>?
 
 help?> @all
 ```
-This would give you more infos about the `@all` macro. 
+This would, e.g., give you more infos about the `@all` macro. 
 """
 
 #src ######################################################################### 
@@ -469,6 +469,16 @@ which suggests only volumetric or bulk effects to be considered in the latter.
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Note that the original constitutive relation in linear elasticity (elastic rheology) is
+
+$$ σ = -P + μ \left(∇_i u_j + ∇_j u_i \right) ~.$$
+
+However, we here consider deviatoric stresses $(τ)$ (removing the trace of the stress tensor - the pressure $P$) and derive the expression wrt time to express it as function of strain-rates $(v)$.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 ### Task 1 - starting from acoustic
 The task is now to implement the Navier-Cauchy equations in 2D starting from the acoustic 2D script realised in lecture 3.
 
@@ -539,7 +549,7 @@ However, his last part is a [homework task](#exercise_3_-_cauchy-navier_elastic_
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Now it's time to wrap up this part before moving to more Git workflows. So far, we learned about:
+Now it's **time to wrap up** this part before moving to more Git workflows. So far, we learned about:
 - How Julia solves the two-language problem 
 - XPU programming with ParallelStencil 
 - Cauchy-Navier elastic wave propagation (solid mechanics)
