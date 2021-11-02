@@ -600,9 +600,9 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 
 [[LoopVectorization]]
 deps = ["ArrayInterface", "CPUSummary", "CloseOpenIntervals", "DocStringExtensions", "HostCPUFeatures", "IfElse", "LayoutPointers", "LinearAlgebra", "OffsetArrays", "PolyesterWeave", "Requires", "SIMDDualNumbers", "SLEEFPirates", "Static", "ThreadingUtilities", "UnPack", "VectorizationBase"]
-git-tree-sha1 = "898a1fc3956c9f1f3733b71202139521fe23538a"
+git-tree-sha1 = "87107f7dfbf1aa49a3275edaa1cab9aee6577675"
 uuid = "bdcacae8-1622-11e9-2a5c-532679323890"
-version = "0.12.92"
+version = "0.12.93"
 
 [[MacroTools]]
 deps = ["Markdown", "Random"]
@@ -847,9 +847,9 @@ version = "2.20.0"
 
 [[RecursiveFactorization]]
 deps = ["LinearAlgebra", "LoopVectorization", "Polyester", "StrideArraysCore", "TriangularSolve"]
-git-tree-sha1 = "575c18c6b00ce409f75d96fefe33ebe01575457a"
+git-tree-sha1 = "b7edd69c796b30985ea6dfeda8504cdb7cf77e9f"
 uuid = "f2c3362d-daeb-58d1-803e-2bc74f2840b4"
-version = "0.2.4"
+version = "0.2.5"
 
 [[Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"

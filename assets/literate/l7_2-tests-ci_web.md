@@ -18,7 +18,7 @@ to write your project report as "documentation" for the package which will be de
 ### GitHub Actions
 
 GitHub Actions are a generic way to run computations when you interact with the repository.
-There is extensive [documentation](https://docs.github.com/en/actions) for it.
+There is extensive [documentation](https://docs.github.com/en/actions) for it (no need for you to read it).
 
 For instance the course's [website](https://eth-vaw-glaciology.github.io/course-101-0250-00/) is generated from the markdown input files upon pushing to the repo:
 - [https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website) contains the source
@@ -77,9 +77,27 @@ jobs:
       - uses: julia-actions/julia-runtest@v1
 ```
 
+### Where is my BADGE!!!
+
+The CI will create a badge (a small picture) which reflects the status of the Action.  Typically added to the README.md:
+
+![ci-badge](../assets/literate_figures/ci-badge.png)
+
+It can be found under
+```
+https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg
+```
+and should be added to the near the top of README like so:
+```
+[![CI action](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg)](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml)
+```
+(this also sets the link to the Actions which gets open upon clicking on it)
+
+**All together** on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
+
 ### Wait a second, we submit our homework as subfolders of our Github repo...
 
-This makes the yml a bit more compilcated:
+This makes the yml a bit more complicated:
 ```
 name: CI
 on:
@@ -116,20 +134,7 @@ jobs:
 ```
 Note that you have to **adjust** the bit: `cd("<subfolder-of-julia-project>")`.
 
-### Where is my BADGE!!!
-
-The CI will create a badge (a small picture) which reflects the status of the Action.  Typically added to the README.md:
-
-![ci-badge](../assets/literate_figures/ci-badge.png)
-
-It can be found under
-```
-https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg
-```
-and should be added to the near the top of README like so:
-```
-![CI action](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg)
-```
+The **example** is in [course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl).
 
 ### A final note
 
