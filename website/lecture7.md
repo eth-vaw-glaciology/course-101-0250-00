@@ -9,12 +9,12 @@ noeval = true
 # Lecture 7
 
 > **Agenda**\
-> :books: The "two-language problem", XPU implementation with `ParallelStencil.jl`\
+> :books: The "two-language problem", `ParallelStencil.jl` XPU implementation\
 > :computer: Reference testing, GitHub CI and workflows\
 > :construction: Exercises:
-> - Data transfer optimisations on GPUs
-> - GPU codes for diffusion / acoustic waves 2D
-> - Reference testing in Julia
+> - XPU codes for diffusion / acoustic waves 2D
+> - Cauchy-Navier elasticity (waves)
+> - CI workflows
 
 --- 
 

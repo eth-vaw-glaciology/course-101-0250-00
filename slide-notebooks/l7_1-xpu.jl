@@ -4,7 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 7_
 md"""
-# Solving the two-language problem: XPU-implementation
+# Julia XPU: the two-language solution
 """
 
 #src ######################################################################### 
