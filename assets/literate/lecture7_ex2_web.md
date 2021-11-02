@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Diffusion 2D XPU implementation**
+## Exercise 2 - **Acoustic 2D XPU implementation**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
