@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# Solving the two-language problem: XPU-implementation
+# Julia XPU: the two-language solution
 
 ### The goal of this lecture 7:
 
