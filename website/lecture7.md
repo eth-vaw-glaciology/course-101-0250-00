@@ -54,3 +54,9 @@ noeval = true
 \literate{/_literate/lecture7_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture7_ex4_web.jl}
+
+[⤴ _**back to Content**_](#content)

@@ -115,7 +115,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Let's get started with [`ParallelStencil.jl`](https://github.com/omlins/ParallelStencil.jl)
+Let's get started with [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 """
 
 #src ######################################################################### 
@@ -141,7 +141,7 @@ ParallelStencil relies on the native kernel programming capabilities of:
 md"""
 ### Short tour of ParallelStencil's README
 
-Before we start our push-up exercises, let's have a rapid tour of [`ParallelStencil.jl`](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
+Before we start our push-up exercises, let's have a rapid tour of [ParallelStencil](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
 
 """
 
@@ -164,7 +164,7 @@ As first hands-on for this lecture, let's _**merge**_ the diffusion 2D solvers [
 md"""
 ### Stencil computations with math-close notation
 
-Let's get started with using the `ParallelStencil` module and the `ParallelStencil.FiniteDifferences2D` submodule to enable math-close notation.
+Let's get started with using the ParallelStencil.jl module and the `ParallelStencil.FiniteDifferences2D` submodule to enable math-close notation.
 
 💻 We'll start from the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) (available in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it at hand from lecture 6) to create the `diffusion_2D_xpu.jl` script.
 """
@@ -201,7 +201,7 @@ $$ q_x = -D\frac{∂C}{∂x} ~,~~ q_y = -D\frac{∂C}{∂y} ~.$$
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-`ParallelStencil`'s `FiniteDifferences2D` submodule provides macros we need: `@all()`, `@d_xi()`, `@d_yi()`.
+ParallelStencil's `FiniteDifferences2D` submodule provides macros we need: `@all()`, `@d_xi()`, `@d_yi()`.
 
 The macros used in this example are described in the Module documentation callable from the Julia REPL / IJulia:
 ```julia
@@ -245,15 +245,15 @@ end
 md"""
 So far so good. We are done with the kernels. Let's see what changes are needed in the main part of the script.
 
-We can keep the `# Physics` section as such. The `# Numerics` only needs `nx`, `ny` and `nout`; the kernel launch parameters being now automatically adapted
+In the `# Physics` section, change total time to `ttot = 1e2`. The `# Numerics` only needs `nx`, `ny` and `nout`; the kernel launch parameters being now automatically adapted:
 """
 @views function diffusion_2D(; do_visu=false)
     ## Physics
     Lx, Ly  = 10.0, 10.0
     D       = 1.0
-    ttot    = 1e-4
+    ttot    = 1e2
     ## Numerics
-    nx, ny  = 32*16, 32*16 # number of grid points
+    nx, ny  = 32*4, 32*4 # number of grid points
     nout    = 50
     ## [...]
     return
@@ -267,7 +267,7 @@ In the `# Derived numerics`, we can skip the scalar pre-processing, keeping only
 ## [...]
 ## Derived numerics
 dx, dy  = Lx/nx, Ly/ny
-dt      = min(dx, dy)^2/D/4.1
+dt      = min(dx,dy)^2/D/4.1
 nt      = cld(ttot, dt)
 xc, yc  = LinRange(dx/2, Lx-dx/2, nx), LinRange(dy/2, Ly-dy/2, ny)
 ## [...]
@@ -314,7 +314,7 @@ The performance evaluation section remaining unchanged, we are all set!
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- Changing the `USE_GPU` flag to `true` (having first relaunched a Julia session) will make the application running on a GPU.
+- Changing the `USE_GPU` flag to `true` (having first relaunched a Julia session) will make the application running on a GPU. On the GPU, you can reduce `ttot` and increase `nx, ny` in order achieve higher $T_\mathrm{eff}$.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -434,7 +434,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (Navier-Cauchy equations) and fluid mechanics (Navier-Stokes equations).
+Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (e.g., Navier-Cauchy equations) and fluid mechanics (e.g., Navier-Stokes equations).
 
 The goal of this part of the lecture is to explore the elastic wave propagation processes, building upon acoustic waves from lecture 3.
 
@@ -444,7 +444,7 @@ We'll use a practical approach to familiarise with stress, strain, strain-rates 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The [Navier-Cauchy equation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements) we are interested in reads as following, when expressed in terms of velocities ($v=∂^2u/∂t^2$; linearised):
+The [Navier-Cauchy equation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements) we are interested in reads as following, when expressed (linearised) in terms of velocities ($v=∂^2u/∂t^2$):
 
 $$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
 
@@ -474,7 +474,7 @@ Note that the original constitutive relation in linear elasticity (elastic rheol
 
 $$ σ = -P + μ \left(∇_i u_j + ∇_j u_i \right) ~.$$
 
-However, we here consider deviatoric stresses $(τ)$ (removing the trace of the stress tensor - the pressure $P$) and derive the expression wrt time to express it as function of strain-rates $(v)$.
+However, we here consider deviatoric stresses $(τ)$ (removing the trace of the stress tensor - the pressure $P$) and derive the expression w.r.t. time to express it as function of strain-rates $(v)$.
 """
 
 #src ######################################################################### 
@@ -506,21 +506,27 @@ One can make the analogy of stresses being "fluxes of momentum", the velocity eq
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Start by making a new version of the script named `acoustic_2D_elast2.jl`. Then, add for the $xx$ component following flux (that needs to be initialised):
+Start by making a new version of the script named `acoustic_2D_elast2.jl`. Then, add for the $xx$ normal stress component following (the array needs to be initialised):
 ```julia
-qVxx  .= qVxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx .- 1/3 .*∇V))
+τxx  .= τxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx .- 1/3 .*∇V))
 ```
-
-Note that one has to remove the divergence (volumetric part) of the stress tensor if considering its deviatoric form (removing the trace of the tensor, i.e. the pressure we explicitly define and compute).
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Repeat this for the $yy$ component:
+Note that one has to remove the divergence (volumetric part) of the stress tensor if considering its deviatoric form (removing the trace of the tensor, i.e. the pressure we explicitly define and compute).
+
+Also, adding elastic shear rheology, we need to define the elastic shear modulus $μ = 1$ in the `# Physics` section.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Repeat this for the $yy$ normal stress component:
 ```julia
-#hint qVyy  .= qVyy .+ ??
-#sol qVyy  .= qVyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
+#hint τyy  .= τyy .+ ??
+#sol τyy  .= τyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
 ```
 
 We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
@@ -539,8 +545,15 @@ dt     = min(dx,dy)/sqrt((K + 4/3*μ)/ρ)/2.1
 ```
 to take shear modulus $μ$ into account.
 
-This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, with $xy$ components of the tensor.
+This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor.
 """
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+
+#md # @@img-med
+# ![elastic missing shear](./figures/l7-elast.png)
+#md # @@
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
