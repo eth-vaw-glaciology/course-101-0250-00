@@ -23,7 +23,7 @@ noeval = true
 
 \toc
 
-[_👉 get started with exercises_](#exercises_-_lecture_6)
+[_👉 get started with exercises_](#exercises_-_lecture_7)
 
 ---
 

@@ -38,6 +38,7 @@ _any further relevant suggestions are welcome - open a PR_
   ~~~
 
 - [Geo-HPC short course](https://github.com/luraess/geo-hpc-course)
+- [Advanced GPU Programming with Julia](https://github.com/omlins/julia-gpu-course) (CSCS course by Sam Omlin & Tim Besard)
 - [Solving differential equations in parallel with Julia @EGU2021](https://github.com/luraess/julia-parallel-course-EGU21)
 - Solving Nonlinear Multi-Physics on GPU Supercomputers with Julia @JuliaCon2021:
   ~~~
