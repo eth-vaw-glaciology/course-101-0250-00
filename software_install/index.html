@@ -84,6 +84,46 @@ julia</code></pre>
       Status `~/my_cool_project/Project.toml`
   [91a5bcdd] Plots v1.22.3</code></pre>
 <p>Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environment 🙂</p>
+<h3 id=multi-threading_on_cpus ><a href="#multi-threading_on_cpus" class=header-anchor >Multi-threading on CPUs</a></h3>
+<p>On the CPU, <a href="https://docs.julialang.org/en/v1/manual/multi-threading/#man-multithreading">multi-threading</a> is made accessible via <a href="https://docs.julialang.org/en/v1/base/multi-threading/">Base.Threads</a>. To make use of threads, Julia needs to be launched with</p>
+<pre><code class="sh hljs">julia --project -t auto</code></pre>
+<p>which will launch Julia with as many threads are there are cores on your machine &#40;including hyper-threaded cores&#41;. Alternatively set the environment variable <code>JULIA_NUM_THREADS</code>, e.g. <code>export JULIA_NUM_THREADS&#61;2</code> to enable 2 threads.</p>
+<h3 id=running_on_gpus ><a href="#running_on_gpus" class=header-anchor >Running on GPUs</a></h3>
+<p>The <a href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a> module permits to launch compute kernels on Nvidia GPUs natively from within Julia. <a href="https://juliagpu.org">JuliaGPU</a> provides further reading and <a href="https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/">introductory material</a> about GPU ecosystems within Julia.</p>
+<h3 id=julia_mpi ><a href="#julia_mpi" class=header-anchor >Julia MPI</a></h3>
+<p>The following steps permit you to install <a href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a> on your machine and test it:</p>
+<ol>
+<li><p>If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the <code>instantiate</code> command from within the package manager <a href="#package_manager">see here</a>. If not, MPI.jl can be added from within the package manager &#40;typing <code>add MPI</code> in package mode&#41;.</p>
+
+<li><p>Install <code>mpiexecjl</code>:</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
+</span>[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
+[ Info: Done!</code></pre>
+<ol start=3 >
+<li><p>Then, one should add <code>HOME/.julia/bin</code> to PATH in order to launch the Julia MPI wrapper <code>mpiexecjl</code>.</p>
+
+<li><p>Running a Julia MPI code <code>&lt;my_script.jl&gt;</code> on <code>np</code> MPI processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n np julia --project &lt;my_script.jl&gt;</code></pre>
+<ol start=5 >
+<li><p>To test the Julia MPI installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi.jl"><code>hello_mpi.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>~/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./hello_mpi.jl
+$ Hello world, I am 0 of 3
+$ Hello world, I am 1 of 3
+$ Hello world, I am 2 of 3
+$ Hello world, I am 3 of 3</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><p>On MacOS, you may encounter <a href="https://github.com/JuliaParallel/MPI.jl/issues/407">this issue</a>. To fix it, define following <code>ENV</code> variable:</p>
+<pre><code class="sh hljs">$ <span class=hljs-built_in >export</span> MPICH_INTERFACE_HOSTNAME=localhost</code></pre>
+<p>and add <code>-host localhost</code> to the execution script:</p>
+<pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
 <h2 id=accessing_the_gpu_resources_on_octopus ><a href="#accessing_the_gpu_resources_on_octopus" class=header-anchor >Accessing the GPU resources on <code>octopus</code></a></h2>
 <p>The following steps will permit you to access the GPU resources, the <a href="https://wp.unil.ch/geocomputing/octopus/">octopus supercomputer</a>.</p>
 <p>Look-up your username &#40;<code>&lt;username&gt;</code>&#41; and assigned node &#40;<code>node</code>&#41;, both listed in <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a> under <code>Connecting to the GPU resources &#40;octopus&#41;</code>. Your password was sent via email.</p>
