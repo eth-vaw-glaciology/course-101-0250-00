@@ -224,6 +224,8 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
 
+\note{See [Julia MPI GPU on your `octopus` node](#julia_mpi_gpu_on_your_octopus_node) for detailed information on how to run MPI GPU (multi-GPU) applications on your assigned `octopus` node.}
+
 ## Accessing the GPU resources on `octopus`
 
 The following steps will permit you to access the GPU resources, the [octopus supercomputer](https://wp.unil.ch/geocomputing/octopus/).
@@ -258,7 +260,9 @@ ssh <username>@octopus.unil.ch
 \warn{Never "logout" from your remote desktop, just close the VNC viewer window!}
 
 #### Login to node40
-This node should only be accessed during lecture 6 and for the exercise 1 (lecture 6).
+This node only needed to be accessed during lecture 6 and for the exercise 1 (lecture 6).
+
+<!-- This node should only be accessed during lecture 6 and for the exercise 1 (lecture 6).
 
 1. **In your remote desktop**, open a terminal, `ssh` to `node40` enabling graphics redirecting `-YC`
 ```sh
@@ -300,7 +304,7 @@ You should see Firefox opening a Jupyter tab (make sure you connected using `-YC
 
 8. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
 
-\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...}
+\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...} -->
 
 #### Login to your node
 Except for doing the hands-on in lecture 6 and for exercise 1 (lecture 6), you should connect to your corresponding GPU node according to the node list available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0):
@@ -311,7 +315,7 @@ ssh node<node>
 in your local terminal or in the terminal within the remote desktop (e.g. `ssh node39`).
 2. Typing `pwd()` should confirm you are in your `/home` folder.
 
-\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space.}
+\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...}
 
 3. Navigate to your scratch-space
 ```sh
@@ -322,8 +326,61 @@ as this is the place where you should work from, save data, etc...
 ```sh
 module load julia cuda/11.4
 ```
-5. Launch Julia
+5. CUDA.jl ships with precompiled CUDA binaries (called [artifacts](https://juliagpu.gitlab.io/CUDA.jl/installation/overview/#Artifacts)). On `octopus` we want to disallow use of artifacts, because an optimized CUDA installation is available for the system. You can do so by setting the environment variable `JULIA_CUDA_USE_BINARYBUILDER` to `false` when importing CUDA.jl.
+```sh
+export JULIA_CUDA_USE_BINARYBUILDER=false
+```
+6. Launch Julia
 ```sh
 julia
 ```
 and you are all set 🚀
+
+#### Julia MPI GPU on your `octopus` node
+
+This section will get you set-up to exercise with multi-GPU programs on your assigned `octopus` node:
+1. Open a terminal on your local machine and connect to `octopus` over `ssh` (or open your VNC remote desktop)
+2. Connect to your node: node03 - node26 (no longer node40 - see [Moodle - General](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0))
+3. Navigate to your scratch folder (you should have a copy of lecture08 material)
+```sh
+ssh -YC nodeXX
+cd /scratch/<username>/lecture08
+```
+4. Load the  required modules
+```sh
+module load cuda/11.4 julia
+```
+5. Start Julia in project mode
+```sh
+julia --project
+```
+6. Resolve and instantiate the project to download all required packages
+```julia-repl
+julia> ]
+
+(lecture08) pkg> resolve
+
+(lecture08) pkg> instantiate
+``` 
+7. Install `mpiexecjl`:
+```julia-repl
+julia> using MPI
+
+julia> MPI.install_mpiexecjl()
+[ Info: Installing `mpiexecjl` to `/home/<username>/.julia/bin`...
+[ Info: Done!
+```
+8. Then, one should add `/home/<username>/.julia/bin` to PATH in order to launch the Julia MPI wrapper `mpiexecjl`.
+9. Running a Julia MPI code `<my_script.jl>` on `np` MPI processes:
+```sh
+$ mpiexecjl -n np julia --project <my_script.jl>
+```
+10. To test the Julia MPI GPU installation, launch the [`hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl) using the Julia MPI wrapper `mpiexecjl` (located in `/home/<username>/.julia/bin`) on, e.g., 4 processes:
+```sh
+$ mpiexecjl -n 4 julia --project ./hello_mpi_gpu.jl 
+$ Hello world, I am 0 of 4 using CuDevice(0)
+$ Hello world, I am 1 of 4 using CuDevice(1)
+$ Hello world, I am 2 of 4 using CuDevice(2)
+$ Hello world, I am 3 of 4 using CuDevice(3)
+```
+If you made it to here you should be all set 🚀
