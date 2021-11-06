@@ -215,10 +215,11 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">ssh -YC nodeXX
 <span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture08</code></pre>
 <ol start=4 >
-<li><p>Load the  required modules</p>
+<li><p>Load the required modules and use system CUDA</p>
 
 </ol>
-<pre><code class="sh hljs">module load cuda/11.4 julia</code></pre>
+<pre><code class="sh hljs">module load cuda/11.4 julia
+<span class=hljs-built_in >export</span> JULIA_CUDA_USE_BINARYBUILDER=<span class=hljs-literal >false</span></code></pre>
 <ol start=5 >
 <li><p>Start Julia in project mode</p>
 
@@ -234,7 +235,7 @@ $ Hello world, I am 3 of 3</code></pre>
 
 <span class=hljs-metap>(lecture08) pkg&gt;</span> instantiate</code></pre>
 <ol start=7 >
-<li><p>Install <code>mpiexecjl</code>:</p>
+<li><p>Install <code>mpiexecjl</code> launcher:</p>
 
 </ol>
 <pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
