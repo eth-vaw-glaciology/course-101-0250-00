@@ -308,7 +308,7 @@ You should see Firefox opening a Jupyter tab (make sure you connected using `-YC
 
 #### Login to your node
 Except for doing the hands-on in lecture 6 and for exercise 1 (lecture 6), you should connect to your corresponding GPU node according to the node list available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0):
-1. From the _octopus_ login node, you can access your compute node typing
+1. From the _octopus_ login node, you can access your compute node (replacing `<node>` by the 2 digit node number assigned to you) typing
 ```sh
 ssh node<node>
 ```
