@@ -124,6 +124,8 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">$ <span class=hljs-built_in >export</span> MPICH_INTERFACE_HOSTNAME=localhost</code></pre>
 <p>and add <code>-host localhost</code> to the execution script:</p>
 <pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >See <a href="#julia_mpi_gpu_on_your_octopus_node">Julia MPI GPU on your <code>octopus</code> node</a> for detailed information on how to run MPI GPU &#40;multi-GPU&#41; applications on your assigned <code>octopus</code> node.</div></div>
 <h2 id=accessing_the_gpu_resources_on_octopus ><a href="#accessing_the_gpu_resources_on_octopus" class=header-anchor >Accessing the GPU resources on <code>octopus</code></a></h2>
 <p>The following steps will permit you to access the GPU resources, the <a href="https://wp.unil.ch/geocomputing/octopus/">octopus supercomputer</a>.</p>
 <p>Look-up your username &#40;<code>&lt;username&gt;</code>&#41; and assigned node &#40;<code>node</code>&#41;, both listed in <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a> under <code>Connecting to the GPU resources &#40;octopus&#41;</code>. Your password was sent via email.</p>
@@ -163,56 +165,7 @@ $ Hello world, I am 3 of 3</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Never &quot;logout&quot; from your remote desktop, just close the VNC viewer window&#33;</div></div>
 <h4 id=login_to_node40 ><a href="#login_to_node40" class=header-anchor >Login to node40</a></h4>
-<p>This node should only be accessed during lecture 6 and for the exercise 1 &#40;lecture 6&#41;.</p>
-<ol>
-<li><p><strong>In your remote desktop</strong>, open a terminal, <code>ssh</code> to <code>node40</code> enabling graphics redirecting <code>-YC</code></p>
-
-</ol>
-<pre><code class="sh hljs">ssh -YC node40</code></pre>
-<ol start=2 >
-<li><p>Load the required modules:</p>
-
-</ol>
-<pre><code class="sh hljs">module load julia cuda/11.4</code></pre>
-<ol start=3 >
-<li><p>List the available GPU resources:</p>
-
-</ol>
-<pre><code class="sh hljs">nvidia-smi</code></pre>
-<ol start=4 >
-<li><p>Navigate to <code>/scratch/&lt;username&gt;/lecture06</code></p>
-
-</ol>
-<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture06</code></pre>
-<ol start=5 >
-<li><p>Launch Julia</p>
-
-</ol>
-<pre><code class="sh hljs">julia</code></pre>
-<ol start=6 >
-<li><p>Activate and instantiate the project &#40;this should download all packages you need 🙂&#41;</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
-</span>
-<span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
-
-<span class=hljs-metap>(lecture06) pkg&gt;</span> instantiate</code></pre>
-<ol start=7 >
-<li><p>Launch Jupyter</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
-</span>
-<span class=hljs-meta >julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
-<p>You will get prompted to <code>install jupyter &#91;y/N&#93;</code> the first time running the <code>notebook&#40;&#41;</code> command. Type <code>Yes</code> or <code>y</code>.</p>
-<p>You should see Firefox opening a Jupyter tab &#40;make sure you connected using <code>-YC</code> to <code>node40</code>&#41;.</p>
-<ol start=8 >
-<li><p>Open the <code>l6_1-gpu-memcopy.ipynb</code> notebook. You are all set 🚀</p>
-
-</ol>
-<div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg >Do not save data in your <code>/home</code> as the space is very limited. Always Navigate to your scratch-space <code>cd /scratch/&lt;username&gt;</code>, as this is the place where you should work from, save data, etc...</div></div>
+<p>This node only needed to be accessed during lecture 6 and for the exercise 1 &#40;lecture 6&#41;.</p>
 <h4 id=login_to_your_node ><a href="#login_to_your_node" class=header-anchor >Login to your node</a></h4>
 <p>Except for doing the hands-on in lecture 6 and for exercise 1 &#40;lecture 6&#41;, you should connect to your corresponding GPU node according to the node list available on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle</a>:</p>
 <ol>
@@ -226,7 +179,7 @@ $ Hello world, I am 3 of 3</code></pre>
 
 </ol>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg >Do not save data in your <code>/home</code> as the space is very limited. Always Navigate to your scratch-space.</div></div>
+<div class=messg >Do not save data in your <code>/home</code> as the space is very limited. Always Navigate to your scratch-space <code>cd /scratch/&lt;username&gt;</code>, as this is the place where you should work from, save data, etc...</div></div>
 <ol start=3 >
 <li><p>Navigate to your scratch-space</p>
 
@@ -239,15 +192,77 @@ $ Hello world, I am 3 of 3</code></pre>
 </ol>
 <pre><code class="sh hljs">module load julia cuda/11.4</code></pre>
 <ol start=5 >
+<li><p>CUDA.jl ships with precompiled CUDA binaries &#40;called <a href="https://juliagpu.gitlab.io/CUDA.jl/installation/overview/#Artifacts">artifacts</a>&#41;. On <code>octopus</code> we want to disallow use of artifacts, because an optimized CUDA installation is available for the system. You can do so by setting the environment variable <code>JULIA_CUDA_USE_BINARYBUILDER</code> to <code>false</code> when importing CUDA.jl.</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >export</span> JULIA_CUDA_USE_BINARYBUILDER=<span class=hljs-literal >false</span></code></pre>
+<ol start=6 >
 <li><p>Launch Julia</p>
 
 </ol>
 <pre><code class="sh hljs">julia</code></pre>
 <p>and you are all set 🚀</p>
+<h4 id=julia_mpi_gpu_on_your_octopus_node ><a href="#julia_mpi_gpu_on_your_octopus_node" class=header-anchor >Julia MPI GPU on your <code>octopus</code> node</a></h4>
+<p>This section will get you set-up to exercise with multi-GPU programs on your assigned <code>octopus</code> node:</p>
+<ol>
+<li><p>Open a terminal on your local machine and connect to <code>octopus</code> over <code>ssh</code> &#40;or open your VNC remote desktop&#41;</p>
+
+<li><p>Connect to your node: node03 - node26 &#40;no longer node40 - see <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a>&#41;</p>
+
+<li><p>Navigate to your scratch folder &#40;you should have a copy of lecture08 material&#41;</p>
+
+</ol>
+<pre><code class="sh hljs">ssh -YC nodeXX
+<span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture08</code></pre>
+<ol start=4 >
+<li><p>Load the  required modules</p>
+
+</ol>
+<pre><code class="sh hljs">module load cuda/11.4 julia</code></pre>
+<ol start=5 >
+<li><p>Start Julia in project mode</p>
+
+</ol>
+<pre><code class="sh hljs">julia --project</code></pre>
+<ol start=6 >
+<li><p>Resolve and instantiate the project to download all required packages</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(lecture08) pkg&gt;</span> resolve
+
+<span class=hljs-metap>(lecture08) pkg&gt;</span> instantiate</code></pre>
+<ol start=7 >
+<li><p>Install <code>mpiexecjl</code>:</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
+</span>[ Info: Installing `mpiexecjl` to `/home/&lt;username&gt;/.julia/bin`...
+[ Info: Done!</code></pre>
+<ol start=8 >
+<li><p>Then, one should add <code>/home/&lt;username&gt;/.julia/bin</code> to PATH in order to launch the Julia MPI wrapper <code>mpiexecjl</code>.</p>
+
+<li><p>Running a Julia MPI code <code>&lt;my_script.jl&gt;</code> on <code>np</code> MPI processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n np julia --project &lt;my_script.jl&gt;</code></pre>
+<ol start=10 >
+<li><p>To test the Julia MPI GPU installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl"><code>hello_mpi_gpu.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>/home/&lt;username&gt;/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./hello_mpi_gpu.jl 
+$ Hello world, I am 0 of 4 using CuDevice(0)
+$ Hello world, I am 1 of 4 using CuDevice(1)
+$ Hello world, I am 2 of 4 using CuDevice(2)
+$ Hello world, I am 3 of 4 using CuDevice(3)</code></pre>
+<p>If you made it to here you should be all set 🚀</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 04, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 06, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
