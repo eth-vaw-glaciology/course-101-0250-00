@@ -346,9 +346,10 @@ This section will get you set-up to exercise with multi-GPU programs on your ass
 ssh -YC nodeXX
 cd /scratch/<username>/lecture08
 ```
-4. Load the  required modules
+4. Load the required modules and use system CUDA
 ```sh
 module load cuda/11.4 julia
+export JULIA_CUDA_USE_BINARYBUILDER=false
 ```
 5. Start Julia in project mode
 ```sh
@@ -362,7 +363,7 @@ julia> ]
 
 (lecture08) pkg> instantiate
 ``` 
-7. Install `mpiexecjl`:
+7. Install `mpiexecjl` launcher:
 ```julia-repl
 julia> using MPI
 
