@@ -38,7 +38,7 @@ Finalise the `diffusion_2D_perf_xpu.jl` script from class.
 
 Create a `README.md` file in your lecture 7 GitHub folder, adding a first section about "Diffusion 2D XPU performance".
 
-In this section, include one figure that reporting the performance of both the `diffusion_2D_xpu.jl` and `diffusion_2D_perf_xpu.jl` implementation of the diffusion 2D solver using the $T_\mathrm{eff}$ metric.
+In this section, include a figure reporting the performance of both the `diffusion_2D_xpu.jl` and `diffusion_2D_perf_xpu.jl` implementation of the diffusion 2D solver using the $T_\mathrm{eff}$ metric.
 
 Vary the number of grid points `nx = ny = 16 * 2 .^ (1:8)` (or until you run out of memory on the GPU). Report as well the value for memory copy $T_\mathrm{peak}$ of the given GPU (and arithmetic precision) you are using. Make sure to including figure axis labels and add a short figure caption or description to the `README`.
 """
