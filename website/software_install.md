@@ -341,7 +341,7 @@ and you are all set 🚀
 This section will get you set-up to exercise with multi-GPU programs on your assigned `octopus` node:
 1. Open a terminal on your local machine and connect to `octopus` over `ssh` (or open your VNC remote desktop)
 2. Connect to your node: node03 - node26 (no longer node40 - see [Moodle - General](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0))
-3. Navigate to your scratch folder (you should have a copy of lecture08 material)
+3. Navigate to your `scratch` folder, then `lecture08` (you should have a copy of _**Lecture 8**_ material)
 ```sh
 ssh -YC nodeXX
 cd /scratch/<username>/lecture08

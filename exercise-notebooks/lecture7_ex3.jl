@@ -37,7 +37,10 @@ Start by making a new duplicate of the latest `acoustic_2D_elast2.jl` script, re
 
 Note that the strain(-rate) tensor is symmetric, thus $τ_{xy} = τ_{yx}$. 
 
-Make sure to correctly interpret [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) - normal and shear stresses are not defined in the same way.
+Make sure to correctly interpret [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) - normal $(τ_{xx}, τ_{yy})$ and shear $(τ_{xy})$ stresses are not defined in the same way.
+
+![2D staggered grid](./figures/stagg_elast_ex7.png)
+
 """
 
 #nb # > 💡 hint: Transforming [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) into code: rate of change of normal stress $∂τ_{xx}/∂t$ is defined as $2~μ~(∂v_x/∂x -1/3∇v)$, i.e. two $2μ$ times the normal strain-rate. For the rate of change of the shear stress $∂τ_{xy}/∂t$, the shear strain-rate defines as $1/2~(∂v_x/∂y + ∂v_y/∂x)$. Make sure to implement it consistently.
