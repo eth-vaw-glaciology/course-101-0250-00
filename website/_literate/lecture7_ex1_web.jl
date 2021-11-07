@@ -43,6 +43,6 @@ In this section, include a figure reporting the performance of both the `diffusi
 Vary the number of grid points `nx = ny = 16 * 2 .^ (1:8)` (or until you run out of memory on the GPU). Report as well the value for memory copy $T_\mathrm{peak}$ of the given GPU (and arithmetic precision) you are using. Make sure to including figure axis labels and add a short figure caption or description to the `README`.
 """
 
-#md # \note{Remember that for performance benchmark purpose, the code needs only to execute a couple of seconds. Adapt , e.g., `ttot` (or `nt`) as function of the number of grid points to achieve this (avoiding the high-resolution runs to take forever to finalise).}
+#md # \note{Remember that for performance benchmark purpose, the code needs only to run a couple of seconds. Adapt, e.g., `ttot` (or `nt`) as function of the number of grid points to achieve this (avoiding the high-resolution runs to take forever to finalise).}
 
 
