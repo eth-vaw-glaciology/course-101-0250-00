@@ -111,7 +111,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
     C, C2 = C2, C <span class=hljs-comment ># pointer swap</span>
     update_halo!(C)
 <span class=hljs-keyword >end</span></code></pre>
-<p>The <code>@hide_communication &#40;8, 2, 0&#41;</code> will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform &#40;overlapping the MPI communication&#41;.</p>
+<p>The <code>@hide_communication &#40;8, 2&#41;</code> will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform &#40;overlapping the MPI communication&#41;.</p>
 <p>To &#40;4.&#41; finalise the global grid,</p>
 <pre><code class="julia hljs">finalize_global_grid()</code></pre>
 <p>needs to be added before the <code>return</code> of the &quot;main&quot;.</p>
