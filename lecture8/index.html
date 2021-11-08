@@ -63,15 +63,15 @@ C     = exp.(.-xc.^<span class=hljs-number >2</span>)</code></pre> <p>where <cod
 <p>Visualise the results after each run with the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/vizme2D_mpi.jl"><code>vizme2D_mpi.jl</code></a> code &#40;adapt the variable <code>nprocs</code>&#33;&#41;. Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.</p>
 <p>The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.</p>
 <p>Besides facilitating the programming, it can leverage Remote Direct Memory Access &#40;RDMA&#41; which can be of great benefit in many HPC scenarios.</p>
-<h3 id=task_5_multi-gpu_homework ><a href="#task_5_multi-gpu_homework" class=header-anchor >Task 5 &#40;multi-GPU&#41; <strong>HOMEWORK</strong></a></h3>
+<h3 id=task_5_multi-gpu_homework ><a href="#task_5_multi-gpu_homework" class=header-anchor >Task 5 &#40;multi-GPU&#41; <em><strong>HOMEWORK</strong></em></a></h3>
 <p>Translate the code <code>diffusion_2D_mpi.jl</code> from Task 4 to GPU using GPU array programming. Note what changes were needed to go from CPU to GPU in this distributed solver.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >You can use a similar approach as in the CPU code to perform the boundary updates. You can use <code>copyto&#33;</code> function in order to copy the data from the GPU memory into the send buffers &#40;CPU memory&#41; or to copy the receive buffer data to the GPU array.</div></div>
+<p>Head to the <a href="#exercises_-_lecture_8">exercise section</a> for further directions on this task which is part of this week&#39;s homework assignments.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI &#40;it allows to pass GPU arrays directly to the MPI functions&#41;. However, this requires MPI being specifically compiled against a CUDA installation.</div></div>
 <p>This completes the introduction to distributed parallelisation with Julia.</p>
-<p>Note that high-level Julia packages as for example <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a> can render distributed parallelisation with GPU and CPU for HPC a very simple task.</p>
-<p>Let&#39;s check it out&#33;</p>
+<p>Note that high-level Julia packages as for example <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a> can render distributed parallelisation with GPU and CPU for HPC a very simple task. Let&#39;s check it out&#33;</p>
 <h2 id=using_implicitglobalgridjl ><a href="#using_implicitglobalgridjl" class=header-anchor >Using <code>ImplicitGlobalGrid.jl</code></a></h2>
 <p>Let&#39;s have look at <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>&#39;s repository.</p>
 <p>ImplicitGlobalGrid.jl can render distributed parallelisation with GPU and CPU for HPC a very simple task. Moreover, ImplicitGlobalGrid.jl elegantly combines with <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a>.</p>
