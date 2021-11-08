@@ -7,7 +7,7 @@
   - Fake parallelisation
   - Julia MPI (CPU + GPU)
   - Using `ParallelStencil.jl` together with `ImplicitGlobalGrid.jl`
-- Towards Stokes II: elastic to viscous (Cauchy-Navier to (Navier-)Stokes)
+  - Towards Stokes II: elastic to viscous (Cauchy-Navier to (Navier-)Stokes)
 - Automatic documentation and CI
 
 ## New to distributed computing?
@@ -354,7 +354,7 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 
 \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
-## Towards Stokes II: viscous Stokes flow
+## Towards Stokes II: Navier-Stokes flow
 
 Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.
 
