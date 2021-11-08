@@ -48,6 +48,14 @@ heatmap(Xi_g, Yi_g, Array(P_v)'; opts...); frame(anim)
 
 Execute the `acoustic_2D_perf_mulixpu.jl` on 4 GPUs (on your octopus node) to generate a .gif. Then, create a new section in the `README.md` of your lecture 8 GitHub repository and add the generated .gif. Including a short description of the results.
 
+Here is a snapshot on what to expect:
+"""
+
+#md # @@img-med
+#md # ![Acoustic 2D 4 procs](./figures/acoustic_2D_mxpu_2.gif)
+#md # @@
+
+md"""
 ### Task 3
 
 Realise a weak scaling experiment on 1-4 Titan Xm GPUs on your node and report parallel efficiency.
