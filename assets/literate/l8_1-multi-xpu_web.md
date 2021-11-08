@@ -354,11 +354,47 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 
 \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
-# Towards Stokes II: viscous Stokes flow
+## Towards Stokes II: viscous Stokes flow
 
-Transforming the Cauchy-Navier elastic wave solver into a Navier-Stokes or viscous Stokes flow solver is an exercise related to this lecture 8. See the [exercise section](#exercises_-_lecture_8) for detailed description.
+Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.
 
-Let's finally **wrap-up** recalling what we learned today about distributed computing in Julia using GPUs:
+In this final section, we will see how to turn the elastic wave solver into a weekly compressible viscous flow solver with inertia - a problem part of the [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations). From this point, we could turn transient physics into numerics and use the solver to converge an incompressible viscous Stokes flow to the steady state.
+
+The weekly compressible [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations) expressed in terms of velocities and pressure reads as following:
+
+$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
+
+$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
+
+$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
+
+where $P$ is the pressure, $v$ the velocity, $K$ the bulk modulus, $μ$ the viscosity, $τ$ the viscous deviatoric stress tensor, $ρ$ the density, and $\delta_{ij}$ the Kronecker delta.
+
+The incompressible Stokes flow represent the incompressible limit of the Navier-Stokes equation and can be formulated as following:
+
+$$ 0 = -K ∇_k v_k ~,$$
+
+$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
+
+$$ 0 = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
+
+These equations represent a steady state for which a viscous flow stress can be computed. Since all physical transient terms vanish, incompressible viscous Stokes problems are considered stiff requiring implicit type of methods to achieve a solution.
+
+However, an iterative solutions to incompressible Stokes equations can be achieved using the second-order pseudo-transient method, as seen in [Lecture 4](/lecture4/#implicit_solutions).
+
+$$ \frac{1}{K_τ} \frac{∂P}{∂τ} = - ∇_k v_k ~,$$
+
+$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
+
+$$ \frac{∂v^2_i}{∂τ^2} + ρ_τ \frac{∂v_i}{∂τ} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
+
+where $∂τ$, $K_τ$ and $ρ_τ$ represent now numerical iterative parameters one can tune in order to reach the steady state as fast as possible.
+
+One of your homework task for this lecture is to transform the Navier-Cauchy elastic wave solver into a weekly compressible (viscous) Navier-Stokes solver. See [Exercise 3](#exercise_3_-_navier-stokes_flow) for a detailed task description.
+
+### Wrapping up
+
+Let's recall what we learned today about distributed computing in Julia using GPUs:
 - We used fake parallelisation to understand the correct boundary exchange procedure.
 - We implemented 1D and 2D diffusion solvers in Julia using MPI for distributed memory parallelisation on both CPUs and GPUs (using blocking messages).
 - We saw how combining `ParallelStencil.jl` with `ImplicitGlobalGrid.jl` permits to implement distributed memory parallelisation on multiple CPU and GPUs.
