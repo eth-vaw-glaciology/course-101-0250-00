@@ -320,7 +320,7 @@ finalize_global_grid()
 needs to be added before the `return` of the "main".
 
 The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
-- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest/) may help out there.
+- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 
 - Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.
 

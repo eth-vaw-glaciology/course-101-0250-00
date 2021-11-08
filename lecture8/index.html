@@ -117,7 +117,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <p>needs to be added before the <code>return</code> of the &quot;main&quot;.</p>
 <p>The last changes to take car of is to &#40;5.&#41; handle visualisation in an appropriate fashion. Here, several options exists.</p>
 <ul>
-<li><p>One approach would for each local process to dump the local domain results to a file &#40;with process ID in the filename&#41; in order to reconstruct to global grid with a post-processing visualisation script &#40;as done in the previous examples&#41;. Libraries like, e.g., <a href="https://adios2.readthedocs.io/en/latest/">ADIOS2</a> may help out there.</p>
+<li><p>One approach would for each local process to dump the local domain results to a file &#40;with process ID in the filename&#41; in order to reconstruct to global grid with a post-processing visualisation script &#40;as done in the previous examples&#41;. Libraries like, e.g., <a href="https://adios2.readthedocs.io/en/latest">ADIOS2</a> may help out there.</p>
 
 <li><p>Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.</p>
 
