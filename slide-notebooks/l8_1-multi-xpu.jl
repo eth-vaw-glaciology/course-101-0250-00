@@ -547,7 +547,7 @@ needs to be added before the `return` of the "main".
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
-- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest/) may help out there.
+- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
