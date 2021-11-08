@@ -51,6 +51,7 @@ using Plots
             end
         end
     end
+    return
 end
 
 diffusion_1D_nprocs(; do_visu=true)
