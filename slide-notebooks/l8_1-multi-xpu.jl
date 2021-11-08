@@ -530,7 +530,7 @@ Now, when running on GPUs, it is possible to hide MPi communication behind compu
     update_halo!(C)
 end
 ```
-The `@hide_communication (8, 2, 0)` will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform (overlapping the MPI communication).
+The `@hide_communication (8, 2)` will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform (overlapping the MPI communication).
 """
 
 #src ######################################################################### 
