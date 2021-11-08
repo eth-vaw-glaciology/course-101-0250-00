@@ -540,7 +540,7 @@ needs to be added before the `return` of the "main".
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
-- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like [ADIOS2]() may help out there.
+- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest/) may help out there.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -551,13 +551,16 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To implement the latter, one needs to define a global array for visualisation:
+To implement the latter and generate a .gif, one needs to define a global array for visualisation:
 ```julia
-nx_v, ny_v = (nx-2)*dims[1], (ny-2)*dims[2]
-if (nx_v*ny_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
-C_v   = zeros(nx_v, ny_v) # global array for visu
-C_inn = zeros(nx-2, ny-2) # no halo local array for visu
-Xi_g, Yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, ny_v) # inner points only
+if do_visu
+    if (me==0) ENV["GKSwstype"]="nul"; if isdir("viz2D_mxpu_out")==false mkdir("viz2D_mxpu_out") end; loadpath = "./viz2D_mxpu_out/"; anim = Animation(loadpath,String[]); println("Animation directory: $(anim.dir)") end
+    nx_v, ny_v = (nx-2)*dims[1], (ny-2)*dims[2]
+    if (nx_v*ny_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
+    C_v   = zeros(nx_v, ny_v) # global array for visu
+    C_inn = zeros(nx-2, ny-2) # no halo local array for visu
+    Xi_g, Yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, ny_v) # inner points only
+end
 ```
 """
 
@@ -566,11 +569,18 @@ Xi_g, Yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, 
 md"""
 Then, the plotting routine can be adapted to first gather the inner points of the local domains into the global array (using `gather!` function) and then plot and/or save the global array (here `C_v`) from the master process `me==0`:
 ```julia
-C_inn .= C[2:end-1,2:end-1]; gather!(C_inn, C_v)
-if (me==0)
-    opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
-    heatmap(Xi_g, Yi_g, Array(C_v)'; opts...); frame(anim)
+# Visualize
+if do_visu && (it % nout == 0)
+    C_inn .= C[2:end-1,2:end-1]; gather!(C_inn, C_v)
+    if (me==0)
+        opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
+        heatmap(Xi_g, Yi_g, Array(C_v)'; opts...); frame(anim)
+    end
 end
+```
+To finally generate the .gif, one needs to place the following after the time loop:
+```julia
+if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
 """
 
