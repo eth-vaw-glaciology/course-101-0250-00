@@ -413,13 +413,17 @@ Besides facilitating the programming, it can leverage Remote Direct Memory Acces
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Task 5 (multi-GPU) **HOMEWORK**
+### Task 5 (multi-GPU) _**HOMEWORK**_
 
 Translate the code `diffusion_2D_mpi.jl` from Task 4 to GPU using GPU array programming. Note what changes were needed to go from CPU to GPU in this distributed solver.
 """
 
 #nb # > 💡 hint: You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.
 #md # \note{You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.}
+
+md"""
+Head to the [exercise section](#exercises_-_lecture_8) for further directions on this task which is part of this week's homework assignments.
+"""
 
 #nb # > 💡 hint: As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically compiled against a CUDA installation.
 #md # \note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically compiled against a CUDA installation.}
@@ -429,9 +433,7 @@ Translate the code `diffusion_2D_mpi.jl` from Task 4 to GPU using GPU array prog
 md"""
 This completes the introduction to distributed parallelisation with Julia.
 
-Note that high-level Julia packages as for example [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) can render distributed parallelisation with GPU and CPU for HPC a very simple task.
-
-Let's check it out!
+Note that high-level Julia packages as for example [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) can render distributed parallelisation with GPU and CPU for HPC a very simple task. Let's check it out!
 """
 
 #src ######################################################################### 
