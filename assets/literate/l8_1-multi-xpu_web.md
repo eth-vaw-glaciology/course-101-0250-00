@@ -25,13 +25,13 @@ Adds one additional layer of parallelisation:
 
 Simply said:
 
-_If one compute device is not sufficient to solve a problem, duplicate the resource and solve a subset of the global problem on each._
+_If one CPU or GPU is not sufficient to solve a problem, then use more than one and solve a subset of the global problem on each._
 
-Distributed (memory) computing permits to take advantage of computing "cluster", many similar compute nodes interconnected by high-throughput network. That's also what supercomputers are.
+Distributed (memory) computing permits to take advantage of computing "clusters", many similar compute nodes interconnected by high-throughput network. That's also what supercomputers are.
 
 ### Parallel scaling
 
-So here we go. Let's assume we want to solve a global problem. This global problem can be split into several local problems that execute concurrently.
+So here we go. Let's assume we want to solve a certain problem, which we will call the "global problem". This global problem, we split then into several local problems that execute concurrently.
 
 Two scaling approaches exist:
 - strong scaling
@@ -39,17 +39,18 @@ Two scaling approaches exist:
 
 Increasing the amount of computing resources to resolve the same global problem would increase parallelism and may result in faster execution (wall-time). This parallelisation is called _**strong scaling**_; the resources are increased but the global problem size does not change, resulting in an increase in the number of (smaller) local problems that can be solved in parallel.
 
-This _**strong scaling**_ approach is mostly used when parallelising existing CPU codes as increasing the number of parallel local problems would lead to some speed-up, reaching an optimum beyond which additional local processes would no longer be beneficial.
+The _**strong scaling**_ approach is often used when parallelising legacy CPU codes, as increasing the number of parallel local problems can lead to some speed-up, reaching an optimum beyond which additional local processes is no longer be beneficial.
 
-However, we won't follow that path for parallel multi-GPU computing. Why?
+However, we won't follow that path when developing parallel multi-GPU applications from scratch. Why?
 
 _Because GPUs' performance is very sensitive to the local problem size as we experienced when trying to tune the kernel launch parameters (threads, blocks, i.e., the local problem size)._
 
-With GPUs, it is better suited to approach distributed parallelisation from a _**weak scaling**_ perspective; defining first the optimal local problem size to resolve on a single GPU and then increasing the number of optimal local problems (and the number of GPUs) until reaching the global problem one originally wants to solve.
+When developing multi-GPU applications from scratch, it is likely more suitably to approach distributed parallelisation from a _**weak scaling**_ perspective;
+defining first the optimal local problem size to resolve on a single GPU and then increasing the number of optimal local problems (and the number of GPUs) until reaching the global problem one originally wants to solve.
 
 ### Implicit Global Grid
 
-We can thus use a local problem and duplicate it in the Cartesian space to obtain a global grid, which is thus defined implicitly. Local problems exchange internal boundary conditions (to synchronise) using intra-node communication (e.g., message passing interface - [MPI](https://en.wikipedia.org/wiki/Message_Passing_Interface)), as depicted on the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
+We can thus replicate a local problem multiple times in each dimension of the Cartesian space to obtain a global grid, which is therefore defined implicitly. Local problems define each others local boundary conditions by exchanging internal boundary values using intra-node communication (e.g., message passing interface - [MPI](https://en.wikipedia.org/wiki/Message_Passing_Interface)), as depicted on the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
 ![IGG](../assets/literate_figures/l8-igg.png)
 
@@ -59,7 +60,7 @@ Many things could certainly go wrong in distributed computing. However, the ulti
 
 The parallel efficiency defines the ratio between the execution time of an n-fold larger problem divided by the execution time of a single process to perform a given number of iterations.
 
-Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources, meaning no time is lost (no overhead) in communication (due to e.g., global reduction, inter-process communication, congestion of shared filesystem, etc...) as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
+Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources, meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
 ![Parallel scaling](../assets/literate_figures/l8-par_eff.png)
 
@@ -77,9 +78,11 @@ We're going to work out the following steps to tackle distributed parallelisatio
 
 As a first step, we will look at the below 1-D diffusion code which solves the linear diffusion equations using a "fake-parallelisation" approach. We split the calculation on two distinct left and right domains, which requires left and right `C` arrays, `CL` and `CR`, respectively.
 
-In this "fake parallelization" code, the computations for the left and right domain are performed sequentially on one process, but they could be computed on two distinct processes if the needed boundary update (often referred to as halo update in literature) was done with MPI.
+In this "fake parallelisation" code, the computations for the left and right domain are performed sequentially on one process, but they could be computed on two distinct processes if the needed boundary update (often referred to as halo update in literature) was done with MPI.
 
-The idea of this fake parallelization approach is the following:
+![1D Global grid](../assets/literate_figures/l8-1D_global_grid.png)
+
+The idea of this fake parallelisation approach is the following:
 ```julia
 # Compute physics locally
 CL[2:end-1] .= CL[2:end-1] .+ dt*D*diff(diff(CL)/dx)/dx
@@ -107,7 +110,11 @@ CR[1]   = ...
 
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 
-The next step will be to generalise the fake parallelisation with `2` fake processes to work with `n` fake processes. The idea of this generalized fake parallelization approach is the following:
+@@img-med
+![diffusion 1D 2 procs](../assets/literate_figures/l8-diff_1D_2procs_1.gif)
+@@
+
+The next step will be to generalise the fake parallelisation with `2` fake processes to work with `n` fake processes. The idea of this generalised fake parallelisation approach is the following:
 
 ```julia
 for ip = 1:np # compute physics locally
@@ -144,6 +151,10 @@ end
 Modify the initial condition in the 1-D diffusion code [`diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_nprocs.jl) (also available in your `/scratch/<username>/lecture08` directory on `octopus`) to a centred $(L_x/2)$ Gaussian anomaly.
 
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
+
+@@img-med
+![diffusion 1D n procs](../assets/literate_figures/l8-diff_1D_nprocs_1.gif)
+@@
 
 ## Julia and MPI
 
@@ -199,7 +210,7 @@ x0    = coords[1]*(nx-2)*dx
 xc    = [x0 + ix*dx - dx/2 - 0.5*lx  for ix=1:nx]
 C     = exp.(.-xc.^2)
 ```
-where `x0` represents the first global x-coordinate on every process (computed in function of `coords`) and `xc` represents the local chunk of the global coordinates on each local process (this is analogue to the initialisation in the fake parallelization).
+where `x0` represents the first global x-coordinate on every process (computed in function of `coords`) and `xc` represents the local chunk of the global coordinates on each local process (this is analogue to the initialisation in the fake parallelisation).
 
 Last, we need to (4.) finalise MPI prior to returning from the main function:
 ```julia
@@ -228,6 +239,10 @@ Run the code [`diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/cours
 
 Visualise the results after each run with the [`vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/vizme2D_mpi.jl) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
+@@img-med
+![diffusion 2D MPI](../assets/literate_figures/l8-diffusion_2D_xpu_1.gif)
+@@
+
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.
 
 Besides facilitating the programming, it can leverage Remote Direct Memory Access (RDMA) which can be of great benefit in many HPC scenarios.
@@ -240,7 +255,7 @@ Translate the code `diffusion_2D_mpi.jl` from Task 4 to GPU using GPU array prog
 
 Head to the [exercise section](#exercises_-_lecture_8) for further directions on this task which is part of this week's homework assignments.
 
-\note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically compiled against a CUDA installation.}
+\note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built to that purpose.}
 
 This completes the introduction to distributed parallelisation with Julia.
 
@@ -263,10 +278,9 @@ Only a few changes are required to enable multi-XPU execution, namely:
 4. finalise the global grid
 5. tune visualisation
 
-To (1.) initialise the global grid, one first needs to use the package and import MPI
+To (1.) initialise the global grid, one first needs to use the package
 ```julia
 using ImplicitGlobalGrid
-import MPI
 ```
 Then, one can add the global grid initialisation in the `# Derived numerics` section
 ```julia
@@ -291,7 +305,7 @@ update_halo!(C)
 
 Now, when running on GPUs, it is possible to hide MPi communication behind computations! This option implements as:
 ```julia
-@hide_communication (8, 2, 0) begin
+@hide_communication (8, 2) begin
     @parallel compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
     C, C2 = C2, C # pointer swap
     update_halo!(C)
@@ -306,11 +320,11 @@ finalize_global_grid()
 needs to be added before the `return` of the "main".
 
 The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
-- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples).
+- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like [ADIOS2]() may help out there.
 
 - Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.
 
-To implement the latter, one needs to define global array for visualisation:
+To implement the latter, one needs to define a global array for visualisation:
 ```julia
 nx_v, ny_v = (nx-2)*dims[1], (ny-2)*dims[2]
 if (nx_v*ny_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
@@ -328,7 +342,7 @@ if (me==0)
 end
 ```
 
-\note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then not available as its implementation relies on leveraging CUDA streams.}
+\note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
 # Towards Stokes II: viscous Stokes flow
 
