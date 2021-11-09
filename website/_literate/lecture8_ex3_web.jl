@@ -48,7 +48,7 @@ nx, ny = 128, 128
 
 Also, add the possibility of deactivating visualisation.
 
-### Task 2 
+### Task 2
 
 In a new section of the `README.md` add a figure from code featuring 4 subplots depicting pressure $P$, velocity x-component $v_x$, normal and shear stress components, $\tau_{xx}$ and $\tau_{xy}$, respectively, and a short description.
 
@@ -63,21 +63,21 @@ Perform the following tasks, applying reference testing to the `viscous_NS_2D.jl
 - Make a `ReferenceTest.jl` which tests the value at 12 random indices of `P` against a truth, the truth being the `reftest-files/X.bson` file you should download and unzip from the [course-101-0250-00/scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/reftest-files.zip) folder (**make sure to place the `X.bson` in your `reftest-files` folder**). The reference test used to generate the `X.bson` file is following (feel free to recycle it for your tests):
     ```julia
     using Test, ReferenceTests, BSON
-    
+
     include("./viscous_NS_2D.jl")
-    
+
     ## Reference Tests with ReferenceTests.jl
     # We put both arrays xc and P into a BSON.jl and then compare them
-    
+
     "Compare all dict entries"
     comp(d1, d2) = keys(d1) == keys(d2) && all([ v1≈v2 for (v1,v2) in zip(values(d1), values(d2))])
-    
+
     X, P, = viscous_2D()
-    
+
     inds = Int.(ceil.(LinRange(1, length(X), 12)))
-    
+
     d = Dict(:X=> X[inds], :P=>P[inds])
-    
+
     @testset "Ref-tests" begin
         @test_reference "reftest-files/X.bson" d by=comp
     end
@@ -87,7 +87,7 @@ Perform the following tasks, applying reference testing to the `viscous_NS_2D.jl
 
 GitHub Actions and CI:
 - Make sure that all tests run and pass when called via package-mode `test`
-- Follow/revisit the Lecture 7 and in particular look at the example at [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl) to setup CI
+- Follow/revisit the Lecture 7 and in particular look at the example at [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl) and [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl) to setup CI
 - Push to GitHub and make sure the CI runs and passes
 - Add the CI-badge to the `README.md`
 """
