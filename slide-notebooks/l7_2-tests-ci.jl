@@ -50,12 +50,12 @@ How do we use GitHub Actions for CI?
 3. pushing to GitHub will now run the tests (maybe you need to activate Actions in `Setting` -> `Actions` -> `Allow all actions`)
 """
 
-#nb # > 💡 note: There are other providers of CI, e.g. Travis, Appveyor, etc.  Here we'll only look at GitHub actions.
-#md # \note{There are other providers of CI, e.g. Travis, Appveyor, etc.  Here we'll only look at GitHub actions.}
+#nb # > 💡 note: There are other providers of CI, e.g. Travis, Appveyor, etc. Here we'll only look at GitHub actions.
+#md # \note{There are other providers of CI, e.g. Travis, Appveyor, etc. Here we'll only look at GitHub actions.}
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Example from last lecture continued
+#### Example from last lecture continued
 
 In the last lecture I setup a [project](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl) to illustrate how unit-testing works.
 
@@ -73,7 +73,7 @@ For step 2 we follow the documentation on [https://github.com/julia-actions/juli
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Example from last lecture continued: YML magic
+#### Example from last lecture continued: YML magic
 
 The `.yml` file, adapted from the `README` of [julia-runtest](https://github.com/julia-actions/julia-runtest):
 ```yml
@@ -103,9 +103,9 @@ jobs:
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Where is my BADGE!!!
+#### Where is my BADGE!!!
 
-The CI will create a badge (a small picture) which reflects the status of the Action.  Typically added to the `README.md`:
+The CI will create a badge (a small picture) which reflects the status of the Action. Typically added to the `README.md`:
 
 ![ci-badge](./figures/ci-badge.png)
 
@@ -119,12 +119,12 @@ and should be added to the near the top of `README` like so:
 ```
 (this also sets the link to the Actions which gets open upon clicking on it)
 
-**All together** on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
+👉 _**All together**_ on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Wait a second, we submit our homework as subfolders of our GitHub repo...
+#### Wait a second, we submit our homework as subfolders of our GitHub repo...
 
 This makes the `.yml` a bit more complicated:
 ```yml
@@ -158,18 +158,17 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
-      - run: julia --check-bounds=yes --color=yes -e 'cd("<subfolder-of-julia-project>");
-                                                      import Pkg; Pkg.activate("."); Pkg.test()'
+      - run: julia --check-bounds=yes --color=yes -e 'cd("<subfolder-of-julia-project>"); import Pkg; Pkg.activate("."); Pkg.test()'
 ```
-Note that you have to **adjust** the bit: `cd("<subfolder-of-julia-project>")`.
+Note that you have to _**adjust**_ the bit: `cd("<subfolder-of-julia-project>")`.
 
-The **example** is in [course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl).
+👉 The _**example**_ is in [course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl).
 """
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### A final note
+#### A final note
 
 GitHub Actions are limited to 2000min per month per user for private repositories.
 """
