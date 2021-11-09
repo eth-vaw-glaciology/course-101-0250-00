@@ -596,13 +596,13 @@ md"""
 
 Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.
 
-In this final section, we will see how to turn the elastic wave solver into a weekly compressible viscous flow solver with inertia - a problem part of the [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations). From this point, we could turn transient physics into numerics and use the solver to converge an incompressible viscous Stokes flow to the steady state.
+In this final section, we will see how to turn the elastic wave solver into a weakly compressible viscous flow solver with inertia - a problem part of the [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations). From this point, we could turn transient physics into numerics and use the solver to converge an incompressible viscous Stokes flow to the steady state.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The weekly compressible [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations) expressed in terms of velocities and pressure reads as following:
+The weakly compressible [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations) expressed in terms of velocities and pressure reads as following:
 
 $$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
 
@@ -644,7 +644,7 @@ where $∂τ$, $K_τ$ and $ρ_τ$ represent now numerical iterative parameters o
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-One of your homework task for this lecture is to transform the Navier-Cauchy elastic wave solver into a weekly compressible (viscous) Navier-Stokes solver. See [Exercise 3](#exercise_3_-_navier-stokes_flow) for a detailed task description.
+One of your homework task for this lecture is to transform the Navier-Cauchy elastic wave solver into a weakly compressible (viscous) Navier-Stokes solver. See [Exercise 3](#exercise_3_-_navier-stokes_flow) for a detailed task description.
 """
 
 #src ######################################################################### 
