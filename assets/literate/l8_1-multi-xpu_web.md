@@ -56,11 +56,11 @@ We can thus replicate a local problem multiple times in each dimension of the Ca
 
 ### Distributing computations - challenges
 
-Many things could certainly go wrong in distributed computing. However, the ultimate goal (at least for us) is to keep up with _**parallel efficiency**_.
+Many things could potentially go wrong in distributed computing. However, the ultimate goal (at least for us) is to keep up with _**parallel efficiency**_.
 
-The parallel efficiency defines the ratio between the execution time of an n-fold larger problem divided by the execution time of a single process to perform a given number of iterations.
+The parallel efficiency defines as the speedup divided by the numebr of processors. The speed-up defines as the execution time using an increasing number of processors normalised by the single processor execution time. We will use the parallel efficiency in a weak scaling configuration.
 
-Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources, meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
+Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources proportionally with the global problem size (i.e. keeping the constant local problem sizes), meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
 ![Parallel scaling](../assets/literate_figures/l8-par_eff.png)
 
