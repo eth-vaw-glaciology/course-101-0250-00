@@ -352,6 +352,8 @@ To finally generate the .gif, one needs to place the following after the time lo
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
 
+You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl) script in the [script/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder.
+
 \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
 ## Towards Stokes II: Navier-Stokes flow

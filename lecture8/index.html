@@ -142,6 +142,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <span class=hljs-keyword >end</span></code></pre>
 <p>To finally generate the .gif, one needs to place the following after the time loop:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >if</span> (do_visu &amp;&amp; me==<span class=hljs-number >0</span>) gif(anim, <span class=hljs-string >&quot;diffusion_2D_mxpu.gif&quot;</span>, fps = <span class=hljs-number >5</span>)  <span class=hljs-keyword >end</span></code></pre>
+<p>You can find the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl"><code>diffusion_2D_perf_multixpu.jl</code></a> script in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts">script/</a> folder.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if <code>USE_GPU &#61; false</code>; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.</div></div>
 <h2 id=towards_stokes_ii_navier-stokes_flow ><a href="#towards_stokes_ii_navier-stokes_flow" class=header-anchor >Towards Stokes II: Navier-Stokes flow</a></h2>
