@@ -10,7 +10,7 @@ The goal of this exercise is to:
 
 ### Getting started
 
-In this exercise your task will be to modify the elastic wave code `elastic_2D.jl` from [Exercise 3, Lecture 7](/lecture7/#task_4_-_rearranging_the_code), turning it into a weekly compressible viscous Navier-Stokes flow solver with inertia terms.
+In this exercise your task will be to modify the elastic wave code `elastic_2D.jl` from [Exercise 3, Lecture 7](/lecture7/#task_4_-_rearranging_the_code), turning it into a weakly compressible viscous Navier-Stokes flow solver with inertia terms.
 
 The main task will be to modify the shear rheology, now viscous. Viscosity [Pa.s] defines as the ratio between  stress $τ$ and strain-rate $ε̇$.
 
@@ -18,7 +18,7 @@ In this lecture's Git repository, duplicate the `elastic_2D.jl` renaming it `vis
 
 ### Task 1
 
-Modify the physics in order to implement the weekly compressible Navier-Stokes equations:
+Modify the physics in order to implement the weakly compressible Navier-Stokes equations:
 
 $$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
 
