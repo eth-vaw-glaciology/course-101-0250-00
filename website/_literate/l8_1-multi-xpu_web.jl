@@ -433,6 +433,8 @@ Translate the code `diffusion_2D_mpi.jl` from Task 4 to GPU using GPU array prog
 #nb # > 💡 hint: You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.
 #md # \note{You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.}
 
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Head to the [exercise section](#exercises_-_lecture_8) for further directions on this task which is part of this week's homework assignments.
 """
@@ -582,6 +584,8 @@ To finally generate the .gif, one needs to place the following after the time lo
 ```julia
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
+
+You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl) script in the [script/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder.
 """
 
 #src ######################################################################### 
