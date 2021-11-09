@@ -228,7 +228,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <p>Worse than no documentation/code comments is documentation which is outdated.</p>
 <p>I find the best way to keep documentation up to date is:</p>
 <ul>
-<li><p>have documentation visible to you, e.g. Github README</p>
+<li><p>have documentation visible to you, e.g. GitHub README</p>
 
 <li><p>document what you need yourself</p>
 
@@ -282,7 +282,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <li><p>can be edited within the web-page &#40;pencil-icon&#41;</p>
 
 </ul>
-<p>-&gt; this is a good and low-overhead way to produce pretty nice documentation</p>
+<p>👉 this is a good and low-overhead way to produce pretty nice documentation</p>
 <h3 id=documentation_tools_literatejl ><a href="#documentation_tools_literatejl" class=header-anchor >Documentation tools: Literate.jl</a></h3>
 <p>There are several tools which render .jl files &#40;with special formatting&#41; into markdown files.  These files can then be added to Github and will be rendered there.</p>
 <ul>
@@ -304,67 +304,67 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <p>But this is not automatic&#33;  Manual steps: run Literate, add files, commit and push...</p>
 <h3 id=documentation_tools_automating_literatejl ><a href="#documentation_tools_automating_literatejl" class=header-anchor >Documentation tools: Automating Literate.jl</a></h3>
 <p>As is done on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
-<pre><code class="julia hljs">name: Run Literate.jl
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
 <span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
 
-on: push
+<span class=hljs-attr >on:</span> <span class=hljs-string >push</span>
 
-jobs:
-  lit:
-    runs-on: ubuntu-latest
-    steps:
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >lit:</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >ubuntu-latest</span>
+    <span class=hljs-attr >steps:</span>
       <span class=hljs-comment ># Checkout the branch</span>
-      - uses: actions/checkout<span class=hljs-meta >@v2</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
 
-      - uses: julia-actions/setup-julia<span class=hljs-meta >@v1</span>
-        with:
-          version: &#x27;<span class=hljs-number >1.6</span>&#x27;
-          arch: x64
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >&#x27;1.6&#x27;</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >x64</span>
 
-      - uses: actions/cache<span class=hljs-meta >@v1</span>
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles(&#x27;**/Project.toml&#x27;) }}
-          restore-keys: |
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v1</span>
+        <span class=hljs-attr >env:</span>
+          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
+          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
 
-      - uses: julia-actions/julia-buildpkg<span class=hljs-meta >@v1</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >run</span> <span class=hljs-string >Literate</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >--project</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;scripts&quot;); include(&quot;literate-script.jl&quot;)&#x27;</span>
 
-      - name: run Literate
-        run: julia --color=yes --project -e &#x27;cd(<span class=hljs-string >&quot;scripts&quot;</span>); include(<span class=hljs-string >&quot;literate-script.jl&quot;</span>)&#x27;
-
-      - name: setup git config
-        run: |
-          <span class=hljs-comment ># setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default</span>
-          git config user.name <span class=hljs-string >&quot;GitHub Actions Bot&quot;</span>
-          git config user.email <span class=hljs-string >&quot;&lt;&gt;&quot;</span>
-
-      - name: commit
-        run: |
-          <span class=hljs-comment ># Stage the file, commit and push</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >setup</span> <span class=hljs-string >git</span> <span class=hljs-string >config</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >|
+          # setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default
+          git config user.name &quot;GitHub Actions Bot&quot;
+          git config user.email &quot;&lt;&gt;&quot;
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >|
+          # Stage the file, commit and push
           git add scripts/md/*
-          git commit -m <span class=hljs-string >&quot;Commit markdown files fom Literate&quot;</span>
-          git push origin master</code></pre>
+          git commit -m &quot;Commit markdown files fom Literate&quot;
+          git push origin master</span></code></pre>
 <h3 id=documentation_tools_documenterjl ><a href="#documentation_tools_documenterjl" class=header-anchor >Documentation tools: Documenter.jl</a></h3>
 <p>If you want to have full-blown documentation, including, e.g., automatic API documentation generation, versioning, then use <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>.</p>
 <p>Examples:</p>
 <ul>
-<li><p>https://docs.julialang.org/en/v1/</p>
+<li><p><a href="https://docs.julialang.org/en/v1/">https://docs.julialang.org/en/v1/</a></p>
 
-<li><p>https://mauro3.github.io/Parameters.jl/stable/</p>
+<li><p><a href="https://mauro3.github.io/Parameters.jl/stable/">https://mauro3.github.io/Parameters.jl/stable/</a></p>
 
 </ul>
-<p>Notes:</p>
+<p><em><strong>Notes:</strong></em></p>
 <ul>
 <li><p>it&#39;s geared towards Julia-packages, less for a bunch-of-scripts as in our lecture</p>
 
 <li><p>Documenter.jl also integrates with Literate.jl.</p>
 
-<li><p>for more free-form websites, use https://github.com/tlienart/Franklin.jl &#40;as the course website does&#41;</p>
+<li><p>for more free-form websites, use <a href="https://github.com/tlienart/Franklin.jl">https://github.com/tlienart/Franklin.jl</a> &#40;as the course website does&#41;</p>
 
 <li><p>if you want to use it, it&#39;s easiest to generate your package with <a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> which will generate the Documenter-setup for you.</p>
 

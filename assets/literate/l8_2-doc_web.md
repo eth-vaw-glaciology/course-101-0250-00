@@ -33,7 +33,7 @@ Worse than no documentation/code comments is documentation which is
 outdated.
 
 I find the best way to keep documentation up to date is:
-- have documentation visible to you, e.g. Github README
+- have documentation visible to you, e.g. GitHub README
 - document what you need yourself
 - use examples and run them as part of CI (doc-tests, example-scripts)
 
@@ -92,7 +92,7 @@ by Ludovic (incidentally about solving PDDs on GPUs ;-).
 - top-left has a burger-menu for page navigation
 - can be edited within the web-page (pencil-icon)
 
--> this is a good and low-overhead way to produce pretty nice documentation
+👉 this is a good and low-overhead way to produce pretty nice documentation
 
 ### Documentation tools: Literate.jl
 
@@ -116,7 +116,7 @@ But this is not automatic!  Manual steps: run Literate, add files, commit and pu
 ### Documentation tools: Automating Literate.jl
 
 As is done on [course-101-0250-00-L8Documentation.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl)
-```
+```yml
 name: Run Literate.jl
 # adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
 
@@ -170,13 +170,13 @@ If you want to have full-blown documentation, including, e.g., automatic API doc
 then use [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl).
 
 Examples:
-- https://docs.julialang.org/en/v1/
-- https://mauro3.github.io/Parameters.jl/stable/
+- [https://docs.julialang.org/en/v1/](https://docs.julialang.org/en/v1/)
+- [https://mauro3.github.io/Parameters.jl/stable/](https://mauro3.github.io/Parameters.jl/stable/)
 
-Notes:
+_**Notes:**_
 - it's geared towards Julia-packages, less for a bunch-of-scripts as in our lecture
 - Documenter.jl also integrates with Literate.jl.
-- for more free-form websites, use https://github.com/tlienart/Franklin.jl (as the course website does)
+- for more free-form websites, use [https://github.com/tlienart/Franklin.jl](https://github.com/tlienart/Franklin.jl) (as the course website does)
 - if you want to use it, it's easiest to generate your package with [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl)
   which will generate the Documenter-setup for you.
 
