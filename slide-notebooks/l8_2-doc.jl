@@ -84,16 +84,17 @@ One can add examples to doc-strings (they can even be part of testing: [doc-test
 - run it in the REPL and copy paste to the docstring
 """
 
+
 """
     transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 Transform polar to cartesian coordinates.
 
-## Example
-```jldoctest
-julia> transform(4.5, pi/5)
-(3.6405764746872635, 2.6450336353161292)
-```
+#src ## Example
+#src ```jldoctest
+#src julia> transform(4.5, pi/5)
+#src (3.6405764746872635, 2.6450336353161292)
+#src ```
 """
 transform(r, θ) = (r*cos(θ), r*sin(θ))
 
