@@ -127,8 +127,8 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 </ol>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >There are other providers of CI, e.g. Travis, Appveyor, etc.  Here we&#39;ll only look at GitHub actions.</div></div>
-<h3 id=example_from_last_lecture_continued ><a href="#example_from_last_lecture_continued" class=header-anchor >Example from last lecture continued</a></h3>
+<div class=messg >There are other providers of CI, e.g. Travis, Appveyor, etc. Here we&#39;ll only look at GitHub actions.</div></div>
+<h4 id=example_from_last_lecture_continued ><a href="#example_from_last_lecture_continued" class=header-anchor >Example from last lecture continued</a></h4>
 <p>In the last lecture I setup a <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">project</a> to illustrate how unit-testing works.</p>
 <p>Let&#39;s now add CI to this:</p>
 <ol>
@@ -142,7 +142,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <p>For step 2 we follow the documentation on <a href="https://github.com/julia-actions/julia-runtest">https://github.com/julia-actions/julia-runtest</a>.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg ><a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> is a handy package, which can generate a suitable Github Actions file.</div></div>
-<h3 id=example_from_last_lecture_continued_yml_magic ><a href="#example_from_last_lecture_continued_yml_magic" class=header-anchor >Example from last lecture continued: YML magic</a></h3>
+<h4 id=example_from_last_lecture_continued_yml_magic ><a href="#example_from_last_lecture_continued_yml_magic" class=header-anchor >Example from last lecture continued: YML magic</a></h4>
 <p>The <code>.yml</code> file, adapted from the <code>README</code> of <a href="https://github.com/julia-actions/julia-runtest">julia-runtest</a>:</p>
 <pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >tests</span>
 
@@ -165,16 +165,16 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
           <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@v1</span></code></pre>
-<h3 id=where_is_my_badge ><a href="#where_is_my_badge" class=header-anchor >Where is my BADGE&#33;&#33;&#33;</a></h3>
-<p>The CI will create a badge &#40;a small picture&#41; which reflects the status of the Action.  Typically added to the <code>README.md</code>:</p>
+<h4 id=where_is_my_badge ><a href="#where_is_my_badge" class=header-anchor >Where is my BADGE&#33;&#33;&#33;</a></h4>
+<p>The CI will create a badge &#40;a small picture&#41; which reflects the status of the Action. Typically added to the <code>README.md</code>:</p>
 <p><img src="../assets/literate_figures/ci-badge.png" alt=ci-badge  /></p>
 <p>It can be found under</p>
 <pre><code class="julia hljs">https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg</code></pre>
 <p>and should be added to the near the top of <code>README</code> like so:</p>
 <pre><code class="julia hljs">[![CI action](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml)</code></pre>
 <p>&#40;this also sets the link to the Actions which gets open upon clicking on it&#41;</p>
-<p><strong>All together</strong> on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl</a></p>
-<h3 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our GitHub repo...</a></h3>
+<p>👉 <em><strong>All together</strong></em> on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl</a></p>
+<h4 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our GitHub repo...</a></h4>
 <p>This makes the <code>.yml</code> a bit more complicated:</p>
 <pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >CI</span>
 <span class=hljs-attr >on:</span>
@@ -206,11 +206,10 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
             ${{ runner.os }}-test-
             ${{ runner.os }}-
 </span>      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--check-bounds=yes</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;);
-                                                      import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
-<p>Note that you have to <strong>adjust</strong> the bit: <code>cd&#40;&quot;&lt;subfolder-of-julia-project&gt;&quot;&#41;</code>.</p>
-<p>The <strong>example</strong> is in <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">course-101-0250-00-L6Testing-subfolder.jl</a>.</p>
-<h3 id=a_final_note ><a href="#a_final_note" class=header-anchor >A final note</a></h3>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--check-bounds=yes</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;); import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
+<p>Note that you have to <em><strong>adjust</strong></em> the bit: <code>cd&#40;&quot;&lt;subfolder-of-julia-project&gt;&quot;&#41;</code>.</p>
+<p>👉 The <em><strong>example</strong></em> is in <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">course-101-0250-00-L6Testing-subfolder.jl</a>.</p>
+<h4 id=a_final_note ><a href="#a_final_note" class=header-anchor >A final note</a></h4>
 <p>GitHub Actions are limited to 2000min per month per user for private repositories.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
