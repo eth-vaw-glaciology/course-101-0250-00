@@ -10,7 +10,7 @@ noeval = true
 
 > **Agenda**\
 > :books: Distributed multi-XPU computing, MPI, Stokes flow\
-> :computer: Automatic documentation (`Documenter.jl`,`Literate.jl`)\
+> :computer: Automatic documentation\
 > :construction: Exercises:
 > - Fake parallelisation, Julia MPI, `ImplicitGlobalGrid.jl`
 > - Fluid dynamics: Navier-Stokes equations, incompressible Stokes flow 
