@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # Documenting your code
 
-This lecture we will learn
+This lecture we will learn:
 - documentation vs code-comments
 - why to write documentation
 - some Julia tools:
@@ -72,6 +72,11 @@ One can add examples to doc-strings (they can even be part of testing: [doc-test
 
 Transform polar to cartesian coordinates.
 
+# Example
+````jldoctest
+julia> transform(4.5, pi/5)
+(3.6405764746872635, 2.6450336353161292)
+````
 """
 transform(r, θ) = (r*cos(θ), r*sin(θ))
 ```
@@ -85,7 +90,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))
 The easiest way to write long-form documentation is to just use GitHub's markdown rendering.
 
 A nice example is [this short course](https://github.com/luraess/parallel-gpu-workshop-JuliaCon21#parallel-cpu-implementation)
-by Ludovic (incidentally about solving PDDs on GPUs ;-).
+by Ludovic (incidentally about solving PDEs on GPUs 🙂).
 
 - images are rendered
 - in-page links are easy, e.g. `[_back to workshop material_](#workshop-material)`

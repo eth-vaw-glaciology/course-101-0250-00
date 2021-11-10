@@ -17,6 +17,11 @@ const BEERBOX = 12
 
 Transform polar to cartesian coordinates.
 
+# Example
+````jldoctest
+julia> transform(4.5, pi/5)
+(3.6405764746872635, 2.6450336353161292)
+````
 """
 transform(r, θ) = (r*cos(θ), r*sin(θ))
 

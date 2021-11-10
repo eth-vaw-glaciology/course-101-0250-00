@@ -177,7 +177,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=documenting_your_code ><a href="#documenting_your_code" class=header-anchor >Documenting your code</a></h1>
-<p>This lecture we will learn</p>
+<p>This lecture we will learn:</p>
 <ul>
 <li><p>documentation vs code-comments</p>
 
@@ -266,12 +266,17 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 Transform polar to cartesian coordinates.
 
+# Example
+````jldoctest
+julia&gt; transform(4.5, pi/5)
+(3.6405764746872635, 2.6450336353161292)
+````
 &quot;&quot;&quot;</span>
 transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <pre><code class="julia hljs">?transform</code></pre>
 <h3 id=documentation_tools_github_markdown_rendering ><a href="#documentation_tools_github_markdown_rendering" class=header-anchor >Documentation tools: Github markdown rendering</a></h3>
 <p>The easiest way to write long-form documentation is to just use GitHub&#39;s markdown rendering.</p>
-<p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21#parallel-cpu-implementation">this short course</a> by Ludovic &#40;incidentally about solving PDDs on GPUs ;-&#41;.</p>
+<p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21#parallel-cpu-implementation">this short course</a> by Ludovic &#40;incidentally about solving PDEs on GPUs 🙂&#41;.</p>
 <ul>
 <li><p>images are rendered</p>
 
@@ -585,7 +590,7 @@ nx, ny = <span class=hljs-number >128</span>, <span class=hljs-number >128</span
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 09, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 10, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
