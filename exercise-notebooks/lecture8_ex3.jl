@@ -61,27 +61,27 @@ Perform the following tasks, applying reference testing to the `viscous_NS_2D.jl
 - add `viscous_NS_2D.jl` to a `scripts/` folder
 - You can deactivate the plotting.  This will make the tests run faster.  Also return the final `P` and `xc` from the function.
 - Make a `ReferenceTest.jl` which tests the value at 12 random indices of `P` against a truth, the truth being the `reftest-files/X.bson` file you should download and unzip from the [course-101-0250-00/scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/reftest-files.zip) folder (**make sure to place the `X.bson` in your `reftest-files` folder**). The reference test used to generate the `X.bson` file is following (feel free to recycle it for your tests):
-    ```julia
-    using Test, ReferenceTests, BSON
+```julia
+using Test, ReferenceTests, BSON
 
-    include("./viscous_NS_2D.jl")
+include("./viscous_NS_2D.jl")
 
-    ## Reference Tests with ReferenceTests.jl
-    # We put both arrays xc and P into a BSON.jl and then compare them
+## Reference Tests with ReferenceTests.jl
+# We put both arrays xc and P into a BSON.jl and then compare them
 
-    "Compare all dict entries"
-    comp(d1, d2) = keys(d1) == keys(d2) && all([ v1≈v2 for (v1,v2) in zip(values(d1), values(d2))])
+"Compare all dict entries"
+comp(d1, d2) = keys(d1) == keys(d2) && all([ v1≈v2 for (v1,v2) in zip(values(d1), values(d2))])
 
-    X, P, = viscous_2D()
+X, P, = viscous_2D()
 
-    inds = Int.(ceil.(LinRange(1, length(X), 12)))
+inds = Int.(ceil.(LinRange(1, length(X), 12)))
 
-    d = Dict(:X=> X[inds], :P=>P[inds])
+d = Dict(:X=> X[inds], :P=>P[inds])
 
-    @testset "Ref-tests" begin
-        @test_reference "reftest-files/X.bson" d by=comp
-    end
-    ```
+@testset "Ref-tests" begin
+@test_reference "reftest-files/X.bson" d by=comp
+end
+```
 
 \note{Remember to check-in all the files into the repo; in particular the reference `*.bson`.}
 
