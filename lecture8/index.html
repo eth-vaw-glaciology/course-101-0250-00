@@ -531,23 +531,23 @@ nx, ny = <span class=hljs-number >128</span>, <span class=hljs-number >128</span
 </ul>
 <pre><code class="julia hljs"><span class=hljs-keyword >using</span> Test, ReferenceTests, BSON
 
-    include(<span class=hljs-string >&quot;./viscous_NS_2D.jl&quot;</span>)
+include(<span class=hljs-string >&quot;./viscous_NS_2D.jl&quot;</span>)
 
-    <span class=hljs-comment >## Reference Tests with ReferenceTests.jl</span>
-    <span class=hljs-comment ># We put both arrays xc and P into a BSON.jl and then compare them</span>
+<span class=hljs-comment >## Reference Tests with ReferenceTests.jl</span>
+<span class=hljs-comment ># We put both arrays xc and P into a BSON.jl and then compare them</span>
 
-    <span class=hljs-string >&quot;Compare all dict entries&quot;</span>
-    comp(d1, d2) = keys(d1) == keys(d2) &amp;&amp; all([ v1≈v2 <span class=hljs-keyword >for</span> (v1,v2) <span class=hljs-keyword >in</span> zip(values(d1), values(d2))])
+<span class=hljs-string >&quot;Compare all dict entries&quot;</span>
+comp(d1, d2) = keys(d1) == keys(d2) &amp;&amp; all([ v1≈v2 <span class=hljs-keyword >for</span> (v1,v2) <span class=hljs-keyword >in</span> zip(values(d1), values(d2))])
 
-    X, P, = viscous_2D()
+X, P, = viscous_2D()
 
-    inds = <span class=hljs-built_in >Int</span>.(ceil.(<span class=hljs-built_in >LinRange</span>(<span class=hljs-number >1</span>, length(X), <span class=hljs-number >12</span>)))
+inds = <span class=hljs-built_in >Int</span>.(ceil.(<span class=hljs-built_in >LinRange</span>(<span class=hljs-number >1</span>, length(X), <span class=hljs-number >12</span>)))
 
-    d = <span class=hljs-built_in >Dict</span>(:X=&gt; X[inds], :P=&gt;P[inds])
+d = <span class=hljs-built_in >Dict</span>(:X=&gt; X[inds], :P=&gt;P[inds])
 
-    <span class=hljs-meta >@testset</span> <span class=hljs-string >&quot;Ref-tests&quot;</span> <span class=hljs-keyword >begin</span>
-        <span class=hljs-meta >@test_reference</span> <span class=hljs-string >&quot;reftest-files/X.bson&quot;</span> d by=comp
-    <span class=hljs-keyword >end</span></code></pre>
+<span class=hljs-meta >@testset</span> <span class=hljs-string >&quot;Ref-tests&quot;</span> <span class=hljs-keyword >begin</span>
+<span class=hljs-meta >@test_reference</span> <span class=hljs-string >&quot;reftest-files/X.bson&quot;</span> d by=comp
+<span class=hljs-keyword >end</span></code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Remember to check-in all the files into the repo; in particular the reference <code>*.bson</code>.</div></div>
 <p>GitHub Actions and CI:</p>
