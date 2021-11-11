@@ -44,7 +44,7 @@ For enhanced stability of the elastic solver, it is important to use the newly c
 
 Create a last duplicate of the `acoustic_2D_elast3.jl` script, renaming it `elastic_2D.jl`.
 
-In this final version of the script, move the pressure calculations as the beginning of the time loop, to use update pressure within the velocity update.
+In this final version of the script, move the pressure update at the beginning of the time loop. First update pressure in order to use the updated pressure later on when computing the pressure gradient in the velocity update.
 
 You should now have a 2D elastic solver up and running 🚀
 

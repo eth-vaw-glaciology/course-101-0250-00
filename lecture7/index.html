@@ -352,7 +352,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <h3 id=task_4_-_rearranging_the_code ><a href="#task_4_-_rearranging_the_code" class=header-anchor >Task 4 - rearranging the code</a></h3>
 <p>For enhanced stability of the elastic solver, it is important to use the newly computed quantities as soon as possible.</p>
 <p>Create a last duplicate of the <code>acoustic_2D_elast3.jl</code> script, renaming it <code>elastic_2D.jl</code>.</p>
-<p>In this final version of the script, move the pressure calculations as the beginning of the time loop, to use update pressure within the velocity update.</p>
+<p>In this final version of the script, move the pressure update at the beginning of the time loop. First update pressure in order to use the updated pressure later on when computing the pressure gradient in the velocity update.</p>
 <p>You should now have a 2D elastic solver up and running 🚀</p>
 <h3 id=final_task ><a href="#final_task" class=header-anchor >Final Task</a></h3>
 <p>Compare the results between acoustic and elastic wave propagation for identical physical and numerical input parameters. Create one figure for each simulation that you add to the <code>README</code> in a new final section. Comment briefly about the results.</p>
@@ -382,7 +382,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 10, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 11, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
