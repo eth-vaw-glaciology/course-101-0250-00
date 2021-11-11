@@ -35,16 +35,22 @@ Start by making a new duplicate of the latest `acoustic_2D_elast2.jl` script, re
 τxy  .= τxy .+ ??
 ```
 
-Note that the strain(-rate) tensor is symmetric, thus $τ_{xy} = τ_{yx}$. 
+Note that we assume the strain(-rate) tensor to be symmetric, thus the following is to be assumed $τ_{xy} = τ_{yx}$. 
 
 Make sure to correctly interpret [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) - normal $(τ_{xx}, τ_{yy})$ and shear $(τ_{xy})$ stresses are not defined in the same way.
-
-![2D staggered grid](./figures/stagg_elast_ex7.png)
-
 """
 
 #nb # > 💡 hint: Transforming [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) into code: rate of change of normal stress $∂τ_{xx}/∂t$ is defined as $2~μ~(∂v_x/∂x -1/3∇v)$, i.e. two $2μ$ times the normal strain-rate. For the rate of change of the shear stress $∂τ_{xy}/∂t$, the shear strain-rate defines as $1/2~(∂v_x/∂y + ∂v_y/∂x)$. Make sure to implement it consistently.
 #md # \note{Transforming [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) into code: rate of change of normal stress $∂τ_{xx}/∂t$ is defined as $2~μ~(∂v_x/∂x -1/3∇v)$, i.e. two $2μ$ times the normal strain-rate. For the rate of change of the shear stress $∂τ_{xy}/∂t$, the shear strain-rate defines as $1/2~(∂v_x/∂y + ∂v_y/∂x)$. Make sure to implement it consistently.}
+
+md"""
+![2D staggered grid](./figures/stagg_elast_ex7.png)
+
+The shear stress $τ_{xy}$ derivative needs then to be included into the momentum equations, used to compute the rate of change of velocity in both $x$ and $y$ direction (similarly to the normal stress).
+"""
+
+#nb # > 💡 hint: Make sure to take the "cross-derivative" of the shear stress when adding them to the momentum equation; use $∂τ_{xy}/∂y$ when computing `dVxdt` and $∂τ_{xy}/∂x$ for computing `dVydt`.
+#md # \note{Make sure to take the "cross-derivative" of the shear stress when adding them to the momentum equation; use $∂τ_{xy}/∂y$ when computing `dVxdt` and $∂τ_{xy}/∂x$ for computing `dVydt`.}
 
 md"""
 ### Task 4 - rearranging the code
