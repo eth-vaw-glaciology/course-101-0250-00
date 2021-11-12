@@ -15,7 +15,7 @@ help?&gt; <span class=hljs-meta >@all</span></code></pre> <p>This would, e.g., g
     <span class=hljs-meta >@all</span>(qy) = -D*<span class=hljs-meta >@d_yi</span>(C)/dy
     <span class=hljs-keyword >return</span>
 <span class=hljs-keyword >end</span></code></pre> <p>Now that we&#39;re done with <code>compute_q&#33;</code>, your turn&#33;</p> <p>By analogy, update <code>compute_C&#33;</code>.</p> <pre><code class="julia hljs"><span class=hljs-meta >@parallel</span> <span class=hljs-keyword >function</span> compute_C!(C, qx, qy, dt, dx, dy)
-   <span class=hljs-comment ># C = C - dt * (∂qx/dx + ∂qy/dy)</span>
+   <span class=hljs-meta >@inn</span>(C) = <span class=hljs-meta >@inn</span>(C) - dt*( <span class=hljs-meta >@d_xa</span>(qx)/dx + <span class=hljs-meta >@d_ya</span>(qy)/dy )
     <span class=hljs-keyword >return</span>
 <span class=hljs-keyword >end</span></code></pre> <p>So far so good. We are done with the kernels. Let&#39;s see what changes are needed in the main part of the script.</p> <p>In the <code># Physics</code> section, change total time to <code>ttot &#61; 1e2</code>. The <code># Numerics</code> only needs <code>nx</code>, <code>ny</code> and <code>nout</code>; the kernel launch parameters being now automatically adapted:</p> <pre><code class="julia hljs"><span class=hljs-meta >@views</span> <span class=hljs-keyword >function</span> diffusion_2D(; do_visu=<span class=hljs-literal >false</span>)
     <span class=hljs-comment ># Physics</span>
@@ -72,9 +72,9 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <p>Note that one has to remove the divergence &#40;volumetric part&#41; of the stress tensor if considering its deviatoric form &#40;removing the trace of the tensor, i.e. the pressure we explicitly define and compute&#41;.</p>
 <p>Also, adding elastic shear rheology, we need to define the elastic shear modulus <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">μ = 1</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">μ</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span><span class=mrel >=</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span></span><span class=base ><span class=strut  style="height:0.64444em;vertical-align:0em;"></span><span class=mord >1</span></span></span></span> in the <code># Physics</code> section.</p>
 <p>Repeat this for the <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">yy</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> normal stress component:</p>
-<pre><code class="julia hljs">τyy  .= τyy .+ ??</code></pre>
+<pre><code class="julia hljs">τyy  .= τyy .+ dt*(<span class=hljs-number >2.0</span>.*μ.* (diff(Vy,dims=<span class=hljs-number >2</span>)/dy) .- <span class=hljs-number >1.0</span>/<span class=hljs-number >3.0</span> .*∇V)</code></pre>
 <p>We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by &#40;that needs to be initialised&#41;:</p>
-<pre><code class="julia hljs">∇V    .= ???</code></pre>
+<pre><code class="julia hljs">∇V    .= diff(Vx,dims=<span class=hljs-number >1</span>)./dx .+ diff(Vy,dims=<span class=hljs-number >2</span>)./dy</code></pre>
 <p>Having added elasticity to the acoustic process &#40;elastic stresses instead of only pressure&#41;, we need to adapt the time step stability condition:</p>
 <pre><code class="julia hljs">dt     = min(dx,dy)/sqrt((K + <span class=hljs-number >4</span>/<span class=hljs-number >3</span>*μ)/ρ)/<span class=hljs-number >2.1</span></code></pre>
 <p>to take shear modulus <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">μ</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">μ</span></span></span></span> into account.</p>
@@ -385,7 +385,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 11, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 12, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

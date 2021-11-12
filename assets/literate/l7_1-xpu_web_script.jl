@@ -17,7 +17,7 @@ using Plots, Printf
 end
 
 @parallel function compute_C!(C, qx, qy, dt, dx, dy)
-   # C = C - dt * (∂qx/dx + ∂qy/dy)
+   @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
     return
 end
 

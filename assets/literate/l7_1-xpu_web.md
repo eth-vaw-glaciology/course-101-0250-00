@@ -129,7 +129,7 @@ By analogy, update `compute_C!`.
 
 ```julia:ex3
 @parallel function compute_C!(C, qx, qy, dt, dx, dy)
-   # C = C - dt * (∂qx/dx + ∂qy/dy)
+   @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
     return
 end
 ```
@@ -324,12 +324,12 @@ Also, adding elastic shear rheology, we need to define the elastic shear modulus
 
 Repeat this for the $yy$ normal stress component:
 ```julia
-τyy  .= τyy .+ ??
+τyy  .= τyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
 ```
 
 We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
 ```julia
-∇V    .= ???
+∇V    .= diff(Vx,dims=1)./dx .+ diff(Vy,dims=2)./dy
 ```
 
 Having added elasticity to the acoustic process (elastic stresses instead of only pressure), we need to adapt the time step stability condition:
