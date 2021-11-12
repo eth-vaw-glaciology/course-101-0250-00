@@ -250,7 +250,7 @@ ssh <username>@octopus.unil.ch
     ```
 
 ### Connect to remote desktop
-1. On your local machine (laptop), open **VNCviewer** and paste the address you got prompted at remote desktop creation, i.e., `octopus.unil.ch:<VNC screen>` in the search bar - hit `enter`.
+1. On your local machine (laptop), open **VNC viewer** and paste the address you got prompted at remote desktop creation, i.e., `octopus.unil.ch:<VNC screen>` in the search bar - hit `enter`.
 2. Type in the VNC password your received by email and you should be connected.
 3. **Make sure to disable screensaver** when connecting for the first time to the remote desktop. You can do so accessing the `Applications` menu in the upper left corner and selecting: `Applications > Settings > Screensaver` and turning it `off`.
 4. You can open a terminal (`Applications` menu in the upper left corner) and follow the next steps:
@@ -284,25 +284,9 @@ cd /scratch/<username>/lecture06
 ```sh
 julia
 ```
-6. Activate and instantiate the project (this should download all packages you need 🙂)
-```julia-repl
-julia> ]
+6. See [here](#running_a_jupyter_notebook) for running a Jupyter notebook
 
-(@v1.6) pkg> activate .
-
-(lecture06) pkg> instantiate
-```
-7. Launch Jupyter
-```julia-repl
-julia> using IJulia
-
-julia> notebook(dir=pwd())
-```
-You will get prompted to `install jupyter [y/N]` the first time running the `notebook()` command. Type `Yes` or `y`.
-
-You should see Firefox opening a Jupyter tab (make sure you connected using `-YC` to `node40`).
-
-8. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
+7. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
 
 \warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...} -->
 
@@ -336,7 +320,50 @@ julia
 ```
 and you are all set 🚀
 
-#### Julia MPI GPU on your `octopus` node
+7. See [here](#running_a_jupyter_notebook) for running a Jupyter notebook
+
+\note{You can use the `nvidia-smi` command as `top` alternative to monitor processes on the GPU(s).}
+
+### Running a Jupyter notebook
+
+If you need to run a Julia notebook within Jupyter, do following:
+
+1. Navigate to the notebook's parent folder (e.g. `/scratch/<username>/lecture06`)
+```sh
+cd /scratch/<username>/lecture06
+```
+2. Launch Julia
+```sh
+julia
+```
+3. Activate and instantiate the project (this should download all packages you need 🙂)
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> activate .
+
+(lecture06) pkg> instantiate
+```
+If you are not running in a particular project, you may need to add the `IJulia` package
+```julia-repl
+julia> ]
+
+(@v1.6) pkg> add IJulia
+```
+4. Launch Jupyter
+```julia-repl
+julia> using IJulia
+
+julia> notebook(dir=pwd())
+```
+You will get prompted to `install jupyter [y/N]` the first time running the `notebook()` command. Type `Yes` or `y`.
+
+You should see Firefox opening a Jupyter tab (make sure you connected using `-YC` or `-X`).
+
+5. Open the notebook. You are all set 🚀
+
+
+### Julia MPI GPU on your `octopus` node
 
 This section will get you set-up to exercise with multi-GPU programs on your assigned `octopus` node:
 1. Open a terminal on your local machine and connect to `octopus` over `ssh` (or open your VNC remote desktop)
