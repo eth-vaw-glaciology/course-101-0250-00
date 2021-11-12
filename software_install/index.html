@@ -147,7 +147,7 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">New <span class=hljs-string >&#x27;octopus.unil.ch:&lt;VNC screen&gt; (&lt;username&gt;)&#x27;</span> desktop is octopus.unil.ch:&lt;VNC screen&gt;</code></pre>
 <h3 id=connect_to_remote_desktop ><a href="#connect_to_remote_desktop" class=header-anchor >Connect to remote desktop</a></h3>
 <ol>
-<li><p>On your local machine &#40;laptop&#41;, open <strong>VNCviewer</strong> and paste the address you got prompted at remote desktop creation, i.e., <code>octopus.unil.ch:&lt;VNC screen&gt;</code> in the search bar - hit <code>enter</code>.</p>
+<li><p>On your local machine &#40;laptop&#41;, open <strong>VNC viewer</strong> and paste the address you got prompted at remote desktop creation, i.e., <code>octopus.unil.ch:&lt;VNC screen&gt;</code> in the search bar - hit <code>enter</code>.</p>
 
 <li><p>Type in the VNC password your received by email and you should be connected.</p>
 
@@ -202,7 +202,51 @@ $ Hello world, I am 3 of 3</code></pre>
 </ol>
 <pre><code class="sh hljs">julia</code></pre>
 <p>and you are all set 🚀</p>
-<h4 id=julia_mpi_gpu_on_your_octopus_node ><a href="#julia_mpi_gpu_on_your_octopus_node" class=header-anchor >Julia MPI GPU on your <code>octopus</code> node</a></h4>
+<ol start=7 >
+<li><p>See <a href="#running_a_jupyter_notebook">here</a> for running a Jupyter notebook</p>
+
+</ol>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You can use the <code>nvidia-smi</code> command as <code>top</code> alternative to monitor processes on the GPU&#40;s&#41;.</div></div>
+<h3 id=running_a_jupyter_notebook ><a href="#running_a_jupyter_notebook" class=header-anchor >Running a Jupyter notebook</a></h3>
+<p>If you need to run a Julia notebook within Jupyter, do following:</p>
+<ol>
+<li><p>Navigate to the notebook&#39;s parent folder &#40;e.g. <code>/scratch/&lt;username&gt;/lecture06</code>&#41;</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture06</code></pre>
+<ol start=2 >
+<li><p>Launch Julia</p>
+
+</ol>
+<pre><code class="sh hljs">julia</code></pre>
+<ol start=3 >
+<li><p>Activate and instantiate the project &#40;this should download all packages you need 🙂&#41;</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
+
+<span class=hljs-metap>(lecture06) pkg&gt;</span> instantiate</code></pre>
+<p>If you are not running in a particular project, you may need to add the <code>IJulia</code> package</p>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(@v1.6) pkg&gt;</span> add IJulia</code></pre>
+<ol start=4 >
+<li><p>Launch Jupyter</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
+</span>
+<span class=hljs-meta >julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
+<p>You will get prompted to <code>install jupyter &#91;y/N&#93;</code> the first time running the <code>notebook&#40;&#41;</code> command. Type <code>Yes</code> or <code>y</code>.</p>
+<p>You should see Firefox opening a Jupyter tab &#40;make sure you connected using <code>-YC</code> or <code>-X</code>&#41;.</p>
+<ol start=5 >
+<li><p>Open the notebook. You are all set 🚀</p>
+
+</ol>
+<h3 id=julia_mpi_gpu_on_your_octopus_node ><a href="#julia_mpi_gpu_on_your_octopus_node" class=header-anchor >Julia MPI GPU on your <code>octopus</code> node</a></h3>
 <p>This section will get you set-up to exercise with multi-GPU programs on your assigned <code>octopus</code> node:</p>
 <ol>
 <li><p>Open a terminal on your local machine and connect to <code>octopus</code> over <code>ssh</code> &#40;or open your VNC remote desktop&#41;</p>
