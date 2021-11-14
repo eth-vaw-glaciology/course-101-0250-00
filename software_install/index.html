@@ -15,6 +15,8 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
 <li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code">access a remote compute node from within VS Code</a> &#40;e.g. a GPU node on <code>octopus</code>&#41;.</p>
 
 </ol>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >This remote configuration supports Julia graphics to render within VS Code&#39;s plot pane. However, this &quot;remote&quot; visualisation option is only functional when plotting from a Julia instance launched as <code>Julia: Start REPL</code> from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal &#40;which allows, e.g., to include custom options such as <code>ENV</code> variables or load modules&#41; will fail. To work around this limitation, select <code>Julia: Connect external REPL</code> from the Command Palette and follow the prompted instructions.</div></div>
 <h2 id=running_julia ><a href="#running_julia" class=header-anchor >Running Julia</a></h2>
 <h3 id=first_steps ><a href="#first_steps" class=header-anchor >First steps</a></h3>
 <p>Now that you have a running Julia install, launch Julia &#40;e.g. by typing <code>julia</code> in the shell since it should be on path&#41;</p>
