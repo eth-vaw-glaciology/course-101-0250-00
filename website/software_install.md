@@ -53,6 +53,12 @@ to make sure that the Julia REPL (aka terminal) starts. Then you should ba able 
 ### VS Code
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
 
+#### VS Code Remote - SSH setup
+VS Code's [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem ([more](https://code.visualstudio.com/docs/remote/ssh)).
+
+1. To get started, follow [the install steps](https://code.visualstudio.com/docs/remote/ssh#_installation).
+2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
+3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#connect_to_the_machine_and_to_your_compute_node_from_vs_code) (e.g. a GPU node on `octopus`).
 
 ## Running Julia
 
@@ -236,6 +242,25 @@ Look-up your username (`<username>`) and assigned node (`node`), both listed in 
 ```sh
 ssh <username>@octopus.unil.ch
 ```
+
+### Connect to the machine and to your compute node from VS Code
+[Using VS Code](#vs_code_remote_-_ssh_setup) with the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension enables direct ssh access to your compute node `nodeXX`.
+
+Edit your ssh config file (on Unix-based systems `.ssh/config`) as suggested in the [advanced settings](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) by adding following information (replacing `nodeXX` and `<username>`):
+
+```txt
+Host octopus
+  HostName octopus.unil.ch
+  User <username>
+  IdentityFile ~/.ssh/id_rsa
+
+Host nodeXX
+  HostName nodeXX.octopoda
+  User <username>
+  ProxyJump <username>@octopus.unil.ch
+
+```
+This will create a ProxyJump, setting up a connexion to your node via the master (login node).
 
 ### Initialise your remote desktop (first time only)
 1. On your local machine (laptop), head to [RealVNC's download page](https://www.realvnc.com/en/connect/download/viewer/) to download the **VNC viewer**.
