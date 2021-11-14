@@ -5,6 +5,16 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
 <p><img src="/course-101-0250-00/assets/julia_terminal.png" alt="Julia from Terminal" /></p>
 <h3 id=vs_code ><a href="#vs_code" class=header-anchor >VS Code</a></h3>
 <p>If you&#39;d enjoy a more IDE type of environment, <a href="https://code.visualstudio.com">check out VS Code</a>. Follow the <a href="https://github.com/julia-vscode/julia-vscode#getting-started">installation directions</a> for the <a href="https://www.julia-vscode.org">Julia VS Code extension</a>.</p>
+<h4 id=vs_code_remote_-_ssh_setup ><a href="#vs_code_remote_-_ssh_setup" class=header-anchor >VS Code Remote - SSH setup</a></h4>
+<p>VS Code&#39;s <a href="https://marketplace.visualstudio.com/items?itemName&#61;ms-vscode-remote.remote-ssh">Remote - SSH</a> extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem &#40;<a href="https://code.visualstudio.com/docs/remote/ssh">more</a>&#41;.</p>
+<ol>
+<li><p>To get started, follow <a href="https://code.visualstudio.com/docs/remote/ssh#_installation">the install steps</a>.</p>
+
+<li><p>Then, you can <a href="https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host">connect to a remote host</a>, using <code>ssh user@hostname</code> and your password &#40;selecting <code>Remote-SSH: Connect to Host...</code> from the Command Palette&#41;.</p>
+
+<li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code">access a remote compute node from within VS Code</a> &#40;e.g. a GPU node on <code>octopus</code>&#41;.</p>
+
+</ol>
 <h2 id=running_julia ><a href="#running_julia" class=header-anchor >Running Julia</a></h2>
 <h3 id=first_steps ><a href="#first_steps" class=header-anchor >First steps</a></h3>
 <p>Now that you have a running Julia install, launch Julia &#40;e.g. by typing <code>julia</code> in the shell since it should be on path&#41;</p>
@@ -131,6 +141,19 @@ $ Hello world, I am 3 of 3</code></pre>
 <p>Look-up your username &#40;<code>&lt;username&gt;</code>&#41; and assigned node &#40;<code>node</code>&#41;, both listed in <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a> under <code>Connecting to the GPU resources &#40;octopus&#41;</code>. Your password was sent via email.</p>
 <h3 id=connect_to_the_machine_via_ssh ><a href="#connect_to_the_machine_via_ssh" class=header-anchor >Connect to the machine via ssh</a></h3>
 <pre><code class="sh hljs">ssh &lt;username&gt;@octopus.unil.ch</code></pre>
+<h3 id=connect_to_the_machine_and_to_your_compute_node_from_vs_code ><a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code" class=header-anchor >Connect to the machine and to your compute node from VS Code</a></h3>
+<p><a href="#vs_code_remote_-_ssh_setup">Using VS Code</a> with the <a href="https://marketplace.visualstudio.com/items?itemName&#61;ms-vscode-remote.remote-ssh">Remote - SSH</a> extension enables direct ssh access to your compute node <code>nodeXX</code>.</p>
+<p>Edit your ssh config file &#40;on Unix-based systems <code>.ssh/config</code>&#41; as suggested in the <a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">advanced settings</a> by adding following information &#40;replacing <code>nodeXX</code> and <code>&lt;username&gt;</code>&#41;:</p>
+<pre><code class="txt hljs">Host octopus
+  HostName octopus.unil.ch
+  User &lt;username&gt;
+  IdentityFile ~/.ssh/id_rsa
+
+Host nodeXX
+  HostName nodeXX.octopoda
+  User &lt;username&gt;
+  ProxyJump &lt;username&gt;@octopus.unil.ch</code></pre>
+<p>This will create a ProxyJump, setting up a connexion to your node via the master &#40;login node&#41;.</p>
 <h3 id=initialise_your_remote_desktop_first_time_only ><a href="#initialise_your_remote_desktop_first_time_only" class=header-anchor >Initialise your remote desktop &#40;first time only&#41;</a></h3>
 <ol>
 <li><p>On your local machine &#40;laptop&#41;, head to <a href="https://www.realvnc.com/en/connect/download/viewer/">RealVNC&#39;s download page</a> to download the <strong>VNC viewer</strong>.</p>
