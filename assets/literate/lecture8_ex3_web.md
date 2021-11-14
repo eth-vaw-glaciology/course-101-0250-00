@@ -41,6 +41,13 @@ ttot   = 5.0
 nx, ny = 128, 128
 ```
 
+Since the process is now viscous, think how to adapt the time step to ensure stability. You can guess it upon the analogy between diffusion and acoustic waves. Diffusive-like (here viscous) processes take a time step limiter in the form $∆x^2/μ_\mathrm{eff}/n_\mathrm{dims}/2.1$, while wave-like (elastic) processes take a time step limiter in the form $∆x/v_\mathrm{eff}/2.1,$ where $μ_\mathrm{eff}$, $n_\mathrm{dims}$, and $v_\mathrm{eff}$ represent the effective viscosity, the number of spacial dimensions and an effective wave speed, respectively.
+
+In this particular case, we could use
+```julia
+dt = min(dx,dy)^2/(K + 4/3*μ)/ρ/4.1
+```
+
 Also, add the possibility of deactivating visualisation.
 
 ### Task 2
