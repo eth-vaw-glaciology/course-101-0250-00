@@ -39,7 +39,7 @@ md"""
 In the last notebook (`3_datatransfer_optimisations.ipynb`), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
 
 Here is the documentation of the function `cumsum!`
-```julia
+```julia-repl
 help?> CUDA.cumsum!
   cumsum!(B, A; dims::Integer)
 
@@ -188,7 +188,7 @@ md"""
 Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a time in the first dimension (index `ix`) rather than one number at a time as before. Launch the kernel with just 32 threads, all placed in the first dimension; adapt the the block configuration if you need to. Verify the correctness of your kernel. Then, think about what performance you expect now, compute `T_tot` and explain the measured performance.
 """
 #nb # > 💡 Hint: you could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).
-#md # \note{ou could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
+#md # \note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
 
 #-
 ## solution
@@ -203,7 +203,7 @@ md"""
 Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 6. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
 """
 #nb # > 💡 Hint: if you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.
-#md # \note{f you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
+#md # \note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
 
 #-
 ## solution

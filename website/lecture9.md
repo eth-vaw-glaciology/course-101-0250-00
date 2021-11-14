@@ -35,7 +35,7 @@ noeval = true
 
 # Exercises - lecture 9
 
-\warn{Exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{**Exercises 1 and 2 have to be handed in as Jupyter notebook**, uploaded to your private (shared) GitHub repository, in **this week's lecture specific folder**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture9_ex1_web.jl}
 
