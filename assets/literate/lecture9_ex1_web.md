@@ -147,9 +147,9 @@ We will do now our first shared memory experiment with this simple triad kernel.
 Modify the above `update_temperature!` kernel (which now does just triad memory copy) as follows: read the values of the temperature array `T` into shared memory; then, subsequently, read the temperature values from there when updating `T2`.
 To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
 
-\note{Use [@cuDynamicSharedMem](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem) to allocate the required shared memory}
+\note{Use [`@cuDynamicSharedMem`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem) to allocate the required shared memory}
 \note{Shared memory is block-local, i.e., shared between the threads of a same block.}
-\note{Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [maxthreads](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).}
+\note{Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [`maxthreads`](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).}
 
 ```julia:ex11
 # hint
