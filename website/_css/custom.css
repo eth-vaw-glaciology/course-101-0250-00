@@ -119,6 +119,7 @@ pre.code-output {
     font-weight: normal !important;
 }
 .sidebar-nav .sidebar-nav-item {
+    /*font-size: 0.97em;*/
     color: #cccccc;
     margin: 0.25em 0;
 }
