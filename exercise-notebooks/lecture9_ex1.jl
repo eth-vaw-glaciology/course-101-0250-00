@@ -40,7 +40,7 @@ function diffusion2D()
     ## Physics
     lam      = 1.0                                          # Thermal conductivity
     c0       = 2.0                                          # Heat capacity
-    lx, ly   = 1.0, 1.0                                     # Length of computational domain in dimension x and y
+    lx, ly   = 10.0, 10.0                                   # Length of computational domain in dimension x and y
 
     ## Numerics
     nx, ny   = 32*2, 32*2                                   # Number of gridpoints in dimensions x and y
@@ -62,10 +62,9 @@ function diffusion2D()
     ## Time loop
     dt  = min(dx^2,dy^2)/lam/maximum(Ci)/4.1                # Time step for 2D Heat diffusion
     opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
-    for it = 1:nt
+    @gif for it = 1:nt
         diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)     # Diffusion time step.
-        IJulia.clear_output(true)
-        display(heatmap(Array(T)'; opts...))                # Visualization
+        heatmap(Array(T)'; opts...)                         # Visualization
         T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)
     end
 end
@@ -246,7 +245,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 #sol     end
 #sol     return
 #sol end
-#sol 
+#sol
 #sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #sol T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 #hint ## hint
@@ -262,7 +261,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 #hint     end
 #hint     return
 #hint end
-#hint 
+#hint
 #hint t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=#=adjust the shared memory=# update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #hint T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
@@ -295,7 +294,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 #sol     end
 #sol     return
 #sol end
-#sol 
+#sol
 #sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #sol T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 #hint ## hint
@@ -315,7 +314,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 #hint     end
 #hint     return
 #hint end
-#hint 
+#hint
 #hint t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #hint T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
@@ -353,9 +352,9 @@ To help you, the structure of the kernel is already given; you only need to comp
 #sol     end
 #sol     return
 #sol end
-#sol 
+#sol
 #sol diffusion2D()
-#sol 
+#sol
 #sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #sol T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 #hint ## hint
@@ -379,9 +378,9 @@ To help you, the structure of the kernel is already given; you only need to comp
 #hint     end
 #hint     return
 #hint end
-#hint 
+#hint
 #hint diffusion2D()
-#hint 
+#hint
 #hint t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #hint T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
