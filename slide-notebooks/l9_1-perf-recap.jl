@@ -48,8 +48,8 @@ md"""
 ![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
-#nb # > 💡 note: the position of the memory wall is to be considered very approximative.
-#md # \note{the position of the memory wall is to be considered very approximative.}
+#nb # > 💡 note: The position of the memory wall is to be considered very approximative.
+#md # \note{The position of the memory wall is to be considered very approximative.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -142,8 +142,8 @@ md"""
 ![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
-#nb # > 💡 note: the position of the memory wall is to be considered very approximative.
-#md # \note{the position of the memory wall is to be considered very approximative.}
+#nb # > 💡 note: The position of the memory wall is to be considered very approximative.
+#md # \note{The position of the memory wall is to be considered very approximative.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
