@@ -9,7 +9,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We now want get a high-level overview on how can control on-chip memory in order to reduce redundant main memory access.
+We now want get a high-level overview on how we can control on-chip memory in order to reduce redundant main memory access.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -25,7 +25,6 @@ Let us first look at the different kinds of memory.
 There is memory private to each thread ("local memory"), shared between thread blocks ("shared memory") and shared between all threads of the grid ("global memory" or "main memory").
 """
 
-#src #TODO: add to local mem: "registers or private main memory ("spilled registers")""; add to shared mem: "repurposed L1 cache"
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -49,7 +48,7 @@ md"""
 md"""
 In this approach, we allocate a cell in shared memory per each thread of the block, **plus a halo on all sides**.
 
-The threads at the boundaries of the block will read from their when doing finite differences.
+The threads at the boundaries of the block will read from there when doing finite differences.
 
 As a result, we will need to read the data corresponding to a thread block (see image) only once to shared memory and then we can compute all the required finite differences reading only from there.
 """
@@ -59,14 +58,13 @@ As a result, we will need to read the data corresponding to a thread block (see 
 md"""
 Making basic use of "local memory" is very simple: it is enough to define a variable inside a kernel and it will be allocated private to the each thread.
 
-Scalars (and possibly small arrays) will be stored in registers if the kernel does not use to many (else it is stored in global memory as noted earlier).
+Scalars (and possibly small arrays) will be stored in registers if the kernel does not use too many (else it is stored in global memory as noted earlier).
 """
 
-#src #TODO: missing image!
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-This "control" of register usage becomes often particularly useful, when each thread does not only compute the results for one cell, but for a multiple cells, e.g. adjacent in the last dimension.
+This "control" of register usage becomes often particularly useful when each thread does not only compute the results for one cell but for multiple cells, e.g., adjacent in the last dimension.
 
 In that case, the registers can store, e.g., intermediate results.
 """

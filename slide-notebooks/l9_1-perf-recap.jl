@@ -2,6 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # _Lecture 9_
 md"""
 # GPU computing and performance assessment
 """
@@ -139,7 +140,7 @@ The ratio for double precision corresponds to what was common in the early 2000s
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio.png)
+![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio2.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
 #nb # > 💡 note: The position of the memory wall is to be considered very approximative.
