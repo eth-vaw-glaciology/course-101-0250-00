@@ -125,7 +125,7 @@ Modify the above `memcopy!` kernel to read in A and write B in a serial manner w
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol threads = (32, 8, 1)
 #sol blocks  = (nx÷threads[1], ny÷threads[2], 1)
 #sol #-
@@ -165,7 +165,7 @@ Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dim
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol ## Verification
 #sol @cuda blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
 #sol CUDA.cumsum!(B_ref, A; dims=3);
@@ -199,7 +199,7 @@ Modify the `memcopy!` kernel given in the beginning to read in A and write B in 
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol threads = (256, 1, 1)
 #sol blocks  = (nx÷threads[1], 1, nz÷threads[3])
 #sol #-
@@ -234,7 +234,7 @@ Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dim
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol ## Verification
 #sol @cuda blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
 #sol CUDA.cumsum!(B_ref, A; dims=2);
@@ -269,7 +269,7 @@ Modify the `memcopy!` kernel given in the beginning to read in A and write B in 
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol threads = (1, 256, 1)
 #sol blocks  = (1, ny÷threads[2], nz÷threads[3])
 #sol #-
@@ -307,7 +307,7 @@ Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a ti
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol threads = (32, 1, 1)
 #sol blocks  = (1, ny÷threads[2], nz÷threads[3])
 #sol #-
@@ -355,7 +355,7 @@ Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dim
 #sol     end
 #sol     return nothing
 #sol end
-#sol
+#sol 
 #sol ## Verification
 #sol @cuda blocks=blocks threads=threads shmem=prod(threads)*sizeof(Float64) cumsum_dim1!(B, A); synchronize()
 #sol CUDA.cumsum!(B_ref, A; dims=1);
