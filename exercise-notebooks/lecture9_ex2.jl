@@ -27,6 +27,8 @@ md"""
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 """
 ] activate .
+#-
+] instantiate
 
 #-
 
