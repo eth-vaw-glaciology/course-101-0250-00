@@ -353,8 +353,14 @@ To help you, the structure of the kernel is already given; you only need to comp
 #sol     return
 #sol end
 #sol
-#sol diffusion2D()
+#sol function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol     threads = (32, 8)
+#sol     blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
+#sol     @cuda blocks=blocks threads=threads shmem=prod(threads.+2)*sizeof(Float64) update_temperature!(T2, T, Ci, lam, dt, _dx, _dy); synchronize()
+#sol end
 #sol
+#sol diffusion2D()
+#sol #-
 #sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 #sol T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 #hint ## hint
