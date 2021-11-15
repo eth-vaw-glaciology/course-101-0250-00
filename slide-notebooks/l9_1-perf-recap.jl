@@ -42,12 +42,14 @@ md"""
 This situation is the result of a much faster increase of computation speed with respect to memory access speed over the last decades, until we hit the "memory wall" at the beginning of the century:
 """
 
-#src #TODO: add memory wall
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![memwall](./figures/mem_wall.png)
+![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio.png)
+*Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
+#nb # > 💡 note: the position of the memory wall is to be considered very approximative.
+#md # \note{the position of the memory wall is to be considered very approximative.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -113,10 +115,57 @@ Defining the $T_\mathrm{eff}$ metric, we assume that:
 #md # \note{Fields within the effective memory access that do not depend on their own history; such fields can be re-computed on the fly or stored on-chip.}
 
 
-
-#src #TODO: add some note about titan single precision, compute ratio and note implications for exercises
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the [exercises](#exercises_-_lecture_9), we invite you to a "time travel"
+When solving the [exercises](#exercises_-_lecture_9) later, we invite you to a "time travel"!
+
+We will ask you to solve them first on the consumer electronics GPU Titan Xm in double precision, even though its double precision floating point peak performance is very low; then, we will ask you to rerun your solutions on the Tesla V100 GPUs.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Why do we talk about "time travel"?
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+It is because the Titan Xm's ratio between compute access speed and memory access speed is much lower for double precision than for single precision.
+
+The ratio for double precision corresponds to what was common in the early 2000s. So we "time-travel" 15 to 20 years back!
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+![flop_to_memaccess_ratio](./figures/flop_to_memaccess_ratio.png)
+*Source: John McCalpin, Texas Advanced Computing Center (modified)*
+"""
+#nb # > 💡 note: the position of the memory wall is to be considered very approximative.
+#md # \note{the position of the memory wall is to be considered very approximative.}
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Let us compute the Titan Xm's ratio for double precision (the specifications are, e.g., found [here](https://www.techpowerup.com/gpu-specs/geforce-gtx-titan-x.c2632)):
+
+$$ \frac{209 ~\mathrm{[GFlop/s]}}{337 ~\mathrm{[GB/s]}}~×~8 = 5 $$
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+So we can do only 5 floating point operations per number read from main memory or written to it.
+"""
+
+#nb # > 💡 note: As a consquence, think in every exercise if you are compute-bound or memory-bound when using the Titan Xm in double precision!
+#md # \note{As a consquence, think in every exercise if you are compute-bound or memory-bound when using the Titan Xm in double precision!}
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+As a side note, in single precision, we can do 80 floating point operations per number read from main memory or written to it:
+
+$$ \frac{6690 ~\mathrm{[GFlop/s]}}{337 ~\mathrm{[GB/s]}}~×~4 = 80 $$
 """
