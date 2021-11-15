@@ -2,47 +2,168 @@
 
 ] activate .
 
+] instantiate
+
 #using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
 
-A = CUDA.ones(4,4,4)
-B = CUDA.zeros(4,4,4)
-cumsum!(B, A; dims=1)
-cumsum!(B, A; dims=2)
-cumsum!(B, A; dims=3)
+function diffusion2D()
+    # Physics
+    lam      = 1.0                                          # Thermal conductivity
+    c0       = 2.0                                          # Heat capacity
+    lx, ly   = 10.0, 10.0                                   # Length of computational domain in dimension x and y
 
-nx = ny = nz = 512
-A = CUDA.rand(Float64, nx, ny, nz);
-B = CUDA.zeros(Float64, nx, ny, nz);
+    # Numerics
+    nx, ny   = 32*2, 32*2                                   # Number of gridpoints in dimensions x and y
+    nt       = 100                                          # Number of time steps
+    dx       = lx/(nx-1)                                    # Space step in x-dimension
+    dy       = ly/(ny-1)                                    # Space step in y-dimension
+    _dx, _dy = 1.0/dx, 1.0/dy
 
-B_ref = CUDA.zeros(Float64, nx, ny, nz);
+    # Array initializations
+    T    = CUDA.zeros(Float64, nx, ny)                      # Temperature
+    T2   = CUDA.zeros(Float64, nx, ny)                      # 2nd array for Temperature
+    Ci   = CUDA.zeros(Float64, nx, ny)                      # 1/Heat capacity
 
-function memcopy!(B, A)
-    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-    @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-    return nothing
+    # Initial conditions
+    Ci .= 1/c0                                              # 1/Heat capacity (could vary in space)
+    T  .= CuArray([10.0*exp(-(((ix-1)*dx-lx/2)/2)^2-(((iy-1)*dy-ly/2)/2)^2) for ix=1:size(T,1), iy=1:size(T,2)]) # Initialization of Gaussian temperature anomaly
+    T2 .= T;                                                 # Assign also T2 to get correct boundary conditions.
+
+    # Time loop
+    dt  = min(dx^2,dy^2)/lam/maximum(Ci)/4.1                # Time step for 2D Heat diffusion
+    opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
+    @gif for it = 1:nt
+        diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)     # Diffusion time step.
+        heatmap(Array(T)'; opts...)                         # Visualization
+        T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)
+    end
 end
 
-threads = (32, 8, 1)
-blocks  = nx.÷threads
-t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    threads = (32, 8)
+    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
+    @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+end
+
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T[ix,iy] + dt*Ci[ix,iy]*(
+                              - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
+                              - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
+                              )
+    end
+    return
+end
+
+nx = ny = 512*32
+T    = CUDA.rand(Float64, nx, ny);
+T2   = CUDA.rand(Float64, nx, ny);
+Ci   = CUDA.rand(Float64, nx, ny);
+lam = _dx = _dy = dt = rand();
 
 # solution
 
-# solution
+T_tot_max, index = findmax(throughputs)
+threads = (32, thread_count[index]÷32)
+blocks  = (nx÷threads[1], ny÷threads[2])
+
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T[ix,iy] + dt*Ci[ix,iy]
+    end
+    return
+end
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = # local thread id, x dimension
+    ty = # local thread id, y dimension
+    T_l = # allocation of a block-local temperature array (in shared memory)
+    @inbounds T_l[tx,ty] = # read the values of the temperature array `T` into shared memory
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = #=read temperature values from shared memory=#  + dt*Ci[ix,iy]
+    end
+    return
+end
 
 # solution
 
-# solution
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx =  # adjust the local thread id in y dimension
+    ty =  # adjust the local thread id in y dimension
+    T_l = # adjust the shared memory allocation
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+    end
+    return
+end
 
-# solution
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=#=adjust the shared memory=# update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
-# solution
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = threadIdx().x+1
+    ty = threadIdx().y+1
+    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds if (threadIdx().x == 1)            #=read the required values to the left halo of `T_l`=# end
+        @inbounds if (threadIdx().x == blockDim().x) #=read the required values to the right halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the bottom halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the top halo of `T_l`=# end
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+    end
+    return
+end
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = threadIdx().x+1
+    ty = threadIdx().y+1
+    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds if (threadIdx().x == 1)            T_l[tx-1,ty] = T[ix-1,iy] end
+        @inbounds if (threadIdx().x == blockDim().x) T_l[tx+1,ty] = T[ix+1,iy] end
+        @inbounds if (threadIdx().y == 1)            T_l[tx,ty-1] = T[ix,iy-1] end
+        @inbounds if (threadIdx().y == blockDim().y) T_l[tx,ty+1] = T[ix,iy+1] end
+        sync_threads()
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]*(
+                    # add the computation of the derivatives
+                    # ...
+                    )
+    end
+    return
+end
+
+diffusion2D()
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 # solution
 

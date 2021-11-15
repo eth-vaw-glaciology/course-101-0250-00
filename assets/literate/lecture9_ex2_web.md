@@ -1,22 +1,20 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 2 - **Advanced data transfer optimisations (part 2)**
+## Exercise 2 - **Advanced data transfer optimisations (part 1)**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
 The goal of this exercise is to:
-- learn how to control registers for storing intermediate results on-chip;
-- learn how to use shared memory (on-chip) to communicate between threads.
+- learn how to use shared memory (on-chip) to avoid main memory accesses.
 
 Prerequisites:
 - the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb))
 - the *Data transfer optimisation notebook* ([`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb))
-- the second *Data transfer optimisation notebook* (Exercise 1 [`lecture9_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture9_ex1.ipynb))
 
 [*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md)
 
 ### Getting started
 
-👉 Download the [`lecture9_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture9_ex2.ipynb) notebook and edit it *(you should have a copy on it in your `lecture09` folder on octopus)*.
+👉 Download the [`lecture9_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture9_ex2.ipynb) notebook and edit it *(you should have a copy of it in your `lecture09` folder on octopus)*.
 
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
@@ -25,158 +23,268 @@ We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a 
 ```
 
 ```julia:ex2
+] instantiate
+```
+
+```julia:ex3
 #using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
 ```
 
-In the last notebook (`3_datatransfer_optimisations.ipynb`), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
-
-Here is the documentation of the function `cumsum!`
-```julia-repl
-help?> CUDA.cumsum!
-  cumsum!(B, A; dims::Integer)
-
-  Cumulative sum of A along the dimension dims, storing the result in B. See
-  also cumsum.
-```
-
-And here is a small example of how cumsum! works for 3-D arrays:
-
-```julia:ex3
-A = CUDA.ones(4,4,4)
-B = CUDA.zeros(4,4,4)
-cumsum!(B, A; dims=1)
-cumsum!(B, A; dims=2)
-cumsum!(B, A; dims=3)
-```
-
-For benchmarking activities, we will allocate again large arrays, matching closely the number of grid points of the array size found best in the introduction notebook (you can modify the value if it is not right for you):
+Let us consider the same 2-D heat diffusion solver as in the second part of the first *Data transfer optimisation notebook* ([`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb)):
 
 ```julia:ex4
-nx = ny = nz = 512
-A = CUDA.rand(Float64, nx, ny, nz);
-B = CUDA.zeros(Float64, nx, ny, nz);
-```
+function diffusion2D()
+    # Physics
+    lam      = 1.0                                          # Thermal conductivity
+    c0       = 2.0                                          # Heat capacity
+    lx, ly   = 10.0, 10.0                                   # Length of computational domain in dimension x and y
 
-Moreover, we preallocate also an array to store reference results obtained from `CUDA.cumsum!` for verification.
+    # Numerics
+    nx, ny   = 32*2, 32*2                                   # Number of gridpoints in dimensions x and y
+    nt       = 100                                          # Number of time steps
+    dx       = lx/(nx-1)                                    # Space step in x-dimension
+    dy       = ly/(ny-1)                                    # Space step in y-dimension
+    _dx, _dy = 1.0/dx, 1.0/dy
 
-```julia:ex5
-B_ref = CUDA.zeros(Float64, nx, ny, nz);
-```
+    # Array initializations
+    T    = CUDA.zeros(Float64, nx, ny)                      # Temperature
+    T2   = CUDA.zeros(Float64, nx, ny)                      # 2nd array for Temperature
+    Ci   = CUDA.zeros(Float64, nx, ny)                      # 1/Heat capacity
 
-Now, we are set up to get started.
+    # Initial conditions
+    Ci .= 1/c0                                              # 1/Heat capacity (could vary in space)
+    T  .= CuArray([10.0*exp(-(((ix-1)*dx-lx/2)/2)^2-(((iy-1)*dy-ly/2)/2)^2) for ix=1:size(T,1), iy=1:size(T,2)]) # Initialization of Gaussian temperature anomaly
+    T2 .= T;                                                 # Assign also T2 to get correct boundary conditions.
 
-If we only consider main memory access, then the `cumsum!` will ideally need to read one array (`A`) and write one array (`B`). No other main memory access should be required. Let us therefore create an ad hoc adaption of the effective memory throughput metric for iterative PDE solvers (presented in the second notebook) to this problem. We will call the metric `T_eff_cs` and compute it as follows:
-`T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it`
-
-The upper bound of `T_eff_cs` is given by the maximum throughput achievable when copying exactly one aray to another. For this specific case, you might have measured in our benchmarks in the introduction notebook a slightly less good performance (measured 550 GB/s with the Tesla P100 GPU) then what we established as `T_peak`. Thus, we will consider here this measured value to be the upper bound of `T_eff_cs`.
-
-We will now adapt the corresponding 2-D memory copy kernel in the most straightforward way to work for 3-D arrays. Then, we will modify this memory copy code in little steps until we have a well performing `cumsum!` GPU function.
-
-Here is the adapted memory copy kernel from the introduction notebook and the `T_tot` we achieve with it (for the first two dimensions, we use again the thread/block configuration that we found best in the introduction notebook and we use one thread in the third dimension; you can modify the values if it is not right for you):
-
-\note{The usage of the variables `A` and `B` is reversed in comparison with the previous notebooks in order to match the documentation of cumsum!.}
-
-```julia:ex6
-function memcopy!(B, A)
-    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-    @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-    return nothing
+    # Time loop
+    dt  = min(dx^2,dy^2)/lam/maximum(Ci)/4.1                # Time step for 2D Heat diffusion
+    opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
+    @gif for it = 1:nt
+        diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)     # Diffusion time step.
+        heatmap(Array(T)'; opts...)                         # Visualization
+        T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)
+    end
 end
 ```
 
-```julia:ex7
-threads = (32, 8, 1)
-blocks  = nx.÷threads
-t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+```julia:ex5
+function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    threads = (32, 8)
+    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
+    @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+end
 ```
 
-Let us first implement the cummulative sum over the third dimension (index `iz`). The first step is to read in A (and write B) in a way that will later allow to easily do the required cumsums, which is an inherently serial operation. However, we want to try to avoid a serious degradation of the memory throughput when doing so.
+```julia:ex6
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T[ix,iy] + dt*Ci[ix,iy]*(
+                              - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
+                              - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
+                              )
+    end
+    return
+end
+```
 
-### Task 1 (grid-stride loops)
+Moreover, for benchmarking activities, we will require again the following arrays and scalars (use again the `nx=ny` found best in the introduction notebook; you can modify the value if it is not right for you):
 
-Modify the above `memcopy!` kernel to read in A and write B in a serial manner with respect to the third dimension (index `iz`), i.e., with parallelization only over the first two dimensions (index `ix` and `iy`). Launch the kernel with the same thread configuration as above and adapt the the block configuration for the third dimension correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
-\note{You need to launch the kernel with only one thread and one block in the third dimension and, inside the kernel, do a loop over the third dimension. Use `iz` as loop index as it will replace the previous `iz` computed from the thread location in the grid.}
-\note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your memory copy kernel.}
+```julia:ex7
+nx = ny = 512*32
+T    = CUDA.rand(Float64, nx, ny);
+T2   = CUDA.rand(Float64, nx, ny);
+Ci   = CUDA.rand(Float64, nx, ny);
+lam = _dx = _dy = dt = rand();
+```
+
+In the introduction notebook, we determined how the performance of memory copy behaved with in function of the number of threads per blocks. We will do the same now for the temperature update kernel.
+
+### Task 1 (Performance evaluation)
+
+Determine the effective memory throughput, `T_eff`, of the kernel `update_temperature!` in function of the number of threads, fixing the number of threads in x dimension to 32.
+\note{You can base yourself on the corresponding activity in the introduction notebook (remember to compute now `T_eff` rather than `T_tot`).}
 
 ```julia:ex8
 # solution
 ```
 
-Great! You just implemented a so called [grid-stride loop](https://developer.nvidia.com/blog/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/). It exhibits a good memory access pattern and it allows to easily reuse, e.g., intermediate results from previous iterations in the loop. You probably observe a `T_tot` that is a bit below the one measured in the previous experiment (measured 520 GB/s with the Tesla P100 GPU). There is certainly room to improve this memory copy kernel a bit, but we will consider it sufficient in order to continue with this exercise.
-
-### Task 2 (controlling registers)
-
-Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 1. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
-\note{Define a variable `cumsum_iz` before the loop and initialize it to 0.0 in order to cumulate the sum.}
-\note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your results against `CUDA.cumsum!` (remember that for the verification, we already preallocated an array `B_ref` at the beginning, which you can use now).}
+Save the best thread/block configuration measured for reusing it later (adapt the code if your variable names above do not match):
 
 ```julia:ex9
-# solution
+T_tot_max, index = findmax(throughputs)
+threads = (32, thread_count[index]÷32)
+blocks  = (nx÷threads[1], ny÷threads[2])
 ```
 
-You should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 1 (measured 520 GB/s with the Tesla P100 GPU). In fact, scalar variables defined in a kernel, like `cumsum_iz`, will be stored in registers as long as there are enough available (if not, then so called [register spilling](https://developer.download.nvidia.com/CUDA/training/register_spilling.pdf) to main memory takes place). As access to register is extremely fast, the summation added in this Task did certainly not reduce the measured performance. It is, once again, the memory copy speed that completely determines the performance of the kernel, because we have successfully controlled the use of registers!
+You could probably observe that this kernel is more sensitive to the thread/block configuration than the memory copy kernel. The reason is that the thread/block configuration directly influences the way the fast memory situated on-chip (here high-level cache and registers) is used in order to avoid redundant main memory accesses. We will now explicitly control part of the the on-chip memory usage, using so called "shared memory", which is repurposed high-level cache. This will give some insights on how certain parameters relate to on-chip memory usage. However, we will not implement a diffusion kernel with shared memory at once, but in little steps.
 
-We will now implement the cummulative sum over the 2nd dimension (index `iy`). As for the previous implementation, the first step is to read in A (and write B) in a way that will later allow to easily do the required cumsums without exhibiting significant memory throughput degradation.
-
-### Task 3 (kernel loops)
-
-Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension (index `iy`), i.e., with parallelization only over the first and the last dimensions (index `ix` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension (i.e. use one thread in the second and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
+Let us start with relating the `update_temperature!` kernel back to the triad memory copy kernel investigated in the introduction notebook. We can observe that if we remove the derivatives from the `update_temperature!` kernel then we end up with a simple triad memory copy kernel, except for an additional if-statement to avoid updating the boundary values (for simplicity, we do not remove the unused function arguments which we will use again in the next experiments):
 
 ```julia:ex10
-# solution
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T[ix,iy] + dt*Ci[ix,iy]
+    end
+    return
+end
 ```
 
-You should observe no big difference between `T_tot` measured here and `T_tot` computed in Task 1 (measured 519 GB/s with the Tesla P100 GPU) as this kernel is accessing memory also in large contiguous chunks.
-
-### Task 4 (controlling registers)
-
-Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 3. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
+This kernel should consequently achieve a `T_tot` of essentially the value of `T_peak` (if an optimal thread/block configuration is used). Moreover, for this case `T_eff = T_tot`. Let us verify quickly that `T_eff` is essentially equal `T_peak` here (measured 561 GB/s with the Tesla P100 GPU):
 
 ```julia:ex11
-# solution
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 ```
 
-Again, you should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 3 (measured 519 GB/s with the Tesla P100 GPU), as you probably expected.
+We will do now our first shared memory experiment with this simple triad kernel.
 
-We will now implement the cumulative sum over the 1st dimension (index `ix`). As for the previous implementations, the first step is to read in A (and write B) in a way that will later allow to easily do the required cumsums without exhibiting significant memory throughput degradation.
+### Task 2 (Shared memory basics)
 
-### Task 5 (kernel loops)
+Modify the above `update_temperature!` kernel (which now does just triad memory copy) as follows: read the values of the temperature array `T` into shared memory; then, subsequently, read the temperature values from there when updating `T2`.
+To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
 
-Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the first dimension (index `ix`), i.e., with parallelization only over the second and third dimensions (index `iy` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the second dimension (i.e. use one thread in the first and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, think about what performance you expect, compute `T_tot` and explain the measured performance.
+\note{Use [`@cuDynamicSharedMem`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem) to allocate the required shared memory}
+\note{Shared memory is block-local, i.e., shared between the threads of a same block.}
+\note{Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [`maxthreads`](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).}
 
 ```julia:ex12
-# solution
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = # local thread id, x dimension
+    ty = # local thread id, y dimension
+    T_l = # allocation of a block-local temperature array (in shared memory)
+    @inbounds T_l[tx,ty] = # read the values of the temperature array `T` into shared memory
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = #=read temperature values from shared memory=#  + dt*Ci[ix,iy]
+    end
+    return
+end
 ```
 
-You likely observe `T_tot` to be an order of magnitude or more below `T_tot` measured in Task 1 and 3 (measured 36 GB/s with the Tesla P100 GPU) because, in contrast to the previous kernels, this kernel accesses memory discontinuously with a large stride (of `nx` numbers) between each requested number.
+### Task 3 (Shared memory basics)
 
-There obviously is no point in creating a `cumsum!` kernel out of this `memcopy!` kernel: the performance could only be the same or worse (even though worse is not to expect). Hence, we will try to improve this memory copy kernel by accessing multiple contiguous numbers from memory, which we can achieve by launching more then one threads in the first dimension, adapting the loop accordingly.
-
-### Task 6 (kernel loops)
-
-Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a time in the first dimension (index `ix`) rather than one number at a time as before. Launch the kernel with just 32 threads, all placed in the first dimension; adapt the the block configuration if you need to. Verify the correctness of your kernel. Then, think about what performance you expect now, compute `T_tot` and explain the measured performance.
-\note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
+Launch the kernel requesting the required amount of shared memory; compute the `T_eff` achieved.
+\note{The `@cuda` macro supports the keyword `shmem` to request the required amount of shared memory; note that it must be indicated in bytes (use sizeof() to get the number of bytes used by the datatype used).}
 
 ```julia:ex13
 # solution
 ```
 
-`T_tot` should now be similar to the one obtained in Task 1 and 3 or even a bit better (measured 534 GB/s with the Tesla P100 GPU) thanks to the additional concurrency compared to the other `memcopy!` versions. We are therefore ready to implement the cummulative sum over the 1st dimension.
+You should not observe any significant change in `T_eff` compared to the previous kernel (measured as before 561 GB/s with the Tesla P100 GPU).
 
-### Task 7 (communication via shared memory)
+When we will add back the derivatives later, then each thread will read values on the left, right, bottom and top of it. We will want the threads to read the temperature values from the block-local array `T_l`, not from `T` anymore. However, right now each thread maps directly to a cell of `T_l`; thus, the threads at the boundary of the block would read out-of-bounds when reading the "neighbour cells". We therefore need to add a "halo" to `T_l` that will contain the required values.
 
-Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 6. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
-\note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
+### Task 4 (Shared memory)
+
+Modify the `update_temperature!` kernel from Task 2 as follows: add a "halo" of size `1` to `T_l` on each side, i.e. on the left, right, bottom and top. To this purpose, you need to modify the allocation of `T_l` and adapt the local thread ids `tx` and `ty` accordingly. Then, launch the new kernel adjusting the required amount of shared memory and compute `T_eff`.
+To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
 
 ```julia:ex14
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx =  # adjust the local thread id in y dimension
+    ty =  # adjust the local thread id in y dimension
+    T_l = # adjust the shared memory allocation
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+    end
+    return
+end
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=#=adjust the shared memory=# update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+```
+
+`T_eff` did certainly not significantly change, as you probably expected as we did not access more data than before (measured as before 561 GB/s with the Tesla P100 GPU).
+
+### Task 5 (Shared memory)
+
+Modify the `update_temperature!` kernel from Task 4 as follows: read the required values into the newly added halo of `T_l`. Then, compute again `T_eff`.
+To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
+
+```julia:ex15
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = threadIdx().x+1
+    ty = threadIdx().y+1
+    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds if (threadIdx().x == 1)            #=read the required values to the left halo of `T_l`=# end
+        @inbounds if (threadIdx().x == blockDim().x) #=read the required values to the right halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the bottom halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the top halo of `T_l`=# end
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+    end
+    return
+end
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+```
+
+`T_eff` certainly decreased a bit due to the additional read-in of the halo of `T_l` (measured 538 GB/s with the Tesla P100 GPU), except if the compiler would have understood that the halo is never used and therefore never done these additional reads. In order to create the 2-D diffusion kernel using shared memory, the last step is to add back the derivatives.
+
+### Task 6 (Shared memory)
+
+Modify the `update_temperature!` kernel from Task 5 as follows: add back the derivatives that we removed at the beginning of the notebook and modify them to read the temperature from `T_l` rather then from `T`. Then, verify that the diffusion works as expected and compute again `T_eff`.
+
+To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
+
+```julia:ex16
+# hint
+function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    tx = threadIdx().x+1
+    ty = threadIdx().y+1
+    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    @inbounds T_l[tx,ty] = T[ix,iy]
+    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+        @inbounds if (threadIdx().x == 1)            T_l[tx-1,ty] = T[ix-1,iy] end
+        @inbounds if (threadIdx().x == blockDim().x) T_l[tx+1,ty] = T[ix+1,iy] end
+        @inbounds if (threadIdx().y == 1)            T_l[tx,ty-1] = T[ix,iy-1] end
+        @inbounds if (threadIdx().y == blockDim().y) T_l[tx,ty+1] = T[ix,iy+1] end
+        sync_threads()
+        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]*(
+                    # add the computation of the derivatives
+                    # ...
+                    )
+    end
+    return
+end
+
+diffusion2D()
+
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+```
+
+\note{The we have added a call to `sync_threads()` at the end of all reads into shared memory (i.e. `T_l`) in order to ensure that no thread tries to read a from a "neighboring cell" before it contains the required value.}
+
+`T_eff` should not have decreased significantly when adding back the derivatives (measured, as in Task 5, 538 GB/s with the Tesla P100 GPU) even though they constitute the major part of the computations! This confirms one more time empirically that the performance of solvers as the above is essentially defined by how much we can avoid redundant main memory accesses.
+
+### Task 7 (Performance evaluation)
+
+Compute by how much percent you can improve the performance of the solver at most.
+
+```julia:ex17
 # solution
 ```
 
-`T_eff_cs` is probably significantly less good than the one obtained for the cumulative sums over the other dimensions, but still quite good if we keep in mind the `T_tot` achieved with the first memcopy manner in Task 5. A good strategy for tackling an optimal implementation would certainly be to use warp-level functions (and if needed a more complex summation algorithm).
+Congratulations! You have implemented a 2-D diffusion solver using shared memory!
 
