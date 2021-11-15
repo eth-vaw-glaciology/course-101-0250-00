@@ -602,6 +602,11 @@ You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-gl
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # > 💡 note: Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).
+#md # \warn{Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).}
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Towards Stokes II: Navier-Stokes flow
 
