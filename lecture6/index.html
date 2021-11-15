@@ -424,8 +424,8 @@ qTy  = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx-<span class=hljs
 dTdt = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx-<span class=hljs-number >2</span>, ny-<span class=hljs-number >2</span>);
 lam = _dx = _dy = dt = rand();</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> ... <span class=hljs-keyword >end</span>
-T_tot_lb = .../<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> diffusion2D_step!($T, $Ci, $qTx, $qTy, $dTdt, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+T_tot_lb = <span class=hljs-number >11</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>Save the measured minimal runtime and the computed <code>T_tot_lb</code> in other variables &#40;<code>t_it_task1</code> and <code>T_tot_lb_task1</code>&#41; in order not to overwrite them later &#40;adapt these two lines if you used other variable names&#33;&#41;; moreover, we will remove the arrays we do no longer need in order to save space:</p>
 <pre><code class="julia hljs">t_it_task1 = t_it
 T_tot_lb_task1 = T_tot_lb
@@ -486,16 +486,21 @@ CUDA.unsafe_free!(dTdt)</code></pre>
 <div class=messg ><strong>hint</strong>: Only add the <code>@inbounds</code> macro to the function once you have verified that it work as they should. Remember that outside of these exercises it can be more convenient not to use the <code>@inbounds</code> macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : <code>julia --check-bounds&#61;no ...</code></div></div>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
 <span class=hljs-meta >@inbounds</span> <span class=hljs-meta >@views</span> <span class=hljs-keyword >function</span> diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    T2[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .= T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+ dt.* ...
+    T2[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .= T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+ dt.*Ci[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>].*(                        <span class=hljs-comment ># T_new = T_old + ∂t 1/cp (</span>
+                            .- (   (.-lam.*(T[<span class=hljs-number >3</span>:<span class=hljs-keyword >end</span>  ,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .- T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]).*_dx)
+                                .- (.-lam.*(T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .- T[<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >2</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]).*_dx)).*_dx  <span class=hljs-comment >#         - ∂(-λ ∂T/∂x)/∂x</span>
+                            .- (   (.-lam.*(T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >3</span>:<span class=hljs-keyword >end</span>  ] .- T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]).*_dy)
+                                .- (.-lam.*(T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .- T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >2</span>]).*_dy)).*_dy  <span class=hljs-comment >#         - ∂(-λ ∂T/∂y)/∂y</span>
+                            )                                                                      <span class=hljs-comment >#         )</span>
 <span class=hljs-keyword >end</span></code></pre>
 <h3 id=task_3_benchmarking ><a href="#task_3_benchmarking" class=header-anchor >Task 3 &#40;Benchmarking&#41;</a></h3>
 <p>Benchmark the new function <code>diffusion2D_step&#33;</code> and compute the runtime speed-up compared to the function benchmarked in Task 1. Then, compute <code>T_tot_lb</code> and the ratio between this <code>T_tot_lb</code> and the one obtained in Task 1.</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-T2 = ...
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> ...; synchronize() <span class=hljs-keyword >end</span>
+T2 = CUDA.zeros(<span class=hljs-built_in >Float64</span>, nx, ny);
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
 speedup = t_it_task1/t_it
-T_tot_lb = .../<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
-ratio_T_tot_lb = ...</code></pre>
+T_tot_lb = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1</code></pre>
 <p>Save the measured minimal runtime and the computed T<em>tot</em>lb in other variables &#40;<code>t_it_task3</code> and <code>T_tot_lb_task3</code>&#41; in order not to overwrite them later &#40;adapt these two lines if you used other variable names&#33;&#41;:</p>
 <pre><code class="julia hljs">t_it_task3 = t_it
 T_tot_lb_task3 = T_tot_lb</code></pre>
@@ -513,27 +518,30 @@ T_tot_lb_task3 = T_tot_lb</code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Only add the <code>@inbounds</code> macro to the function once you have verified that it work as they should &#40;as in task 2&#41;.</div></div>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-<span class=hljs-keyword >function</span> diffusion2D_step!(...)
-    threads = (..., ...)
-    blocks  = (size(...)÷threads[<span class=hljs-number >1</span>], size(...)÷threads[<span class=hljs-number >2</span>])
-    <span class=hljs-meta >@cuda</span> ...
+<span class=hljs-keyword >function</span> diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    threads = (<span class=hljs-number >32</span>, <span class=hljs-number >8</span>)
+    blocks  = (size(T2,<span class=hljs-number >1</span>)÷threads[<span class=hljs-number >1</span>], size(T2,<span class=hljs-number >2</span>)÷threads[<span class=hljs-number >2</span>])
+    <span class=hljs-meta >@cuda</span> blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
 <span class=hljs-keyword >end</span>
 
-<span class=hljs-keyword >function</span> update_temperature!(...)
-    ix = ...
-    iy = ...
-    <span class=hljs-keyword >if</span> (ix... &amp;&amp; iy... )
-        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*( ... ))
+<span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
+        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
+                              - ((-lam*(T[ix+<span class=hljs-number >1</span>,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-<span class=hljs-number >1</span>,iy])*_dx))*_dx
+                              - ((-lam*(T[ix,iy+<span class=hljs-number >1</span>] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-<span class=hljs-number >1</span>])*_dy))*_dy
+                              ))
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span>
 <span class=hljs-keyword >end</span></code></pre>
 <h3 id=task_5_benchmarking ><a href="#task_5_benchmarking" class=header-anchor >Task 5 &#40;Benchmarking&#41;</a></h3>
 <p>Just like in Task 3, benchmark the new function <code>diffusion2D_step&#33;</code> and compute the runtime speedup compared to the function benchmarked in Task 1. Then, compute <code>T_tot_lb</code> and the ratio between this <code>T_tot_lb</code> and the one obtained in Task 1.</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> ...; synchronize() <span class=hljs-keyword >end</span>
-speedup = ...
-T_tot_lb = .../<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
-ratio_T_tot_lb = ...</code></pre>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+speedup = t_it_task1/t_it
+T_tot_lb = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
+ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1</code></pre>
 <p>The runtime speedup is probably even higher &#40;a speedup of factor 5 measured with the Tesla P100 GPU&#41;, even though <code>T_tot_lb</code> is probably somewhat similar to the one obtained in task 1 &#40;524 GB/s with the Tesla P100 GPU, i.e about 36&#37; above <code>T_tot_lb</code> measured in task 1&#41;. We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.</p>
 <p>To this aim, let us recall first the reflections made after benchmarking the original GPU array programming code in Task 1:</p>
 <blockquote>
@@ -547,9 +555,9 @@ ratio_T_tot_lb = ...</code></pre>
 <h3 id=task_6_benchmarking ><a href="#task_6_benchmarking" class=header-anchor >Task 6 &#40;Benchmarking&#41;</a></h3>
 <p>Compute the effective memory throughput, <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant=normal >e</mi><mi mathvariant=normal >f</mi><mi mathvariant=normal >f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">T_\mathrm{eff}</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.83333em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathrm mtight">e</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span></span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, for the solvers benchmarked in Task 1, 3 and 5 &#40;you do not need to redo any benchmarking, but you can compute it based on the saved measured runtimes in these three tasks&#41; and recompute the speedup achieved in Task 3 and 5 based on <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant=normal >e</mi><mi mathvariant=normal >f</mi><mi mathvariant=normal >f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">T_\mathrm{eff}</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.83333em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathrm mtight">e</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span></span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> instead of based on the runtime; compare the newly computed speedups with the previous.</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-T_eff_task1 = .../t_it_task1
-T_eff_task3 = .../t_it_task3
-T_eff_task5 = .../t_it
+T_eff_task1 = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it_task1
+T_eff_task3 = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it_task3
+T_eff_task5 = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
 speedup_Teff_task3 = T_eff_task3/T_eff_task1
 speedup_Teff_task5 = T_eff_task5/T_eff_task1</code></pre>
 <p>Did the speedups you recomputed differ from the previous ones?</p>
