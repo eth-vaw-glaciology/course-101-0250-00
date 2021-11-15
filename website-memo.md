@@ -5,7 +5,7 @@ This document lists the basics on how to edit the course website accessible at h
 
 ## Franklin static website
 
-To test the website locally (or after making the a pull from Git):
+To test the website locally (or after making a pull from Git):
 ```julia-repl
 julia> using Franklin
 
