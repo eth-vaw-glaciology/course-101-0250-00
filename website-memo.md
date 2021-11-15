@@ -7,9 +7,7 @@ This document lists the basics on how to edit the course website accessible at h
 
 To test the website locally (or after making a pull from Git):
 ```julia-repl
-julia> using Franklin
-
-julia> using NodeJS
+julia> using Franklin, NodeJS
 
 julia> serve(clear=true)
 ```
