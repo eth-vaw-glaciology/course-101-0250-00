@@ -145,6 +145,8 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <p>You can find the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl"><code>diffusion_2D_perf_multixpu.jl</code></a> script in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts">script/</a> folder.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if <code>USE_GPU &#61; false</code>; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.</div></div>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Because of an issue most probably with CUDA.jl, you&#39;ll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI &#40;as we are doing here&#41;. To enforce this compatibility, type <code>add CUDA@v3.3.6</code> whithin the REPL in package mode in your project &#40;having ensured to launch Julia with the <code>--project</code> flag&#41;.</div></div>
 <h2 id=towards_stokes_ii_navier-stokes_flow ><a href="#towards_stokes_ii_navier-stokes_flow" class=header-anchor >Towards Stokes II: Navier-Stokes flow</a></h2>
 <p>Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.</p>
 <p>In this final section, we will see how to turn the elastic wave solver into a weakly compressible viscous flow solver with inertia - a problem part of the <a href="https://en.wikipedia.org/wiki/Navier–Stokes_equations">Navier-Stokes equations</a>. From this point, we could turn transient physics into numerics and use the solver to converge an incompressible viscous Stokes flow to the steady state.</p>
@@ -453,6 +455,8 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <li><p>Deploy it on multiple XPUs using ImplicitGlobalGrid.jl</p>
 
 </ul>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Because of an issue most probably with CUDA.jl, you&#39;ll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI &#40;as we are doing here&#41;. To enforce this compatibility, type <code>add CUDA@v3.3.6</code> whithin the REPL in package mode in your project &#40;having ensured to launch Julia with the <code>--project</code> flag&#41;.</div></div>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>Starting from the <code>acoustic_2D_perf_xpu.jl</code> script you developed for exercise 2 &#40;lecture 7&#41; &#40;also available in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">scripts/</a> folder after homework 7 due date&#41;, create a multi-XPU version adding ImplicitGlobalGrid features to run on multiple XPUs.</p>
 <p>Follow the steps discussed in lecture 8 in the <a href="#using_implicitglobalgridjl">Using <code>ImplicitGlobalGrid.jl</code></a> Section.</p>

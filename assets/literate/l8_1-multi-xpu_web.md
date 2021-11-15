@@ -356,6 +356,8 @@ You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-gl
 
 \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
+\warn{Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).}
+
 ## Towards Stokes II: Navier-Stokes flow
 
 Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.

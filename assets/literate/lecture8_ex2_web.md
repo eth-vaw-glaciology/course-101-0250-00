@@ -13,6 +13,8 @@ In this exercise, you will:
 - Make it XPU compatible using ParallelStencil.jl
 - Deploy it on multiple XPUs using ImplicitGlobalGrid.jl
 
+\warn{Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).}
+
 ### Task 1
 
 Starting from the `acoustic_2D_perf_xpu.jl` script you developed for exercise 2 (lecture 7) (also available in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder after homework 7 due date), create a multi-XPU version adding ImplicitGlobalGrid features to run on multiple XPUs.
