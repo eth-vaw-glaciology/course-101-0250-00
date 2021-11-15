@@ -77,3 +77,5 @@ md"""
 
 ![steady_1D_ex4](../assets/literate_figures/steady_1D_ex4.png)
 """
+
+

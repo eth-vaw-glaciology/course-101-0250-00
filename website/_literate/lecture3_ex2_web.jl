@@ -26,3 +26,5 @@ Use `nx = 128` and `ny = 129` grid points and the same parameters as for exercis
 
 Create a 3-panels plot that shows the 2D pressure $P$ and the velocity $V_x$ fields, as well as the 1D cross-section of the pressure field at $Ly/2$.
 """
+
+

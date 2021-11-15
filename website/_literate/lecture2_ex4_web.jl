@@ -43,3 +43,5 @@ For this week, edit the `README.md` of your private repository:
 - Then `commit` the change and `push` it.
 - Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) in the _git commit hash (SHA)_ activity.
 """
+
+

@@ -49,3 +49,5 @@ Report the initial and final distribution of concentration on a figure with axis
 
 Repeat the exercise but introduce the non-dimensional [Damköhler number](https://en.wikipedia.org/wiki/Damköhler_numbers) $Da = L^2/D/ξ$ as physical quantity defining the diffusion coefficient D as a `# Derived physics` quantity. Confirm the if $Da < 0.1$ most of the mass diffuses away from $C_{eq}$, and the opposite holds for $Da > 10$.
 """
+
+

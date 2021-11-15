@@ -46,3 +46,5 @@ Report the total time it takes for the last, out of 5, volcanic bombs to hit the
 Repeat the exercise 1 but vectorise all your code, i.e. make use of broadcasting capabilities in Julia (using `.` operator) to only have a single loop for advancing in time.
 
 """
+
+

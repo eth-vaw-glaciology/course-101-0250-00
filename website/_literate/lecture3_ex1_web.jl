@@ -39,3 +39,5 @@ Record the pressure at position $(x,y) = (5,7)$ during the entire simulation and
 
 #nb # > 💡 hint: Check out e.g. [here](https://docs.juliaplots.org/latest/tutorial/#Combining-Multiple-Plots-as-Subplots) for inspiration about subplots.
 #md # \note{Check out e.g. [here](https://docs.juliaplots.org/latest/tutorial/#Combining-Multiple-Plots-as-Subplots) for inspiration about subplots.}
+
+

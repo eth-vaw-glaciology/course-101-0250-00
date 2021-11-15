@@ -128,3 +128,5 @@ Define a yearly variable interest rate of 0.5% +/- 1%. Report the final wealth a
 md"""
 🎉 Good job! You are done with **Exercise 1**
 """
+
+

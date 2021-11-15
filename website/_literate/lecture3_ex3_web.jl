@@ -41,3 +41,5 @@ Create a new Julia script `acoustic_2D_v3.jl` for this homework. The script shou
 
 Use `nx = 128` and `ny = 129` grid points and the same parameters as for exercise 1 and 2.
 """
+
+
