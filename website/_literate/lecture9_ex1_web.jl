@@ -2,7 +2,7 @@ md"""
 ## Exercise 1 - **Push-ups with memory copy**
 """
 
-#md # 👉 See [Logistics](/logistics/#submission) for submission details (this exercise don't need to be handed-in).
+#md # 👉 See [Logistics](/logistics/#submission) for submission details (this exercise doesn't need to be handed-in).
 
 md"""
 The goal of this exercise is to:
