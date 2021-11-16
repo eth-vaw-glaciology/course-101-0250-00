@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 1 - **Push-ups with memory copy**
 
-👉 See [Logistics](/logistics/#submission) for submission details (this exercise don't need to be handed-in).
+👉 See [Logistics](/logistics/#submission) for submission details (this exercise doesn't need to be handed-in).
 
 The goal of this exercise is to:
 - ensure you can run a Julia notebook on your octopus node
