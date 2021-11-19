@@ -88,8 +88,8 @@ The idea of this fake parallelisation approach is the following:
 CL[2:end-1] .= CL[2:end-1] .+ dt*D*diff(diff(CL)/dx)/dx
 CR[2:end-1] .= CR[2:end-1] .+ dt*D*diff(diff(CR)/dx)/dx
 # Update boundaries (MPI)
-CL[end] = ...
-CR[1]   = ...
+CL[end] = CR[2]
+CR[1]   = CL[end-1]
 # Global picture
 C .= [CL[1:end-1]; CR[2:end]]
 ```
@@ -104,8 +104,8 @@ Then, add the required boundary update:
 
 ```julia
 # Update boundaries (MPI)
-CL[end] = ...
-CR[1]   = ...
+CL[end] = CR[2]
+CR[1]   = CL[end-1]
 ```
 
 in order make the code work properly and run it again. Note what has changed in the visualisation.
@@ -121,7 +121,8 @@ for ip = 1:np # compute physics locally
     C[2:end-1,ip] .= C[2:end-1,ip] .+ dt*D*diff(diff(C[:,ip])/dxg)/dxg
 end
 for ip = 1:np-1 # update boundaries
-   # ...
+   C[end,ip  ] = C[    2,ip+1]
+   C[  1,ip+1] = C[end-1,ip  ]
 end
 for ip = 1:np # global picture
     i1 = 1 + (ip-1)*(nx-2)
@@ -137,7 +138,7 @@ The previous simple initial conditions can be easily defined without computing a
 # Initial condition
 for ip = 1:np
     for ix = 1:nx
-        x[ix,ip] = ...
+       x[ix,ip] = ( (ip-1)*(nx-2) + (ix-0.5) )*dxg - 0.5*lx
         C[ix,ip] = exp(-x[ix,ip]^2)
     end
     i1 = 1 + (ip-1)*(nx-2)

@@ -2,16 +2,17 @@
 CL[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .= CL[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+ dt*D*diff(diff(CL)/dx)/dx
 CR[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .= CR[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+ dt*D*diff(diff(CR)/dx)/dx
 <span class=hljs-comment ># Update boundaries (MPI)</span>
-CL[<span class=hljs-keyword >end</span>] = ...
-CR[<span class=hljs-number >1</span>]   = ...
+CL[<span class=hljs-keyword >end</span>] = CR[<span class=hljs-number >2</span>]
+CR[<span class=hljs-number >1</span>]   = CL[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]
 <span class=hljs-comment ># Global picture</span>
 C .= [CL[<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]; CR[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>]]</code></pre> <p>We see that a correct boundary update will be the critical part for a successful implementation. In our approach, we need an overlap of 2 cells between <code>CL</code> and <code>CR</code> in order to avoid any wrong computations at the transition between the left and right domains.</p> <h3 id=task_1_fake_parallelisation_with_2_fake_processes ><a href="#task_1_fake_parallelisation_with_2_fake_processes" class=header-anchor >Task 1 &#40;fake parallelisation with 2 fake processes&#41;</a></h3> <p>Run the &quot;fake parallelisation&quot; 1-D diffusion code <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_2procs.jl"><code>diffusion_1D_2procs.jl</code></a> &#40;also available in your <code>/scratch/&lt;username&gt;/lecture08</code> directory on <code>octopus</code>&#41;, which is missing the boundary updates of the 2 fake processes and describe what you see in the visualisation.</p> <p>Then, add the required boundary update:</p> <pre><code class="julia hljs"><span class=hljs-comment ># Update boundaries (MPI)</span>
-CL[<span class=hljs-keyword >end</span>] = ...
-CR[<span class=hljs-number >1</span>]   = ...</code></pre> <p>in order make the code work properly and run it again. Note what has changed in the visualisation.</p> <div class=img-med ><img src="../assets/literate_figures/l8-diff_1D_2procs_1.gif" alt="diffusion 1D 2 procs" /></div> <p>The next step will be to generalise the fake parallelisation with <code>2</code> fake processes to work with <code>n</code> fake processes. The idea of this generalised fake parallelisation approach is the following:</p> <pre><code class="julia hljs"><span class=hljs-keyword >for</span> ip = <span class=hljs-number >1</span>:np <span class=hljs-comment ># compute physics locally</span>
+CL[<span class=hljs-keyword >end</span>] = CR[<span class=hljs-number >2</span>]
+CR[<span class=hljs-number >1</span>]   = CL[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]</code></pre> <p>in order make the code work properly and run it again. Note what has changed in the visualisation.</p> <div class=img-med ><img src="../assets/literate_figures/l8-diff_1D_2procs_1.gif" alt="diffusion 1D 2 procs" /></div> <p>The next step will be to generalise the fake parallelisation with <code>2</code> fake processes to work with <code>n</code> fake processes. The idea of this generalised fake parallelisation approach is the following:</p> <pre><code class="julia hljs"><span class=hljs-keyword >for</span> ip = <span class=hljs-number >1</span>:np <span class=hljs-comment ># compute physics locally</span>
     C[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,ip] .= C[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,ip] .+ dt*D*diff(diff(C[:,ip])/dxg)/dxg
 <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >for</span> ip = <span class=hljs-number >1</span>:np-<span class=hljs-number >1</span> <span class=hljs-comment ># update boundaries</span>
-   <span class=hljs-comment ># ...</span>
+   C[<span class=hljs-keyword >end</span>,ip  ] = C[    <span class=hljs-number >2</span>,ip+<span class=hljs-number >1</span>]
+   C[  <span class=hljs-number >1</span>,ip+<span class=hljs-number >1</span>] = C[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,ip  ]
 <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >for</span> ip = <span class=hljs-number >1</span>:np <span class=hljs-comment ># global picture</span>
     i1 = <span class=hljs-number >1</span> + (ip-<span class=hljs-number >1</span>)*(nx-<span class=hljs-number >2</span>)
@@ -19,7 +20,7 @@ CR[<span class=hljs-number >1</span>]   = ...</code></pre> <p>in order make the 
 <span class=hljs-keyword >end</span></code></pre> <p>The array <code>C</code> contains now <code>n</code> local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of <code>C</code> &#40;ip&#41;. The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays. We only need &quot;global&quot; knowledge in the definition of the initial condition.</p> <p>The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates. In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID &#40;<code>ip</code>&#41;, the cell ID &#40;<code>ix</code>&#41;, the array size &#40;<code>nx</code>&#41;, the overlap of the local domains &#40;<code>2</code>&#41; and the grid spacing of the global grid &#40;<code>dxg</code>&#41;; moreover, the origin of the coordinate system can be moved to any position using the global domain length &#40;<code>lx</code>&#41;:</p> <pre><code class="julia hljs"><span class=hljs-comment ># Initial condition</span>
 <span class=hljs-keyword >for</span> ip = <span class=hljs-number >1</span>:np
     <span class=hljs-keyword >for</span> ix = <span class=hljs-number >1</span>:nx
-        x[ix,ip] = ...
+       x[ix,ip] = ( (ip-<span class=hljs-number >1</span>)*(nx-<span class=hljs-number >2</span>) + (ix-<span class=hljs-number >0.5</span>) )*dxg - <span class=hljs-number >0.5</span>*lx
         C[ix,ip] = exp(-x[ix,ip]^<span class=hljs-number >2</span>)
     <span class=hljs-keyword >end</span>
     i1 = <span class=hljs-number >1</span> + (ip-<span class=hljs-number >1</span>)*(nx-<span class=hljs-number >2</span>)
@@ -597,7 +598,7 @@ d = <span class=hljs-built_in >Dict</span>(:X=&gt; X[inds], :P=&gt;P[inds])
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 16, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 19, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
