@@ -10,7 +10,7 @@ noeval = true
 
 > **Agenda**\
 > :books: Final projects\
-> :computer: Q&A\
+> :computer: MPI & Advanced optimisations Q&A\
 > :construction: Exercises: Q&A
 
 ---
@@ -69,7 +69,8 @@ Selecting a project of your choice among 3 possible directions:
     - [2D Shallow water equations](https://en.wikipedia.org/wiki/Shallow_water_equations)
     - [3D Thermo-mechanically coupled viscous flow](https://doi.org/10.1093/gji/ggy434)
     - [3D elastic wave propagation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements)
-    - [3D viscous Stokes flow]
+    - 3D viscous Stokes flow
+    - viscous or elastic poromechanics
     - more ...
 
 ## Getting started with the final projects
@@ -83,14 +84,14 @@ The following steps will get you started with the final projects:
     - your project mate
     - a brief description of your choice for **_part 2_**
     - a link to your final project GitHub repository
-    - what is missing in this list
+    - _anything else missing in this list_
 6. Work on you final project, asking for help
     - in the Element _Helpdesk_ channel for general question
     - as **GitHub "issue"** for project specific questions
 
 ## Project submission
 
-Submission deadline for the project is XXX. Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub's doc](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
+Submission deadline for the project is XXX. Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
 ## Project grading
 
