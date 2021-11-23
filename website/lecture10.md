@@ -27,7 +27,7 @@ Final projects will provide 60% of the course grade. We recommend you work in te
 
 _Note that a single GitHub repository is sufficient per project._
 
-**Project's due date is XXX (enforced by a "release tag v1.0.0").**
+**Project's due date is December 23, 2021 -- 23h59 CET (enforced by a "release tag v1.0.0").**
 
 [**Project template** available here](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) - copy or clone to get started.
 
@@ -91,7 +91,11 @@ The following steps will get you started with the final projects:
 
 ## Project submission
 
-Submission deadline for the project is XXX. Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
+Submission deadline for the project is **December 23, 2021 -- 23h59 CET**.
+
+Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
+
+Also, add the last commit HSA to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-10) as for the exercises.
 
 ## Project grading
 
