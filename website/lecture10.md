@@ -36,7 +36,7 @@ _Note that a single GitHub repository is sufficient per project._
 Final projects compose of 2 distinct parts (50% of the project mark each) to be handed-in on a single GitHub repository, including scripts, documentation (and code documentation), unit and reference testing, Continuous Integration (CI - using e.g. GitHub Actions), instructions to run the software and reproduce the results, references.
 
 ### Part 1: 3D multi-XPUs diffusion solver
-Steady state solution of a diffusive process for given physical time steps using the pseudo-transient acceleration (using the so-called "[dual-time]((/lecture4/#implicit_solutions))" method).
+Steady state solution of a diffusive process for given physical time steps using the pseudo-transient acceleration (using the so-called "[dual-time](/lecture4/#implicit_solutions)" method).
 
 Your task in **_part 1_** is to solve the linear diffusion equation in 3D
 
