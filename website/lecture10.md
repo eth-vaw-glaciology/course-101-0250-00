@@ -57,11 +57,9 @@ As initial condition, define a Gaussian distribution of $H$ centred in the domai
 
 Implement the 3D diffusion equation (1) using a [dual-time stepping](/lecture4/#implicit_solutions) approach, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions).
 
-For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D.
+For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D. For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting graphical rendering capabilities.
 
-For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting grpahical rendering capabilities.
-
-Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in `FinalProjectRepo.jl/docs/` regarding the specific steps we expect you to work and report on.
+👉 Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in [FinalProjectRepo.jl/docs/](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/) regarding the **specific steps we expect you to work and report on**.
 
 \note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (e.g. `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
