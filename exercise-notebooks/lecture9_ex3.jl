@@ -32,7 +32,7 @@ We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a 
 
 #-
 
-#using IJulia
+#src #using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
@@ -116,7 +116,27 @@ Modify the above `memcopy!` kernel to read in A and write B in a serial manner w
 #md # \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your memory copy kernel.}
 
 #-
-## solution
+#hint ## hint
+#hint function memcopy!(B, A)
+#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint     for iz #...
+#hint         #...
+#hint     end
+#hint     return nothing
+#hint end
+#hint 
+#hint threads = (32, 8, 1)
+#hint blocks  = (nx÷threads[1], ny÷threads[2], 1)
+#hint #-
+#hint ## Verification
+#hint B .= 0.0;
+#hint @cuda #...
+#hint B ≈ A
+#hint #-
+#hint ## Performance
+#hint t_it = @belapsed begin #...# end
+#hint T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 #sol function memcopy!(B, A)
 #sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
 #sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -154,7 +174,28 @@ Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dim
 #md # \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your results against `CUDA.cumsum!` (remember that for the verification, we already preallocated an array `B_ref` at the beginning, which you can use now).}
 
 #-
-## solution
+#hint ## hint
+#hint function cumsum_dim3!(B, A)
+#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint     cumsum_iz = 0.0
+#hint     for iz #...
+#hint         #...
+#hint     end
+#hint     return nothing
+#hint end
+#hint 
+#hint ## Verification
+#hint @cuda #...
+#hint CUDA.cumsum!(B_ref, A; dims=3);
+#hint B ≈ B_ref
+#hint #-
+#hint ## Performance
+#hint t_it = @belapsed begin @cuda #...# end
+#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint #-
+#hint t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
+#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 #sol function cumsum_dim3!(B, A)
 #sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
 #sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -190,7 +231,23 @@ md"""
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension (index `iy`), i.e., with parallelization only over the first and the last dimensions (index `ix` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension (i.e. use one thread in the second and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
 """
 #-
-## solution
+#hint ## hint
+#hint function memcopy!(B, A)
+#hint     #...
+#hint     return nothing
+#hint end
+#hint 
+#hint threads = (256, 1, 1)
+#hint blocks  = #...
+#hint #-
+#hint ## Verification
+#hint B .= 0.0;
+#hint @cuda #...
+#hint B ≈ A
+#hint #-
+#hint ## Performance
+#hint t_it = @belapsed begin @cuda #...# end
+#hint T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 #sol function memcopy!(B, A)
 #sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
 #sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -223,7 +280,26 @@ Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dim
 """
 
 #-
-## solution
+#hint ## hint
+#hint function cumsum_dim2!(B, A)
+#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#hint     cumsum_iy = 0.0
+#hint     #...
+#hint     return nothing
+#hint end
+#hint 
+#hint ## Verification
+#hint @cuda #...
+#hint CUDA.cumsum!(B_ref, A; dims=2);
+#hint B ≈ B_ref
+#hint #-
+#hint ## Performance
+#hint t_it = @belapsed begin #...# end
+#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint #-
+#hint t_it = @belapsed #...
+#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 #sol function cumsum_dim2!(B, A)
 #sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
 #sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -260,7 +336,21 @@ Modify the `memcopy!` kernel given in the beginning to read in A and write B in 
 """
 
 #-
-## solution
+#hint ## hint
+#hint function memcopy!(B, A)
+#hint     #...
+#hint     return nothing
+#hint end
+#hint 
+#hint threads = (1, 256, 1)
+#hint blocks  = #...
+#hint #-
+#hint ## Verification
+#hint #...
+#hint #-
+#hint ## Performance
+#hint t_it = #...
+#hint T_tot = #...
 #sol function memcopy!(B, A)
 #sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
 #sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -297,7 +387,21 @@ Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a ti
 #md # \note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
 
 #-
-## solution
+#hint ## hint
+#hint function memcopy!(B, A)
+#hint     #...
+#hint     return nothing
+#hint end
+#hint 
+#hint threads = #...
+#hint blocks  = #...
+#hint #-
+#hint ## Verification
+#hint #...
+#hint #-
+#hint ## Performance
+#hint t_it = #...
+#hint T_tot = #...
 #sol function memcopy!(B, A)
 #sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
 #sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -333,7 +437,26 @@ Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dim
 #md # \note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
 
 #-
-## solution
+#hint ## hint
+#hint function cumsum_dim1!(B, A)
+#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#hint     tx = threadIdx().x
+#hint     shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
+#hint     cumsum_ix = 0.0
+#hint     #...
+#hint     return nothing
+#hint end
+#hint 
+#hint ## Verification
+#hint #...
+#hint #-
+#hint ## Performance
+#hint t_it = #...
+#hint T_eff_cs = #...
+#hint #-
+#hint t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
+#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 #sol function cumsum_dim1!(B, A)
 #sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
 #sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z

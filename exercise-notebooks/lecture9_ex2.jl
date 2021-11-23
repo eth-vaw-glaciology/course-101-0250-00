@@ -30,7 +30,7 @@ We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a 
 
 #-
 
-#using IJulia
+#src #using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
@@ -106,6 +106,9 @@ md"""
 In the introduction notebook, we determined how the performance of memory copy behaved with in function of the number of threads per blocks. We will do the same now for the temperature update kernel.
 """
 
+#nb # > 💡 Hint: Make sure to have no other notebook **kernel** running; array sizes are close to device DRAM max and you may get an out-of-mem error otherwise.
+#md # \note{Make sure to have no other notebook **kernel** running; array sizes are close to device DRAM max and you may get an out-of-mem error otherwise.}
+
 md"""
 ### Task 1 (Performance evaluation)
 
@@ -115,7 +118,19 @@ Determine the effective memory throughput, `T_eff`, of the kernel `update_temper
 #md # \note{You can base yourself on the corresponding activity in the introduction notebook (remember to compute now `T_eff` rather than `T_tot`).}
 
 #-
-## solution
+#hint ## solution
+#hint max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+#hint thread_count = []
+#hint throughputs  = []
+#hint for pow = 0:Int(log2(max_threads/32))
+#hint     threads = (32, 2^pow)
+#hint     blocks  = #...
+#hint     t_it = @belapsed begin @cuda #...
+#hint     T_eff = #...
+#hint     push!(thread_count, prod(threads))
+#hint     push!(throughputs, T_eff)
+#hint     println("(threads=$threads) T_eff = $(T_eff)")
+#hint end
 #sol max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 #sol thread_count = []
 #sol throughputs  = []
@@ -127,8 +142,8 @@ Determine the effective memory throughput, `T_eff`, of the kernel `update_temper
 #sol     push!(thread_count, prod(threads))
 #sol     push!(throughputs, T_eff)
 #sol     println("(threads=$threads) T_eff = $(T_eff)")
-#sol     #IJulia.clear_output(true)
-#sol     #display(plot(thread_count, throughputs))
+#src #sol     #IJulia.clear_output(true)
+#src #sol     #display(plot(thread_count, throughputs))
 #sol end
 
 md"""

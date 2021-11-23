@@ -30,7 +30,7 @@ We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a 
 
 #-
 
-#using IJulia
+#src #using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
@@ -106,6 +106,9 @@ md"""
 In the introduction notebook, we determined how the performance of memory copy behaved with in function of the number of threads per blocks. We will do the same now for the temperature update kernel.
 """
 
+#nb # > 💡 Hint: Make sure to have no other notebook **kernel** running; array sizes are close to device DRAM max and you may get an out-of-mem error otherwise.
+#md # \note{Make sure to have no other notebook **kernel** running; array sizes are close to device DRAM max and you may get an out-of-mem error otherwise.}
+
 md"""
 ### Task 1 (Performance evaluation)
 
@@ -116,6 +119,18 @@ Determine the effective memory throughput, `T_eff`, of the kernel `update_temper
 
 #-
 ## solution
+max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+thread_count = []
+throughputs  = []
+for pow = 0:Int(log2(max_threads/32))
+    threads = (32, 2^pow)
+    blocks  = #...
+    t_it = @belapsed begin @cuda #...
+    T_eff = #...
+    push!(thread_count, prod(threads))
+    push!(throughputs, T_eff)
+    println("(threads=$threads) T_eff = $(T_eff)")
+end
 
 md"""
 Save the best thread/block configuration measured for reusing it later (adapt the code if your variable names above do not match):
