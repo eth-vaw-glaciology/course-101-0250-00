@@ -4,7 +4,6 @@
 
 ] instantiate
 
-#using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
@@ -67,6 +66,18 @@ Ci   = CUDA.rand(Float64, nx, ny);
 lam = _dx = _dy = dt = rand();
 
 # solution
+max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+thread_count = []
+throughputs  = []
+for pow = 0:Int(log2(max_threads/32))
+    threads = (32, 2^pow)
+    blocks  = #...
+    t_it = @belapsed begin @cuda #...
+    T_eff = #...
+    push!(thread_count, prod(threads))
+    push!(throughputs, T_eff)
+    println("(threads=$threads) T_eff = $(T_eff)")
+end
 
 T_tot_max, index = findmax(throughputs)
 threads = (32, thread_count[index]÷32)
