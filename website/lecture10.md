@@ -53,11 +53,15 @@ and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the 
 
 As initial condition, define a Gaussian distribution of $H$ centred in the domain's centre with amplitude of 2 and standard deviation of 1. Enforce Dirichlet boundary condition $H=0$ an all 6 faces.
 
-\note{Use [ParallelStencil.jl]() and [ImplicitGlobalGrid.jl]() for the (multi-)XPU implementation. You are free to use either `@parallel` or `@parallel_indices` type of kernel definition.}
+\note{Use [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl) and [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) for the (multi-)XPU implementation. You are free to use either `@parallel` or `@parallel_indices` type of kernel definition.}
 
 Implement the 3D diffusion equation (1) using a [dual-time stepping](/lecture4/#implicit_solutions) approach, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions).
 
 For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D.
+
+For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting grpahical rendering capabilities.
+
+Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in `FinalProjectRepo.jl/docs/` regarding the specific steps we expect you to work and report on.
 
 \note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (e.g. `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
@@ -77,7 +81,7 @@ Selecting a project of your choice among 3 possible directions:
 
 The following steps will get you started with the final projects:
 1. Find a classmate to work with (being your own mate is fine too)
-2. Select a topic of your choice for **_part 2_** (see [here]())
+2. Select a topic of your choice for **_part 2_** (see [here](#part_2_your_personal_project))
 3. Copy or clone the [**template**](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) for the final project.
 4. Invite the teaching staff to the repo
 5. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Tuesday November 30, 2021**, with subject _**Final projects**_ including
