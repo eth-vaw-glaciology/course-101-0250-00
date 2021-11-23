@@ -80,7 +80,7 @@ The following steps will get you started with the final projects:
 2. Select a topic of your choice for **_part 2_** (see [here]())
 3. Copy or clone the [**template**](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) for the final project.
 4. Invite the teaching staff to the repo
-5. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Tuesday November 30, 2021**, including
+5. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Tuesday November 30, 2021**, with subject _**Final projects**_ including
     - your project mate
     - a brief description of your choice for **_part 2_**
     - a link to your final project GitHub repository
