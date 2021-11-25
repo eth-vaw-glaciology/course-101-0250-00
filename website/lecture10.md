@@ -61,7 +61,7 @@ For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](
 
 👉 Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in [FinalProjectRepo.jl/docs/](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/) regarding the **specific steps we expect you to work and report on**.
 
-👉 Make sure to include unit and reference tests. We provide you with a [reference test](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl) (using [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)) you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return `H_g` and `Xc_g`, the inner points of the global solution array and the corresponding global x-coordinate vector, respectively.
+👉 Make sure to **include unit and reference tests**. We provide you with a [reference test](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl) (using [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)) you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return `H_g` and `Xc_g`, the inner points of the global solution array and the corresponding global x-coordinate vector, respectively.
 
 The 3D diffusion should be:
 - executed as a **single** (non-MPI) program,
