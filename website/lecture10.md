@@ -61,6 +61,8 @@ For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](
 
 👉 Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in [FinalProjectRepo.jl/docs/](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/) regarding the **specific steps we expect you to work and report on**.
 
+👉 Make sure to include unit and reference tests. We provide you with a [reference test](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl) (using [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)) you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return `H_g` and `Xc_g`, the global solution array and the global x-coordinate vector, respectively. The global result array `H_g` can be assembled using ImplicitGlobalGrid.jl's [`gather!()`](https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl) function. Refer to e.g. [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) for further details on how to construct the global solution and coordinate vectors.
+
 \note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (e.g. `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
 ### Part 2: [your personal project]
