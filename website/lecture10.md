@@ -71,7 +71,7 @@ The 3D diffusion should be:
 
 The global result array `H_g` can be assembled using ImplicitGlobalGrid.jl's [`gather!()`](https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl) function. Refer to e.g. [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) for further details on how to construct the global solution and coordinate vectors.
 
-\note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (e.g. `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
+\note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (here `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
 ### Part 2: [your personal project]
 Selecting a project of your choice among 3 possible directions:
