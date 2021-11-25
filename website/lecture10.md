@@ -31,6 +31,8 @@ _Note that a single GitHub repository is sufficient per project._
 
 [**Project template** available here](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) - copy or clone to get started.
 
+\warn{The final project GitHub repository shoud **remain private** until submission on December 23, 2021.}
+
 ---
 
 Final projects compose of 2 distinct parts (50% of the project mark each) to be handed-in on a single GitHub repository, including scripts, documentation (and code documentation), unit and reference testing, Continuous Integration (CI - using e.g. GitHub Actions), instructions to run the software and reproduce the results, references.
@@ -42,34 +44,34 @@ Your task in **_part 1_** is to solve the linear diffusion equation in 3D
 
 $$ \frac{∂H}{∂t} = ∇ ⋅ D\;∇H ~ ,$$
 
-where $D=1$, using an implicit iterative approach leveraging pseudo-transient acceleration (see [Lecture 4](/lecture4/#steady-state_and_implicit_iterative_solutions)). Use following physical parameters
+where $D=1$, using an implicit iterative approach leveraging pseudo-transient acceleration (see [Lecture 4](/lecture4/#steady-state_and_implicit_iterative_solutions)). Use the following physical parameters
 ```julia
 lx, ly, lz = 10.0, 10.0, 10.0 # domain size
 D          = 1.0              # diffusion coefficient
 ttot       = 1.0              # total simulation time
 dt         = 0.2              # physical time step
 ```
-and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the L2-norm on the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`).
+and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the L2-norm of the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`).
 
 As initial condition, define a Gaussian distribution of $H$ centred in the domain's centre with amplitude of 2 and standard deviation of 1. Enforce Dirichlet boundary condition $H=0$ an all 6 faces.
 
 \note{Use [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl) and [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) for the (multi-)XPU implementation. You are free to use either `@parallel` or `@parallel_indices` type of kernel definition.}
 
-Implement the 3D diffusion equation (1) using a [dual-time stepping](/lecture4/#implicit_solutions) approach, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions).
+Implement the 3D diffusion equation (1) using a [dual-time](/lecture4/#implicit_solutions) method, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions).
 
-For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D. For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting graphical rendering capabilities.
+For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D. For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting graphical rendering capabilities. 
 
 👉 Refer to the [`part1.md`](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md) in [FinalProjectRepo.jl/docs/](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/) regarding the **specific steps we expect you to work and report on**.
 
-👉 Make sure to **include unit and reference tests**. We provide you with a [reference test](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl) (using [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)) you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return `H_g` and `Xc_g`, the inner points of the global solution array and the corresponding global x-coordinate vector, respectively.
+👉 Make sure to **include unit and reference tests**. We provide you with a [reference test](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl) (using [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)) you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return `H_g` and `Xc_g`, the inner points of the global solution array and the corresponding global x-coordinate vector, respectively (`C_v` and `Xi_g` in the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl) script).
 
-The 3D diffusion should be:
+The 3D diffusion script for reference testing should be:
 - executed as a **single** (non-MPI) program,
 - run on the **CPU** (not GPU),
 - use `nx = ny = nz = 32` as **local** grid resolution,
-- return the global inner points (2:end-1) of the global `H` array (as one can construct it, e.g., for visualisation).
+- return the global inner points `[2:end-1]` of the global `H` array in all dims (as one can construct it, e.g., for visualisation).
 
-The global result array `H_g` can be assembled using ImplicitGlobalGrid.jl's [`gather!()`](https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl) function. Refer to e.g. [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) for further details on how to construct the global solution and coordinate vectors.
+The global result array `H_g` can be assembled using ImplicitGlobalGrid's [`gather!()`](https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl) function. Refer to e.g. [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) for further details on how to construct the global solution and coordinate vectors.
 
 \note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (here `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
