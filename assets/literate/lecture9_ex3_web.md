@@ -108,12 +108,11 @@ Modify the above `memcopy!` kernel to read in A and write B in a serial manner w
 \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your memory copy kernel.}
 
 ```julia:ex9
-# hint
 function memcopy!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    for iz #...
-        #...
+    for iz = 1:size(A,3)
+        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
     end
     return nothing
 end
@@ -125,13 +124,13 @@ blocks  = (nx÷threads[1], ny÷threads[2], 1)
 ```julia:ex10
 # Verification
 B .= 0.0;
-@cuda #...
+@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
 ```
 
 ```julia:ex11
 # Performance
-t_it = @belapsed begin #...# end
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
@@ -144,26 +143,26 @@ Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dim
 \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your results against `CUDA.cumsum!` (remember that for the verification, we already preallocated an array `B_ref` at the beginning, which you can use now).}
 
 ```julia:ex12
-# hint
 function cumsum_dim3!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     cumsum_iz = 0.0
-    for iz #...
-        #...
+    for iz = 1:size(A,3)
+        @inbounds cumsum_iz  += A[ix,iy,iz]
+        @inbounds B[ix,iy,iz] = cumsum_iz
     end
     return nothing
 end
 
 # Verification
-@cuda #...
+@cuda blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=3);
 B ≈ B_ref
 ```
 
 ```julia:ex13
 # Performance
-t_it = @belapsed begin @cuda #...# end
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim3!($B, $A); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
@@ -181,26 +180,29 @@ We will now implement the cummulative sum over the 2nd dimension (index `iy`). A
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension (index `iy`), i.e., with parallelization only over the first and the last dimensions (index `ix` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension (i.e. use one thread in the second and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
 
 ```julia:ex15
-# hint
 function memcopy!(B, A)
-    #...
+    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+    for iy = 1:size(A,2)
+        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+    end
     return nothing
 end
 
 threads = (256, 1, 1)
-blocks  = #...
+blocks  = (nx÷threads[1], 1, nz÷threads[3])
 ```
 
 ```julia:ex16
 # Verification
 B .= 0.0;
-@cuda #...
+@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
 ```
 
 ```julia:ex17
 # Performance
-t_it = @belapsed begin @cuda #...# end
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
@@ -211,29 +213,31 @@ You should observe no big difference between `T_tot` measured here and `T_tot` c
 Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 3. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
 
 ```julia:ex18
-# hint
 function cumsum_dim2!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
     cumsum_iy = 0.0
-    #...
+    for iy = 1:size(A,2)
+        @inbounds cumsum_iy  += A[ix,iy,iz]
+        @inbounds B[ix,iy,iz] = cumsum_iy
+    end
     return nothing
 end
 
 # Verification
-@cuda #...
+@cuda blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=2);
 B ≈ B_ref
 ```
 
 ```julia:ex19
 # Performance
-t_it = @belapsed begin #...# end
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim2!($B, $A); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
 ```julia:ex20
-t_it = @belapsed #...
+t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=2); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
@@ -246,25 +250,30 @@ We will now implement the cumulative sum over the 1st dimension (index `ix`). As
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the first dimension (index `ix`), i.e., with parallelization only over the second and third dimensions (index `iy` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the second dimension (i.e. use one thread in the first and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, think about what performance you expect, compute `T_tot` and explain the measured performance.
 
 ```julia:ex21
-# hint
 function memcopy!(B, A)
-    #...
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+    for ix = 1:size(A,1)
+        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+    end
     return nothing
 end
 
 threads = (1, 256, 1)
-blocks  = #...
+blocks  = (1, ny÷threads[2], nz÷threads[3])
 ```
 
 ```julia:ex22
 # Verification
-#...
+B .= 0.0;
+@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+B ≈ A
 ```
 
 ```julia:ex23
 # Performance
-t_it = #...
-T_tot = #...
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
 You likely observe `T_tot` to be an order of magnitude or more below `T_tot` measured in Task 1 and 3 (measured 36 GB/s with the Tesla P100 GPU) because, in contrast to the previous kernels, this kernel accesses memory discontinuously with a large stride (of `nx` numbers) between each requested number.
@@ -277,25 +286,31 @@ Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a ti
 \note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
 
 ```julia:ex24
-# hint
 function memcopy!(B, A)
-    #...
+    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+    for ix_offset = 0 : blockDim().x : size(A,1)-1
+        ix = threadIdx().x + ix_offset
+        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+    end
     return nothing
 end
 
-threads = #...
-blocks  = #...
+threads = (32, 1, 1)
+blocks  = (1, ny÷threads[2], nz÷threads[3])
 ```
 
 ```julia:ex25
 # Verification
-#...
+B .= 0.0;
+@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+B ≈ A
 ```
 
 ```julia:ex26
 # Performance
-t_it = #...
-T_tot = #...
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
 `T_tot` should now be similar to the one obtained in Task 1 and 3 or even a bit better (measured 534 GB/s with the Tesla P100 GPU) thanks to the additional concurrency compared to the other `memcopy!` versions. We are therefore ready to implement the cummulative sum over the 1st dimension.
@@ -306,25 +321,38 @@ Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dim
 \note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
 
 ```julia:ex27
-# hint
 function cumsum_dim1!(B, A)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
     tx = threadIdx().x
     shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
     cumsum_ix = 0.0
-    #...
+    for ix_offset = 0 : blockDim().x : size(A,1)-1
+        ix = threadIdx().x + ix_offset
+        @inbounds shmem[tx] = A[ix,iy,iz]       # Read the x-dimension chunk into shared memory.
+        sync_threads()
+        if tx == 1                            # Compute the cumsum only with the first thread, accessing only shared memory
+            for i = 1:blockDim().x
+                @inbounds cumsum_ix += shmem[i]
+                @inbounds shmem[i] = cumsum_ix
+            end
+        end
+        sync_threads()
+        @inbounds B[ix,iy,iz] = shmem[tx]       # Write the x-dimension chunk to main memory.
+    end
     return nothing
 end
 
 # Verification
-#...
+@cuda blocks=blocks threads=threads shmem=prod(threads)*sizeof(Float64) cumsum_dim1!(B, A); synchronize()
+CUDA.cumsum!(B_ref, A; dims=1);
+B ≈ B_ref
 ```
 
 ```julia:ex28
 # Performance
-t_it = #...
-T_eff_cs = #...
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=2*prod($threads)*sizeof(Float64) cumsum_dim1!($B, $A); synchronize() end
+T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 ```
 
 ```julia:ex29
