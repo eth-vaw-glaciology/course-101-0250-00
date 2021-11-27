@@ -191,9 +191,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
 deps = ["ChainRulesCore", "DensityInterface", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns", "Test"]
-git-tree-sha1 = "380dab663ca4234c4ec91340c3211c5e73374612"
+git-tree-sha1 = "a17e3bce1fd6747162d1a467ced6974d630244ce"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.32"
+version = "0.25.33"
 
 [[DocStringExtensions]]
 deps = ["LibGit2"]
