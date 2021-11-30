@@ -206,7 +206,7 @@ So over 1000 iterations, the magnitude of the error ($\max(|A|)$) only dropped a
 
 How can we improve this?
 
-👉 **One needs a second order implementation**
+#### 👉 One needs a second order implementation
 
 The goal is to reach a steady-state, we thus seek the left-hand-side of the "numerical" parabolic equation
 
