@@ -327,7 +327,7 @@ How can we improve this?
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-👉 **One needs a second order implementation**
+#### 👉 One needs a second order implementation
 """
 
 #src #########################################################################
