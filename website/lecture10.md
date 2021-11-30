@@ -44,20 +44,20 @@ Your task in **_part 1_** is to solve the linear diffusion equation in 3D
 
 $$ \frac{∂H}{∂t} = ∇ ⋅ D\;∇H ~ ,$$
 
-where $D=1$, using an implicit iterative approach leveraging pseudo-transient acceleration (see [Lecture 4](/lecture4/#steady-state_and_implicit_iterative_solutions)). Use the following physical parameters
+where $D=1$, using an implicit iterative approach leveraging [pseudo-transient **acceleration** (or damping)](lecture4/#one_needs_a_second_order_implementation) (see [Lecture 4](/lecture4/#steady-state_and_implicit_iterative_solutions)). Use the following physical parameters
 ```julia
 lx, ly, lz = 10.0, 10.0, 10.0 # domain size
 D          = 1.0              # diffusion coefficient
 ttot       = 1.0              # total simulation time
 dt         = 0.2              # physical time step
 ```
-and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the L2-norm of the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`).
+and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the "normalised" L2-norm of the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`). _The residual $R_H$ is defined as imbalance of Eq. (1), one can obtain by, e.g, moving all terms on the right-hand-side._
 
 As initial condition, define a Gaussian distribution of $H$ centred in the domain's centre with amplitude of 2 and standard deviation of 1. Enforce Dirichlet boundary condition $H=0$ an all 6 faces.
 
 \note{Use [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl) and [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) for the (multi-)XPU implementation. You are free to use either `@parallel` or `@parallel_indices` type of kernel definition.}
 
-Implement the 3D diffusion equation (1) using a [dual-time](/lecture4/#implicit_solutions) method, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions).
+Implement the 3D diffusion equation (1) using a [dual-time](/lecture4/#implicit_solutions) method, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested [here (Eqs 11 & 12)](/lecture4/#implicit_solutions). Make use of acceleration (or damping) to enforce scaling of the pseudo-transient iterations, finding the optimal damping term.
 
 For the multi-XPU implementation, you can build on the [2D multi-XPU diffusion](/lecture8/#using_implicitglobalgridjl) provided in Lecture 8, extending it to 3D. For 3D visualisation, feel free to check out [Makie.jl](https://makie.juliaplots.org/stable/) which offers interesting graphical rendering capabilities. 
 
