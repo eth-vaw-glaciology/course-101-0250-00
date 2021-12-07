@@ -53,7 +53,7 @@ dt         = 0.2              # physical time step
 ```
 and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the "normalised" L2-norm of the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`). _The residual $R_H$ is defined as imbalance of Eq. (1), one can obtain by, e.g, moving all terms on the right-hand-side._
 
-As initial condition, define a Gaussian distribution of $H$ centred in the domain's centre with amplitude of 2 and standard deviation of 1. Enforce Dirichlet boundary condition $H=0$ an all 6 faces.
+As initial condition, define a Gaussian distribution of $H$ centred in the domain's centre with **amplitude of 2 and standard deviation of 1**. Enforce Dirichlet boundary condition $H=0$ an all 6 faces.
 
 \note{Use [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl) and [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) for the (multi-)XPU implementation. You are free to use either `@parallel` or `@parallel_indices` type of kernel definition.}
 
