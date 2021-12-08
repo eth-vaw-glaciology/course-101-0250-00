@@ -75,6 +75,8 @@ The global result array `H_g` can be assembled using ImplicitGlobalGrid's [`gath
 
 \note{GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes (here `nx = ny = nz = 32`), run on a single process (launching the code without `mpirun` or `mpiexecjl`) and use ParallelStencil's CPU backend (setting `USE_GPU = false`).}
 
+> If you struggle implementing the [dual-time](/lecture4/#implicit_solutions) solution strategy, you can look-up this [1D diffusion code](/scripts/diff_1D_dualtime.jl) for inspiration. Set the `steady` flag to `false` for dual-time, time dependent implicit solution; set it to `true` for a steady-state implicit solution.
+
 ### Part 2: [your personal project]
 Selecting a project of your choice among 3 possible directions:
 1. Solving PDEs you have some interest in (e.g. related to another project or future study/research direction of yours)
