@@ -53,7 +53,7 @@ dt         = 0.2              # physical time step
 ```
 and converge your reference solution to $\mathrm{tol_{nl}} = 10^{-8}$ using the "normalised" L2-norm of the equation's residual $R_H$ (`norm(R_H)/sqrt(length(R_H))`). _The residual $R_H$ is defined as imbalance of Eq. (1), one can obtain by, e.g, moving all terms on the right-hand-side._
 
-Note to employ the following implementation of a "global" norm function using `MPI.Allreduce()` of local squared sum:
+Consider implementing the following definition of a "global" norm function (relying on `MPI.Allreduce()`):
 ```julia
 norm_g(A) = (sum2_l = sum(A.^2); sqrt(MPI.Allreduce(sum2_l, MPI.SUM, MPI.COMM_WORLD)))
 ```
