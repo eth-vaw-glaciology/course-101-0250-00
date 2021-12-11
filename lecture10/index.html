@@ -8,7 +8,7 @@ dt         = <span class=hljs-number >0.2</span>              <span class=hljs-c
 <p>Implement the 3D diffusion equation &#40;1&#41; using a <a href="/course-101-0250-00/lecture4/#implicit_solutions">dual-time</a> method, including the physical time-derivative as physical term in the residual definition and using pseudo-time to iterate the solution as suggested <a href="/course-101-0250-00/lecture4/#implicit_solutions">here &#40;Eqs 11 &amp; 12&#41;</a>. Make use of acceleration &#40;or damping&#41; to enforce scaling of the pseudo-transient iterations, finding the optimal damping term.</p>
 <p>For the multi-XPU implementation, you can build on the <a href="/course-101-0250-00/lecture8/#using_implicitglobalgridjl">2D multi-XPU diffusion</a> provided in Lecture 8, extending it to 3D. For 3D visualisation, feel free to check out <a href="https://makie.juliaplots.org/stable/">Makie.jl</a> which offers interesting graphical rendering capabilities. </p>
 <p>👉 Refer to the <a href="https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/part1.md"><code>part1.md</code></a> in <a href="https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main/docs/">FinalProjectRepo.jl/docs/</a> regarding the <strong>specific steps we expect you to work and report on</strong>.</p>
-<p>👉 Make sure to <strong>include unit and reference tests</strong>. We provide you with a <a href="https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl">reference test</a> &#40;using <a href="https://github.com/JuliaTesting/ReferenceTests.jl">ReferenceTests.jl</a>&#41; you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return <code>H_g</code> and <code>Xc_g</code>, the inner points of the global solution array and the corresponding global x-coordinate vector, respectively &#40;<code>C_v</code> and <code>Xi_g</code> in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl"><code>diffusion_2D_perf_multixpu.jl</code></a> script&#41;.</p>
+<p>👉 Make sure to <strong>include unit and reference tests</strong>. We provide you with a <a href="https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl/blob/main//test/part1.jl">reference test</a> &#40;using <a href="https://github.com/JuliaTesting/ReferenceTests.jl">ReferenceTests.jl</a>&#41; you can benchmark your implementation against. Adapt it to your needs and ensure your 3D diffusion solver to return <code>H</code> and <code>xc</code>, the global solution array and the corresponding global x-coordinate vector, respectively &#40;<code>C</code> and <code>xc</code> in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl"><code>diffusion_2D_perf_multixpu.jl</code></a> script&#41;.</p>
 <p>The 3D diffusion script for reference testing should be:</p>
 <ul>
 <li><p>executed as a <strong>single</strong> &#40;non-MPI&#41; program,</p>
@@ -17,12 +17,12 @@ dt         = <span class=hljs-number >0.2</span>              <span class=hljs-c
 
 <li><p>use <code>nx &#61; ny &#61; nz &#61; 32</code> as <strong>local</strong> grid resolution,</p>
 
-<li><p>return the global inner points <code>&#91;2:end-1&#93;</code> of the global <code>H</code> array in all dims &#40;as one can construct it, e.g., for visualisation&#41;.</p>
+<li><p>return the <code>H</code> array and the <code>xc</code> &#40;x-coordinate&#41; vector.</p>
 
 </ul>
-<p>The global result array <code>H_g</code> can be assembled using ImplicitGlobalGrid&#39;s <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl"><code>gather&#33;&#40;&#41;</code></a> function. Refer to e.g. <a href="/course-101-0250-00/lecture8/#using_implicitglobalgridjl">2D multi-XPU diffusion</a> for further details on how to construct the global solution and coordinate vectors.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >GitHub Actions only provides CPU-based runners. For unit and reference testing purpose, select small problem sizes &#40;here <code>nx &#61; ny &#61; nz &#61; 32</code>&#41;, run on a single process &#40;launching the code without <code>mpirun</code> or <code>mpiexecjl</code>&#41; and use ParallelStencil&#39;s CPU backend &#40;setting <code>USE_GPU &#61; false</code>&#41;.</div></div>
+<p>For multi-XPU visualisation purpose, the global result array <code>H_g</code> can be assembled using ImplicitGlobalGrid&#39;s <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl/blob/master/src/gather.jl"><code>gather&#33;&#40;&#41;</code></a> function. Refer to e.g. <a href="/course-101-0250-00/lecture8/#using_implicitglobalgridjl">2D multi-XPU diffusion</a> for further details on how to construct the global solution and coordinate vectors.</p>
 <blockquote>
 <p>If you struggle implementing the <a href="/course-101-0250-00/lecture4/#implicit_solutions">dual-time</a> solution strategy, you can look-up this <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diff_1D_dualtime.jl">1D diffusion code</a> for inspiration. Set the <code>steady</code> flag to <code>false</code> for dual-time, time dependent implicit solution; set it to <code>true</code> for a steady-state implicit solution.</p>
 </blockquote>
@@ -116,7 +116,7 @@ dt         = <span class=hljs-number >0.2</span>              <span class=hljs-c
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: December 10, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: December 11, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
