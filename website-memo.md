@@ -1,5 +1,5 @@
 # website-memo
-This document lists the basics on how to edit the course website accessible at https://eth-vaw-glaciology.github.io/course-101-0250-00/.
+This document lists the basics on how to edit the course website accessible at https://pde-on-gpu.vaw.ethz.ch/.
 
 🚧 More to come soon.
 
