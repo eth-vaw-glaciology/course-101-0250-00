@@ -15,7 +15,7 @@ The teaching staff is composed of:
 ## Organisation
 
 ### Course material
-Course material, exercises and extra resources are available on the [**course website**](https://eth-vaw-glaciology.github.io/course-101-0250-00/).
+Course material, exercises and extra resources are available on the [**course website**](https://pde-on-gpu.vaw.ethz.ch/).
 
 Detailed course description is available on the [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en).
 
