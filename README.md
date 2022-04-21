@@ -1,6 +1,6 @@
 ## 101-0250-00: Solving partial differential equations in parallel on GPUs
 
-👉 [**Go to course website**](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
+👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 
 **Welcome to ETH course 101-0250-00 ✨ First edition - Fall 2021**
 
@@ -35,7 +35,7 @@ Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.
 1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.
 2. A final project during Part 3 (60% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
 
-👉 [**Go to course website**](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
+👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 
 ---
 
