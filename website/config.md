@@ -6,7 +6,7 @@ The website_* must be defined for the RSS to work
 @def website_title = "Solving partial differential equations in parallel on GPUs"
 @def website_descr = "Website for the Julia GPU course"
 <!-- @def website_url   = "https://eth-vaw-glaciology.github.io/course-101-0250-00/" -->
-@def website_url   = "http://pde-on-gpu.vaw.ethz.ch/"
+@def website_url   = "https://pde-on-gpu.vaw.ethz.ch/"
 
 @def author = "ETHZ - VAW-GL"
 
