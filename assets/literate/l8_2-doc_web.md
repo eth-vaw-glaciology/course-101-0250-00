@@ -44,7 +44,7 @@ A Julia doc-string ([Julia manual](https://docs.julialang.org/en/v1/manual/docum
 - can be attached to most things (functions, variables, modules, macros, types)
 - can be queried with `?`
 
-```julia:ex1
+````julia:ex1
 """
     transform(r, θ) = (r*cos(θ), r*sin(θ))
 
@@ -54,11 +54,11 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 "Typical size of beer crate"
 const BEERBOX = 12
-```
+````
 
-```julia:ex2
+````julia:ex2
 ?BEERBOX
-```
+````
 
 ### Documentation tools: doc-strings with examples
 
@@ -66,7 +66,7 @@ One can add examples to doc-strings (they can even be part of testing: [doc-test
 
 - run it in the REPL and copy paste to the docstring
 
-```julia:ex3
+````julia:ex3
 """
     transform(r, θ) = (r*cos(θ), r*sin(θ))
 
@@ -79,11 +79,11 @@ julia> transform(4.5, pi/5)
 ````
 """
 transform(r, θ) = (r*cos(θ), r*sin(θ))
-```
+````
 
-```julia:ex4
+````julia:ex4
 ?transform
-```
+````
 
 ### Documentation tools: Github markdown rendering
 

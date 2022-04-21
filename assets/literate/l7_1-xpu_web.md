@@ -81,7 +81,7 @@ Let's get started with using the ParallelStencil.jl module and the `ParallelSten
 
 The first step is to handle the packages:
 
-```julia:ex1
+````julia:ex1
 const USE_GPU = false
 using ParallelStencil
 using ParallelStencil.FiniteDifferences2D
@@ -91,7 +91,7 @@ else
     @init_parallel_stencil(Threads, Float64, 2)
 end
 using Plots, Printf
-```
+````
 
 Then, we need to create two compute functions , `compute_q!` to compute the fluxes, and `compute_C!` for computing the update of `C`, the quantity we diffusion (e.g. concentration).
 
@@ -115,30 +115,30 @@ So, back to our compute function (kernel). The `compute_q!` function gets the `@
 
 Inside, we define the flux definition as following:
 
-```julia:ex2
+````julia:ex2
 @parallel function compute_q!(qx, qy, C, D, dx, dy)
     @all(qx) = -D*@d_xi(C)/dx
     @all(qy) = -D*@d_yi(C)/dy
     return
 end
-```
+````
 
 Now that we're done with `compute_q!`, your turn!
 
 By analogy, update `compute_C!`.
 
-```julia:ex3
+````julia:ex3
 @parallel function compute_C!(C, qx, qy, dt, dx, dy)
    @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
     return
 end
-```
+````
 
 So far so good. We are done with the kernels. Let's see what changes are needed in the main part of the script.
 
 In the `# Physics` section, change total time to `ttot = 1e2`. The `# Numerics` only needs `nx`, `ny` and `nout`; the kernel launch parameters being now automatically adapted:
 
-```julia:ex4
+````julia:ex4
 @views function diffusion_2D(; do_visu=false)
     # Physics
     Lx, Ly  = 10.0, 10.0
@@ -150,11 +150,11 @@ In the `# Physics` section, change total time to `ttot = 1e2`. The `# Numerics` 
     # [...]
     return
 end
-```
+````
 
 In the `# Derived numerics`, we can skip the scalar pre-processing, keeping only
 
-```julia:ex5
+````julia:ex5
 # [...]
 # Derived numerics
 dx, dy  = Lx/nx, Ly/ny
@@ -162,22 +162,22 @@ dt      = min(dx,dy)^2/D/4.1
 nt      = cld(ttot, dt)
 xc, yc  = LinRange(dx/2, Lx-dx/2, nx), LinRange(dy/2, Ly-dy/2, ny)
 # [...]
-```
+````
 
 In the `# Array initialisation` section, we need to wrap the Gaussian by `Data.Array` (instead of `CuArray`) and initialise the flux arrays:
 
-```julia:ex6
+````julia:ex6
 # [...]
 # Array initialisation
 C       = Data.Array(exp.(.-(xc .- Lx/2).^2 .-(yc' .- Ly/2).^2))
 qx      = @zeros(nx-1,ny-2)
 qy      = @zeros(nx-2,ny-1)
 # [...]
-```
+````
 
 In the `# Time loop`, only the kernel call needs to be worked out. We can here re-use the single `@parallel` macro which now serves to launch the computations on the chosen backend:
 
-```julia:ex7
+````julia:ex7
 # [...]
 t_tic = 0.0; niter = 0
 # Time loop
@@ -191,7 +191,7 @@ for it = 1:nt
     end
 end
 # [...]
-```
+````
 
 The performance evaluation section remaining unchanged, we are all set!
 
@@ -216,7 +216,7 @@ We can keep the package handling and initialisation identical to what we impleme
 
 Then, we can start from the flux macro an compute function definition from the `diffusion_2D_perf_gpu.jl` script, removing the `ix`, `iy` indices as those are now handled by ParallelStencil. The function definition takes however the `@parallel_indices` macro and the `(ix,iy)` tuple:
 
-```julia:ex8
+````julia:ex8
 # macros to avoid array allocation
 macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
 macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
@@ -227,7 +227,7 @@ macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
     end
     return
 end
-```
+````
 
 The `# Physics` section remains unchanged, and the `# Numerics section` is identical to the previous `xpu` script, i.e., no need for explicit block and thread definition.
 
@@ -239,7 +239,7 @@ In the `# Array initialisation`, make sure wrapping the Gaussian by `Data.Array`
 
 The `# Time loop` gets very concise; XPU kernels are launched here also with `@parallel` macro (that implicitly includes `synchronize()` statement):
 
-```julia:ex9
+````julia:ex9
 # Time loop
 for it = 1:nt
     if (it==11) t_tic = Base.time(); niter = 0 end
@@ -250,7 +250,7 @@ for it = 1:nt
         # visu unchanged
     end
 end
-```
+````
 
 Here we go 🚀 The `diffusion_2D_perf_xpu.jl` code is ready and should squeeze the performance out of your CPU or GPU, running as fast as the exclusive Julia multi-threaded or Julia GPU implementations, respectively.
 

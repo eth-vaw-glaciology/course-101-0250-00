@@ -22,27 +22,27 @@ Prerequisites:
 
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
-```julia:ex1
+````julia:ex1
 using IJulia
 using CUDA
 using BenchmarkTools
 using Plots
-```
+````
 
 Before we go further, make sure we select the GPU we want to run on (if running on a multi-GPU node). In the terminal or Julia REPL in shell mode (typing `;`), type `nvidia-smi` command to list visible GPUs. Remember the GPU_ID you want to use.
 
 Then, in Julia, add following if you decide to, e.g., use GPU 7:
 
-```julia:ex2
+````julia:ex2
 GPU_ID = 7 # select a GPU between 0-7
 device!(GPU_ID)
-```
+````
 
 \warn{Having multiple users accessing the same GPU will result in severe performance deprecation.}
 
 Let us consider the following 2-D heat diffusion solver (the comments explain the code):
 
-```julia:ex3
+````julia:ex3
 function diffusion2D()
     # Physics
     lam      = 1.0                                          # Thermal conductivity
@@ -79,13 +79,13 @@ function diffusion2D()
         end
     end
 end
-```
+````
 
 \note{Divisions are precomputed as they are slower than multiplications.}
 
 The function to compute an actual time step is still missing to complete this solver. It can be written, e.g., as follows with finite differences using GPU *array programming* (AP):
 
-```julia:ex4
+````julia:ex4
 @inbounds @views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
 @inbounds @views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
 @inbounds @views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
@@ -98,7 +98,7 @@ The function to compute an actual time step is still missing to complete this so
     dTdt    .= @inn(Ci).*(.-@d_xa(qTx).*_dx .- @d_ya(qTy).*_dy)  # Conservation of energy:           ∂T/∂t = 1/cp (-∂qT_x/∂x - ∂qT_y/∂y)
     @inn(T) .= @inn(T) .+ dt.*dTdt                               # Update of temperature             T_new = T_old + ∂t ∂T/∂t
 end
-```
+````
 
 \note{We use everywhere views to avoid allocations of temporary arrays (see [here](https://docs.julialang.org/en/v1/manual/performance-tips/#man-performance-views) for more information).}
 
@@ -108,9 +108,9 @@ end
 
 Run now the 2-D heat diffusion solver to verify that it is working:
 
-```julia:ex5
+````julia:ex5
 diffusion2D()
-```
+````
 
 ### Task 1 (Benchmarking)
 
@@ -121,7 +121,7 @@ Furthermore, use the `nx=ny` found best in the introduction notebook ([`1_memory
 To help you, there is already some code below to initialize the required arrays and scalars for the benchmarking.
 \note{**hint**: Do not forget to interpolate these predefined variables into the benchmarking expression using `$` and note that you do not need to call the solver itself (`diffusion2D`)!}
 
-```julia:ex6
+````julia:ex6
 nx = ny = # complete!
 T    = CUDA.rand(Float64, nx, ny);
 Ci   = CUDA.rand(Float64, nx, ny);
@@ -129,23 +129,23 @@ qTx  = CUDA.zeros(Float64, nx-1, ny-2);
 qTy  = CUDA.zeros(Float64, nx-2, ny-1);
 dTdt = CUDA.zeros(Float64, nx-2, ny-2);
 lam = _dx = _dy = dt = rand();
-```
+````
 
-```julia:ex7
+````julia:ex7
 # solution
 t_it = @belapsed begin diffusion2D_step!($T, $Ci, $qTx, $qTy, $dTdt, $lam, $dt, $_dx, $_dy); synchronize() end
 T_tot_lb = 11*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do no longer need in order to save space:
 
-```julia:ex8
+````julia:ex8
 t_it_task1 = t_it
 T_tot_lb_task1 = T_tot_lb
 CUDA.unsafe_free!(qTx)
 CUDA.unsafe_free!(qTy)
 CUDA.unsafe_free!(dTdt)
-```
+````
 
 `T_tot_lb` should be relatively close to `T_peak`. Nevertheless, one could do these computations at least three times faster. You may wonder why it is possible to predict that just looking at the code. It is because three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the temperature array (`T`) needs inevitably to be read from main memory and written to it at every iteration as is computed based on its values from the previous iteration (and the entire temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be entirely read at every iteration. To sum up, all but three of eleven full array memory reads or writes can be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
 
@@ -165,7 +165,7 @@ We will though use (2) in order not to make limiting assumptions and simplify th
 
 We remove therefore the arrays `qTx`, `qTy` and `dTdt` in the main function of the 2-D heat diffusion solver as they are no longer needed; moreover, we introduce `T2` as a second array for the temperature. `T2` is needed to write newly computed temperature values to a different location then the old temperature values while they are still needed for computations (else we would perform the spatial derivatives partly with new temperature values instead of only with old ones). Here is the resulting main function:
 
-```julia:ex9
+````julia:ex9
 function diffusion2D()
     # Physics
     lam      = 1.0                                          # Thermal conductivity
@@ -202,7 +202,7 @@ function diffusion2D()
         T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)
     end
 end
-```
+````
 
 ### Task 2 (GPU array programming)
 
@@ -213,7 +213,7 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 
 \note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should. Remember that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`}
 
-```julia:ex10
+````julia:ex10
 # solution
 @inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
     T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.*Ci[2:end-1,2:end-1].*(                        # T_new = T_old + ∂t 1/cp (
@@ -223,27 +223,27 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
                                 .- (.-lam.*(T[2:end-1,2:end-1] .- T[2:end-1,1:end-2]).*_dy)).*_dy  #         - ∂(-λ ∂T/∂y)/∂y
                             )                                                                      #         )
 end
-```
+````
 
 ### Task 3 (Benchmarking)
 
 Benchmark the new function `diffusion2D_step!` and compute the runtime speed-up compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 
-```julia:ex11
+````julia:ex11
 # solution
 T2 = CUDA.zeros(Float64, nx, ny);
 t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 speedup = t_it_task1/t_it
 T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
-```
+````
 
 Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!):
 
-```julia:ex12
+````julia:ex12
 t_it_task3 = t_it
 T_tot_lb_task3 = T_tot_lb
-```
+````
 
 You should have observed a significant speedup (a speedup of factor 2 measured with the Tesla P100 GPU) even though `T_tot_lb` has probably decreased (to 214 GB/s with the Tesla P100 GPU, i.e about 56% of `T_tot_lb` measured in task 1). This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the **optimality** of an implementation.
 
@@ -262,7 +262,7 @@ Rewrite the function `diffusion2D_step!` using GPU kernel programming: from with
 
 \note{Only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).}
 
-```julia:ex13
+````julia:ex13
 # solution
 function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
     threads = (32, 8)
@@ -281,19 +281,19 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     end
     return
 end
-```
+````
 
 ### Task 5 (Benchmarking)
 
 Just like in Task 3, benchmark the new function `diffusion2D_step!` and compute the runtime speedup compared to the function benchmarked in Task 1. Then, compute `T_tot_lb` and the ratio between this `T_tot_lb` and the one obtained in Task 1.
 
-```julia:ex14
+````julia:ex14
 # solution
 t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 speedup = t_it_task1/t_it
 T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
-```
+````
 
 The runtime speedup is probably even higher (a speedup of factor 5 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
 
@@ -314,14 +314,14 @@ The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured e.g. by [Mc
 
 Compute the effective memory throughput, $T_\mathrm{eff}$, for the solvers benchmarked in Task 1, 3 and 5 (you do not need to redo any benchmarking, but you can compute it based on the saved measured runtimes in these three tasks) and recompute the speedup achieved in Task 3 and 5 based on $T_\mathrm{eff}$ instead of based on the runtime; compare the newly computed speedups with the previous.
 
-```julia:ex15
+````julia:ex15
 # solution
 T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
 T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
 T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 speedup_Teff_task3 = T_eff_task3/T_eff_task1
 speedup_Teff_task5 = T_eff_task5/T_eff_task1
-```
+````
 
 Did the speedups you recomputed differ from the previous ones?
 
@@ -333,9 +333,9 @@ Most importantly though, comparing a measured $T_\mathrm{eff}$ with $T_\mathrm{p
 
 Compute by how much percent you can improve the performance of the solver at most:
 
-```julia:ex16
+````julia:ex16
 #solution for V100
 T_peak = ... # Peak memory throughput of the Tesla V100 GPU
 @show T_eff/T_peak
-```
+````
 

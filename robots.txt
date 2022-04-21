@@ -1,4 +1,4 @@
-Sitemap: https://eth-vaw-glaciology.github.io/course-101-0250-00/sitemap.xml
+Sitemap: https://pde-on-gpu.vaw.ethz.ch/sitemap.xml
 
 User-agent: *
 Disallow:

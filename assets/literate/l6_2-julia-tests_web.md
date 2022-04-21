@@ -80,7 +80,7 @@ false
 
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
-```julia:ex1
+````julia:ex1
 using Plots
 pyplot()
 
@@ -112,7 +112,7 @@ function car_travel_1D()
 end
 
 T, X = car_travel_1D()
-```
+````
 
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 

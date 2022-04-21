@@ -106,7 +106,7 @@ Note that calling further instances of `plot!()` will act as "hold-on" and allow
 
 We may want to write a single "monolithic" `reaction_1D.jl` code to perform these steps that looks as following
 
-```julia:ex1
+````julia:ex1
 using Plots
 
 @views function reaction_1D()
@@ -140,7 +140,7 @@ using Plots
 end
 
 #reaction_1D()
-```
+````
 
 Let's execute it and visualise output
 
@@ -232,7 +232,7 @@ No surprise `C .= diff(C)` won't work ...
 
 The initialisation steps of the diffusion code should contain
 
-```julia:ex2
+````julia:ex2
 # Physics
 Lx   = 10.0
 D    = 1.0
@@ -250,11 +250,11 @@ C    =  rand(Float64, nx)
 Ci   =  copy(C)
 dCdt = zeros(Float64, nx-2)
 qx   = zeros(Float64, nx-1);
-```
+````
 
 Followed by the 3 physics computations (lines) in the time loop
 
-```julia:ex3
+````julia:ex3
 # Time loop
 for it = 1:nt
     qx         .= .-D.*diff(C)./dx
@@ -262,26 +262,26 @@ for it = 1:nt
     C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
     # Visualisation
 end
-```
+````
 
 One can examine the size of the various vectors ...
 
-```julia:ex4
+````julia:ex4
 # check sizes and staggering
 @show size(qx)
 @show size(dCdt)
 @show size(C)
 @show size(C[2:end-1]);
-```
+````
 
 ... and visualise it
 
-```julia:ex5
+````julia:ex5
 using Plots
  plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-```
+````
 
 Note: plotting and visualisation is slow. A convenient workaround is to only visualise or render the figure every `nout` iteration within the time loop
 

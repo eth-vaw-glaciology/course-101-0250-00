@@ -2,98 +2,92 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture6/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture6/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture4/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture4/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture2/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture2/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture8/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/software_install/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/software_install/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/logistics/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/logistics/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture3/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture3/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture10/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture10/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/homework/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/homework/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture1/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture1/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/extras/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/extras/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture5/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture5/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture7/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture7/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/404/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/404/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture9/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/lecture9/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>https://eth-vaw-glaciology.github.io/course-101-0250-00/index.html</loc>
-    <lastmod>2021-12-11</lastmod>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/index.html</loc>
+    <lastmod>2022-04-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>

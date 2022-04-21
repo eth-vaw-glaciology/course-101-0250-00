@@ -47,7 +47,7 @@ We'll see later that the performance of a GPU application is highly sensitive to
 
 Writing a Julia GPU function (aka kernel) copying array `A` to array `B` with the layout from the above figure looks as follow
 
-```julia:ex1
+````julia:ex1
 using CUDA
 
 function copy!(A, B)
@@ -65,7 +65,7 @@ B       =  CUDA.rand(Float64, nx, ny)
 
 @cuda blocks=blocks threads=threads copy!(A, B)
 synchronize()
-```
+````
 
 _**Playing with GPUs: the rules**_
 - Current GPUs allow typically a maximum of 1024 threads per block.
@@ -102,10 +102,10 @@ Let's take a few minutes to get started.
 
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 
-```julia:ex2
+````julia:ex2
 using CUDA
 using BenchmarkTools
-```
+````
 
 ### Scientific applications' performance
 
@@ -129,19 +129,19 @@ There exists already the function `copyto!`, which permits to copy data from one
 
 But first, let us list what GPUs are available and make sure we assign no more than one user per GPU:
 
-```julia:ex3
+````julia:ex3
 collect(devices())
 device!(0) # select a GPU between 0-7
-```
+````
 
 To this purpose, we allocate two arrays and benchmark the function using `BenchmarkTools`:
 
-```julia:ex4
+````julia:ex4
 nx = ny = 32
 A = CUDA.zeros(Float64, nx, ny);
 B = CUDA.rand(Float64, nx, ny);
 @benchmark begin copyto!($A, $B); synchronize() end
-```
+````
 
 \note{Previously defined variables are interpolated with `$` into the benchmarked expression.}
 
@@ -153,17 +153,17 @@ For such distribution, the median is the most robust of the commonly used estima
 
 Using `@belapsed` instead of `@benchmark`, we directly obtain the minimum of the taken time samples:
 
-```julia:ex5
+````julia:ex5
 t_it = @belapsed begin copyto!($A, $B); synchronize() end
-```
+````
 
 Now, we know that it does not take "an awful lot of time". Of course, we do not want to stop here, but figure out how good the achieved performance was.
 
 To this aim, we compute the *total memory throughput*, `T_tot` [GB/s], which is defined as the volume of the copied data [GB] divided by the time spent [s]:
 
-```julia:ex6
+````julia:ex6
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 \note{The factor `2` comes from the fact that the data is read and written (`2` operations).}
 
@@ -177,7 +177,7 @@ You have surely found `T_tot` to be orders of magnitude below `T_peak`. This is 
 
 Let us determine how `T_tot` behaves with increasing array sizes:
 
-```julia:ex7
+````julia:ex7
 array_sizes = []
 throughputs = []
 for pow = 0:11
@@ -193,7 +193,7 @@ for pow = 0:11
     CUDA.unsafe_free!(A)
     CUDA.unsafe_free!(B)
 end
-```
+````
 
 You can observe that the best performance is on pair with `T_peak` or a bit lower (measured 522 GB/s with the Tesla P100 GPU) as `copyto!` is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.
 
@@ -201,12 +201,12 @@ Furthermore, we note that best performance is obtained for large arrays (in the 
 
 We will use the array size for which we obtained the best result for the remainder of the performance experiments:
 
-```julia:ex8
+````julia:ex8
 T_tot_max, index = findmax(throughputs)
 nx = ny = array_sizes[index]
 A = CUDA.zeros(Float64, nx, ny);
 B = CUDA.rand(Float64, nx, ny);
-```
+````
 
 ### GPU array programming
 
@@ -214,9 +214,9 @@ Let us now create our own memory copy function using GPU *Array Programming* (AP
 
 We can write a memory copy simply as `A .= B`; and wrap it in a function using Julia's concise notation, it looks as follows:
 
-```julia:ex9
+````julia:ex9
 @inbounds memcopy_AP!(A, B) = (A .= B)
-```
+````
 
 \note{We use `@inbounds` macro to make sure no array bounds checking is performed, which would slow down significantly. Note, furthermore, that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`}
 
@@ -224,10 +224,10 @@ We can write a memory copy simply as `A .= B`; and wrap it in a function using J
 
 We also benchmark it and compute `T_tot`:
 
-```julia:ex10
+````julia:ex10
 t_it = @belapsed begin memcopy_AP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 The performance you observe might be a little lower than with the `copyto!` function (measured 496 GB/s with the Tesla P100 GPU).
 
@@ -239,14 +239,14 @@ We will now use GPU *Kernel Programming* (KP) to try to get closer to `T_peak`.
 
 A memory copy kernel can be written e.g. as follows:
 
-```julia:ex11
+````julia:ex11
 @inbounds function memcopy_KP!(A, B)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     A[ix,iy] = B[ix,iy]
     return nothing
 end
-```
+````
 
 Then, in order to copy the (entire) array `B` to `A`, we need to launch the kernel such that the above indices `ix` and `iy` map exactly to each array cell.
 
@@ -254,12 +254,12 @@ Therefore, we need to have `blocks[1]*threads[1] == nx` and `blocks[2]*threads[2
 
 We will try first with the simplest possible option using only one thread per block:
 
-```julia:ex12
+````julia:ex12
 threads = (1, 1)
 blocks  = (nx, ny)
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 `T_tot` is certainly orders of magnitude below `T_peak` with this kernel launch parameters.
 
@@ -269,12 +269,12 @@ Furthermore, warps should access contiguous memory for best performance.
 
 We therefore retry using 32 threads (one warp) per block as follows:
 
-```julia:ex13
+````julia:ex13
 threads = (32, 1)
 blocks  = (nx÷threads[1], ny)
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_KP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 \note{For simplicity, the number of threads was set here explicitly to 32; more future proof would be to retrieve the warp size from the corresponding CUDA attribute by doing: `attribute(device(),CUDA.DEVICE_ATTRIBUTE_WARP_SIZE)`.}
 
@@ -284,7 +284,7 @@ If `T_tot` is significantly below `T_peak`, then we need to set the numbers of t
 
 Let us determine how `T_tot` behaves with an increasing number of threads per blocks:
 
-```julia:ex14
+````julia:ex14
 max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 thread_count = []
 throughputs  = []
@@ -297,7 +297,7 @@ for pow = Int(log2(32)):Int(log2(max_threads))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 end
-```
+````
 
 You should observe now that beyond a certain minimum number of threads per block (64 with the Tesla P100 GPU), `T_tot` is quite close to `T_peak` (which exact thread/block configuration leads to the best `T_tot` depends on the used GPU architecture).
 
@@ -305,7 +305,7 @@ Instead of increasing the number of threads only in the x dimension, we can also
 
 We keep though 32 threads in the x dimension in order to let the warps access contiguous memory:
 
-```julia:ex15
+````julia:ex15
 thread_count = []
 throughputs  = []
 for pow = 0:Int(log2(max_threads/32))
@@ -317,7 +317,7 @@ for pow = 0:Int(log2(max_threads/32))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 end
-```
+````
 
 `T_tot` is even slightly better in general. Much more important is though that a thread block accesses now not a 1D-line of the arrays, but a 2D block.
 
@@ -329,18 +329,18 @@ We will therefore also do a few experiments on another commonly benchmarked case
 
 We modify therefore the previous kernel to take a third array `C` as input and add it to `B` (the rest is identical):
 
-```julia:ex16
+````julia:ex16
 @inbounds function memcopy2_KP!(A, B, C)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     A[ix,iy] = B[ix,iy] + C[ix,iy]
     return nothing
 end
-```
+````
 
 Then, we test exactly as for the previous kernel how `T_tot` behaves with an increasing number of threads per blocks in y dimension, keeping it fixed to 32 in x dimension:
 
-```julia:ex17
+````julia:ex17
 C = CUDA.rand(Float64, nx, ny);
 thread_count = []
 throughputs  = []
@@ -353,7 +353,7 @@ for pow = 0:Int(log2(max_threads/32))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 end
-```
+````
 
 \note{There is now a factor `3` instead of `2` in the computation of `T_tot`: `2` arrays are read and `1` written (`3` operations).}
 
@@ -365,7 +365,7 @@ For completeness, we will also quickly benchmark a *triad* kernel.
 
 To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:
 
-```julia:ex18
+````julia:ex18
 @inbounds function memcopy_triad_KP!(A, B, C, s)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -380,18 +380,18 @@ threads = (32, thread_count[index]÷32)
 blocks  = (nx÷threads[1], ny÷threads[2])
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_triad_KP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 There should be no significant difference between `T_tot` of this triad kernel and of the previous kernel (with the Tesla P100 GPU, it is 561 GB/s with both kernels).
 
 Finally, let us also check the triad performance we obtain with GPU array programming:
 
-```julia:ex19
+````julia:ex19
 @inbounds memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
 
 t_it = @belapsed begin memcopy_triad_AP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-```
+````
 
 `T_tot` is probably a bit lower than in the above experiment, but still rather close to `T_peak`.
 
@@ -399,7 +399,7 @@ Congratulations! You have successfully made it through the memory copy kernel op
 
 One moment! For the following exercises you will need the parameters we have established here for best memory access:
 
-```julia:ex20
+````julia:ex20
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
-```
+````
 

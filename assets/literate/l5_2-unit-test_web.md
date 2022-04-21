@@ -14,35 +14,35 @@
 
 Simple unit testing can be performed with the `@test` and `@test_throws` macros:
 
-```julia:ex1
+````julia:ex1
 using Test
 
 @test true
-```
+````
 
 Or another example
 
-```julia:ex2
+````julia:ex2
 @test [1, 2] + [2, 1] == [3, 3]
-```
+````
 
 Testing an expression which is a call using infix syntax such as approximate comparisons
 
-```julia:ex3
+````julia:ex3
 @test π ≈ 3.14 atol=0.01
-```
+````
 
 For example, suppose we want to check our new function `square!(x)` works as expected:
 
-```julia:ex4
+````julia:ex4
 square!(x) = x^2
-```
+````
 
 If the condition is true, a `Pass` is returned:
 
-```julia:ex5
+````julia:ex5
 @test square!(5) == 25
-```
+````
 
 If the condition is false, then a `Fail` is returned and an exception is thrown:
 ```julia
@@ -63,7 +63,7 @@ All the tests in a test set will be run, and at the end of the test set a summar
 
 If any of the tests failed, or could not be evaluated due to an error, the test set will then throw a `TestSetException`.
 
-```julia:ex6
+````julia:ex6
 @testset "trigonometric identities" begin
     θ = 2/3*π
     @test sin(-θ) ≈ -sin(θ)
@@ -71,11 +71,11 @@ If any of the tests failed, or could not be evaluated due to an error, the test 
     @test sin(2θ) ≈ 2*sin(θ)*cos(θ)
     @test cos(2θ) ≈ cos(θ)^2 - sin(θ)^2
 end;
-```
+````
 
 Let's try it with our `square!()` function
 
-```julia:ex7
+````julia:ex7
 square!(x) = x^2
 
 @testset "Square Tests" begin
@@ -83,7 +83,7 @@ square!(x) = x^2
     @test square!("a") == "aa"
     @test square!("bb") == "bbbb"
 end;
-```
+````
 
 If we now introduce a bug
 ```julia

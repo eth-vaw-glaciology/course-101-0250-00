@@ -20,7 +20,7 @@ where $r_i$ is the position vector, $v_i$ the velocity vector, $F_i$ the force v
 
 The sample code you can use to get started looks like:
 
-```julia:ex1
+````julia:ex1
 using Plots
 
 @views function orbital()
@@ -46,7 +46,7 @@ using Plots
 end
 
 orbital()
-```
+````
 
 ### Question 1
 

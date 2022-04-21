@@ -26,7 +26,7 @@ $$
 
 1. Based on this equation, your task is to setup a numerical model to predict the position of the car as function of time. In order not to start from scratch this time, you can complete the code draft below, filling in the relevant quantities in following order:
 
-```julia:ex1
+````julia:ex1
 using Plots
 
 @views function main_fun()
@@ -44,7 +44,7 @@ using Plots
 end
 
 main_fun()
-```
+````
 
 2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.
 
@@ -52,7 +52,7 @@ main_fun()
 
 The sample code you can use to get started looks like:
 
-```julia:ex2
+````julia:ex2
 using Plots
 
 @views function car_travel_1D()
@@ -84,7 +84,7 @@ using Plots
 end
 
 car_travel_1D()
-```
+````
 
 ### Question 1
 

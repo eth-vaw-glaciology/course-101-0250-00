@@ -17,9 +17,9 @@ To do so, start from the script you wrote to predict the trajectory of a single 
 
 Declare a new variable for the number of volcanic bombs
 
-```julia:ex1
+````julia:ex1
 nb = 5 # number of volcanic bombs
-```
+````
 
 Then, replace the vertical angle of ejection α to randomly vary between 60° and 120° with respect to the horizon for each bomb. Keep the magnitude of the ejection velocity as before, i.e. $V=120$ m/s.
 

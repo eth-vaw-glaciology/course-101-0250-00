@@ -32,18 +32,18 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
  _/ |\__&#x27;_|_|_|\__&#x27;_|  |  Official https://julialang.org/ release
 |__/                   |
 
-<span class=hljs-meta >julia&gt;</span></code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span></code></pre>
 <p>the shell mode by hitting <code>;</code>, where you can enter Unix commands,</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metas>shell&gt;</span></code></pre>
 <p>and the <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode">Pkg mode</a> &#40;package manager&#41; by hitting <code>&#93;</code>, that will be used to add and manage packages, and environments,</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.6) pkg&gt;</span></code></pre>
 <p>You can interactively execute commands in the REPL, like adding two numbers</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-number >2</span>+<span class=hljs-number >2</span>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-number >2</span>+<span class=hljs-number >2</span>
 </span>4
 
-<span class=hljs-meta >julia&gt;</span></code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span></code></pre>
 <p>Within this class, we will mainly work with Julia scripts. You can run them using the <code>include&#40;&#41;</code> function in the REPL</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > include(<span class=hljs-string >&quot;my_script.jl&quot;</span>)</span></code></pre>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > include(<span class=hljs-string >&quot;my_script.jl&quot;</span>)</span></code></pre>
 <p>Alternatively, you can also execute a Julia script from the shell</p>
 <pre><code class="sh hljs">julia -O3 --check-bounds=no my_script.jl</code></pre>
 <p>here passing the <code>-O3</code> optimisation flag, and the Julia <code>--check-bounds</code> flag set to <code>no</code> in order to deactivate out-of-bound checking.</p>
@@ -55,7 +55,7 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
 <span class=hljs-built_in >cd</span> my_cool_project 
 julia</code></pre>
 <p>and activate it</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
 <span class=hljs-metap>(@v1.6) pkg&gt;</span> 
 
@@ -70,14 +70,14 @@ julia</code></pre>
       Status `~/my_cool_project/Project.toml`
   [91a5bcdd] Plots v1.22.3</code></pre>
 <p>as well as the <code>.toml</code> files</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ;
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ;
 </span>
 <span class=hljs-metas>shell&gt;</span> ls
 Manifest.toml Project.toml</code></pre>
 <p>We can now load <code>Plots.jl</code> and plot some random noise</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> Plots
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> Plots
 </span>
-<span class=hljs-meta >julia&gt;</span><span class=language-julia > heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number >10</span>))</span></code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number >10</span>))</span></code></pre>
 <p>Let&#39;s assume you&#39;re handed your <code>my_cool_project</code> to someone to reproduce your cool random plot. To do so, you can open julia from the <code>my_cool_project</code> folder with the <code>--project</code> option</p>
 <pre><code class="sh hljs"><span class=hljs-built_in >cd</span> my_cool_project 
 julia --project</code></pre>
@@ -85,7 +85,7 @@ julia --project</code></pre>
 <pre><code class="sh hljs"><span class=hljs-built_in >cd</span> my_cool_project 
 julia</code></pre>
 <p>and then,</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
 <span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
   Activating environment at `~/my_cool_project/Project.toml`
@@ -110,9 +110,9 @@ julia</code></pre>
 <li><p>Install <code>mpiexecjl</code>:</p>
 
 </ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
 </span>
-<span class=hljs-meta >julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
 </span>[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
 [ Info: Done!</code></pre>
 <ol start=3 >
@@ -249,22 +249,22 @@ Host nodeXX
 <li><p>Activate and instantiate the project &#40;this should download all packages you need 🙂&#41;</p>
 
 </ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
 <span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
 
 <span class=hljs-metap>(lecture06) pkg&gt;</span> instantiate</code></pre>
 <p>If you are not running in a particular project, you may need to add the <code>IJulia</code> package</p>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
 <span class=hljs-metap>(@v1.6) pkg&gt;</span> add IJulia</code></pre>
 <ol start=4 >
 <li><p>Launch Jupyter</p>
 
 </ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
 </span>
-<span class=hljs-meta >julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
 <p>You will get prompted to <code>install jupyter &#91;y/N&#93;</code> the first time running the <code>notebook&#40;&#41;</code> command. Type <code>Yes</code> or <code>y</code>.</p>
 <p>You should see Firefox opening a Jupyter tab &#40;make sure you connected using <code>-YC</code> or <code>-X</code>&#41;.</p>
 <ol start=5 >
@@ -298,7 +298,7 @@ Host nodeXX
 <li><p>Resolve and instantiate the project to download all required packages</p>
 
 </ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > ]
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
 <span class=hljs-metap>(lecture08) pkg&gt;</span> resolve
 
@@ -307,9 +307,9 @@ Host nodeXX
 <li><p>Install <code>mpiexecjl</code> launcher:</p>
 
 </ol>
-<pre><code class="julia-repl hljs"><span class=hljs-meta >julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
 </span>
-<span class=hljs-meta >julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
 </span>[ Info: Installing `mpiexecjl` to `/home/&lt;username&gt;/.julia/bin`...
 [ Info: Done!</code></pre>
 <ol start=8 >
@@ -332,7 +332,7 @@ $ Hello world, I am 3 of 4 using CuDevice(3)</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: December 11, 2021. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: April 21, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

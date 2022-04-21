@@ -20,19 +20,19 @@ Prerequisites:
 
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
-```julia:ex1
+````julia:ex1
 ] activate .
-```
+````
 
-```julia:ex2
+````julia:ex2
 ] instantiate
-```
+````
 
-```julia:ex3
+````julia:ex3
 using CUDA
 using BenchmarkTools
 using Plots
-```
+````
 
 In the last notebook ([`lecture9_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture9_ex2.ipynb)), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
 
@@ -47,27 +47,27 @@ help?> CUDA.cumsum!
 
 And here is a small example of how cumsum! works for 3-D arrays:
 
-```julia:ex4
+````julia:ex4
 A = CUDA.ones(4,4,4)
 B = CUDA.zeros(4,4,4)
 cumsum!(B, A; dims=1)
 cumsum!(B, A; dims=2)
 cumsum!(B, A; dims=3)
-```
+````
 
 For benchmarking activities, we will allocate again large arrays, matching closely the number of grid points of the array size found best in the introduction notebook (you can modify the value if it is not right for you):
 
-```julia:ex5
+````julia:ex5
 nx = ny = nz = 512
 A = CUDA.rand(Float64, nx, ny, nz);
 B = CUDA.zeros(Float64, nx, ny, nz);
-```
+````
 
 Moreover, we preallocate also an array to store reference results obtained from `CUDA.cumsum!` for verification.
 
-```julia:ex6
+````julia:ex6
 B_ref = CUDA.zeros(Float64, nx, ny, nz);
-```
+````
 
 Now, we are set up to get started.
 
@@ -82,7 +82,7 @@ Here is the adapted memory copy kernel from the introduction notebook and the `T
 
 \note{The usage of the variables `A` and `B` is reversed in comparison with the previous notebooks in order to match the documentation of cumsum!.}
 
-```julia:ex7
+````julia:ex7
 function memcopy!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -90,14 +90,14 @@ function memcopy!(B, A)
     @inbounds B[ix,iy,iz] = A[ix,iy,iz]
     return nothing
 end
-```
+````
 
-```julia:ex8
+````julia:ex8
 threads = (32, 8, 1)
 blocks  = nx.÷threads
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 Let us first implement the cummulative sum over the third dimension (index `iz`). The first step is to read in A (and write B) in a way that will later allow to easily do the required cumsums, which is an inherently serial operation. However, we want to try to avoid a serious degradation of the memory throughput when doing so.
 
@@ -107,7 +107,7 @@ Modify the above `memcopy!` kernel to read in A and write B in a serial manner w
 \note{You need to launch the kernel with only one thread and one block in the third dimension and, inside the kernel, do a loop over the third dimension. Use `iz` as loop index as it will replace the previous `iz` computed from the thread location in the grid.}
 \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your memory copy kernel.}
 
-```julia:ex9
+````julia:ex9
 function memcopy!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -119,20 +119,20 @@ end
 
 threads = (32, 8, 1)
 blocks  = (nx÷threads[1], ny÷threads[2], 1)
-```
+````
 
-```julia:ex10
+````julia:ex10
 # Verification
 B .= 0.0;
 @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
-```
+````
 
-```julia:ex11
+````julia:ex11
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 Great! You just implemented a so called [grid-stride loop](https://developer.nvidia.com/blog/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/). It exhibits a good memory access pattern and it allows to easily reuse, e.g., intermediate results from previous iterations in the loop. You probably observe a `T_tot` that is a bit below the one measured in the previous experiment (measured 520 GB/s with the Tesla P100 GPU). There is certainly room to improve this memory copy kernel a bit, but we will consider it sufficient in order to continue with this exercise.
 
@@ -142,7 +142,7 @@ Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dim
 \note{Define a variable `cumsum_iz` before the loop and initialize it to 0.0 in order to cumulate the sum.}
 \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your results against `CUDA.cumsum!` (remember that for the verification, we already preallocated an array `B_ref` at the beginning, which you can use now).}
 
-```julia:ex12
+````julia:ex12
 function cumsum_dim3!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -158,18 +158,18 @@ end
 @cuda blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=3);
 B ≈ B_ref
-```
+````
 
-```julia:ex13
+````julia:ex13
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim3!($B, $A); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
-```julia:ex14
+````julia:ex14
 t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 You should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 1 (measured 520 GB/s with the Tesla P100 GPU). In fact, scalar variables defined in a kernel, like `cumsum_iz`, will be stored in registers as long as there are enough available (if not, then so called [register spilling](https://developer.download.nvidia.com/CUDA/training/register_spilling.pdf) to main memory takes place). As access to register is extremely fast, the summation added in this Task did certainly not reduce the measured performance. It is, once again, the memory copy speed that completely determines the performance of the kernel, because we have successfully controlled the use of registers!
 
@@ -179,7 +179,7 @@ We will now implement the cummulative sum over the 2nd dimension (index `iy`). A
 
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension (index `iy`), i.e., with parallelization only over the first and the last dimensions (index `ix` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension (i.e. use one thread in the second and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
 
-```julia:ex15
+````julia:ex15
 function memcopy!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -191,20 +191,20 @@ end
 
 threads = (256, 1, 1)
 blocks  = (nx÷threads[1], 1, nz÷threads[3])
-```
+````
 
-```julia:ex16
+````julia:ex16
 # Verification
 B .= 0.0;
 @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
-```
+````
 
-```julia:ex17
+````julia:ex17
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 You should observe no big difference between `T_tot` measured here and `T_tot` computed in Task 1 (measured 519 GB/s with the Tesla P100 GPU) as this kernel is accessing memory also in large contiguous chunks.
 
@@ -212,7 +212,7 @@ You should observe no big difference between `T_tot` measured here and `T_tot` c
 
 Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 3. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
 
-```julia:ex18
+````julia:ex18
 function cumsum_dim2!(B, A)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -228,18 +228,18 @@ end
 @cuda blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=2);
 B ≈ B_ref
-```
+````
 
-```julia:ex19
+````julia:ex19
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim2!($B, $A); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
-```julia:ex20
+````julia:ex20
 t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=2); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 Again, you should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 3 (measured 519 GB/s with the Tesla P100 GPU), as you probably expected.
 
@@ -249,7 +249,7 @@ We will now implement the cumulative sum over the 1st dimension (index `ix`). As
 
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the first dimension (index `ix`), i.e., with parallelization only over the second and third dimensions (index `iy` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the second dimension (i.e. use one thread in the first and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, think about what performance you expect, compute `T_tot` and explain the measured performance.
 
-```julia:ex21
+````julia:ex21
 function memcopy!(B, A)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -261,20 +261,20 @@ end
 
 threads = (1, 256, 1)
 blocks  = (1, ny÷threads[2], nz÷threads[3])
-```
+````
 
-```julia:ex22
+````julia:ex22
 # Verification
 B .= 0.0;
 @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
-```
+````
 
-```julia:ex23
+````julia:ex23
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 You likely observe `T_tot` to be an order of magnitude or more below `T_tot` measured in Task 1 and 3 (measured 36 GB/s with the Tesla P100 GPU) because, in contrast to the previous kernels, this kernel accesses memory discontinuously with a large stride (of `nx` numbers) between each requested number.
 
@@ -285,7 +285,7 @@ There obviously is no point in creating a `cumsum!` kernel out of this `memcopy!
 Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a time in the first dimension (index `ix`) rather than one number at a time as before. Launch the kernel with just 32 threads, all placed in the first dimension; adapt the the block configuration if you need to. Verify the correctness of your kernel. Then, think about what performance you expect now, compute `T_tot` and explain the measured performance.
 \note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
 
-```julia:ex24
+````julia:ex24
 function memcopy!(B, A)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -298,20 +298,20 @@ end
 
 threads = (32, 1, 1)
 blocks  = (1, ny÷threads[2], nz÷threads[3])
-```
+````
 
-```julia:ex25
+````julia:ex25
 # Verification
 B .= 0.0;
 @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A
-```
+````
 
-```julia:ex26
+````julia:ex26
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
 T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 `T_tot` should now be similar to the one obtained in Task 1 and 3 or even a bit better (measured 534 GB/s with the Tesla P100 GPU) thanks to the additional concurrency compared to the other `memcopy!` versions. We are therefore ready to implement the cummulative sum over the 1st dimension.
 
@@ -320,7 +320,7 @@ T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 6. Verify the correctness of your kernel against `CUDA.cumsum!`. Then, compute `T_eff_cs` as defined above, explain the measured performance and compare it to the one obtained with the generic `CUDA.cumsum!`.
 \note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
 
-```julia:ex27
+````julia:ex27
 function cumsum_dim1!(B, A)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
@@ -347,18 +347,18 @@ end
 @cuda blocks=blocks threads=threads shmem=prod(threads)*sizeof(Float64) cumsum_dim1!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=1);
 B ≈ B_ref
-```
+````
 
-```julia:ex28
+````julia:ex28
 # Performance
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=2*prod($threads)*sizeof(Float64) cumsum_dim1!($B, $A); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
-```julia:ex29
+````julia:ex29
 t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-```
+````
 
 `T_eff_cs` is probably significantly less good than the one obtained for the cumulative sums over the other dimensions, but still quite good if we keep in mind the `T_tot` achieved with the first memcopy manner in Task 5. A good strategy for tackling an optimal implementation would certainly be to use warp-level functions (and if needed a more complex summation algorithm).
 
