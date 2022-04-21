@@ -1,4 +1,4 @@
-Sitemap: http://pde-on-gpu.vaw.ethz.ch/sitemap.xml
+Sitemap: https://pde-on-gpu.vaw.ethz.ch/sitemap.xml
 
 User-agent: *
 Disallow:
