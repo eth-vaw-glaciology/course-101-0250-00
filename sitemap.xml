@@ -20,6 +20,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture8/index.html</loc>
+    <lastmod>2022-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://pde-on-gpu.vaw.ethz.ch/software_install/index.html</loc>
     <lastmod>2022-06-07</lastmod>
     <changefreq>monthly</changefreq>
