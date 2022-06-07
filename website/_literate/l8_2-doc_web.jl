@@ -91,10 +91,10 @@ One can add examples to doc-strings (they can even be part of testing: [doc-test
 Transform polar to cartesian coordinates.
 
 ## Example
-````jldoctest
+```jldoctest
 julia> transform(4.5, pi/5)
 (3.6405764746872635, 2.6450336353161292)
-```` 
+```
 """
 transform(r, θ) = (r*cos(θ), r*sin(θ))
 
