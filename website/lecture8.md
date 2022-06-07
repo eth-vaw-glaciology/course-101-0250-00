@@ -12,7 +12,7 @@ noeval = true
 > :books: Distributed multi-XPU computing, MPI, Stokes flow\
 > :computer: Automatic documentation\
 > :construction: Exercises:
-> - Fake parallelisation, Julia MPI, `ImplicitGlobalGrid.jl`
+> - Fake-parallelisation, Julia MPI, `ImplicitGlobalGrid.jl`
 > - Fluid dynamics: Navier-Stokes equations, incompressible Stokes flow 
 > - Automatic documentation and CI
 
