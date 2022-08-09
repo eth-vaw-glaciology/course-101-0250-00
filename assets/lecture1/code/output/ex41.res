@@ -1,1 +1,0 @@
-"Rock wins"
