@@ -2,7 +2,7 @@
 
 👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 
-**Welcome to ETH course 101-0250-00 ✨ First edition - Fall 2021**
+**Welcome to ETH course 101-0250-00 ✨ Second edition - Fall 2022**
 
 This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.
 
@@ -11,6 +11,8 @@ The teaching staff is composed of:
 - [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
 - [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
+- [Ivan Utkin](https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
+- Teaching Assistant: [Alexander Mandt]()
 
 ## Organisation
 
@@ -28,12 +30,13 @@ Detailed course description is available on the [**ETHZ course catalogue**](http
 ### Discussion
 We encourage students to ask questions related to the course and the exercises as well as other technical issues on the course's [Element](https://chat.ethz.ch) chat.
 
-Head to the [course chat space (Element)](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=632283) to get started with Element.
+Head to the [course chat space (Element)]() to get started with Element.
 
 ### Homework and Evaluation
-Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755) (& GitHub):
-1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.
-2. A final project during Part 3 (60% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
+Enrolled ETHZ students will have to hand in on [Moodle]() (& GitHub):
+1. 5 (out of 6) weekly assignments (30% of the final grade) during the course’s Parts 1. _**Weekly coding exercises can be done alone or in groups of two**_.
+2. A project during Part 2 (35% of the final grade). _**Projects submission includes codes in a git repository and an automatic generated documentation**_.
+3. A final project during Part 3 (35% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
 
 👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 

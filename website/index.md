@@ -6,10 +6,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 🎉 Welcome to ETH's **course 101-0250-00L** on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/).
 
-> **Announce:** lectures start at 12h45 every Tuesday ([more](/logistics/#lectures))
-
-> ⚠️ The requirement for a Covid certificate applies from Monday, 20 September 2021 for teachers and students. For further questions, please see the [Coronavirus FAQs for Students](https://ethz.ch/services/en/news-and-events/coronavirus/students.html).
-
+> **Announce:** 2022 edition is under development. Stay tuned 🚀
 
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
@@ -22,29 +19,35 @@ The goal of this course is to offer a practical approach to solve systems of dif
 
 ### Outline
 - **Part 1**  _Introduction_
-  - The Julia language
-  - Basic physical processes
-  - Spatial and temporal discretisation
-  - Software development tools (Git, CI)
+  - The Julia language: hands-on
+  - Solving physical processes: advection, reaction, diffusion & wave propagation
+  - Spatial and temporal discretisation: finite-differences and explicit time-stepping
+  - Software development tools: Git, Continuous Integration
 
 - **Part 2**  _Solving PDEs on GPUs_
+  - Steady-state, implicit & nonlinear solutions
+  - Efficient iterative algorithms
   - Parallel and GPU computing
   - Simulation performance limiters
-  - Efficient iterative algorithms
-  - Distributed computing
-  - Advanced physics
 
-- **Part 3** _Final project_
+- **Part 3** _Projects_
   
+  Multi-GPU computing and optimisations
+  - xPU comuting
+  - Distributed computing
+  - Advanced optimisations
+
+- **Final projects**
+
   Solve a solid mechanics or fluid dynamics problem of your interest, such as:
   - the shallow water / ice equation
   - acoustic wave propagation, nonlinear diffusion
   - viscous flow or elastic deformation
   - viscous or elastic poromechanics
   - frictional heating
-  - and more...
+  - Navier-Stokes equations
 
-> Detailled content is available on [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2021W&ansicht=KATALOGDATEN&lerneinheitId=155538&lang=en)
+> Detailed content is available on [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en)
 
 > Course repository: [https://github.com/eth-vaw-glaciology/course-101-0250-00](https://github.com/eth-vaw-glaciology/course-101-0250-00)
 
@@ -53,4 +56,5 @@ The goal of this course is to offer a practical approach to solve systems of dif
 - [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
 - [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
-
+- [Ivan Utkin](https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
+- Teaching Assistant: [Alexander Mandt]()

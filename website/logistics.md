@@ -6,8 +6,8 @@ hascode = false
 # Logistics
 
 [![Element chat](/assets/element_chat.svg#badge)](https://chat.ethz.ch)
-[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us/j/61047225026)
-[![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=15755)
+[![Zoom Meeting](/assets/zoom_logo.svg#badge)]()
+[![ETHZ Moodle](/assets/moodle.png#badge)]()
 
 > **Suggestion:** Bookmark this page for easy access to all infos you need for the course.
 
@@ -22,11 +22,9 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 
 ## Lectures
 
-> ⚠️ **Note:** The requirement for a Covid certificate applies from Monday, 20 September 2021 for teachers and students. For further questions, please see the [Coronavirus FAQs for Students](https://ethz.ch/services/en/news-and-events/coronavirus/students.html). For further information about the certificate [see here](https://ethz.ch/services/de/news-und-veranstaltungen/intern-aktuell/archiv/2021/09/die-eth-regeln-zur-zertifikatspflicht.html).
-
 ### Live lectures | Tuesdays 12h45-15h30
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
-- Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/61047225026) (ETH Students only - Password _and password-less login_ available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755)).
+- Online attendance will be possible on [Zoom]() (ETH Students only - Password _and password-less login_ available on [Moodle]()).
 - **Exercise session** follow the lectures; they will not be broadcasted _(no online support will be provided during the exercise session)_.
 
 ### Office hours 

@@ -1,6 +1,5 @@
 <!--
-Add here global page variables to use throughout your
-website.
+Add here global page variables to use throughout your website.
 The website_* must be defined for the RSS to work
 -->
 @def website_title = "Solving partial differential equations in parallel on GPUs"

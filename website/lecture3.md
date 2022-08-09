@@ -3,6 +3,7 @@ title = "Lecture 3"
 hascode = true
 literate_mds = true
 showall = false
+noeval = true
 +++
 
 # Lecture 3
