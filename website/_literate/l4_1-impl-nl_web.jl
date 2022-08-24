@@ -33,7 +33,7 @@ Until now we investigated linear and transient processes using a forward Euler e
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-However many interesting application may exhibit nonlinear behaviours, e.g.,
+However many interesting applications may exhibit nonlinear behaviours, e.g.,
 
 $$\frac{∂H}{∂t}=\frac{∂}{∂x}\left(H^n\frac{∂H}{∂x}\right)~,$$
 
@@ -97,18 +97,7 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 hint: Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.
 #md # \note{Think about the staggering of the `H`-dependent effective diffusion coefficient. Since D is no longer constant, special care is needed for the time step definition `dt`.}
-#md # The effective diffusion coefficient and time step definition can be implement as
-#md # ```julia
-#md # D  .= (D0.*H).^n
-#md # dt  = dx^2/maximum(D)/2.1
-#md # qx .= .-av(D)
-#md # ```
-#md # where `dt` must be placed inside the time loop and `av` is the averaging function defined as
-#md # ```julia
-#md # @views av(A) = 0.5.*(A[1:end-1].+A[2:end])
-#md # ```
 
-#md # 👉 [Download the `diffusion_nl_1D.jl` script.](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -247,9 +236,9 @@ md"""
 and initial conditions
 ```julia
 # Initial conditions
-A       = zeros(Float64, nx,ny)
-dAdt    = zeros(Float64, nx,ny)
-A[2:end-1,2:end-1] .= rand(nx-2,ny-2)
+A       = ...
+dAdt    = ...
+A[...] .= rand(...)
 ```
 """
 
@@ -288,26 +277,31 @@ md"""
 errv = [] # storage for error
 # iteration loop
 for it = 1:niter
-   dAdt[2:end-1,2:end-1] .= D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
-                                 diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
-   A                     .= A .+ dt.*dAdt
+   dAdt[...] .= ...
+   A         .= ...
     if it % nx == 0
         err = maximum(abs.(A)); push!(errv, err)
-       p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
-               markershape=:circle, framestyle=:box, legend=false,
-               xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
-       p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
-                  title="max(|A|)=$(round(err,sigdigits=3))")
-       display(plot(p1,p2, dpi=150))
+       # visualisation (error evol plot + heatmap(A))
     end
 end
 ```
 """
 
 #src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Hint for visualisation
 
+```julia
+p1=plot(nx:nx:it,log10.(errv), linewidth=3, markersize=4,
+        markershape=:circle, framestyle=:box, legend=false,
+        xlabel="iter", ylabel="log10(max(|A|))", title="iter=$it")
+p2=heatmap(A', aspect_ratio=1, xlims=(1,nx), ylims=(1,ny),
+           title="max(|A|)=$(round(err,sigdigits=3))")
+display(plot(p1,p2, dpi=150))
+```
+"""
 
-#md # 👉 [Download the `Laplacian.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -404,14 +398,11 @@ dt      = dx/sqrt(D)/2.1
 
 and the second order pseudo-physics
 ```julia
-dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1]*(1-dmp)*(order-1) .+ 
-                         dt.*D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
-                                  diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
-A                     .= A .+ dt.*dAdt
+dAdt[2:end-1,2:end-1] .= ... .*(1-dmp).*(order-1) .+
+A                     .= ...
 ```
 """
 
-#md # 👉 [Download the `Laplacian_damped.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -446,14 +437,6 @@ Finally, we can verify that the second order method iteration count scales linea
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Note that various formulations of the second-order implementation exist and lead to a linear scaling of iteration count with resolution increase.
-A useful and more concise one may be the following one:
-
-```julia
-dAdt[2:end-1,2:end-1] .= dAdt[2:end-1,2:end-1].*(1-dmp) .+ 
-                         D.*( diff(diff(A[:,2:end-1],dims=1),dims=1)/dx^2 .+
-                              diff(diff(A[2:end-1,:],dims=2),dims=2)/dy^2 )
-A                     .= A .+ dt.*dAdt
-```
 """
 
 #src #########################################################################

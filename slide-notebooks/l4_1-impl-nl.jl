@@ -33,7 +33,7 @@ Until now we investigated linear and transient processes using a forward Euler e
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-However many interesting application may exhibit nonlinear behaviours, e.g.,
+However many interesting applications may exhibit nonlinear behaviours, e.g.,
 
 $$\frac{∂H}{∂t}=\frac{∂}{∂x}\left(H^n\frac{∂H}{∂x}\right)~,$$
 
