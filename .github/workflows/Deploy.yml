@@ -38,6 +38,7 @@ jobs:
             cd("website");
             using Pkg; Pkg.activate("."); Pkg.instantiate();
             using NodeJS; run(`$(npm_cmd()) install highlight.js`);
+            run(`$(npm_cmd()) install lunr`);
             using Franklin;
             lunr();
             optimize()'
