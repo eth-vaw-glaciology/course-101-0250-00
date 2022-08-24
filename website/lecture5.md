@@ -2,7 +2,7 @@
 title = "Lecture 5"
 hascode = true
 literate_mds = true
-showall = true
+showall = false
 noeval = true
 +++
 
