@@ -170,15 +170,15 @@ C, C2 = C2, C <span class=hljs-comment ># pointer swap</span></code></pre>
 <p>Simple unit testing can be performed with the <code>@test</code> and <code>@test_throws</code> macros:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >using</span> Test
 
-<span class=hljs-meta >@test</span> <span class=hljs-literal >true</span></code></pre><p><span style="color:red;">// `\show{ex1}`: could not find the relevant output file. //</span></p>
+<span class=hljs-meta >@test</span> <span class=hljs-literal >true</span></code></pre>
 <p>Or another example</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@test</span> [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>] + [<span class=hljs-number >2</span>, <span class=hljs-number >1</span>] == [<span class=hljs-number >3</span>, <span class=hljs-number >3</span>]</code></pre><p><span style="color:red;">// `\show{ex2}`: could not find the relevant output file. //</span></p>
+<pre><code class="julia hljs"><span class=hljs-meta >@test</span> [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>] + [<span class=hljs-number >2</span>, <span class=hljs-number >1</span>] == [<span class=hljs-number >3</span>, <span class=hljs-number >3</span>]</code></pre>
 <p>Testing an expression which is a call using infix syntax such as approximate comparisons</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@test</span> <span class=hljs-literal >π</span> ≈ <span class=hljs-number >3.14</span> atol=<span class=hljs-number >0.01</span></code></pre><p><span style="color:red;">// `\show{ex3}`: could not find the relevant output file. //</span></p>
+<pre><code class="julia hljs"><span class=hljs-meta >@test</span> <span class=hljs-literal >π</span> ≈ <span class=hljs-number >3.14</span> atol=<span class=hljs-number >0.01</span></code></pre>
 <p>For example, suppose we want to check our new function <code>square&#33;&#40;x&#41;</code> works as expected:</p>
-<pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span></code></pre><p><span style="color:red;">// `\show{ex4}`: could not find the relevant output file. //</span></p>
+<pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span></code></pre>
 <p>If the condition is true, a <code>Pass</code> is returned:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span></code></pre><p><span style="color:red;">// `\show{ex5}`: could not find the relevant output file. //</span></p>
+<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span></code></pre>
 <p>If the condition is false, then a <code>Fail</code> is returned and an exception is thrown:</p>
 <pre><code class="julia hljs"><span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span></code></pre>
 <pre><code class="julia hljs">Test Failed at none:<span class=hljs-number >1</span>
@@ -195,7 +195,7 @@ Test.FallbackTestSetException(<span class=hljs-string >&quot;There was an error 
     <span class=hljs-meta >@test</span> cos(-θ) ≈ cos(θ)
     <span class=hljs-meta >@test</span> sin(<span class=hljs-number >2</span>θ) ≈ <span class=hljs-number >2</span>*sin(θ)*cos(θ)
     <span class=hljs-meta >@test</span> cos(<span class=hljs-number >2</span>θ) ≈ cos(θ)^<span class=hljs-number >2</span> - sin(θ)^<span class=hljs-number >2</span>
-<span class=hljs-keyword >end</span>;</code></pre><p><span style="color:red;">// `\show{ex6}`: could not find the relevant output file. //</span></p>
+<span class=hljs-keyword >end</span>;</code></pre>
 <p>Let&#39;s try it with our <code>square&#33;&#40;&#41;</code> function</p>
 <pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span>
 
@@ -203,7 +203,7 @@ Test.FallbackTestSetException(<span class=hljs-string >&quot;There was an error 
     <span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span>
     <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;a&quot;</span>) == <span class=hljs-string >&quot;aa&quot;</span>
     <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;bb&quot;</span>) == <span class=hljs-string >&quot;bbbb&quot;</span>
-<span class=hljs-keyword >end</span>;</code></pre><p><span style="color:red;">// `\show{ex7}`: could not find the relevant output file. //</span></p>
+<span class=hljs-keyword >end</span>;</code></pre>
 <p>If we now introduce a bug</p>
 <pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span>
 
@@ -393,7 +393,7 @@ ytest = <span class=hljs-built_in >Int</span>(cld(<span class=hljs-number >0.5</
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: August 09, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: August 24, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
