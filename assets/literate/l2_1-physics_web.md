@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# ODEs & PDEs: reaction - diffusion - advection
+# PDEs and physical processes --- diffusion, wave propagation, advection
 
 ### The goal of this lecture 2 is to familiarise (or refresh) with
 - Ordinary differential equations - ODEs (e.g. reaction equation)
@@ -9,152 +9,19 @@
 - Explicit solutions
 - Multi-process (physics) coupling
 
-> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function.\
-> **Ordinary differential equations (ODE)** form a subclass of partial differential equations, corresponding to functions of a single variable. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 
-## ODEs - reaction
-Simple reaction equation, finite-difference method and explicit solution
-
-![reaction](../assets/literate_figures/reaction3.gif)
-
-Let's take-off 🚀
-
-Our first task is to design a numerical solution approach for the following reaction process (e.g. [reaction kinetics](https://en.wikipedia.org/wiki/Chemical_kinetics))
-
-$$
-\frac{∂C}{∂t} = -\frac{C-C_{eq}}{ξ}~,
-$$
-
-where $C$ is the concentration of ,e.g. a specific chemical quantity, $t$ is time, $C_{eq}$ is the equilibrium concentration of $C$ and $ξ$ is the reaction rate.
-
-Suppose the reaction kinetics process occurs in a spatial domain (x-direction) of $Lx=10.0$, consider a reaction rate $ξ=10.0$ and an equilibrium concentration $C_{eq}=0.5$.
-
-The goal is now to predict the evolution of a system with initial random distribution of concentration $C$ in the range $[0, 1]$ for non-dimensional total time of $20.0$.
-
-```julia
-# Physics
-Lx   = 10.0
-ξ    = 10.0
-Ceq  = 0.5
-ttot = 20.0
-```
-
-As next step, one needs to discretise the continuum problem in both space and time. We will use a [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) spatial discretisation and an explicit ([forward Euler](https://en.wikipedia.org/wiki/Euler_method)) time integration scheme.
-
-In a new `# Numerics` section we define the number of grid points we will use to discretise our physical domain $Lx$.
-
-Then, in a `# Derived numerics` section, we compute the grid size `dx`, the time-step `dt`, the number of time-steps `nt` and the vector containing the coordinate of all cell centres `xc`.
-
-```julia
-# Numerics
-nx   = 128
-# Derived numerics
-dx   = Lx/nx
-dt   = ξ/2.0
-nt   = cld(ttot, dt)
-xc   = LinRange(dx/2, Lx-dx/2, nx)
-```
-
-\note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos.}
-
-We now need to initialise 3 1D arrays to hold information about concentration `C`, initial concentration distribution `Ci`, and rate of change of concentration `dCdt`.
-
-```julia
-# Array initialisation
-C    =  rand(Float64, nx)
-Ci   =  copy(C)
-dCdt = zeros(Float64, nx)
-```
-
-\note{We here work with double precision arithmetic `Float64`.}
-
-Remains the most important part, the `# Time loop` where _predictive_ action should take place. We will loop from `it=1` to `nt` computing the rate of change of `C`, `dCdt`, and then updating `C`. We also want to visualise the evolution of the concentration distribution.
-
-```julia
-using Plots
-
-# Time loop
-for it = 1:nt
-  dCdt .= .-(C .- Ceq)./ξ
-  C    .= C .+ dt.*dCdt
-  display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-               xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-               framestyle=:box, label="Concentration"))
-end
-```
-
-- Make sure to update the arrays `dCdt` and `C` using the [dot syntax](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized) for vectorised functions.
-
-- The `display()` function will force to update the figure within the loop. Note that in Jupyter notebooks, you can use following syntax to avoid the creation of a new figure at each step.
-
-```julia
-using IJulia
-IJulia.clear_output(true)
-display(plot(...))
-```
-
-👉 Your turn. Let's implement the reaction physics.
-
-After the time loop, we can also display the initial concentration we stored `Ci` and the equilibrium concentration `Ceq`:
-
-```julia
-plot!(xc, Ci, lw=2, label="C initial")
-display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
-```
-
-Note that calling further instances of `plot!()` will act as "hold-on" and allow to display multiple objects on top of each other.
-
-We may want to write a single "monolithic" `reaction_1D.jl` code to perform these steps that looks as following
-
-````julia:ex1
-using Plots
-
-@views function reaction_1D()
-    # Physics
-    Lx   = 10.0
-    ξ    = 10.0
-    Ceq  = 0.5
-    ttot = 20.0
-    # Numerics
-    nx   = 128
-    # Derived numerics
-    dx   = Lx/nx
-    dt   = ξ/2.0
-    nt   = cld(ttot, dt)
-    xc   = LinRange(dx/2, Lx-dx/2, nx)
-    # Array initialisation
-    C    =  rand(Float64, nx)
-    Ci   =  copy(C)
-    dCdt = zeros(Float64, nx)
-    # Time loop
-    for it = 1:nt
-        dCdt .= .-(C .- Ceq)./ξ
-        C    .= C .+ dt.*dCdt
-        display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-                     xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-                     framestyle=:box, label="Concentration"))
-    end
-    plot!(xc, Ci, lw=2, label="C initial")
-    display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
-    return
-end
-
-#reaction_1D()
-````
-
-Let's execute it and visualise output
-
-So, excellent, we have our first 1D ODE solver up and running in Julia 🙂
-
-👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+> _**Note on classification of PDEs:**_
+> - **Elliptic:**\
+>   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+> - **Parabolic:**\
+>   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+> - **Hyperbolic:**\
+>   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
 
 ## PDEs - diffusion
 
-From reactions to diffusion and advection - involving gradients (neighbouring cells).
-
 ![diffusion](../assets/literate_figures/diffusion1.gif)
-
-Starting from the reaction script that we just finalised, we will now do as few as possible changes to solve the diffusion equation.
 
 The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was introduced by Fourier in 1822 to understand heat distribution ([heat equation](https://en.wikipedia.org/wiki/Heat_equation)) in various materials.
 
@@ -168,7 +35,7 @@ $$
 
 where $D$ is the diffusion coefficient.
 
-The second order formulation is only possible if the diffusion coefficient D is a single value valid in all the considered domain.
+The second order formulation is only possible if the diffusion coefficient $D$ is a single value valid in all the considered domain.
 
 A more general description allowing for non-uniform, non-linear diffusion coefficient combines a diffusive flux:
 
@@ -201,86 +68,79 @@ diff(C)
 
 So, we are ready to solve the 1D diffusion equation.
 
-Starting from the reaction code, turn `ξ` into `D=1.0`, the diffusion coefficient, remove `C_eq`, set total simulation time `ttot = 2.0`
+We introduce the physical parameters that are relevant for the considered problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
 
 ```julia
 # Physics
-Lx   = 10.0
-D    = 1.0
-ttot = 2.0
+lx   = 10.0
+dc   = 1.0
 ```
 
-The only change in the `# Derived numerics` section is the diffusive stable time step definition, to comply with the [CFL stability condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration
+Then we declare numerical parameters: the number of grid cells used to discretize the computational domain `nx`, and the frequency of updating the visualisation:
 
 ```julia
-# Derived numerics
-dt   = dx^2/D/2.1
+# numerics
+nx   = 200
+nvis = 5
 ```
 
-In the `# Array initialisation` section, we need a new object to hold the diffusive flux in x direction `qx`
+In the `# array initialisation` section, we need to initialise one array to store the concentration field `C`, and the diffusive flux in the x direction `qx`:
 
 ```julia
-dCdt = zeros(Float64, nx-2) # wrong size - will fail because of staggering
-qx   = zeros(Float64, nx-1) # wrong size - will fail because of staggering
+# array initialisation
+C    = @. sin(10π*xc/lx); C_i = copy(C)
+qx   = zeros(Float64, nx) # won't work
 ```
 
-Wait... what about the staggering ?
-
-No surprise `C .= diff(C)` won't work ...
+Wait... why it wouldn't work?
 
 👉 Your turn. Let's implement our first diffusion solver trying to think about how to solve the staggering issue.
 
 The initialisation steps of the diffusion code should contain
 
-````julia:ex2
-# Physics
-Lx   = 10.0
-D    = 1.0
-ttot = 2.0
-# Numerics
-nx   = 12
-nout = 10
-# Derived numerics
-dx   = Lx/nx
-dt   = dx^2/D/2.1
-nt   = cld(ttot, dt)
-xc   = LinRange(dx/2, Lx-dx/2, nx)
-# Array initialisation
-C    =  rand(Float64, nx)
-Ci   =  copy(C)
-dCdt = zeros(Float64, nx-2)
-qx   = zeros(Float64, nx-1);
+````julia:ex1
+# physics
+lx   = 20.0
+dc   = 1.0
+# numerics
+nx   = 200
+nvis = 5
+# derived numerics
+dx   = lx/nx
+dt   = dx^2/dc/2
+nt   = nx^2 ÷ 100
+xc   = LinRange(dx/2,lx-dx/2,nx)
+# array initialisation
+C    = @. sin(10π*xc/lx); C_i = copy(C)
+qx   = zeros(Float64, nx) # won't work
 ````
 
 Followed by the 3 physics computations (lines) in the time loop
 
-````julia:ex3
+````julia:ex2
 # Time loop
 for it = 1:nt
-    qx         .= .-D.*diff(C)./dx
-    dCdt       .= .-diff(qx)./dx
-    C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
+    #q x         .= # add solution
+    #C[2:end-1] .-= # add solution
     # Visualisation
 end
 ````
 
 One can examine the size of the various vectors ...
 
-````julia:ex4
+````julia:ex3
 # check sizes and staggering
 @show size(qx)
-@show size(dCdt)
 @show size(C)
-@show size(C[2:end-1]);
+@show size(C[2:end-1])
 ````
 
 ... and visualise it
 
-````julia:ex5
+````julia:ex4
 using Plots
  plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 ````
 
 Note: plotting and visualisation is slow. A convenient workaround is to only visualise or render the figure every `nout` iteration within the time loop
@@ -290,8 +150,6 @@ if it % nout == 0
     plot()
 end
 ```
-
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## PDEs - advection
 
@@ -328,7 +186,7 @@ dt   = dx/vx
 In the `# Array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 Lx$.
 
 ```julia
-C = exp.(.-(xc .- 0.3*Lx).^2)
+C = exp.( ... )
 ```
 
 \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
@@ -355,8 +213,6 @@ Here we go, an upwind approach is needed to implement a stable advection algorit
 C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
 C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 ```
-
-👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Wrapping-up
 
