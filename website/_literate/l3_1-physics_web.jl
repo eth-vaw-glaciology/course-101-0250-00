@@ -64,18 +64,6 @@ where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillation
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> _**Note on classification of PDEs:**_
-> - **Elliptic:**\
->   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
-> - **Parabolic:**\
->   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
-> - **Hyperbolic:**\
->   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
 ### Back to the wave equation
 
 The the first objective of this lecture is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as seen in lecture 2 for the advection-diffusion-reaction physics.
@@ -175,7 +163,7 @@ K     = 1.0
 ttot  = 20.0
 
 # Derived numerics
-P     =  exp.(.-(xc .- Lx/2).^2)
+P     =  exp.(...)
 ```
 
 Note that the time step needs a new definition: `dt = dx/sqrt(K/ρ)/2.1`
@@ -196,14 +184,13 @@ C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
 Should be modified to account for pressure `P` instead of concentration `C`, the flux update (`Vx`) added, and the coefficients modified:
 
 ```julia
-qx         .= .-1.0/ρ.*diff(P )./dx
-Vx         .= Vx         .+ dt.*qx
-dPdt       .= .-    K.*diff(Vx)./dx
-P[2:end-1] .= P[2:end-1] .+ dt.*dPdt
+qx         .= .-1.0/ρ.*diff(...)./dx
+Vx         .= ...
+dPdt       .= ...
+P[2:end-1] .= P[2:end-1] ...
 ```
 """
 
-#md # 👉 [Download the `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -361,6 +348,5 @@ Let's get started with 2D.
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
 
-#md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 

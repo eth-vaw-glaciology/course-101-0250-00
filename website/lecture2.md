@@ -9,7 +9,7 @@ noeval = true
 # Lecture 2
 
 > **Agenda**\
-> :books: ODEs & PDEs - reaction, diffusion, advection\
+> :books: PDEs and physical processes --- diffusion, wave propagation, advection\
 > :computer: Get started on GitHub\
 > :construction: Exercises:
 > - basic code structure & vectorisation

@@ -4,7 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 2_
 md"""
-# ODEs & PDEs: reaction - diffusion - advection
+# PDEs and physical processes --- diffusion, wave propagation, advection
 """
 
 #src ######################################################################### 
@@ -25,268 +25,27 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function.\
-> **Ordinary differential equations (ODE)** form a subclass of partial differential equations, corresponding to functions of a single variable. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## ODEs - reaction
-Simple reaction equation, finite-difference method and explicit solution
+> _**Note on classification of PDEs:**_
+> - **Elliptic:**\
+>   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+> - **Parabolic:**\
+>   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+> - **Hyperbolic:**\
+>   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
 """
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-![reaction](./figures/reaction3.gif)
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Let's take-off 🚀
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Our first task is to design a numerical solution approach for the following reaction process (e.g. [reaction kinetics](https://en.wikipedia.org/wiki/Chemical_kinetics))
-
-$$
-\frac{∂C}{∂t} = -\frac{C-C_{eq}}{ξ}~,
-$$
-
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-where $C$ is the concentration of ,e.g. a specific chemical quantity, $t$ is time, $C_{eq}$ is the equilibrium concentration of $C$ and $ξ$ is the reaction rate.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Suppose the reaction kinetics process occurs in a spatial domain (x-direction) of $Lx=10.0$, consider a reaction rate $ξ=10.0$ and an equilibrium concentration $C_{eq}=0.5$.
-
-The goal is now to predict the evolution of a system with initial random distribution of concentration $C$ in the range $[0, 1]$ for non-dimensional total time of $20.0$.
-
-```julia
-# Physics
-Lx   = 10.0
-ξ    = 10.0
-Ceq  = 0.5
-ttot = 20.0
-```
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-As next step, one needs to discretise the continuum problem in both space and time. We will use a [finite-difference](https://en.wikipedia.org/wiki/Finite_difference) spatial discretisation and an explicit ([forward Euler](https://en.wikipedia.org/wiki/Euler_method)) time integration scheme.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-In a new `# Numerics` section we define the number of grid points we will use to discretise our physical domain $Lx$.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Then, in a `# Derived numerics` section, we compute the grid size `dx`, the time-step `dt`, the number of time-steps `nt` and the vector containing the coordinate of all cell centres `xc`.
-
-```julia
-# Numerics
-nx   = 128
-# Derived numerics
-dx   = Lx/nx
-dt   = ξ/2.0
-nt   = cld(ttot, dt)
-xc   = LinRange(dx/2, Lx-dx/2, nx)
-```
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Type `?` in the Julia REPL followed by the function you want to know more about to display infos.
-#md # \note{Type `?` in the Julia REPL followed by the function you want to know more about to display infos.}
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-We now need to initialise 3 1D arrays to hold information about concentration `C`, initial concentration distribution `Ci`, and rate of change of concentration `dCdt`.
-
-```julia
-# Array initialisation
-C    =  rand(Float64, nx)
-Ci   =  copy(C)
-dCdt = zeros(Float64, nx)
-```
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Note we here work with double precision arithmetic `Float64`.
-#md # \note{We here work with double precision arithmetic `Float64`.}
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Remains the most important part, the `# Time loop` where _predictive_ action should take place. We will loop from `it=1` to `nt` computing the rate of change of `C`, `dCdt`, and then updating `C`. We also want to visualise the evolution of the concentration distribution.
-
-```julia
-using Plots
-
-# Time loop
-for it = 1:nt
-  #hint #dCdt .= ...
-  #hint #C    .= ...
-  #sol dCdt .= .-(C .- Ceq)./ξ
-  #sol C    .= C .+ dt.*dCdt
-  display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-               xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-               framestyle=:box, label="Concentration"))
-end
-```
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-- Make sure to update the arrays `dCdt` and `C` using the [dot syntax](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized) for vectorised functions.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-- The `display()` function will force to update the figure within the loop. Note that in Jupyter notebooks, you can use following syntax to avoid the creation of a new figure at each step.
-
-```julia
-using IJulia
-IJulia.clear_output(true)
-display(plot(...))
-```
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-👉 Your turn. Let's implement the reaction physics.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-After the time loop, we can also display the initial concentration we stored `Ci` and the equilibrium concentration `Ceq`:
-
-```julia
-plot!(xc, Ci, lw=2, label="C initial")
-display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
-```
-
-Note that calling further instances of `plot!()` will act as "hold-on" and allow to display multiple objects on top of each other.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-We may want to write a single "monolithic" `reaction_1D.jl` code to perform these steps that looks as following
-"""
-
-#!nb using Plots
-#!nb 
-#!nb @views function reaction_1D()
-#!nb     ## Physics
-#!nb     Lx   = 10.0
-#!nb     ξ    = 10.0
-#!nb     Ceq  = 0.5
-#!nb     ttot = 20.0
-#!nb     ## Numerics
-#!nb     nx   = 128
-#!nb     ## Derived numerics
-#!nb     dx   = Lx/nx
-#!nb     dt   = ξ/2.0
-#!nb     nt   = cld(ttot, dt)
-#!nb     xc   = LinRange(dx/2, Lx-dx/2, nx)
-#!nb     ## Array initialisation
-#!nb     C    =  rand(Float64, nx)
-#!nb     Ci   =  copy(C)
-#!nb     dCdt = zeros(Float64, nx)
-#!nb     ## Time loop
-#!nb     for it = 1:nt
-#!nb         #hint #dCdt .= ...
-#!nb         #hint #C    .= ...
-#!nb         #sol dCdt .= .-(C .- Ceq)./ξ
-#!nb         #sol C    .= C .+ dt.*dCdt
-#!nb         display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0),
-#!nb                      xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)",
-#!nb                      framestyle=:box, label="Concentration"))
-#!nb     end
-#!nb     plot!(xc, Ci, lw=2, label="C initial")
-#!nb     display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
-#!nb     return
-#!nb end
-#!nb 
-#!nb #reaction_1D()
-
-#nb using Plots
-#nb @views function reaction_1D()
-#nb     ## Physics
-#nb     Lx   = 10.0
-#nb     ξ    = 10.0
-#nb     Ceq  = 0.5
-#nb     ttot = 20.0
-#nb     ## Numerics
-#nb     nx   = 128
-#nb     ## Derived numerics
-#nb     dx   = Lx/nx
-#nb     dt   = ξ/2.0
-#nb     nt   = cld(ttot, dt)
-#nb     xc   = LinRange(dx/2, Lx-dx/2, nx)
-#nb     ## Array initialisation
-#nb     C    =  rand(Float64, nx)
-#nb     Ci   =  copy(C)
-#nb     dCdt = zeros(Float64, nx)
-#nb     ## Time loop
-#nb     for it = 1:nt
-#nb         #hint #dCdt .= ...
-#nb         #hint #C    .= ...
-#nb         #sol dCdt .= .-(C .- Ceq)./ξ
-#nb         #sol C    .= C .+ dt.*dCdt
-#nb         IJulia.clear_output(true); display(plot(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(it*dt)", framestyle=:box, label="Concentration"))
-#nb         sleep(0.1)
-#nb     end
-#nb     IJulia.clear_output(true); plot!(xc, Ci, lw=2, label="C initial")
-#nb     IJulia.clear_output(true); display(plot!(xc, Ceq*ones(nx), lw=2, label="Ceq"))
-#nb     return
-#nb end
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-# Let's execute it and visualise output
-#nb reaction_1D()
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-So, excellent, we have our first 1D ODE solver up and running in Julia 🙂
-"""
-
-#sol #md # 👉 [Download the `reaction_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## PDEs - diffusion
 
-From reactions to diffusion and advection - involving gradients (neighbouring cells).
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
 ![diffusion](./figures/diffusion1.gif)
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Starting from the reaction script that we just finalised, we will now do as few as possible changes to solve the diffusion equation.
 """
 
 #src #########################################################################
@@ -312,7 +71,7 @@ where $D$ is the diffusion coefficient.
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The second order formulation is only possible if the diffusion coefficient D is a single value valid in all the considered domain.
+The second order formulation is only possible if the diffusion coefficient $D$ is a single value valid in all the considered domain.
 
 A more general description allowing for non-uniform, non-linear diffusion coefficient combines a diffusive flux:
 
@@ -367,44 +126,42 @@ So, we are ready to solve the 1D diffusion equation.
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Starting from the reaction code, turn `ξ` into `D=1.0`, the diffusion coefficient, remove `C_eq`, set total simulation time `ttot = 2.0`
+We introduce the physical parameters that are relevant for the considered problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
 
 ```julia
 # Physics
-Lx   = 10.0
-D    = 1.0
-ttot = 2.0
+lx   = 10.0
+dc   = 1.0
 ```
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The only change in the `# Derived numerics` section is the diffusive stable time step definition, to comply with the [CFL stability condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration
+Then we declare numerical parameters: the number of grid cells used to discretize the computational domain `nx`, and the frequency of updating the visualisation:
 
 ```julia
-# Derived numerics
-dt   = dx^2/D/2.1
+# numerics
+nx   = 200
+nvis = 5
 ```
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the `# Array initialisation` section, we need a new object to hold the diffusive flux in x direction `qx`
+In the `# array initialisation` section, we need to initialise one array to store the concentration field `C`, and the diffusive flux in the x direction `qx`:
 
 ```julia
-#hint dCdt = zeros(Float64, nx) # wrong size - will fail because of staggering
-#hint qx   = zeros(Float64, nx) # wrong size - will fail because of staggering
-#sol dCdt = zeros(Float64, nx-2) # wrong size - will fail because of staggering
-#sol qx   = zeros(Float64, nx-1) # wrong size - will fail because of staggering
+# array initialisation
+C    = @. sin(10π*xc/lx); C_i = copy(C)
+#hint qx   = zeros(Float64, nx) # won't work
+#sol qx   = zeros(Float64, nx-1)
 ```
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Wait... what about the staggering ?
-
-No surprise `C .= diff(C)` won't work ...
+Wait... why it wouldn't work?
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -418,23 +175,21 @@ md"""
 The initialisation steps of the diffusion code should contain
 """
 
-## Physics
-Lx   = 10.0
-D    = 1.0
-ttot = 2.0
-## Numerics
-nx   = 12
-nout = 10
-## Derived numerics
-dx   = Lx/nx
-dt   = dx^2/D/2.1
-nt   = cld(ttot, dt)
-xc   = LinRange(dx/2, Lx-dx/2, nx)
-## Array initialisation
-C    =  rand(Float64, nx)
-Ci   =  copy(C)
-dCdt = zeros(Float64, nx-2)
-qx   = zeros(Float64, nx-1);
+## physics
+lx   = 20.0
+dc   = 1.0
+## numerics
+nx   = 200
+nvis = 5
+## derived numerics
+dx   = lx/nx
+dt   = dx^2/dc/2
+nt   = nx^2 ÷ 100
+xc   = LinRange(dx/2,lx-dx/2,nx)
+## array initialisation
+C    = @. sin(10π*xc/lx); C_i = copy(C)
+#hint qx   = zeros(Float64, nx) # won't work
+#sol qx   = zeros(Float64, nx-1)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -444,11 +199,10 @@ Followed by the 3 physics computations (lines) in the time loop
 
 ## Time loop
 for it = 1:nt
-    #hint #qx         .= # add solution
-    #hint #dCdt       .= # add solution
-    #sol qx         .= .-D.*diff(C)./dx
-    #sol dCdt       .= .-diff(qx)./dx
-    C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
+    #hint #q x         .= # add solution
+    #hint #C[2:end-1] .-= # add solution
+    #sol qx          .= .-dc.*diff(C )./dx
+    #sol C[2:end-1] .-=   dt.*diff(qx)./dx
     ## Visualisation
 end
 
@@ -461,9 +215,8 @@ One can examine the size of the various vectors ...
 
 ## check sizes and staggering
 @show size(qx)
-@show size(dCdt)
 @show size(C)
-@show size(C[2:end-1]);
+@show size(C[2:end-1])
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -474,7 +227,6 @@ md"""
 using Plots
  plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[2:end-1]      , dCdt, label="rate of change", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
