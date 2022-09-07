@@ -4,15 +4,15 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 2_
 md"""
-# PDEs and physical processes -- diffusion, wave propagation, advection
+# PDEs and physical processes - diffusion, wave propagation, advection
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 2 is to familiarise (or refresh) with
-- Ordinary differential equations -- ODEs (e.g. reaction equation)
-- Partial differential equations -- PDEs (e.g. diffusion and advection equations)
+- Ordinary differential equations - ODEs (e.g. reaction equation)
+- Partial differential equations - PDEs (e.g. diffusion and advection equations)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -25,28 +25,38 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 """
+
+#md # \note{
+#md # _**Classification of second-order PDEs:**_
+#md # - **Parabolic:**\
+#md #   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+#md # - **Hyperbolic:**\
+#md #   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. acoustic wave equation)
+#md # - **Elliptic:**\
+#md #   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+#md # }
+
+#nb # > _**Classification of second-order PDEs:**_
+#nb # >  - **Parabolic:**\
+#nb # >    $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+#nb # >  - **Hyperbolic:**\
+#nb # >    $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. acoustic wave equation)
+#nb # >  - **Elliptic:**\
+#nb # >    $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> _**Note on classification of PDEs:**_
-> - **Elliptic:**\
->   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
-> - **Parabolic:**\
->   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
-> - **Hyperbolic:**\
->   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
+## Parabolic PDEs - diffusion
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## PDEs - diffusion
-
-![diffusion](./figures/diffusion1.gif)
-"""
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="./figures/porous_convection_2D.mp4"/>
+# </center>
+#md # ~~~
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -71,9 +81,7 @@ where $D$ is the diffusion coefficient.
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The second order formulation is only possible if the diffusion coefficient $D$ is a single value valid in all the considered domain.
-
-A more general description allowing for non-uniform, non-linear diffusion coefficient combines a diffusive flux:
+A more general description combines a diffusive flux:
 
 $$ q = -D\frac{∂C}{∂x}~,$$
 """
@@ -225,7 +233,7 @@ md"""
 """
 
 using Plots
- plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 
 #src #########################################################################
@@ -289,13 +297,13 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## PDEs - advection
+## Hyperbolic PDEs - acoustic wave propagation
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![advection](./figures/advection3.gif)
+## First-order PDEs - advection
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -313,7 +321,7 @@ $$ \frac{∂C}{∂t} = -\frac{∂(v_x~C)}{∂x} ~.$$
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-In case the flow is incompressible ($∇⋅v = 0$ -- here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
+In case the flow is incompressible ($∇⋅v = 0$ - here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
 
 $$ \frac{∂C}{∂t} = -v_x \frac{∂C}{∂x} ~.$$
 """
@@ -443,6 +451,7 @@ C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
 """
 
 #sol #md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
