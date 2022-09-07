@@ -12,12 +12,10 @@ hascode = true
 ### Course slides and lecture material
 Most of the course slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your nethz-name and an arbitrary password (**but don't use your nethz password**).  _You have to be within the ETHZ network or use a VPN connection._
-
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/) as well. You can execute them on the server or download and run them them locally as well.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle as well. You can execute them on the server or download and run them them locally as well.
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
@@ -25,7 +23,7 @@ Starting from lecture 3, exercise scripts will be mostly standalone regular Juli
 
 \warn{The `achtzack01` is **not** backed up. Make sure to keep local copy of your data!}
 
-## Installing Julia v1.6 (or later)
+## Installing Julia v1.8 (or later)
 Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
@@ -58,7 +56,7 @@ VS Code's [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-
 
 1. To get started, follow [the install steps](https://code.visualstudio.com/docs/remote/ssh#_installation).
 2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
-3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#connect_to_the_machine_and_to_your_compute_node_from_vs_code) (e.g. a GPU node on `octopus`).
+3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#connect_to_the_machine_and_to_your_compute_node_from_vs_code).
 
 \note{This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.}
 
@@ -192,7 +190,7 @@ julia --project -t auto
 ```
 which will launch Julia with as many threads are there are cores on your machine (including hyper-threaded cores). Alternatively set the environment variable `JULIA_NUM_THREADS`, e.g. `export JULIA_NUM_THREADS=2` to enable 2 threads.
 
-### Running on GPUs
+### Julia on GPUs
 The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch compute kernels on Nvidia GPUs natively from within Julia. [JuliaGPU](https://juliagpu.org) provides further reading and [introductory material](https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/) about GPU ecosystems within Julia.
 
 ### Julia MPI
@@ -234,208 +232,3 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 
 \note{See [Julia MPI GPU on your `octopus` node](#julia_mpi_gpu_on_your_octopus_node) for detailed information on how to run MPI GPU (multi-GPU) applications on your assigned `octopus` node.}
 
-## Accessing the GPU resources on `octopus`
-
-The following steps will permit you to access the GPU resources, the [octopus supercomputer](https://wp.unil.ch/geocomputing/octopus/).
-
-Look-up your username (`<username>`) and assigned node (`node`), both listed in [Moodle - General](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) under `Connecting to the GPU resources (octopus)`. Your password was sent via email.
-
-### Connect to the machine via ssh
-```sh
-ssh <username>@octopus.unil.ch
-```
-
-### Connect to the machine and to your compute node from VS Code
-[Using VS Code](#vs_code_remote_-_ssh_setup) with the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension enables direct ssh access to your compute node `nodeXX`.
-
-Edit your ssh config file (on Unix-based systems `.ssh/config`) as suggested in the [advanced settings](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) by adding following information (replacing `nodeXX` and `<username>`):
-
-```txt
-Host octopus
-  HostName octopus.unil.ch
-  User <username>
-  IdentityFile ~/.ssh/id_rsa
-
-Host nodeXX
-  HostName nodeXX.octopoda
-  User <username>
-  ProxyJump <username>@octopus.unil.ch
-
-```
-This will create a ProxyJump, setting up a connexion to your node via the master (login node).
-
-### Initialise your remote desktop (first time only)
-1. On your local machine (laptop), head to [RealVNC's download page](https://www.realvnc.com/en/connect/download/viewer/) to download the **VNC viewer**.
-2. On _octopus_, trigger the remote desktop creation typing in the terminal
-    ```sh
-    vncserver :<VNC screen>
-    ```
-    where `<VNC screen>` refers to the screen number.
-3. You will get prompted a line
-    ```sh
-    New 'octopus.unil.ch:<VNC screen> (<username>)' desktop is octopus.unil.ch:<VNC screen>
-    ```
-
-### Connect to remote desktop
-1. On your local machine (laptop), open **VNC viewer** and paste the address you got prompted at remote desktop creation, i.e., `octopus.unil.ch:<VNC screen>` in the search bar - hit `enter`.
-2. Type in the VNC password your received by email and you should be connected.
-3. **Make sure to disable screensaver** when connecting for the first time to the remote desktop. You can do so accessing the `Applications` menu in the upper left corner and selecting: `Applications > Settings > Screensaver` and turning it `off`.
-4. You can open a terminal (`Applications` menu in the upper left corner) and follow the next steps:
-    - [Login to `node40`](#login_to_node40) (only during lecture 6 and for exercise 1)
-    - [Login to your node](#login_to_your_node) (all other coming classes)
-
-\warn{Never "logout" from your remote desktop, just close the VNC viewer window!}
-
-#### Login to node40
-This node only needed to be accessed during lecture 6 and for the exercise 1 (lecture 6).
-
-<!-- This node should only be accessed during lecture 6 and for the exercise 1 (lecture 6).
-
-1. **In your remote desktop**, open a terminal, `ssh` to `node40` enabling graphics redirecting `-YC`
-```sh
-ssh -YC node40
-```
-2. Load the required modules:
-```sh
-module load julia cuda/11.4
-```
-3. List the available GPU resources:
-```sh
-nvidia-smi
-```
-4. Navigate to `/scratch/<username>/lecture06`
-```sh
-cd /scratch/<username>/lecture06
-```
-5. Launch Julia
-```sh
-julia
-```
-6. See [here](#running_a_jupyter_notebook) for running a Jupyter notebook
-
-7. Open the `l6_1-gpu-memcopy.ipynb` notebook. You are all set 🚀
-
-\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...} -->
-
-#### Login to your node
-Except for doing the hands-on in lecture 6 and for exercise 1 (lecture 6), you should connect to your corresponding GPU node according to the node list available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0):
-1. From the _octopus_ login node, you can access your compute node (replacing `<node>` by the 2 digit node number assigned to you) typing
-```sh
-ssh node<node>
-```
-in your local terminal or in the terminal within the remote desktop (e.g. `ssh node39`).
-2. Typing `pwd()` should confirm you are in your `/home` folder.
-
-\warn{Do not save data in your `/home` as the space is very limited. Always Navigate to your scratch-space `cd /scratch/<username>`, as this is the place where you should work from, save data, etc...}
-
-3. Navigate to your scratch-space
-```sh
-cd /scratch/<username>
-```
-as this is the place where you should work from, save data, etc...
-4. Load the required modules:
-```sh
-module load julia cuda/11.4
-```
-5. CUDA.jl ships with precompiled CUDA binaries (called [artifacts](https://juliagpu.gitlab.io/CUDA.jl/installation/overview/#Artifacts)). On `octopus` we want to disallow use of artifacts, because an optimized CUDA installation is available for the system. You can do so by setting the environment variable `JULIA_CUDA_USE_BINARYBUILDER` to `false` when importing CUDA.jl.
-```sh
-export JULIA_CUDA_USE_BINARYBUILDER=false
-```
-6. Launch Julia
-```sh
-julia
-```
-and you are all set 🚀
-
-7. See [here](#running_a_jupyter_notebook) for running a Jupyter notebook
-
-\note{You can use the `nvidia-smi` command as `top` alternative to monitor processes on the GPU(s).}
-
-### Running a Jupyter notebook
-
-If you need to run a Julia notebook within Jupyter, do following:
-
-1. Navigate to the notebook's parent folder (e.g. `/scratch/<username>/lecture06`)
-```sh
-cd /scratch/<username>/lecture06
-```
-2. Launch Julia
-```sh
-julia
-```
-3. Activate and instantiate the project (this should download all packages you need 🙂)
-```julia-repl
-julia> ]
-
-(@v1.6) pkg> activate .
-
-(lecture06) pkg> instantiate
-```
-If you are not running in a particular project, you may need to add the `IJulia` package
-```julia-repl
-julia> ]
-
-(@v1.6) pkg> add IJulia
-```
-4. Launch Jupyter
-```julia-repl
-julia> using IJulia
-
-julia> notebook(dir=pwd())
-```
-You will get prompted to `install jupyter [y/N]` the first time running the `notebook()` command. Type `Yes` or `y`.
-
-You should see Firefox opening a Jupyter tab (make sure you connected using `-YC` or `-X`).
-
-5. Open the notebook. You are all set 🚀
-
-
-### Julia MPI GPU on your `octopus` node
-
-This section will get you set-up to exercise with multi-GPU programs on your assigned `octopus` node:
-1. Open a terminal on your local machine and connect to `octopus` over `ssh` (or open your VNC remote desktop)
-2. Connect to your node: node03 - node26 (no longer node40 - see [Moodle - General](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0))
-3. Navigate to your `scratch` folder, then `lecture08` (you should have a copy of _**Lecture 8**_ material)
-```sh
-ssh -YC nodeXX
-cd /scratch/<username>/lecture08
-```
-4. Load the required modules and use system CUDA
-```sh
-module load cuda/11.4 julia
-export JULIA_CUDA_USE_BINARYBUILDER=false
-```
-5. Start Julia in project mode
-```sh
-julia --project
-```
-6. Resolve and instantiate the project to download all required packages
-```julia-repl
-julia> ]
-
-(lecture08) pkg> resolve
-
-(lecture08) pkg> instantiate
-``` 
-7. Install `mpiexecjl` launcher:
-```julia-repl
-julia> using MPI
-
-julia> MPI.install_mpiexecjl()
-[ Info: Installing `mpiexecjl` to `/home/<username>/.julia/bin`...
-[ Info: Done!
-```
-8. Then, one should add `/home/<username>/.julia/bin` to PATH in order to launch the Julia MPI wrapper `mpiexecjl`.
-9. Running a Julia MPI code `<my_script.jl>` on `np` MPI processes:
-```sh
-$ mpiexecjl -n np julia --project <my_script.jl>
-```
-10. To test the Julia MPI GPU installation, launch the [`hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl) using the Julia MPI wrapper `mpiexecjl` (located in `/home/<username>/.julia/bin`) on, e.g., 4 processes:
-```sh
-$ mpiexecjl -n 4 julia --project ./hello_mpi_gpu.jl 
-$ Hello world, I am 0 of 4 using CuDevice(0)
-$ Hello world, I am 1 of 4 using CuDevice(1)
-$ Hello world, I am 2 of 4 using CuDevice(2)
-$ Hello world, I am 3 of 4 using CuDevice(3)
-```
-If you made it to here you should be all set 🚀
