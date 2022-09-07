@@ -1,4 +1,4 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Software install</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item active" href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs and physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 - Acoustic waves</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Implicit & nonlinear</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing & perf</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - XPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-XPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=software_install ><a href="#software_install" class=header-anchor >Software install</a></h1> <div class=franklin-toc ><ol><li><a href="#software_install">Software install</a><ol><li><a href="#opening_and_running_the_jupyter_julia_notebook">Opening and running the Jupyter Julia notebook</a><li><a href="#installing_julia_v16_or_later">Installing Julia v1.6 &#40;or later&#41;</a><li><a href="#running_julia">Running Julia</a><li><a href="#accessing_the_gpu_resources_on_octopus">Accessing the GPU resources on <code>octopus</code></a></ol></ol></div> <h2 id=opening_and_running_the_jupyter_julia_notebook ><a href="#opening_and_running_the_jupyter_julia_notebook" class=header-anchor >Opening and running the Jupyter Julia notebook</a></h2> <h3 id=course_slides_and_lecture_material ><a href="#course_slides_and_lecture_material" class=header-anchor >Course slides and lecture material</a></h3> <p>Most of the course slides are a <a href="https://jupyter.org/">Jupyter notebook</a>; a browser-based computational notebook.</p> <p>You can follow the lecture along live at <a href="https://achtzack01.ethz.ch/">https://achtzack01.ethz.ch/</a>, login with your nethz-name and an arbitrary password &#40;<strong>but don&#39;t use your nethz password</strong>&#41;. <em>You have to be within the ETHZ network or use a VPN connection.</em></p> <p>Code cells are executed by putting the cursor into the cell and hitting <code>shift &#43; enter</code>. For more info see the <a href="https://jupyter-notebook.readthedocs.io/en/stable/">documentation</a>.</p> <h3 id=exercises_and_homework ><a href="#exercises_and_homework" class=header-anchor >Exercises and homework</a></h3> <p>The first two lecture&#39;s homework assignments will be <a href="https://jupyter.org/">Jupyter notebooks</a>. You&#39;ll find them on <a href="https://achtzack01.ethz.ch/">https://achtzack01.ethz.ch/</a> as well. You can execute them on the server or download and run them them locally as well.</p> <p>For submission, download the final <code>.ipynb</code> notebooks from the server, or collect the local <code>.ipynb</code> notebooks into a single local folder you then upload to Moodle. See <a href="/logistics">Logistics</a> and <a href="/homework">Homework</a> for details.</p> <p>Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private git repo &#40;shared with the teaching staff only&#41;. Details in <a href="/logistics/#submission">Logistics</a>.</p> <div class=warning ><div class=title >⚠️ Warning&#33;</div> <div class=messg >The <code>achtzack01</code> is <strong>not</strong> backed up. Make sure to keep local copy of your data&#33;</div></div> <h2 id=installing_julia_v16_or_later ><a href="#installing_julia_v16_or_later" class=header-anchor >Installing Julia v1.6 &#40;or later&#41;</a></h2> <p>Check you have an active internet connexion and <a href="https://julialang.org/downloads/">download Julia v1.6</a> for your platform following the install directions provided under <strong>&#91;help&#93;</strong>.</p> <p>Alternatively, open a terminal and download the binaries &#40;select the one for your platform&#41;:</p> <pre><code class="sh hljs">wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.3-win64.exe <span class=hljs-comment ># Windows</span>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Software install</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item active" href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs and physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 - Acoustic waves</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Implicit & nonlinear</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing & perf</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - XPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-XPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=software_install ><a href="#software_install" class=header-anchor >Software install</a></h1> <div class=franklin-toc ><ol><li><a href="#software_install">Software install</a><ol><li><a href="#opening_and_running_the_jupyter_julia_notebook">Opening and running the Jupyter Julia notebook</a><li><a href="#installing_julia_v18_or_later">Installing Julia v1.8 &#40;or later&#41;</a><li><a href="#running_julia">Running Julia</a></ol></ol></div> <h2 id=opening_and_running_the_jupyter_julia_notebook ><a href="#opening_and_running_the_jupyter_julia_notebook" class=header-anchor >Opening and running the Jupyter Julia notebook</a></h2> <h3 id=course_slides_and_lecture_material ><a href="#course_slides_and_lecture_material" class=header-anchor >Course slides and lecture material</a></h3> <p>Most of the course slides are a <a href="https://jupyter.org/">Jupyter notebook</a>; a browser-based computational notebook.</p> <p>Code cells are executed by putting the cursor into the cell and hitting <code>shift &#43; enter</code>. For more info see the <a href="https://jupyter-notebook.readthedocs.io/en/stable/">documentation</a>.</p> <h3 id=exercises_and_homework ><a href="#exercises_and_homework" class=header-anchor >Exercises and homework</a></h3> <p>The first two lecture&#39;s homework assignments will be <a href="https://jupyter.org/">Jupyter notebooks</a>. You&#39;ll find them on Moodle as well. You can execute them on the server or download and run them them locally as well.</p> <p>For submission, download the final <code>.ipynb</code> notebooks from the server, or collect the local <code>.ipynb</code> notebooks into a single local folder you then upload to Moodle. See <a href="/logistics">Logistics</a> and <a href="/homework">Homework</a> for details.</p> <p>Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private git repo &#40;shared with the teaching staff only&#41;. Details in <a href="/logistics/#submission">Logistics</a>.</p> <div class=warning ><div class=title >⚠️ Warning&#33;</div> <div class=messg >The <code>achtzack01</code> is <strong>not</strong> backed up. Make sure to keep local copy of your data&#33;</div></div> <h2 id=installing_julia_v18_or_later ><a href="#installing_julia_v18_or_later" class=header-anchor >Installing Julia v1.8 &#40;or later&#41;</a></h2> <p>Check you have an active internet connexion and <a href="https://julialang.org/downloads/">download Julia v1.6</a> for your platform following the install directions provided under <strong>&#91;help&#93;</strong>.</p> <p>Alternatively, open a terminal and download the binaries &#40;select the one for your platform&#41;:</p> <pre><code class="sh hljs">wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.3-win64.exe <span class=hljs-comment ># Windows</span>
 wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.3-mac64.dmg <span class=hljs-comment ># macOS</span>
 wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_64.tar.gz <span class=hljs-comment ># Linux x86</span></code></pre> <p>Then extract them and add Julia to <code>PATH</code> &#40;usually done in your <code>.bashrc</code>, <code>.profile</code>, or <code>config</code> file&#41;.</p> <blockquote> <p><strong>Note for Windows users</strong><br />When installing Julia 1.6 on Windows, make sure to check the &quot;Add PATH&quot; tick or ensure Julia is on PATH &#40;see <strong>&#91;help&#93;</strong>&#41;. Julia&#39;s REPL has a built-in shell mode you can access typing <code>;</code> that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing <code>Powershell</code> within the shell mode, and exit it typing <code>exit</code>, as described <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode">here</a>.</p> </blockquote> <h3 id=terminal_external_editor ><a href="#terminal_external_editor" class=header-anchor >Terminal &#43; external editor</a></h3> <p>Ensure you have a text editor with syntax highlighting support for Julia. <a href="https://www.sublimetext.com/download">Sublime Text</a> and <a href="https://atom.io">Atom</a> can be recommended.</p> <p>From within the terminal, type</p> <pre><code class="sh hljs">julia</code></pre>
 <p>to make sure that the Julia REPL &#40;aka terminal&#41; starts. Then you should ba able to add <code>1&#43;1</code> and verify you get the expected result. Exit with <code>Ctrl-d</code>.</p>
@@ -12,7 +12,7 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_
 
 <li><p>Then, you can <a href="https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host">connect to a remote host</a>, using <code>ssh user@hostname</code> and your password &#40;selecting <code>Remote-SSH: Connect to Host...</code> from the Command Palette&#41;.</p>
 
-<li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code">access a remote compute node from within VS Code</a> &#40;e.g. a GPU node on <code>octopus</code>&#41;.</p>
+<li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code">access a remote compute node from within VS Code</a>.</p>
 
 </ol>
 <div class=note ><div class=title >💡 Note</div>
@@ -100,7 +100,7 @@ julia</code></pre>
 <p>On the CPU, <a href="https://docs.julialang.org/en/v1/manual/multi-threading/#man-multithreading">multi-threading</a> is made accessible via <a href="https://docs.julialang.org/en/v1/base/multi-threading/">Base.Threads</a>. To make use of threads, Julia needs to be launched with</p>
 <pre><code class="sh hljs">julia --project -t auto</code></pre>
 <p>which will launch Julia with as many threads are there are cores on your machine &#40;including hyper-threaded cores&#41;. Alternatively set the environment variable <code>JULIA_NUM_THREADS</code>, e.g. <code>export JULIA_NUM_THREADS&#61;2</code> to enable 2 threads.</p>
-<h3 id=running_on_gpus ><a href="#running_on_gpus" class=header-anchor >Running on GPUs</a></h3>
+<h3 id=julia_on_gpus ><a href="#julia_on_gpus" class=header-anchor >Julia on GPUs</a></h3>
 <p>The <a href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a> module permits to launch compute kernels on Nvidia GPUs natively from within Julia. <a href="https://juliagpu.org">JuliaGPU</a> provides further reading and <a href="https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/">introductory material</a> about GPU ecosystems within Julia.</p>
 <h3 id=julia_mpi ><a href="#julia_mpi" class=header-anchor >Julia MPI</a></h3>
 <p>The following steps permit you to install <a href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a> on your machine and test it:</p>
@@ -138,201 +138,10 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >See <a href="#julia_mpi_gpu_on_your_octopus_node">Julia MPI GPU on your <code>octopus</code> node</a> for detailed information on how to run MPI GPU &#40;multi-GPU&#41; applications on your assigned <code>octopus</code> node.</div></div>
-<h2 id=accessing_the_gpu_resources_on_octopus ><a href="#accessing_the_gpu_resources_on_octopus" class=header-anchor >Accessing the GPU resources on <code>octopus</code></a></h2>
-<p>The following steps will permit you to access the GPU resources, the <a href="https://wp.unil.ch/geocomputing/octopus/">octopus supercomputer</a>.</p>
-<p>Look-up your username &#40;<code>&lt;username&gt;</code>&#41; and assigned node &#40;<code>node</code>&#41;, both listed in <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a> under <code>Connecting to the GPU resources &#40;octopus&#41;</code>. Your password was sent via email.</p>
-<h3 id=connect_to_the_machine_via_ssh ><a href="#connect_to_the_machine_via_ssh" class=header-anchor >Connect to the machine via ssh</a></h3>
-<pre><code class="sh hljs">ssh &lt;username&gt;@octopus.unil.ch</code></pre>
-<h3 id=connect_to_the_machine_and_to_your_compute_node_from_vs_code ><a href="#connect_to_the_machine_and_to_your_compute_node_from_vs_code" class=header-anchor >Connect to the machine and to your compute node from VS Code</a></h3>
-<p><a href="#vs_code_remote_-_ssh_setup">Using VS Code</a> with the <a href="https://marketplace.visualstudio.com/items?itemName&#61;ms-vscode-remote.remote-ssh">Remote - SSH</a> extension enables direct ssh access to your compute node <code>nodeXX</code>.</p>
-<p>Edit your ssh config file &#40;on Unix-based systems <code>.ssh/config</code>&#41; as suggested in the <a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">advanced settings</a> by adding following information &#40;replacing <code>nodeXX</code> and <code>&lt;username&gt;</code>&#41;:</p>
-<pre><code class="txt hljs">Host octopus
-  HostName octopus.unil.ch
-  User &lt;username&gt;
-  IdentityFile ~/.ssh/id_rsa
-
-Host nodeXX
-  HostName nodeXX.octopoda
-  User &lt;username&gt;
-  ProxyJump &lt;username&gt;@octopus.unil.ch</code></pre>
-<p>This will create a ProxyJump, setting up a connexion to your node via the master &#40;login node&#41;.</p>
-<h3 id=initialise_your_remote_desktop_first_time_only ><a href="#initialise_your_remote_desktop_first_time_only" class=header-anchor >Initialise your remote desktop &#40;first time only&#41;</a></h3>
-<ol>
-<li><p>On your local machine &#40;laptop&#41;, head to <a href="https://www.realvnc.com/en/connect/download/viewer/">RealVNC&#39;s download page</a> to download the <strong>VNC viewer</strong>.</p>
-
-<li><p>On <em>octopus</em>, trigger the remote desktop creation typing in the terminal</p>
-
-</ol>
-<pre><code class="sh hljs">vncserver :&lt;VNC screen&gt;</code></pre>
-<p>where <code>&lt;VNC screen&gt;</code> refers to the screen number.</p>
-<ol start=3 >
-<li><p>You will get prompted a line</p>
-
-</ol>
-<pre><code class="sh hljs">New <span class=hljs-string >&#x27;octopus.unil.ch:&lt;VNC screen&gt; (&lt;username&gt;)&#x27;</span> desktop is octopus.unil.ch:&lt;VNC screen&gt;</code></pre>
-<h3 id=connect_to_remote_desktop ><a href="#connect_to_remote_desktop" class=header-anchor >Connect to remote desktop</a></h3>
-<ol>
-<li><p>On your local machine &#40;laptop&#41;, open <strong>VNC viewer</strong> and paste the address you got prompted at remote desktop creation, i.e., <code>octopus.unil.ch:&lt;VNC screen&gt;</code> in the search bar - hit <code>enter</code>.</p>
-
-<li><p>Type in the VNC password your received by email and you should be connected.</p>
-
-<li><p><strong>Make sure to disable screensaver</strong> when connecting for the first time to the remote desktop. You can do so accessing the <code>Applications</code> menu in the upper left corner and selecting: <code>Applications &gt; Settings &gt; Screensaver</code> and turning it <code>off</code>.</p>
-
-<li><p>You can open a terminal &#40;<code>Applications</code> menu in the upper left corner&#41; and follow the next steps:</p>
-<ul>
-<li><p><a href="#login_to_node40">Login to <code>node40</code></a> &#40;only during lecture 6 and for exercise 1&#41;</p>
-
-<li><p><a href="#login_to_your_node">Login to your node</a> &#40;all other coming classes&#41;</p>
-
-</ul>
-
-</ol>
-<div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg >Never &quot;logout&quot; from your remote desktop, just close the VNC viewer window&#33;</div></div>
-<h4 id=login_to_node40 ><a href="#login_to_node40" class=header-anchor >Login to node40</a></h4>
-<p>This node only needed to be accessed during lecture 6 and for the exercise 1 &#40;lecture 6&#41;.</p>
-<h4 id=login_to_your_node ><a href="#login_to_your_node" class=header-anchor >Login to your node</a></h4>
-<p>Except for doing the hands-on in lecture 6 and for exercise 1 &#40;lecture 6&#41;, you should connect to your corresponding GPU node according to the node list available on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle</a>:</p>
-<ol>
-<li><p>From the <em>octopus</em> login node, you can access your compute node &#40;replacing <code>&lt;node&gt;</code> by the 2 digit node number assigned to you&#41; typing</p>
-
-</ol>
-<pre><code class="sh hljs">ssh node&lt;node&gt;</code></pre>
-<p>in your local terminal or in the terminal within the remote desktop &#40;e.g. <code>ssh node39</code>&#41;.</p>
-<ol start=2 >
-<li><p>Typing <code>pwd&#40;&#41;</code> should confirm you are in your <code>/home</code> folder.</p>
-
-</ol>
-<div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg >Do not save data in your <code>/home</code> as the space is very limited. Always Navigate to your scratch-space <code>cd /scratch/&lt;username&gt;</code>, as this is the place where you should work from, save data, etc...</div></div>
-<ol start=3 >
-<li><p>Navigate to your scratch-space</p>
-
-</ol>
-<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;</code></pre>
-<p>as this is the place where you should work from, save data, etc...</p>
-<ol start=4 >
-<li><p>Load the required modules:</p>
-
-</ol>
-<pre><code class="sh hljs">module load julia cuda/11.4</code></pre>
-<ol start=5 >
-<li><p>CUDA.jl ships with precompiled CUDA binaries &#40;called <a href="https://juliagpu.gitlab.io/CUDA.jl/installation/overview/#Artifacts">artifacts</a>&#41;. On <code>octopus</code> we want to disallow use of artifacts, because an optimized CUDA installation is available for the system. You can do so by setting the environment variable <code>JULIA_CUDA_USE_BINARYBUILDER</code> to <code>false</code> when importing CUDA.jl.</p>
-
-</ol>
-<pre><code class="sh hljs"><span class=hljs-built_in >export</span> JULIA_CUDA_USE_BINARYBUILDER=<span class=hljs-literal >false</span></code></pre>
-<ol start=6 >
-<li><p>Launch Julia</p>
-
-</ol>
-<pre><code class="sh hljs">julia</code></pre>
-<p>and you are all set 🚀</p>
-<ol start=7 >
-<li><p>See <a href="#running_a_jupyter_notebook">here</a> for running a Jupyter notebook</p>
-
-</ol>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >You can use the <code>nvidia-smi</code> command as <code>top</code> alternative to monitor processes on the GPU&#40;s&#41;.</div></div>
-<h3 id=running_a_jupyter_notebook ><a href="#running_a_jupyter_notebook" class=header-anchor >Running a Jupyter notebook</a></h3>
-<p>If you need to run a Julia notebook within Jupyter, do following:</p>
-<ol>
-<li><p>Navigate to the notebook&#39;s parent folder &#40;e.g. <code>/scratch/&lt;username&gt;/lecture06</code>&#41;</p>
-
-</ol>
-<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture06</code></pre>
-<ol start=2 >
-<li><p>Launch Julia</p>
-
-</ol>
-<pre><code class="sh hljs">julia</code></pre>
-<ol start=3 >
-<li><p>Activate and instantiate the project &#40;this should download all packages you need 🙂&#41;</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
-</span>
-<span class=hljs-metap>(@v1.6) pkg&gt;</span> activate .
-
-<span class=hljs-metap>(lecture06) pkg&gt;</span> instantiate</code></pre>
-<p>If you are not running in a particular project, you may need to add the <code>IJulia</code> package</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
-</span>
-<span class=hljs-metap>(@v1.6) pkg&gt;</span> add IJulia</code></pre>
-<ol start=4 >
-<li><p>Launch Jupyter</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> IJulia
-</span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > notebook(dir=pwd())</span></code></pre>
-<p>You will get prompted to <code>install jupyter &#91;y/N&#93;</code> the first time running the <code>notebook&#40;&#41;</code> command. Type <code>Yes</code> or <code>y</code>.</p>
-<p>You should see Firefox opening a Jupyter tab &#40;make sure you connected using <code>-YC</code> or <code>-X</code>&#41;.</p>
-<ol start=5 >
-<li><p>Open the notebook. You are all set 🚀</p>
-
-</ol>
-<h3 id=julia_mpi_gpu_on_your_octopus_node ><a href="#julia_mpi_gpu_on_your_octopus_node" class=header-anchor >Julia MPI GPU on your <code>octopus</code> node</a></h3>
-<p>This section will get you set-up to exercise with multi-GPU programs on your assigned <code>octopus</code> node:</p>
-<ol>
-<li><p>Open a terminal on your local machine and connect to <code>octopus</code> over <code>ssh</code> &#40;or open your VNC remote desktop&#41;</p>
-
-<li><p>Connect to your node: node03 - node26 &#40;no longer node40 - see <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;15755#section-0">Moodle - General</a>&#41;</p>
-
-<li><p>Navigate to your <code>scratch</code> folder, then <code>lecture08</code> &#40;you should have a copy of <em><strong>Lecture 8</strong></em> material&#41;</p>
-
-</ol>
-<pre><code class="sh hljs">ssh -YC nodeXX
-<span class=hljs-built_in >cd</span> /scratch/&lt;username&gt;/lecture08</code></pre>
-<ol start=4 >
-<li><p>Load the required modules and use system CUDA</p>
-
-</ol>
-<pre><code class="sh hljs">module load cuda/11.4 julia
-<span class=hljs-built_in >export</span> JULIA_CUDA_USE_BINARYBUILDER=<span class=hljs-literal >false</span></code></pre>
-<ol start=5 >
-<li><p>Start Julia in project mode</p>
-
-</ol>
-<pre><code class="sh hljs">julia --project</code></pre>
-<ol start=6 >
-<li><p>Resolve and instantiate the project to download all required packages</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
-</span>
-<span class=hljs-metap>(lecture08) pkg&gt;</span> resolve
-
-<span class=hljs-metap>(lecture08) pkg&gt;</span> instantiate</code></pre>
-<ol start=7 >
-<li><p>Install <code>mpiexecjl</code> launcher:</p>
-
-</ol>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
-</span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
-</span>[ Info: Installing `mpiexecjl` to `/home/&lt;username&gt;/.julia/bin`...
-[ Info: Done!</code></pre>
-<ol start=8 >
-<li><p>Then, one should add <code>/home/&lt;username&gt;/.julia/bin</code> to PATH in order to launch the Julia MPI wrapper <code>mpiexecjl</code>.</p>
-
-<li><p>Running a Julia MPI code <code>&lt;my_script.jl&gt;</code> on <code>np</code> MPI processes:</p>
-
-</ol>
-<pre><code class="sh hljs">$ mpiexecjl -n np julia --project &lt;my_script.jl&gt;</code></pre>
-<ol start=10 >
-<li><p>To test the Julia MPI GPU installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl"><code>hello_mpi_gpu.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>/home/&lt;username&gt;/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
-
-</ol>
-<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./hello_mpi_gpu.jl 
-$ Hello world, I am 0 of 4 using CuDevice(0)
-$ Hello world, I am 1 of 4 using CuDevice(1)
-$ Hello world, I am 2 of 4 using CuDevice(2)
-$ Hello world, I am 3 of 4 using CuDevice(3)</code></pre>
-<p>If you made it to here you should be all set 🚀</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: September 06, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: September 07, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
