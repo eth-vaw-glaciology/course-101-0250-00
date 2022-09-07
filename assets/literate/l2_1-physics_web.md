@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# PDEs and physical processes -- diffusion, wave propagation, advection
+# PDEs and physical processes - diffusion, wave propagation, advection
 
 ### The goal of this lecture 2 is to familiarise (or refresh) with
 - Ordinary differential equations -- ODEs (e.g. reaction equation)
@@ -9,19 +9,25 @@
 - Explicit solutions
 - Multi-process (physics) coupling
 
-> A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
+A **partial differential equation (PDE)** is an equation which imposes relations between the various partial derivatives of a multivariable function. [_Wikipedia_](https://en.wikipedia.org/wiki/Partial_differential_equation)
 
-> _**Note on classification of PDEs:**_
-> - **Elliptic:**\
->   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
-> - **Parabolic:**\
->   $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
-> - **Hyperbolic:**\
->   $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. wave equation)
+\note{
+_**Classification of second-order PDEs:**_
+- **Parabolic:**\
+  $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
+- **Hyperbolic:**\
+  $∂^2u/∂t^2 - c^2 ∇^2 u = 0$ (e.g. acoustic wave equation)
+- **Elliptic:**\
+  $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
+}
 
-## PDEs - diffusion
+## Parabolic PDEs - diffusion
 
-![diffusion](../assets/literate_figures/diffusion1.gif)
+~~~
+<center>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/porous_convection_2D.mp4"/>
+</center>
+~~~
 
 The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was introduced by Fourier in 1822 to understand heat distribution ([heat equation](https://en.wikipedia.org/wiki/Heat_equation)) in various materials.
 
@@ -35,9 +41,7 @@ $$
 
 where $D$ is the diffusion coefficient.
 
-The second order formulation is only possible if the diffusion coefficient $D$ is a single value valid in all the considered domain.
-
-A more general description allowing for non-uniform, non-linear diffusion coefficient combines a diffusive flux:
+A more general description combines a diffusive flux:
 
 $$ q = -D\frac{∂C}{∂x}~,$$
 
@@ -139,7 +143,7 @@ One can examine the size of the various vectors ...
 
 ````julia:ex4
 using Plots
- plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 ````
 
@@ -151,9 +155,9 @@ if it % nout == 0
 end
 ```
 
-## PDEs - advection
+## Hyperbolic PDEs - acoustic wave propagation
 
-![advection](../assets/literate_figures/advection3.gif)
+## First-order PDEs - advection
 
 > Advection is a partial differential equation that governs the motion of a conserved scalar field as it is advected by a known velocity vector field. [_Wikipedia_](https://en.wikipedia.org/wiki/Advection)
 
@@ -161,7 +165,7 @@ We will here briefly discuss advection of a quantity $C$ by a constant velocity 
 
 $$ \frac{∂C}{∂t} = -\frac{∂(v_x~C)}{∂x} ~.$$
 
-In case the flow is incompressible ($∇⋅v = 0$ -- here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
+In case the flow is incompressible ($∇⋅v = 0$ - here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
 
 $$ \frac{∂C}{∂t} = -v_x \frac{∂C}{∂x} ~.$$
 
