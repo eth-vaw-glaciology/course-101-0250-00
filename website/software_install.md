@@ -10,32 +10,30 @@ hascode = true
 ## Opening and running the Jupyter Julia notebook
 
 ### Course slides and lecture material
-Most of the course slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
+All the course slides are [Jupyter notebooks](https://jupyter.org/); browser-based computational notebooks.
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle as well. You can execute them on the server or download and run them them locally as well.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [Jupyter Hub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=780549) space. You can execute them on the [Jupyter Hub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=780549) or download them and run them them locally if you're already set-up.
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private git repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
-\warn{The `achtzack01` is **not** backed up. Make sure to keep local copy of your data!}
-
 ## Installing Julia v1.8 (or later)
-Check you have an active internet connexion and [download Julia v1.6](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
+Check you have an active internet connexion and [download Julia v1.8](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.6/julia-1.6.3-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.6/julia-1.6.3-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.6/julia-1.6.3-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.8.0-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.8.0-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.0-linux-x86_64.tar.gz # Linux x86
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
 > **Note for Windows users**\
-> When installing Julia 1.6 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).
+> When installing Julia 1.8 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).
 
 ### Terminal + external editor
 Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
@@ -76,11 +74,11 @@ Welcome in the [Julia REPL](https://docs.julialang.org/en/v1/stdlib/REPL/) (comm
   (_)     | (_) (_)    |
    _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
   | | | | | | |/ _` |  |
-  | | |_| | | | (_| |  |  Version 1.6.3 (2021-09-23)
+  | | |_| | | | (_| |  |  Version 1.8.0 (2022-08-17)
  _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
 |__/                   |
 
-julia> 
+julia>
 ```
 the shell mode by hitting `;`, where you can enter Unix commands,
 ```julia-repl
@@ -88,7 +86,7 @@ shell>
 ```
 and the [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) (package manager) by hitting `]`, that will be used to add and manage packages, and environments,
 ```julia-repl
-(@v1.6) pkg> 
+(@v1.8) pkg> 
 ```
 
 You can interactively execute commands in the REPL, like adding two numbers
@@ -124,9 +122,9 @@ and activate it
 ```julia-repl
 julia> ]
 
-(@v1.6) pkg> 
+(@v1.8) pkg> 
 
-(@v1.6) pkg> activate .
+(@v1.8) pkg> activate .
   Activating new environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg> 
@@ -171,7 +169,7 @@ and then,
 ```julia-repl
 julia> ]
 
-(@v1.6) pkg> activate .
+(@v1.8) pkg> activate .
   Activating environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg> 
@@ -229,6 +227,3 @@ and add `-host localhost` to the execution script:
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
-
-\note{See [Julia MPI GPU on your `octopus` node](#julia_mpi_gpu_on_your_octopus_node) for detailed information on how to run MPI GPU (multi-GPU) applications on your assigned `octopus` node.}
-

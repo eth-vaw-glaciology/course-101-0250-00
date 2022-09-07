@@ -34,7 +34,7 @@ Head to the [course chat space (Element)](https://chat.ethz.ch) to get started w
 
 ### Homework and Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) (& GitHub):
-1. 5 (out of 6) weekly assignments (30% of the final grade) during the course’s Parts 1. _**Weekly coding exercises can be done alone or in groups of two**_.
+1. 5 (out of 6) weekly assignments (30% of the final grade) during the course’s Part 1. _**Weekly coding exercises can be done alone or in groups of two**_.
 2. A project during Part 2 (35% of the final grade). _**Projects submission includes codes in a git repository and an automatic generated documentation**_.
 3. A final project during Part 3 (35% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
 

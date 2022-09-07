@@ -40,6 +40,9 @@ Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.l
 4. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access.
 
 ## Homework
+
+:construction: This section needs update
+
 [Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
 
 Homework **due date will be Thursday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
@@ -51,18 +54,19 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
 **Starting from lecture 3 and onwards**, homework script submission happens on GitHub:
-1. Create a private GitHub repository named `course-101-0250-00-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
-2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
+1. Create a private GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
+2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [utkinis](https://github.com/utkinis), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
 3. **For each homework submission**, you will:
-    - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes onto;
+    - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes into;
     - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). It will serve to control the material was pushed on time.
 
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
-> ⚠️ **Note:** Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.
+\note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
 
 ## Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) (& GitHub):
-1. 7 (out of 9) weekly assignments (40% of the final grade) during the course's Parts 1 and 2. _**Weekly coding exercises can be done alone or in groups of two**_.
-2. A final project during Part 3 (60% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.
+1. 5 (out of 6) weekly assignments (30% of the final grade) during the course's Part 1. _**Weekly coding exercises can be done alone or in groups of two**_.
+2. A project during Part 2 (35% of the final grade). _**Projects submission includes codes in a git repository and an automatic generated documentation**_.
+3. A final project during Part 3 (35% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.

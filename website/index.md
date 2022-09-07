@@ -22,7 +22,7 @@ The goal of this course is to offer a practical approach to solve systems of dif
 
 
 ### Outline
-- **Part 1**  _Introduction_
+- **Part 1**  _Introducing Julia & PDEs_
   - The Julia language: hands-on
   - Solving physical processes: advection, reaction, diffusion & wave propagation
   - Spatial and temporal discretisation: finite-differences and explicit time-stepping
