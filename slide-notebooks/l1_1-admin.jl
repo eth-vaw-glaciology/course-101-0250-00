@@ -54,7 +54,7 @@ md"""
 
 We use the Element-chat as the main communication channel for the course, both between the teachers and the student, and hopefully also between students.
 
-Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with you NETHZ usernam & password.
+Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with you NETHZ username & password.
   - Login link is available on [Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=781163).
   - Join the _**General**_ (course infos) and _**Helpdesk**_ (exercises Q&A) rooms.
 """
@@ -78,7 +78,7 @@ Bring your laptop to all lectures!
 - Who has access to an Nvidia GPU?
 - What operating system are you on?
 
-In the first few lecture we will use Moodle provided JupyterHub to get you started. Later we plan to get you all setup with a personal Julia installation.
+In the first few lecture we will use JupyterHub (accessible within Moodle) to get you started. Later we plan to get you all setup with a personal Julia installation.
 """
 
 #src #########################################################################

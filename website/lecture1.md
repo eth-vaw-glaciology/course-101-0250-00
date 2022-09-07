@@ -28,7 +28,7 @@ noeval = true
 
 [_👉 get started with exercises_](#exercises_-_lecture_1)
 
-\note{This week's homework have to be handed in as notebook. See [here](/software_install/#exercises_and_homework) for details.}
+\note{This week's homework have to be handed in as Jupyter notebook. See [here](/software_install/#exercises_and_homework) for details.}
 
 ---
 

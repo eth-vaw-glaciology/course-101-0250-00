@@ -264,12 +264,8 @@ Datatypes belonging to AbstactArrays:
 # Task: assign two vectors to `a`, and `b` and the concatenate them using `;`:
 
 a = [2, 3]
-## Hint:
-## b = ...
-## [ ; ]
-#md ## Solution:
-#md b = [4, 5]
-#md [a ; b]
+b = ...
+[ ; ]
 
 # Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 

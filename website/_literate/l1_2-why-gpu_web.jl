@@ -90,10 +90,11 @@ Computational costs increase
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-![Stokes2D_vep](../assets/literate_figures/Stokes2D_vep.gif)
-
-"""
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/Stokes2D_vep.mp4"/>
+# </center>
+#md # ~~~
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -154,7 +155,7 @@ Availability (less fight for resources)
 - Still not many applications run on GPUs
 
 Workstation turns into a personal Supercomputers
-- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically maybe more)
+- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
 
 ![titan_node](../assets/literate_figures/titan_node.jpg)
 
@@ -176,7 +177,7 @@ md"""
 Backend agnostic:
 - Single code to run on single CPU or thousands of GPUs
 - Single code to run on various CPUs (x86, Power9, ARM) \
-  and GPUs (Nvidia, AMD, Intel?)
+  and GPUs (Nvidia, AMD)
 
 Interactive:
 - No need for 3rd-party visualisation software
