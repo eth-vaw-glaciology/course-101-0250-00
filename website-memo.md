@@ -65,7 +65,7 @@ Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-not
 sol = true
 ```
 
-You can populate lines beginning of Literate script with `#hint` or `#sol` which will permit to corresponding lines to be removed upon preprocessing (e.g. before / after the lecture).
+You can populate lines beginning of Literate script with `#hint=` or `#sol=` which will permit to corresponding lines to be removed upon preprocessing (e.g. before / after the lecture).
 
 **To deploy notebooks**
 1. Run the deploy script from its folder
@@ -102,7 +102,32 @@ julia> notebook(dir="/some/path")
 
 4. Press `alt-r` to start. Use spacebar to advance.
 
-### gif and loopcount
+### Generate `mp4` out of `gif`
+
+In the second edition, we prefer `mp4` instead of `gif`. Using FFMPEG, one can swiftly convert gifs into mp4:
+```julia
+run(`ffmpeg -i input_anim.gif -c libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white" -y output_anim.mp4`)
+```
+Or generate them from `png`s:
+```julia
+run(`ffmpeg -framerate 30 -i %%04d.png -c libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white" -y output_anim.mp4`)
+```
+The `mp4` animation can then be embedded as follow in `Literate.jl` scripts:
+```julia
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="./path-to-anim/anim.mp4"/>
+# </center>
+#md # ~~~
+```
+or directly into `.md` scripts as
+```md
+<center>
+  <video width="80%" autoplay loop controls src="./path-to-anim/anim.mp4"/>
+</center>
+```
+
+### `gif` and loopcount
 
 You can use [gifsicle](https://www.lcdf.org/gifsicle/) as command line tool to modify the loopcount for gifs to be included in the scripts (tested on MacOS):
 ```sh
