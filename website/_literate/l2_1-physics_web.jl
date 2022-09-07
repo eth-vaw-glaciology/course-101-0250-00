@@ -11,8 +11,8 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 2 is to familiarise (or refresh) with
-- Ordinary differential equations - ODEs (e.g. reaction equation)
-- Partial differential equations - PDEs (e.g. diffusion and advection equations)
+- Ordinary differential equations -- ODEs (e.g. reaction equation)
+- Partial differential equations -- PDEs (e.g. diffusion and advection equations)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
