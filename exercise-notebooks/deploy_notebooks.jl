@@ -26,7 +26,7 @@ Literate.notebook(fl, "notebooks", preproces=drop_sol)
 ```
 """
 function process_hashtag(str, hashtag, fn; striptag=true)
-    hashtag = strip(hashtag) * " "
+    hashtag = strip(hashtag)
     occursin("\r\n", str) && error("""DOS line endings "\r"n" not supported""")
     out = ""
     regex = Regex(hashtag)
@@ -44,14 +44,14 @@ end
 
 "Use as `preproces` function to remove `#sol`-lines & just remote `#tag`-tag"
 function rm_sol(str)
-    str = process_hashtag(str, "#sol", line->"")
-    str = process_hashtag(str, "#hint", line->line * "\n")
+    str = process_hashtag(str, "#sol=", line->"")
+    str = process_hashtag(str, "#hint=", line->line * "\n")
     return str
 end
 "Use as `preproces` function to remove `#hint`-lines & just remote `#sol`-tag"
 function rm_hint(str)
-    str = process_hashtag(str, "#sol", line->line * "\n")
-    str = process_hashtag(str, "#hint", line->"")
+    str = process_hashtag(str, "#sol=", line->line * "\n")
+    str = process_hashtag(str, "#hint=", line->"")
     return str
 end
 
