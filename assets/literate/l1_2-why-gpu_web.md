@@ -46,7 +46,11 @@ Computational costs increase
 - with dimensions (3D tensors...)
 - upon refining spatial and temporal resolution
 
-![Stokes2D_vep](../assets/literate_figures/Stokes2D_vep.gif)
+~~~
+<center>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/Stokes2D_vep.mp4"/>
+</center>
+~~~
 
 Use **parallel computing** to address this:
 - The "memory wall" in ~ 2004
@@ -78,7 +82,7 @@ Availability (less fight for resources)
 - Still not many applications run on GPUs
 
 Workstation turns into a personal Supercomputers
-- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically maybe more)
+- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
 
 ![titan_node](../assets/literate_figures/titan_node.jpg)
 
@@ -91,7 +95,7 @@ Solution to the "two-language problem"
 Backend agnostic:
 - Single code to run on single CPU or thousands of GPUs
 - Single code to run on various CPUs (x86, Power9, ARM) \
-  and GPUs (Nvidia, AMD, Intel?)
+  and GPUs (Nvidia, AMD)
 
 Interactive:
 - No need for 3rd-party visualisation software
