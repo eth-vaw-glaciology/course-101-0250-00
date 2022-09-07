@@ -33,8 +33,9 @@ Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with
 
 ### Grading
 
-- Weekly exercises (7/9) as homework (alone or groups of 2) **40%**
-- Final project (groups of 2) **60%**
+- Weekly exercises 5 (out of 6) as homework (alone or groups of 2) **30%**
+- Consolidation project (alone or groups of 2) **35%**
+- Final project (groups of 2) **35%**
 
 ## Computing
 
