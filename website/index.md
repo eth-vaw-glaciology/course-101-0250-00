@@ -13,9 +13,7 @@ This course aims to cover state-of-the-art methods in modern parallel GPU comput
 
 ~~~
 <center>
-  <video width="600" autoplay loop controls>
-    <source src="/assets/porous_convection_2D.mp4" type="video/mp4" />
-  </video>
+  <video width="80%" autoplay loop controls src="/assets/porous_convection_2D.mp4"/>
 </center>
 ~~~
 
