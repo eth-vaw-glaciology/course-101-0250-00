@@ -54,7 +54,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="./figures/porous_convection_2D.mp4"/>
+#   <video width="80%" autoplay loop controls src="./figures/diffusion_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -300,11 +300,81 @@ md"""
 ## Hyperbolic PDEs - acoustic wave propagation
 """
 
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="./figures/acoustic_1D.mp4"/>
+# </center>
+#md # ~~~
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## The wave equation
+
+The wave equation is a second-order partial differential equation.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+> The [wave equation](https://en.wikipedia.org/wiki/Wave_equation) is a second-order linear partial differential equation for the description of waves—as they occur in classical physics—such as mechanical waves (e.g. water waves, sound waves and seismic waves) or light waves. [_Wikipedia_](https://en.wikipedia.org/wiki/Wave_equation)
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+The hyperbolic equation reads
+
+$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~,$$
+
+where
+- $u$ is pressure, displacement (or another scalar quantity)
+- $c$ a non-negative real constant (speed of sound, stiffness, ...)
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
+
+![hook](./figures/hooke.png)
+
+$$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
+
+$$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
+
+where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances). The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### Back to the wave equation
+
+The the first objective of this lecture is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as seen in lecture 2 for the advection-diffusion-reaction physics.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Also, we will consider acoustic or pressure waves. We can thus rewrite the wave equation as
+
+$$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
+
+where
+- $P$ is pressure
+- $c$ is the speed of sound
+"""
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## First-order PDEs - advection
 """
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="./figures/advection_1D.mp4"/>
+# </center>
+#md # ~~~
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
