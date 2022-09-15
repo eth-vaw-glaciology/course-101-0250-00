@@ -11,7 +11,6 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 2 is to familiarise (or refresh) with
-- Ordinary differential equations - ODEs (e.g. reaction equation)
 - Partial differential equations - PDEs (e.g. diffusion and advection equations)
 """
 
@@ -19,6 +18,7 @@ md"""
 md"""
 - Finite-difference discretisation
 - Explicit solutions
+- Nonlinear processes
 - Multi-process (physics) coupling
 """
 
@@ -137,7 +137,7 @@ md"""
 We introduce the physical parameters that are relevant for the considered problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
 
 ```julia
-# Physics
+# physics
 lx   = 10.0
 dc   = 1.0
 ```
@@ -145,7 +145,7 @@ dc   = 1.0
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Then we declare numerical parameters: the number of grid cells used to discretize the computational domain `nx`, and the frequency of updating the visualisation:
+Then we declare numerical parameters: the number of grid cells used to discretize the computational domain `nx`, and the frequency of updating the visualisation `nvis`:
 
 ```julia
 # numerics
@@ -203,11 +203,11 @@ md"""
 Followed by the 3 physics computations (lines) in the time loop
 """
 
-## Time loop
+## time loop
 for it = 1:nt
-    #q x         .= # add solution
+    #qx          .= # add solution
     #C[2:end-1] .-= # add solution
-    ## Visualisation
+    ## visualisation
 end
 
 
@@ -229,44 +229,39 @@ md"""
 """
 
 using Plots
-plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot( xc               , C , label="Concentration"        , linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Let's implement the diffusion solver
-#nb using Plots
+#nb using Plots,Printf
 #nb 
 #nb @views function diffusion_1D()
-#nb     ## Physics
-#nb     Lx   = 10.0
-#nb     D    = 1.0
-#nb     ttot = 2.0
-#nb     ## Numerics
-#nb     nx   = 128
-#nb     nout = 10
-#nb     ## Derived numerics
-#nb     dx   = Lx/nx
-#nb     dt   = dx^2/D/2.1
-#nb     nt   = cld(ttot, dt)
-#nb     xc   = LinRange(dx/2, Lx-dx/2, nx)
-#nb     ## Array initialisation
-#nb     C    =  rand(Float64, nx)
-#nb     Ci   =  copy(C)
-#nb     dCdt = zeros(Float64, nx-2)
+#nb     ## physics
+#nb     lx   = 20.0
+#nb     dc   = 1.0
+#nb     ## numerics
+#nb     nx   = 200
+#nb     nvis = 5
+#nb     ## derived numerics
+#nb     dx   = lx/nx
+#nb     dt   = dx^2/dc/2
+#nb     nt   = nx^2 ÷ 100
+#nb     xc   = LinRange(dx/2,lx-dx/2,nx)
+#nb     ## array initialisation
+#nb     C    = @. 0.5sin(10π*xc/lx-0.5π)+0.5; C_i = copy(C)
 #nb     qx   = zeros(Float64, nx-1)
-#nb     ## Time loop
-#nb     for it = 1:nt
-#nb         #qx         .= # add solution
-#nb         #dCdt       .= # add solution
-#nb         C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
-#nb         if it % nout == 0
-#nb             IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
-#nb             display(plot!(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(round(it*dt, sigdigits=3))", framestyle=:box, label="concentration"))
-#nb             sleep(0.1)
-#nb         end
-#nb     end
-#nb     return
+#nb     ## time loop
+#nb     @gif for it = 1:nt
+#nb         qx          .= .-dc.*diff(C )./dx
+#nb         C[2:end-1] .-=   dt.*diff(qx)./dx
+#nb         plot(xc,[C_i,C];framestyle=:box, lw=3,
+#nb                         xlims=(0,lx), ylims=(-0.1,1.1),
+#nb                         xlabel="lx", ylabel="Concentration",
+#nb                         title="time = $(round(it*dt,digits=1))",
+#nb                         size=(400,150),aspect_ratio=4,label=false,grid=false)
+#nb     end every nvis
 #nb end
 
 #src #########################################################################
@@ -277,12 +272,12 @@ plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, ma
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Note: plotting and visualisation is slow. A convenient workaround is to only visualise or render the figure every `nout` iteration within the time loop 
+Note: plotting and visualisation is slow. A convenient workaround is to only visualise or render the figure every `nvis` iteration within the time loop 
 
 ```julia
-if it % nout == 0
-    plot()
-end
+@gif for it = 1:nt
+    # plot(...)  
+end every nvis
 ```
 """
 
@@ -292,12 +287,6 @@ end
 md"""
 ## Hyperbolic PDEs - acoustic wave propagation
 """
-
-#md # ~~~
-# <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
-# </center>
-#md # ~~~
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -317,11 +306,11 @@ md"""
 md"""
 The hyperbolic equation reads
 
-$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~,$$
+$$ \frac{∂^2P}{∂t^2} = c^2 ∇^2 P~,$$
 
 where
-- $u$ is pressure, displacement (or another scalar quantity)
-- $c$ a non-negative real constant (speed of sound, stiffness, ...)
+- $u$ is pressure (or, displacement, or another scalar quantity...)
+- $c$ a real constant (speed of sound, stiffness, ...)
 """
 
 #src #########################################################################
@@ -343,18 +332,103 @@ where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillation
 md"""
 ### Back to the wave equation
 
-The the first objective of this lecture is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as seen in lecture 2 for the advection-diffusion-reaction physics.
+The objective is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as for the diffusion physics.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Our first task will be to modify the diffusion equation...
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+... in order to obtain and implement the acoustic wave equation:
+"""
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
+# </center>
+#md # ~~~
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### From diffusion to acoustic wave propagation
+
+We won't implement first the hyperbolic equation as introduced, but rather start from a first order system, similar to the one that we used to implement the diffusion equation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Also, we will consider acoustic or pressure waves. We can thus rewrite the wave equation as
+To this end, we can rewrite the second order wave equation
 
 $$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
 
-where
-- $P$ is pressure
-- $c$ is the speed of sound
+as two first order equations
+
+$$ \frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}~,$$
+
+$$ \frac{∂P}{∂t}  = -\frac{1}{\beta}~\frac{∂V_x}{∂x}~.$$
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Let's get started. 
+
+👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We can start modifying the diffusion code's, adding `ρ` and `β` in `# physics` section, and taking a Gaussian (centred in `lx/2`) as initial condition for the pressure `Pr`
+
+```julia
+# physics
+lx   = 20.0
+ρ,β  = 1.0,1.0
+
+# array initialisation
+#Pr  =  exp.(...)
+```
+
+Note that the time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
+"""
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Then, the diffusion physics:
+
+```julia
+qx          .= .-dc.*diff(C )./dx
+C[2:end-1] .-=   dt.*diff(qx)./dx
+```
+
+Should be modified to account for pressure `Pr` instead of concentration `C`, the velocity update (`Vx`) added, and the coefficients modified:
+
+```julia
+Vx          .-= ...
+Pr[2:end-1] .-= ...
+```
+"""
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Comparing diffusive and wave physics, we can summarise following:
+
+## Compare the equations
+
+| Diffusion                                                            | Wave propagation                                                                    |
+|----------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
+| $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $$ |
 """
 
 #src #########################################################################
@@ -384,7 +458,7 @@ $$ \frac{∂C}{∂t} = -\frac{∂(v_x~C)}{∂x} ~.$$
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-In case the flow is incompressible ($∇⋅v = 0$ - here $\frac{∂v_x}{∂x}=0$), the advection equation can be rewritten as
+In case the flow is incompressible ($\nabla\cdot v = 0$ - here $\nabla\cdot v = \frac{∂v_x}{∂x}$), the advection equation can be rewritten as
 
 $$ \frac{∂C}{∂t} = -v_x \frac{∂C}{∂x} ~.$$
 """
@@ -392,35 +466,33 @@ $$ \frac{∂C}{∂t} = -v_x \frac{∂C}{∂x} ~.$$
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Let's once more start from the simple 1D reaction code, modifying it to implement the advection equation.
+Let's implement the advection equation, following the same code structure as for the diffusion and the acoustic wave propagation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Starting from the reaction code, turn `ξ` into `vx=1.0`, the advection velocity, remove `C_eq`, set total simulation time `ttot = 5.0`
 
 ```julia
-# Physics
-Lx   = 10.0
+# physics
+lx   = 20.0
 vx   = 1.0
-ttot = 5.0
 ```
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The only change in the `# Derived numerics` section is the stable advection time step definition, to comply with the [CFL stability condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration.
+The only change in the `# derived numerics` section is the numerical time step definition to comply with the [CFL condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration.
 
 ```julia
-# Derived numerics
-dt   = dx/vx
+# derived numerics
+dt   = dx/abs(vx)
 ```
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the `# Array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 Lx$.
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 l_x$.
 
 ```julia
 C = exp.( ... )
@@ -431,32 +503,24 @@ C = exp.( ... )
 #nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $
 #md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
 
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-One should also pay attention regarding the correct initialisation of `dCdt` in terms of vector dimension, since the rate of change of `C`, `dCdt`, is the derivative of `C`.
-"""
-
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Defining `dCdt` as following
+Update `C` as following:
 
 ```julia
-dCdt     .= .-vx.*diff(C)./dx
+C .-= dt.*vx.*diff(C)./dx # doesn't work
 ```
-
-implements the right and side of the 1D advection equation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Now, the question is how to add `dCdt` to `C` within the update rule ?
+This doesn't work because of the mismatching array sizes.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-3 (main) possibilities exist.
+There are at least three (naive) ways to solve the problem: update `C[1:end-1]`, `C[2:end]`, or one could even update `C[2:end-1]` with the spatial average of the rate of change `dt.*vx.*diff(C)./dx`.
 
 👉 Your turn. Try it out yourself and motivate your best choice.
 """
@@ -464,38 +528,34 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Initialise the simulation
-#nb using Plots, IJulia
-#nb ## Physics
-#nb Lx   = 10.0
+#nb using Plots
+#nb ## physics
+#nb lx   = 10.0
 #nb vx   = 1.0
-#nb ttot = 5.0
-#nb ## Numerics
-#nb nx   = 128
-#nb nout = 10
-#nb ## Derived numerics
-#nb dx   = Lx/nx
-#nb dt   = dx/vx
-#nb nt   = cld(ttot, dt)
-#nb xc   = LinRange(dx/2, Lx-dx/2, nx)
-#nb ## Array initialisation
-#nb #C    =  exp.(  )
-#nb Ci   =  copy(C)
-#nb #dCdt = zeros ...
+#nb ## numerics
+#nb nx   = 200
+#nb nvis = 2
+#nb ## derived numerics
+#nb dx   = lx/nx
+#nb dt   = dx/abs(vx)
+#nb nt   = nx
+#nb xc   = LinRange(dx/2,lx-dx/2,nx)
+#nb ## array initialisation
+#nb #C    =  exp.(...); C_i = copy(C)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Execute the time loop
-#nb ## Time loop
-#nb for it = 1:nt
-#nb     #dCdt .= ...
-#nb     #C    .= ...
-#nb     ## add solution
-#nb     if it % nout == 0
-#nb         IJulia.clear_output(true); plot(xc, Ci, lw=2, label="C initial")
-#nb         display(plot!(xc, C, lw=2, xlims=(xc[1], xc[end]), ylims=(0.0, 1.0), xlabel="Lx", ylabel="Concentration", title="time = $(round(it*dt, sigdigits=3))", framestyle=:box, label="C"))
-#nb         sleep(0.1)
-#nb     end
-#nb end
+#nb ## time loop
+#nb @gif for it = 1:nt
+#nb     #C .-= ...
+#nb     (it % (nt÷2) == 0) && (vx = -vx) # change the direction of wave propagation
+#nb     plot(xc,[C_i,C];framestyle=:box, lw=7,
+#nb                 xlims=(0,lx), ylims=(-0.1,1.1), 
+#nb                 xlabel="lx", ylabel="Concentration",
+#nb                 title="time = $(round(it*dt,digits=1))", 
+#nb                 size=(500,200),label=false,grid=false)
+#nb end every nvis
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -503,24 +563,132 @@ md"""
 Here we go, an upwind approach is needed to implement a stable advection algorithm
 
 ```julia
-C[2:end]   .= C[2:end]   .+ dt.*dCdt # if vx>0
-C[1:end-1] .= C[1:end-1] .+ dt.*dCdt # if vx<0
+C[2:end]   .-= dt.*vx.*diff(C)./dx # if vx>0
+C[1:end-1] .-= dt.*vx.*diff(C)./dx # if vx<0
 ```
 """
 
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Nonlinear equations
+"""
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
+# </center>
+#md # ~~~
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
+# </center>
+#md # ~~~
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## First step towards solving the elliptic problem
+
+We have considered numerical solutions to the hyperbolic and parabolic PDEs.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+In both cases we used the explicit time integration
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+The elliptic PDE is different:
+
+$$
+\frac{\partial^2 C}{\partial x^2} = 0
+$$
+
+it doesn't depend on time!
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+How do we solve it numerically then?
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Solution to the elliptic PDE...
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+is the steady state limit of the time-dependent diffusion problem described by the parabolic PDE:
+
+$$
+\frac{\partial^2 C}{\partial x^2} - \frac{\partial C}{\partial t} = 0
+$$
+
+when $t\rightarrow\infty$
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+and we know how to solve parabolic PDEs.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Let's try to increase the number of time steps `nt` in our diffusion code to see whether the solution would converge, and decrease the frequency of plotting:
+
+```julia
+nt   = nx^2 ÷ 5
+nvis = 50
+```
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+and see the results:
+"""
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
+# </center>
+#md # ~~~
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We approach the steady-state, but the number of time steps required to converge to a solution is proportional to `nx^2`.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+We'll handle this problem in the next lecture, _stay tuned!_
+"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Wrapping-up
 
-- We implemented and solved PDEs for reaction, diffusion and advection processes in 1D
+- We implemented and solved PDEs for diffusion, wave propagation, and advection processes in 1D
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- We used conservative staggered grid finite-differences, explicit forward Euler time stepping and upwind scheme (advection).
+- We used conservative staggered grid finite-differences, explicit forward Euler time stepping and upwind scheme for advection.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
