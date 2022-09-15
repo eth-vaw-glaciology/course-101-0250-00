@@ -15,11 +15,11 @@ xc   = LinRange(dx/2,lx-dx/2,nx)
 C    = @. sin(10π*xc/lx); C_i = copy(C)
 qx   = zeros(Float64, nx) # won't work
 
-# Time loop
+# time loop
 for it = 1:nt
-    #q x         .= # add solution
+    #qx          .= # add solution
     #C[2:end-1] .-= # add solution
-    # Visualisation
+    # visualisation
 end
 
 # check sizes and staggering
@@ -28,6 +28,6 @@ end
 @show size(C[2:end-1])
 
 using Plots
-plot(xc               , C   , label="Concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
-plot!(xc[1:end-1].+dx/2, qx  , label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot( xc               , C , label="Concentration"        , linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
+plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, markershape=:circle, markersize=5, framestyle=:box)
 
