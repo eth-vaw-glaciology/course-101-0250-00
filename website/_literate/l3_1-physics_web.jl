@@ -4,211 +4,121 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 3_
 md"""
-# From diffusion to acoustic waves
+# Solving elliptic PDEs
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The goal of this lecture 3 is to familiarise (or refresh) with
-- The wave equation
-- The diffusion equation
+### The goal of this lecture 3 is to familiarise (or refresh) with:
+- The damped wave equation
+- Spectral analysis of linear PDEs
+- Pseudo-transient method for solving elliptic PDEs
 - Spatial discretisation: 1D and 2D
-- Finite-differences and staggered grids
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## The wave equation
+In the previous lecture, we established that the solution to the elliptic PDE could be obtained through integrating in time a corresponding parabolic PDE:
 
-The wave equation is a second-order partial differential equation.
+$$
+\frac{\partial C}{\partial t} - \frac{\partial^2 C}{\partial x^2} = 0
+$$
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-![acoustic wave](../assets/literate_figures/acoustic2D_2.gif)
+and discussed the limitation of this approach, for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.
 """
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
+# </center>
+#md # ~~~
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> The [wave equation](https://en.wikipedia.org/wiki/Wave_equation) is a second-order linear partial differential equation for the description of waves—as they occur in classical physics—such as mechanical waves (e.g. water waves, sound waves and seismic waves) or light waves. [_Wikipedia_](https://en.wikipedia.org/wiki/Wave_equation)
+## Accelerating elliptic solver convergence: intuition
+
+In this lecture, we'll improve the convergence rate of the elliptic solver, and consider the generalisation to higher dimensions
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The hyperbolic equation reads
-
-$$ \frac{∂^2u}{∂t^2} = c^2 ∇^2 u~,$$
-
-where
-- $u$ is pressure, displacement (or another scalar quantity)
-- $c$ a non-negative real constant (speed of sound, stiffness, ...)
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
-
-![hook](../assets/literate_figures/hooke.png)
-
-$$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
-
-$$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
-
-where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances). The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-### Back to the wave equation
-
-The the first objective of this lecture is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as seen in lecture 2 for the advection-diffusion-reaction physics.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Also, we will consider acoustic or pressure waves. We can thus rewrite the wave equation as
-
-$$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
-
-where
-- $P$ is pressure
-- $c$ is the speed of sound
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Our first task will be to modify the diffusion equation from lecture 2 ...
-
-![diffusion](../assets/literate_figures/diffusion_0.gif)
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-... in order to obtain and implement the acoustic wave equation
-
-![acoustic](../assets/literate_figures/acoustic_1.gif)
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-### From diffusion to acoustic wave
-
-We won't implement first the hyperbolic equation as introduced, but rather start from a flux/update formulation, as we used to implement for the diffusion equation.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-To this end, we can rewrite the second order wave equation
-
-$$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
-
-as two first order equations
-
-$$ \frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}~,$$
-
-$$ \frac{∂P}{∂t}  = -K~\frac{∂V_x}{∂x}~.$$
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-One can even push the analogy one step further, defining a flux of "momentum" as 
-
-$$ q_x = -\frac{1}{ρ}~\frac{∂P}{∂x}~,$$
-
-using it to update velocity
-
-$$ \frac{∂V_x}{∂t} = q_x,$$
-
-before computing the mass balance (conservation law or divergence of fluxes)
-
-$$ \frac{∂P}{∂t}  = -K~\frac{∂V_x}{∂x}~.$$
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-This formulation is very similar to the diffusion equation, as the only addition is the time-dependence (or history) in the fluxes:
-
-$$ \frac{∂V_x}{∂t} = q_x,$$
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Let's get started with this. We will do this exercise in a Julia standalone script and run it in from the REPL using the local Julia install.
-
-**It's time to launch Julia on your computer** 🚀
-
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-We can start modifying the diffusion code's, adding `ρ` and `K` and changing `ttot=20` in `# Physics`, and taking a Gaussian (centred in `Lx/2`, `σ=1`) as initial condition for the pressure `P`
+Let's recall the stability conditions for diffusion and acoustic wave propagation:
 
 ```julia
-# Physics
-Lx    = 10.0
-ρ     = 1.0
-K     = 1.0
-ttot  = 20.0
-
-# Derived numerics
-P     =  exp.(...)
-```
-
-Note that the time step needs a new definition: `dt = dx/sqrt(K/ρ)/2.1`
-"""
-
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Then, the diffusion physics:
-
-```julia
-qx         .= .-D.*diff(C )./dx
-dCdt       .= .-   diff(qx)./dx
-C[2:end-1] .= C[2:end-1] .+ dt.*dCdt
-```
-
-Should be modified to account for pressure `P` instead of concentration `C`, the flux update (`Vx`) added, and the coefficients modified:
-
-```julia
-qx         .= .-1.0/ρ.*diff(...)./dx
-Vx         .= ...
-dPdt       .= ...
-P[2:end-1] .= P[2:end-1] ...
+dt = dx^2/dc/2      # diffusion
+dt = dx/sqrt(1/β/ρ) # acoustic wave propagation
 ```
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, and not `dx^2` as for the diffusion.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+The number of time steps required for the wave to propagate through the domain is only proportional to the number of grid points `nx`.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Can we use that information to reduce the time required for the elliptic solver to converge?
+In the solution to the wave equation, the waves do not attenuate with time: _there is no steady state!_
+"""
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
+# </center>
+#md # ~~~
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Comparing diffusive and wave physics, we can summarise following:
+## Damped wave equation
+
+Let's add diffusive properties to the wave equation by simply combining the physics:
+
+$$
+\rho\frac{\partial V_x}{\partial t} = -\frac{\partial Pr}{\partial x}
+$$
+
+$$
+\beta\frac{\partial Pr}{\partial t} + \frac{Pr}{\eta} = -\frac{\partial Vx}{\partial x}
+$$
 """
 
-#!nb # |  Physics        |  1D formulation |
-#!nb # | :------------:  | :-------------: |
-#!nb # | Diffusion      | $q_x = -D\frac{∂C}{∂x}$ |
-#!nb # |                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ |
-#!nb # | Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
-#!nb # |                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$ |
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Note the addition of the new term $\frac{Pr}{\eta}$ to the left-hand side of the mass balance equation, which could be interpreted physically as adding the bulk viscosity to the gas.
+"""
 
-#nb # |  Physics        |  1D formulation |
-#nb # |  ------------:  | :-------------  |
-#nb # | Diffusion      | $$q_x = -D\frac{∂C}{∂x}$$  $$\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$$ |
-#nb # | Acoustic waves | $$\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$$  $$\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$$ |
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Equvalently, we could add the time derivatives to the diffusion equation
+
+$$
+\rho\frac{\partial q}{\partial t} + \frac{q}{D} = -\frac{\partial C}{\partial x}
+$$
+
+$$
+\frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x}
+$$
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+In that case, the new term would be `\rho\frac{\partial q}{\partial t}`, which could be interpreted physically as adding inertia to the momentum equation for diffusive flux.
+"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -348,5 +258,6 @@ Let's get started with 2D.
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
 
+#sol #md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 
