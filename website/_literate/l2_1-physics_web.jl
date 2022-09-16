@@ -608,12 +608,7 @@ $$
 \frac{\partial^2 C}{\partial x^2} = 0
 $$
 
-it doesn't depend on time!
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-How do we solve it numerically then?
+It doesn't depend on time! How do we solve it numerically then?
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -629,12 +624,7 @@ $$
 \frac{\partial^2 C}{\partial x^2} - \frac{\partial C}{\partial t} = 0
 $$
 
-when $t\rightarrow\infty$
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-and we know how to solve parabolic PDEs.
+when $t\rightarrow\infty$, and we know how to solve parabolic PDEs.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -645,13 +635,11 @@ Let's try to increase the number of time steps `nt` in our diffusion code to see
 nt   = nx^2 ÷ 5
 nvis = 50
 ```
-"""
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
 and see the results:
 """
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 #md # ~~~
 # <center>
 #   <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
@@ -665,12 +653,12 @@ We approach the steady-state, but the number of time steps required to converge 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable.
+- For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
+- For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
