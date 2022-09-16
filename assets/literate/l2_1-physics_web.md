@@ -335,9 +335,7 @@ $$
 \frac{\partial^2 C}{\partial x^2} = 0
 $$
 
-it doesn't depend on time!
-
-How do we solve it numerically then?
+It doesn't depend on time! How do we solve it numerically then?
 
 ## Solution to the elliptic PDE...
 
@@ -347,9 +345,7 @@ $$
 \frac{\partial^2 C}{\partial x^2} - \frac{\partial C}{\partial t} = 0
 $$
 
-when $t\rightarrow\infty$
-
-and we know how to solve parabolic PDEs.
+when $t\rightarrow\infty$, and we know how to solve parabolic PDEs.
 
 Let's try to increase the number of time steps `nt` in our diffusion code to see whether the solution would converge, and decrease the frequency of plotting:
 
@@ -368,9 +364,9 @@ and see the results:
 
 We approach the steady-state, but the number of time steps required to converge to a solution is proportional to `nx^2`.
 
-For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable.
+- For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable.
 
-For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
+- For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
 
 We'll handle this problem in the next lecture, _stay tuned!_
 
