@@ -4,7 +4,8 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 2_
 md"""
-# PDEs and physical processes - diffusion, wave propagation, advection
+# PDEs and physical processes
+### diffusion, wave propagation, advection
 """
 
 #src ######################################################################### 
@@ -235,7 +236,8 @@ plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, mark
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Let's implement the diffusion solver
-#nb using Plots,Printf
+#nb using Plots,Plots.Measures,Printf
+#nb default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,labelfontsize=20,tickfontsize=20,titlefontsize=24)
 #nb 
 #nb @views function diffusion_1D()
 #nb     ## physics
@@ -256,11 +258,9 @@ plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, mark
 #nb     @gif for it = 1:nt
 #nb         qx          .= .-dc.*diff(C )./dx
 #nb         C[2:end-1] .-=   dt.*diff(qx)./dx
-#nb         plot(xc,[C_i,C];framestyle=:box, lw=3,
-#nb                         xlims=(0,lx), ylims=(-0.1,1.1),
+#nb         plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1),
 #nb                         xlabel="lx", ylabel="Concentration",
-#nb                         title="time = $(round(it*dt,digits=1))",
-#nb                         size=(400,150),aspect_ratio=4,label=false,grid=false)
+#nb                         title="time = $(round(it*dt,digits=1))")
 #nb     end every nvis
 #nb end
 
@@ -288,8 +288,7 @@ md"""
 ## Hyperbolic PDEs - acoustic wave propagation
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 ### The wave equation
 
@@ -309,7 +308,7 @@ The hyperbolic equation reads
 $$ \frac{∂^2P}{∂t^2} = c^2 ∇^2 P~,$$
 
 where
-- $u$ is pressure (or, displacement, or another scalar quantity...)
+- $P$ is pressure (or, displacement, or another scalar quantity...)
 - $c$ a real constant (speed of sound, stiffness, ...)
 """
 
@@ -367,7 +366,7 @@ To this end, we can rewrite the second order wave equation
 
 $$ \frac{∂^2 P}{∂t^2} = c^2 ∇^2 P~,$$
 
-as two first order equations
+as two first order equations 
 
 $$ \frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}~,$$
 
@@ -394,10 +393,10 @@ lx   = 20.0
 # array initialisation
 #Pr  =  exp.(...)
 ```
-
-Note that the time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
 """
 
+#nb # > 💡 hint: The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
+#md # \note{The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -427,13 +426,13 @@ Comparing diffusive and wave physics, we can summarise following:
 """
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
 #!nb # |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
-#!nb # | $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
-#!nb # | $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $ |
+#!nb # | $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial V_x}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
+#!nb # | $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial V_x}{\partial x} $ |
 
 #nb # | Diffusion                                                            | Wave propagation                                                                    |
 #nb # |:--------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
-#nb # | $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
-#nb # | $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $$ |
+#nb # | $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial V_x}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
+#nb # | $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial V_x}{\partial x} $$ |
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -496,7 +495,7 @@ dt   = dx/abs(vx)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 l_x$.
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.4 l_x$.
 
 ```julia
 C = exp.( ... )
@@ -532,9 +531,10 @@ There are at least three (naive) ways to solve the problem: update `C[1:end-1]`,
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Initialise the simulation
-#nb using Plots
+#nb using Plots,Plots.Measures,Printf
+#nb default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,labelfontsize=20,tickfontsize=20,titlefontsize=24)
 #nb ## physics
-#nb lx   = 10.0
+#nb lx   = 20.0
 #nb vx   = 1.0
 #nb ## numerics
 #nb nx   = 200
@@ -545,7 +545,7 @@ There are at least three (naive) ways to solve the problem: update `C[1:end-1]`,
 #nb nt   = nx
 #nb xc   = LinRange(dx/2,lx-dx/2,nx)
 #nb ## array initialisation
-#nb #C    =  exp.(...); C_i = copy(C)
+#nb #C    = @. exp(...); C_i = copy(C)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -554,11 +554,9 @@ There are at least three (naive) ways to solve the problem: update `C[1:end-1]`,
 #nb @gif for it = 1:nt
 #nb     #C .-= ...
 #nb     (it % (nt÷2) == 0) && (vx = -vx) # change the direction of wave propagation
-#nb     plot(xc,[C_i,C];framestyle=:box, lw=7,
-#nb                 xlims=(0,lx), ylims=(-0.1,1.1), 
-#nb                 xlabel="lx", ylabel="Concentration",
-#nb                 title="time = $(round(it*dt,digits=1))", 
-#nb                 size=(500,200),label=false,grid=false)
+#nb     plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1), 
+#nb                     xlabel="lx", ylabel="Concentration",
+#nb                     title="time = $(round(it*dt,digits=1))")
 #nb end every nvis
 
 #src #########################################################################
@@ -617,7 +615,7 @@ It doesn't depend on time! How do we solve it numerically then?
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Solution to the elliptic PDE...
+### Solution to the elliptic PDE...
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -667,7 +665,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We'll handle this problem in the next lecture, _stay tuned!_
+We'll handle this problem in the next lecture, _stay tuned!_ :rocket:
 """
 
 #src #########################################################################

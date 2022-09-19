@@ -17,7 +17,6 @@ default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,
     Pr   = @. exp(-(xc-lx/4)^2); Pr_i = copy(Pr)
     Vx   = zeros(Float64, nx-1)
     # time loop
-    ispath("anim")&&rm("anim",recursive=true);mkdir("anim");iframe = -1
     for it = 1:nt
         Vx          .-= dt./ρ.*diff(Pr)./dx
         Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
