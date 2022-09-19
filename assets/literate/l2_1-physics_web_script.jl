@@ -12,7 +12,7 @@ dt   = dx^2/dc/2
 nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 # array initialisation
-C    = @. sin(10π*xc/lx); C_i = copy(C)
+C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 qx   = zeros(Float64, nx) # won't work
 
 # time loop

@@ -76,7 +76,7 @@ We introduce the physical parameters that are relevant for the considered proble
 
 ```julia
 # physics
-lx   = 10.0
+lx   = 20.0
 dc   = 1.0
 ```
 
@@ -92,7 +92,7 @@ In the `# array initialisation` section, we need to initialise one array to stor
 
 ```julia
 # array initialisation
-C    = @. sin(10π*xc/lx); C_i = copy(C)
+C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 qx   = zeros(Float64, nx) # won't work
 ```
 
@@ -115,7 +115,7 @@ dt   = dx^2/dc/2
 nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 # array initialisation
-C    = @. sin(10π*xc/lx); C_i = copy(C)
+C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 qx   = zeros(Float64, nx) # won't work
 ````
 
@@ -157,7 +157,7 @@ end every nvis
 
 ## Hyperbolic PDEs - acoustic wave propagation
 
-## The wave equation
+### The wave equation
 
 The wave equation is a second-order partial differential equation.
 
@@ -242,7 +242,7 @@ Pr[2:end-1] .-= ...
 
 Comparing diffusive and wave physics, we can summarise following:
 
-## Compare the equationss
+## Compare the equations
 | Diffusion                                                          | Wave propagation                                                                  |
 |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
 | $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
