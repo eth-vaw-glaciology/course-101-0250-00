@@ -2,7 +2,7 @@
 
 julia_version = "1.8.1"
 manifest_format = "2.0"
-project_hash = "92d05ca3239cd58ea9e0f9e720e289d540895793"
+project_hash = "295af44e2b2895d22d708ef61d6e24cd2e05412c"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -116,9 +116,9 @@ version = "2.13.4"
 
 [[deps.LiveServer]]
 deps = ["HTTP", "MIMEs", "Pkg", "Sockets"]
-git-tree-sha1 = "3251b35f4f9a18d9c83a5d4d63bda5110537cf9c"
+git-tree-sha1 = "500ba861f22b3561653e6d2b4fb685f59698f611"
 uuid = "16fef848-5104-11e9-1b77-fb7a48bbb589"
-version = "1.0.1"
+version = "1.0.2"
 
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
