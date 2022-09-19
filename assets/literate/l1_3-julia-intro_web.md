@@ -7,7 +7,7 @@
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-\note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=780549) server.}
+\note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) server.}
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
 info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).

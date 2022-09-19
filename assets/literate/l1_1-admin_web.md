@@ -13,6 +13,8 @@ $\texttt{The small print of}$
 
 - Mauro Werder -- _the ugly_
 
+- Alexander Mandt (Teaching Assistant)
+
 ## Logistics
 
 All you need should be available on the course website:\
