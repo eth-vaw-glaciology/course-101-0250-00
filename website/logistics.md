@@ -36,7 +36,7 @@ We plan to use the [Element-chat (https://chat.ethz.ch/)](https://chat.ethz.ch/)
 Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) to get started with Element:
 1. Select **Start Student-Chat**.
 2. Login using your NETHZ credentials to start using the browser-based client.
-3. Join the **_General_** and **_Helpdesk_** rooms.
+3. Join the **_General_** and **_Helpdesk_** rooms _(you may see an error upon accessing the rooms - refreshing the app should solve the issue)._
 4. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access.
 
 ## Homework
@@ -47,7 +47,7 @@ Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.l
 
 Homework **due date will be Thursday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
 
-Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a version of the homework_**.
+Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a personal version of the homework_**.
 
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 

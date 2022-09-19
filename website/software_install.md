@@ -19,7 +19,7 @@ The first two lecture's homework assignments will be [Jupyter notebooks](https:/
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
-Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private git repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
+Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
 ## JupyterHub
 You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084), clicking on [![JupyterHub](/assets/JHub.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=18084)
@@ -27,6 +27,8 @@ You can access the JupyterHub from the **General** section in [Moodle](https://m
 Upon login to the server, you should see the following launcher environment, including a notebook (file) browser, ability to create a notebook, launch a Julia console (REPL), or a regular terminal.
 
 ![JupyterHub](/assets/JHubLauncher.png)
+
+\warn{It is recommended to duplicate and rename any files you are planning to work on and to download your work as back-up before leaving the session.}
 
 ## Installing Julia v1.8 (or later)
 Check you have an active internet connexion and [download Julia v1.8](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.

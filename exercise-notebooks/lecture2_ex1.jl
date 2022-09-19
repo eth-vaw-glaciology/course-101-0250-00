@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Many volcanic bomb**
+## Exercise 1 - **Advection-Diffusion**
 """
 
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture2_ex1.ipynb)
@@ -8,41 +8,45 @@ md"""
 
 md"""
 The goal of this exercise is to consolidate:
-- vectorisation and element-wise operations using `.`
-- random numbers
-- array initialisation
-- conditional statement
+- 1D advection-diffusion
+- Non-dimensional numbers
 """
 
 md"""
-The goal is to extend the volcanic bomb calculator (exercise 4, lecture 1) to handle `nb` bombs.
+The goal of this exercise is to combine advection and diffusion processes acting on the concentration of a quantity $C$.
 
-To do so, start from the script you wrote to predict the trajectory of a single volcanic bomb and extend it to handle `nb` bombs.
+From what you learned in class, write an advection-diffusion code having following physical input parameters:
 
-Declare a new variable for the number of volcanic bombs
+```
+# Physics
+Lx    = 10.0  # domain length
+D     = 0.4   # diffusion coefficient
+vx    = 1.0   # advection velocity
+ttot  = 2.0   # total simulation time
+```
+
+Discretise your domain in 128 finite-difference cells such that the first cell centre is located at `dx/2` and the last cell centre at `Lx-dx/2`. Use following explicit time step limiters:
+
+```julia
+dtd   = dx^2/D/2.6
+dta   = dx/vx
+dt    = min(dtd, dta)
+```
+
+As initial condition, define a Gaussian profile of concentration `C` of amplitude and standard deviation equal to 1, located at `0.3*Lx`.
+
+Keep the concentration at the boundaries at `C=0`.
 """
-nb = 5 # number of volcanic bombs
+
+#nb # > 💡 hint: Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.
+#md # \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
 
 md"""
-Then, replace the vertical angle of ejection α to randomly vary between 60° and 120° with respect to the horizon for each bomb. Keep the magnitude of the ejection velocity as before, i.e. $V=120$ m/s.
-"""
-
-#nb # > 💡 hint: Use the `randn()` function to generate random numbers normally distributed.
-#md # \note{Use the `randn()` function to generate random numbers normally distributed.}
-
-md"""
-All bombs have the same initial location $(x=0, y=480)$ as before.
-
-Implement the necessary modifications in the time loop in order to update the position of all volcanic bombs correctly.
-
-Ensure the bombs stop their motion once they hit the ground (at position $y=0$).
-
 ### Question 1
 
-Report the total time it takes for the last, out of 5, volcanic bombs to hit the ground and provide a figure that visualise the bombs' overall trajectories.
+Report the initial and final distribution of concentration on a figure with axis-label, title, and plotted line labels. Also, report on the figure (as text in one label of your choice) the maximal final concentration value and its x location.
 
 ### Question 2
 
-Repeat the exercise 1 but vectorise all your code, i.e. make use of broadcasting capabilities in Julia (using `.` operator) to only have a single loop for advancing in time.
-
+Repeat the exercise but introduce the non-dimensional [Péclet number](https://en.wikipedia.org/wiki/Péclet_number) $Pe = L~vx/D$ as physical quantity defining the diffusion coefficient D as a `# Derived physics` quantity. Confirm the if $Pe >> 1$ the diffusion happens in a much longer time compared to the advection, and the opposite for $Pe << 1$.
 """

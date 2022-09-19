@@ -38,7 +38,7 @@ md"""
 
 Please follow along!
 
-If you don't have git installed, head to [https://achtzack01.ethz.ch](https://achtzack01.ethz.ch) and open a terminal. (And do install it on your computer!)
+If you don't have git installed, head to [JupyterHub (within Moodle)](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) and open a terminal. (And do install it on your computer!)
 
 - git setup:
   

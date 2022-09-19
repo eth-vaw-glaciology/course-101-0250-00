@@ -30,6 +30,11 @@ md"""
 - Mauro Werder -- _the ugly_
 """
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+- Alexander Mandt (Teaching Assistant)
+"""
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
