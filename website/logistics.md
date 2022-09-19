@@ -41,8 +41,6 @@ Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.l
 
 ## Homework
 
-:construction: This section needs update
-
 [Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
 
 Homework **due date will be Thursday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
