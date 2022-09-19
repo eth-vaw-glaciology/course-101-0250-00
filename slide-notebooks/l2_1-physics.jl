@@ -138,7 +138,7 @@ We introduce the physical parameters that are relevant for the considered proble
 
 ```julia
 # physics
-lx   = 10.0
+lx   = 20.0
 dc   = 1.0
 ```
 """
@@ -161,7 +161,7 @@ In the `# array initialisation` section, we need to initialise one array to stor
 
 ```julia
 # array initialisation
-C    = @. sin(10π*xc/lx); C_i = copy(C)
+C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 #hint=qx   = zeros(Float64, nx) # won't work
 #sol=qx   = zeros(Float64, nx-1)
 ```
@@ -195,7 +195,7 @@ dt   = dx^2/dc/2
 nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 ## array initialisation
-C    = @. sin(10π*xc/lx); C_i = copy(C)
+C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 #hint=qx   = zeros(Float64, nx) # won't work
 #sol=qx   = zeros(Float64, nx-1)
 
@@ -254,7 +254,7 @@ plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, mark
 #nb     nt   = nx^2 ÷ 100
 #nb     xc   = LinRange(dx/2,lx-dx/2,nx)
 #nb     ## array initialisation
-#nb     C    = @. 0.5sin(10π*xc/lx-0.5π)+0.5; C_i = copy(C)
+#nb     C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
 #nb     qx   = zeros(Float64, nx-1)
 #nb     ## time loop
 #nb     @gif for it = 1:nt
@@ -296,7 +296,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## The wave equation
+### The wave equation
 
 The wave equation is a second-order partial differential equation.
 """
@@ -432,7 +432,7 @@ Should be modified to account for pressure `Pr` instead of concentration `C`, th
 md"""
 Comparing diffusive and wave physics, we can summarise following:
 
-## Compare the equationss
+## Compare the equations
 """
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
 #!nb # |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
