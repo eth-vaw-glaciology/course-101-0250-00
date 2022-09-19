@@ -16,7 +16,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="/assets/porous_convection_2D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/porous_convection_2D.mp4"/>
 # </center>
 #md # ~~~
 

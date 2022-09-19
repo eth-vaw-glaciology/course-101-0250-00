@@ -423,7 +423,7 @@ Pr[2:end-1] .-= ...
 md"""
 Comparing diffusive and wave physics, we can summarise following:
 
-## Compare the equations
+### Compare the equations
 """
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
 #!nb # |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
