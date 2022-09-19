@@ -50,7 +50,7 @@ In the solution to the wave equation, the waves do not attenuate with time: _the
 Let's add diffusive properties to the wave equation by simply combining the physics:
 
 \begin{align}
-\rho\frac{\partial V_x}{\partial t}                 &= -\frac{\partial P}{\partial x} \\
+\rho\frac{\partial V_x}{\partial t}                 &= -\frac{\partial P}{\partial x} \\[10pt]
 \beta\frac{\partial P}{\partial t} + \frac{P}{\eta} &= -\frac{\partial V_x}{\partial x}
 \end{align}
 
@@ -59,7 +59,7 @@ Note the addition of the new term $\frac{Pr}{\eta}$ to the left-hand side of the
 Equvalently, we could add the time derivative to the diffusion equation
 
 \begin{align}
-\rho\frac{\partial q}{\partial t} + \frac{q}{D} &= -\frac{\partial C}{\partial x} \\
+\rho\frac{\partial q}{\partial t} + \frac{q}{D} &= -\frac{\partial C}{\partial x} \\[10pt]
 \frac{\partial C}{\partial t}                   &= -\frac{\partial q}{\partial x}
 \end{align}
 
@@ -70,7 +70,7 @@ Note that in 1D the both modifications are equivalent up to renaming the variabl
 Let's eliminate $V_x$ and $q$ in both systems to get one governing equation for $P$ and $C$, respectively:
 
 \begin{align}
-\beta\frac{\partial^2 P}{\partial t^2} + \frac{1}{\eta}\frac{\partial P}{\partial t} &= \frac{1}{\rho}\frac{\partial^2 P}{\partial x^2} \\
+\beta\frac{\partial^2 P}{\partial t^2} + \frac{1}{\eta}\frac{\partial P}{\partial t} &= \frac{1}{\rho}\frac{\partial^2 P}{\partial x^2} \\[10pt]
 \rho\frac{\partial^2 C}{\partial t^2} + \frac{1}{D}\frac{\partial C}{\partial t}     &= \frac{\partial^2 C}{\partial x^2}
 \end{align}
 
@@ -144,7 +144,7 @@ Re-run the simulation and see the results:
 </center>
 ~~~
 
-Now, this is much better! However, we introduced the new parameter $\rho$, does the solution depend on the value of $\rho$?
+Now, this is much better! We observe that in less time steps, we get a much faster convergence. However, we introduced the new parameter, $\rho$. Does the solution depend on the value of $\rho$?
 
 ## Problem of finding the iteration parameters
 
@@ -173,7 +173,7 @@ We should be careful when introducing the new pseudo-physical terms into the gov
 For example, consider the damped acoustic problem that we introduced in the beggining:
 
 \begin{align}
-\rho\frac{\partial V_x}{\partial\tau}                   &= -\frac{\partial P}{\partial x} \\
+\rho\frac{\partial V_x}{\partial\tau}                 &= -\frac{\partial P}{\partial x} \\[10pt]
 \beta\frac{\partial P}{\partial\tau} + \frac{P}{\eta} &= -\frac{\partial V_x}{\partial x}
 \end{align}
 

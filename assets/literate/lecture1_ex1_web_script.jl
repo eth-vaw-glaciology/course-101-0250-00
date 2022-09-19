@@ -1,39 +1,52 @@
 # This file was generated, do not modify it.
 
-M_init  = 20000.0   # initial wealth
-M_save  = 500.0;    # yearly savings
+using Plots
 
-tot_yrs = 35;       # number of years
+@views function main_fun()
+    # Physical parameters
 
-M_evol1 = zeros(tot_yrs)
-length(M_evol1)
+    # Numerical parameters
 
-M_evol1[1] = M_init;
+    # Array initialisation
 
-for it=2:tot_yrs
-    M_evol1[it] =  M_evol1[it-1] + M_save
+    # Time loop
+
+    # Visualisation
+
+    return
 end
 
-println("Wealth after $(tot_yrs) years: $(M_evol1[end]) CHF")
+main_fun()
 
 using Plots
-plot(M_evol1 ./ 1000, linewidth=3,
-     xlabel="time, yrs", ylabel="savings, kchf", label="without interest",
-     framestyle=:box, legend=:topleft, foreground_color_legend = nothing)
 
-intrst     = 0.006     # fixed interest rate
-M_evol2    = zeros(tot_yrs)
-M_evol2[1] = M_init;
-
-# TO DO: add correct formula !
-for it=2:tot_yrs
-    M_evol2[it] = M_evol2[it-1] + M_save
+@views function car_travel_1D()
+    # Physical parameters
+    #V     =         # speed, km/h
+    #L     =         # length of segment, km
+    #ttot  =         # total time, h
+    # Numerical parameters
+    #dt    = 0.1            # time step, h
+    #nt    = Int(cld(ttot, dt))  # number of time steps
+    # Array initialisation
+    #T     =
+    #X     =
+    # Time loop
+    #for it = 2:nt
+        #T[it] = T[it-1] + dt
+        #X[it] =   # move the car
+        #if X[it] > L
+                  # if beyond L, go back (left)
+        #elseif X[it] < 0
+                   # if beyond 0, go back (right)
+        #end
+    #end
+    # Visualisation
+    #display(scatter(T, X, markersize=5,
+                    #xlabel="time, hrs", ylabel="distance, km",
+                    #framestyle=:box, legend=:none))
+    return
 end
 
-println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
-
-plot!(M_evol2 ./ 1000, linewidth=3, label="with interest")
-
-∆evo = M_evol2[end] - M_evol1[end]
-println("∆evo = $(round(∆evo, sigdigits=5))")
+car_travel_1D()
 
