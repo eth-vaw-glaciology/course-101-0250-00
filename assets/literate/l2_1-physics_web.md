@@ -242,12 +242,11 @@ Pr[2:end-1] .-= ...
 
 Comparing diffusive and wave physics, we can summarise following:
 
-## Compare the equations
-
-| Diffusion                                                            | Wave propagation                                                                    |
-|----------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
-| $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $$ |
+## Compare the equationss
+| Diffusion                                                          | Wave propagation                                                                  |
+|:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
+| $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
+| $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $ |
 
 ## First-order PDEs - advection
 
