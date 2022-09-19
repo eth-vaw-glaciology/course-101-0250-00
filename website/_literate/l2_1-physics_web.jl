@@ -579,15 +579,18 @@ md"""
 
 #md # ~~~
 # <center>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
+# </center>
+#md # ~~~
+
+
+#md # ~~~
+# <center>
 #   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
 # </center>
 #md # ~~~
 
-#md # ~~~
-# <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
-# </center>
-#md # ~~~
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}

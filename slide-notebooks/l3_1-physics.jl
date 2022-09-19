@@ -141,7 +141,7 @@ We refer to such equations as the _damped wave equations_. They combine wave pro
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Implementing the damped wave equation
+### Implementing the damped wave equation
 
 In the following, we'll use the damped wave equation for concentration $C$ obtained by augmenting the diffusion equation with density $\rho$.
 """
@@ -270,7 +270,7 @@ If the parameter `ρ` has optimal value, the convergence to steady-state could b
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Historical perspective
+### Historical perspective
 
 The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the _second-order Richardson method_
 """

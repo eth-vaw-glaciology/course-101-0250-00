@@ -56,7 +56,7 @@ git config --global user.email "youremail@yourdomain.com"
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Further reading
+### Further reading
 
 There are (too) many resources on the web...
 - book: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
@@ -96,7 +96,7 @@ Let's make one (because most of Julia development happens on GitHub)
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## GitHub setup
+### GitHub setup
 
 Make such that you can push and pull without entering a password
 
