@@ -6,7 +6,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 🎉 Welcome to ETH's **course 101-0250-00L** on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/).
 
-> **Announce:** 2022 edition is under development. Stay tuned 🚀
+> **Announce:** 2022 edition starts Tuesday Sept. 20, 12h45. Welcome!
 
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
