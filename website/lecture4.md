@@ -9,12 +9,11 @@ noeval = true
 # Lecture 4
 
 > **Agenda**\
-> :books: Implicit and nonlinear solutions\
+> :books: Implicit and steady-state solutions\
 > :computer: Julia's `Project` environment\
 > :construction: Exercises:
-> - nonlinear diffusion 2D
-> - Laplacian vs damped Laplacian
-> - steady-state implicit nonlinear diffusion 1D & 2D
+> - Porous convection in 2D
+> - ...
 
 --- 
 

@@ -9,11 +9,11 @@ noeval = true
 # Lecture 3
 
 > **Agenda**\
-> :books: Acoustic wave propagation, 1D to 2D\
+> :books: Solving elliptic PDEs, 1D to 2D\
 > :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
-> - acoustic 2D (3 implementations)
-> - Earthquakes and seismic P-waves
+> - Damped wave equation in 2D
+> - Port 1D codes to 2D
 
 --- 
 

@@ -12,9 +12,9 @@ noeval = true
 > :books: PDEs and physical processes -- diffusion, wave propagation, advection\
 > :computer: Get started on GitHub\
 > :construction: Exercises:
-> - basic code structure & vectorisation
-> - combine physical processes
-> - first steps on Git
+> - Basic code structure & vectorisation
+> - Combine physical processes
+> - First steps on Git
 
 --- 
 

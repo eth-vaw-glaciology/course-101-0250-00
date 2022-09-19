@@ -15,9 +15,9 @@ noeval = true
 > :books: Why GPU computing\
 > :computer: Intro to Julia\
 > :construction: Exercises:
-> - numerical solutions
-> - predictive modelling
-> - visualisation
+> - Numerical solutions
+> - Predictive modelling
+> - Visualisation
 
 ---
 
