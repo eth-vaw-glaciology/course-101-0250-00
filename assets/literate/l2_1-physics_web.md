@@ -313,13 +313,13 @@ C[1:end-1] .-= dt.*vx.*diff(C)./dx # if vx<0
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
 </center>
 ~~~
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
 </center>
 ~~~
 

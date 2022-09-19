@@ -38,7 +38,7 @@ git config --global user.email "youremail@yourdomain.com"
 - merge branch (`merge`)
 - tag (`tag`)
 
-## Further reading
+### Further reading
 
 There are (too) many resources on the web...
 - book: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
@@ -66,7 +66,7 @@ Let's make one (because most of Julia development happens on GitHub)
 
 [https://github.com/](https://github.com/) -> "Sign up"
 
-## GitHub setup
+### GitHub setup
 
 Make such that you can push and pull without entering a password
 

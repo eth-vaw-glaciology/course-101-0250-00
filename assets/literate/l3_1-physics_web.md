@@ -76,7 +76,7 @@ Let's eliminate $V_x$ and $q$ in both systems to get one governing equation for 
 
 We refer to such equations as the _damped wave equations_. They combine wave propagation with diffusion, which manifests as wave attenuation, or decay. The damped wave equation is a hyperbolic PDE.
 
-## Implementing the damped wave equation
+### Implementing the damped wave equation
 
 In the following, we'll use the damped wave equation for concentration $C$ obtained by augmenting the diffusion equation with density $\rho$.
 
@@ -154,7 +154,7 @@ We noticed that depending on the value of the parameter `ρ`, the convergence to
 
 If the parameter `ρ` has optimal value, the convergence to steady-state could be achieved in the number of time steps proportional to the number of grid points `nx` and not `nx^2` as for the parabolic PDE.
 
-## Historical perspective
+### Historical perspective
 
 The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the _second-order Richardson method_
 
