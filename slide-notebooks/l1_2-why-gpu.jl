@@ -12,9 +12,13 @@ md"""
 md"""
 ## Why solve PDEs on GPUs?
 
-![gpu](./figures/gpu.png)
-
 """
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="/assets/porous_convection_2D.mp4"/>
+# </center>
+#md # ~~~
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
@@ -141,11 +145,9 @@ md"""
 md"""
 #### GPU are cool
 Price vs Performance
-- Close to **1TB/s** memory throughput (here on nonlinear diffusion SIA)
+- Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
 
 ![perf_gpu](./figures/perf_gpu.png)
-
-! And one can get there !
 """
 
 #src #########################################################################
@@ -192,6 +194,7 @@ md"""
 
 - [ParallelStencil _miniapps_](https://github.com/omlins/ParallelStencil.jl#miniapp-content)
 - [Ice-flow modelling](https://github.com/luraess/julia-parallel-course-EGU21#greenlands-ice-cap-evolution)
+- [GPU4GEO - _Frontier GPU multi-physics solvers_](https://ptsolvers.github.io/GPU4GEO/software/)
 - [3D hydro-mechanical inversions](https://github.com/PTsolvers/PseudoTransientAdjoint.jl#3d-hydro-mechanically-constrained-inversion)
 - [3D Random fields](https://github.com/luraess/ParallelRandomFields.jl#parallelrandomfieldsjl)
 - more ...
