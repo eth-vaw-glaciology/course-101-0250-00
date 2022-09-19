@@ -423,13 +423,17 @@ Pr[2:end-1] .-= ...
 md"""
 Comparing diffusive and wave physics, we can summarise following:
 
-## Compare the equations
-
-| Diffusion                                                            | Wave propagation                                                                    |
-|----------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
-| $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $$ |
+## Compare the equationss
 """
+#!nb # | Diffusion                                                          | Wave propagation                                                                  |
+#!nb # |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
+#!nb # | $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
+#!nb # | $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $ |
+
+#nb # | Diffusion                                                            | Wave propagation                                                                    |
+#nb # |:--------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
+#nb # | $$ q = -D\frac{\partial C}{\partial x} $$                            | $$ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $$  |
+#nb # | $$ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $$ | $$ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $$ |
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
