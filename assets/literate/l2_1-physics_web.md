@@ -1,5 +1,6 @@
 <!--This file was generated, do not modify it.-->
-# PDEs and physical processes - diffusion, wave propagation, advection
+# PDEs and physical processes
+### diffusion, wave propagation, advection
 
 ### The goal of this lecture 2 is to familiarise (or refresh) with
 - Partial differential equations - PDEs (e.g. diffusion and advection equations)
@@ -168,7 +169,7 @@ The hyperbolic equation reads
 $$ \frac{∂^2P}{∂t^2} = c^2 ∇^2 P~,$$
 
 where
-- $u$ is pressure (or, displacement, or another scalar quantity...)
+- $P$ is pressure (or, displacement, or another scalar quantity...)
 - $c$ a real constant (speed of sound, stiffness, ...)
 
 The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
@@ -224,7 +225,7 @@ lx   = 20.0
 #Pr  =  exp.(...)
 ```
 
-Note that the time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
+\note{The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`}
 
 Then, the diffusion physics:
 
@@ -245,8 +246,8 @@ Comparing diffusive and wave physics, we can summarise following:
 ### Compare the equations
 | Diffusion                                                          | Wave propagation                                                                  |
 |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
-| $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial U}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
-| $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial U}{\partial x} $ |
+| $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial V_x}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
+| $ \frac{\partial C}{\partial t} = -\frac{\partial q}{\partial x} $ | $ \frac{\partial P}{\partial t} = -\frac{1}{\beta}\frac{\partial V_x}{\partial x} $ |
 
 ## First-order PDEs - advection
 
@@ -281,7 +282,7 @@ The only change in the `# derived numerics` section is the numerical time step d
 dt   = dx/abs(vx)
 ```
 
-In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.3 l_x$.
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.4 l_x$.
 
 ```julia
 C = exp.( ... )
@@ -336,7 +337,7 @@ $$
 
 It doesn't depend on time! How do we solve it numerically then?
 
-## Solution to the elliptic PDE...
+### Solution to the elliptic PDE...
 
 is the steady state limit of the time-dependent diffusion problem described by the parabolic PDE:
 
@@ -367,7 +368,7 @@ We approach the steady-state, but the number of time steps required to converge 
 
 - For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
 
-We'll handle this problem in the next lecture, _stay tuned!_
+We'll handle this problem in the next lecture, _stay tuned!_ :rocket:
 
 ## Wrapping-up
 
