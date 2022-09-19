@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Money in the bank**
+## Exercise 1 - **Car travel**
 """
 
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex1.ipynb)
@@ -7,124 +7,91 @@ md"""
 
 md"""
 The goal of this exercise is to familiarise with:
+- code structure `# Physics, # Numerics, # Time loop, # Visualisation`
 - array initialisation
-- `for` loop
-- indexing
+- `for` loop & `if` condition
 - update rule
-- basic visualisation
-
-You are managing assets from a client which has an initial wealth `M_init` of 20kCHF. Your client's business generates yearly savings `M_save` of 500CHF.
+- solving ODEs
 """
 
-M_init  = 20000.0   # initial wealth
-M_save  = 500.0;    # yearly savings
+md"""
+A car cruises on a straight road at given speed $\mathrm{V = 113}$ km/h for 16 hours, making a U-turn after a distance $\mathrm{L = 200}$ km. The car speed is defined as the change of position its $x$ per time $t$:
+$$
+V = \frac{\partial x}{\partial t}
+$$
+
+In the above derivative, $\partial x$ and $\partial t$ are considered infinitesimal - a representation it is not possible to handle within a computer (as it would require infinite amount of resources). However, we can discretise this differential equation in order to solve it numerically by transforming the infinitesimal quantities into discrete increments:
+$$
+V = \frac{\partial x}{\partial t} \approx \frac{\Delta x}{\Delta t} = \frac{x_{t+\Delta t}-x_t}{\Delta t}~,
+$$
+where $\Delta x$ and $\Delta t$ are discrete quantities. This equation can be re-organised to return an explicit solution of the position $x$ at time $t+\Delta t$:
+$$
+x_{t+\Delta t} = x_{t} + V \Delta t~.
+$$
+
+1. Based on this equation, your task is to setup a numerical model to predict the position of the car as function of time. In order not to start from scratch this time, you can complete the code draft below, filling in the relevant quantities in following order:
+"""
+
+using Plots
+
+@views function main_fun()
+    ## Physical parameters
+
+    ## Numerical parameters
+    
+    ## Array initialisation
+    
+    ## Time loop
+    
+    ## Visualisation
+    
+    return
+end
+
+main_fun()
+
+md"""
+2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.
+
+---
+
+The sample code you can use to get started looks like:
+"""
+
+using Plots
+
+@views function car_travel_1D()
+    ## Physical parameters
+    #V     =         # speed, km/h
+    #L     =         # length of segment, km
+    #ttot  =         # total time, h
+    ## Numerical parameters
+    #dt    = 0.1            # time step, h
+    #nt    = Int(cld(ttot, dt))  # number of time steps
+    ## Array initialisation
+    #T     = 
+    #X     = 
+    ## Time loop
+    #for it = 2:nt
+        #T[it] = T[it-1] + dt
+        #X[it] =   # move the car
+        #if X[it] > L
+                  ## if beyond L, go back (left)
+        #elseif X[it] < 0
+                   ## if beyond 0, go back (right)
+        #end
+    #end
+    ## Visualisation
+    #display(scatter(T, X, markersize=5, 
+                    #xlabel="time, hrs", ylabel="distance, km", 
+                    #framestyle=:box, legend=:none))
+    return
+end
+
+car_travel_1D()
 
 md"""
 ### Question 1
 
-Model the wealth evolution of your client for the coming 35 years `tot_yrs`:
-"""
-
-tot_yrs = 35;       # number of years
-
-md"""
-To do so, we will first initialise a one dimensional array (vector) to store the wealth evolution of the client and check that the vector `M_evol1` has the correct `length` (or size):
-"""
-
-M_evol1 = zeros(tot_yrs)
-length(M_evol1)
-
-md"""
-We then need to initialise that vector with the initial wealth of the client:
-"""
-
-M_evol1[1] = M_init;
-
-md"""
-Now we have to define the core of our simulator; predicting the wealth evolution. To do so, we will define the the wealth fo the current year `it` as the wealth from previous year `it-1` plus the amount of saving `M_save` and repeat this for `tot_yrs` (taking care about the start value of the iterator):
-"""
-
-for it=2:tot_yrs
-    M_evol1[it] =  M_evol1[it-1] + M_save
-end
-
-md"""
-Now, we want to print the wealth of our client after `tot_yrs`
-"""
-
-println("Wealth after $(tot_yrs) years: $(M_evol1[end]) CHF")
-
-md"""
-Perfect. However, the client is interested in a graphical evolution as he needs this to convince future investors.
-"""
-
-using Plots
-plot(M_evol1 ./ 1000, linewidth=3,
-     xlabel="time, yrs", ylabel="savings, kchf", label="without interest", 
-     framestyle=:box, legend=:topleft, foreground_color_legend = nothing)
-
-md"""
-### Question 2
-
-The bank you are working for offers actually a yearly interest rate `intrst` of 0.6% for all premium client, a category your client belongs to. Repeat the exercise from Question 1 including now the interest rate.
-
-Create a new vector `M_evol2` to store the wealth evolution with interest rate and assign the initial wealth:
-"""
-
-intrst     = 0.006     # fixed interest rate
-M_evol2    = zeros(tot_yrs)
-M_evol2[1] = M_init;
-
-md"""
-Then, update the prediction formula within the time loop to account for the interest rate (changing the update formula)
-"""
-
-## TO DO: add correct formula !
-for it=2:tot_yrs
-    M_evol2[it] = M_evol2[it-1] + M_save
-end
-
-#nb # > 💡 hint: Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.
-#md # \note{Each year, the total wealth is the wealth of previous year plus the percentage proportional to the interest rate.}
-
-md"""
-Report the total wealth of the client after `tot_yrs`:
-"""
-
-println("Wealth after $(tot_yrs) years with interest rate: $(M_evol2[end]) CHF")
-
-md"""
-And display the graphical evolution on top of previous one:
-"""
-
-plot!(M_evol2 ./ 1000, linewidth=3, label="with interest")
-
-md"""
-Finally, quantify the difference in the final wealth with and without interest rate:
-"""
-
-∆evo = M_evol2[end] - M_evol1[end]
-println("∆evo = $(round(∆evo, sigdigits=5))")
-
-md"""
-### Question 3
-
-Great job, your client is very happy and could use the financial prediction you made to convince the investors to further support his business. Your client now wants to know the final wealth after 35 years given the fact he plans a one time expense `expns` of 1125CHF in 20 years. Provide the final wealth and a graphical evolution for both cases with and without interest rate.
-"""
-
-md"""
-### Question 4
-
-The final task you'll have to perform for your client before transferring his dossier to another department within the bank is to predict his wealth evolution taking market's randomness into account.
-"""
-
-md"""
-Define a yearly variable interest rate of 0.5% +/- 1%. Report the final wealth as well as a graphical evolution of your client's wealth taking the random market evolution into account for the coming 35 years.
-"""
-
-#nb # > 💡 hint: You can use `randn()` to generate a normally-distributed random number.
-#md # \note{You can use `randn()` to generate a normally-distributed random number.}
-
-md"""
-🎉 Good job! You are done with **Exercise 1**
+Once the code is running, test various time step increments `0.1 < dt < 0.01` and briefly comment on your findings.
 """

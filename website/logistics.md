@@ -33,7 +33,7 @@ Schedule to be defined (on Element/Zoom or in-person)
 ## Discussion
 We plan to use the [Element-chat (https://chat.ethz.ch/)](https://chat.ethz.ch/) as the main communication channel for the course, both between the teachers and the students, and hopefully also between students. We encourage ETH students to ask course, exercises and technical questions there.
 
-Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=781163) to get started with Element:
+Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) to get started with Element:
 1. Select **Start Student-Chat**.
 2. Login using your NETHZ credentials to start using the browser-based client.
 3. Join the **_General_** and **_Helpdesk_** rooms.
@@ -49,6 +49,8 @@ Homework **due date will be Thursday 23h59 CET** every following week (9 days) t
 
 Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a version of the homework_**.
 
+> ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
+
 ### Submission
 - Submission of scripts (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
@@ -57,10 +59,8 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 1. Create a private GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
 2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [utkinis](https://github.com/utkinis), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
 3. **For each homework submission**, you will:
-    - create a new folder named `lectureX` (X $\in [4-...]$) to push the exercise codes into;
+    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
     - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). It will serve to control the material was pushed on time.
-
-> ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 

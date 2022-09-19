@@ -13,10 +13,12 @@ md"""
 ## Aside 1: Jupyter Notebooks
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
+"""
 
-> You can follow the lecture along live at [https://achtzack01.ethz.ch/](https://achtzack01.ethz.ch/), login with your first-name and an
-> arbitrary password.  You have to be within the ETHZ network or use a VPN connection.
+#nb # > 💡 note: You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=780549) server.
+#md # \note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=780549) server.}
 
+md"""
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
 info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 """
@@ -87,7 +89,7 @@ plot(sol, vars=(1,2,3)) # plot Lorenz attractor
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.6.2
+Julia 1.0 released 2018, now at version 1.8.0
 
 Features:
 - general purpose language with a focus on technical computing

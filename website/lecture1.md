@@ -68,8 +68,3 @@ noeval = true
 
 [⤴ _**back to Content**_](#content)
 
----
-
-\literate{/_literate/lecture1_ex5_web.jl}
-
-[⤴ _**back to Content**_](#content)
