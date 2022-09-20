@@ -18,6 +18,8 @@ sol = solve(ODEProblem(lorenz, x₀, tspan), Tsit5())
 
 plot(sol, vars=(1,2,3)) # plot Lorenz attractor
 
+https://tinyurl.com/pdeongpu
+
 # ?cos
 
 a = 4
@@ -41,6 +43,8 @@ Dict("a"=>1, "b"=>cos)
 a = [2, 3]
 b = ...
 [ ; ]
+
+#
 
 # [  ;  ]
 

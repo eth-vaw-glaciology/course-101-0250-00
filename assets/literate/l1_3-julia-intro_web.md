@@ -22,6 +22,8 @@ info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/)
 6. Assembler
 7. Coq, Brainfuck, ...
 
+https://docs.google.com/forms/d/13BF2S2HaKHN9m1aK3CyR6CHoUJskQHJpIK7L2DrmN3M/edit#responses
+
 ## The Julia programming language
 
 [Julia](https://julialang.org/) is a modern, interactive, and high performance programming language.  It's a general purpose
@@ -31,8 +33,8 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.6.2 (09.2021)
-- thriving community, for instance there are currently around 6300 packages registered
+- current version 1.8.1 (09.2022)
+- thriving community, for instance there are currently around 8300 [packages registered](https://juliahub.com/ui/Packages)
 
 ### What does Julia look like
 
@@ -64,8 +66,10 @@ And its solution plotted
 plot(sol, vars=(1,2,3)) # plot Lorenz attractor
 ````
 
+![lorenz](../assets/literate_figures/lorenz.png)
+
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.8.0
+Julia 1.0 released 2018, now at version 1.8.1
 
 Features:
 - general purpose language with a focus on technical computing
@@ -120,6 +124,21 @@ and also:
 
 ###  Let's get our hands dirty!
 
+Head to the course's moodle page https://moodle-app2.let.ethz.ch/course/view.php?id=18084
+and fire up your JupyterHub.
+
+[Brief explanation on JupyterHub]
+
+Get this notebook (and other stuff), open a terminal on JupyterHub and run:
+
+    git clone https://tinyurl.com/pdeongpu
+
+````julia:ex3
+https://tinyurl.com/pdeongpu
+````
+
+###  Let's get our hands dirty!
+
 We will now look at
 - variables and types
 - control flow
@@ -132,14 +151,14 @@ There are also tutorials, see [https://julialang.org/learning/](https://julialan
 
 Furthermore, documentation can be gotten with `?xyz`
 
-````julia:ex3
+````julia:ex4
 # ?cos
 ````
 
 ## Variables, assignments, and types
 [https://docs.julialang.org/en/v1/manual/variables/](https://docs.julialang.org/en/v1/manual/variables/)
 
-````julia:ex4
+````julia:ex5
 a = 4
 b = "a string"
 c = b # now b and c bind to the same value
@@ -170,7 +189,7 @@ name `δ` can be entered by typing `\delta`-*tab*, or even `α̂⁽²⁾` by `\a
 that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 
-````julia:ex5
+````julia:ex6
 #
 ````
 
@@ -181,25 +200,25 @@ then paste the symbol.)
 - arrays
 - dictionaries
 
-````julia:ex6
+````julia:ex7
 1     # 64 bit integer (or 32 bit if on a 32-bit OS)
 1.5   # Float64
 1//2  # Rational
 ````
 
-````julia:ex7
+````julia:ex8
 typeof(1.5)
 ````
 
-````julia:ex8
+````julia:ex9
 "a string", (1, 3.5) # and tuple
 ````
 
-````julia:ex9
+````julia:ex10
 [1, 2, 3,] # array of eltype Int
 ````
 
-````julia:ex10
+````julia:ex11
 Dict("a"=>1, "b"=>cos)
 ````
 
@@ -214,7 +233,7 @@ Datatypes belonging to AbstactArrays:
 
 Task: assign two vectors to `a`, and `b` and the concatenate them using `;`:
 
-````julia:ex11
+````julia:ex12
 a = [2, 3]
 b = ...
 [ ; ]
@@ -222,22 +241,24 @@ b = ...
 
 Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 
-````julia:ex12
+````julia:ex13
 push!(b, 1)
 push!(b, 3, 4)
+
+#
 ````
 
 ### Array exercises
 
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 
-````julia:ex13
+````julia:ex14
 # [  ;  ]
 ````
 
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 
-````julia:ex14
+````julia:ex15
 #
 ````
 
@@ -245,27 +266,27 @@ Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 
-````julia:ex15
+````julia:ex16
 # a[ ... ], a[ ... ]
 ````
 
 Put those two values into a vector
 
-````julia:ex16
+````julia:ex17
 #
 ````
 
 Linear vs Cartesian indexing,
 access the first element:
 
-````julia:ex17
+````julia:ex18
 a[1]
 a[1,1]
 ````
 
 Access the last element (look up `?end`) both with linear and Cartesian indices
 
-````julia:ex18
+````julia:ex19
 # a[...]
 # a[..., ...]
 ````
@@ -274,13 +295,13 @@ Access the last element (look up `?end`) both with linear and Cartesian indices
 
 Access the last row of `a` (hint use `1:end`)
 
-````julia:ex19
+````julia:ex20
 # a[... , ...]
 ````
 
 Access a 2x2 sub-matrix
 
-````julia:ex20
+````julia:ex21
 # a[ ]
 ````
 
@@ -288,7 +309,7 @@ Access a 2x2 sub-matrix
 
 What do you make of
 
-````julia:ex21
+````julia:ex22
 a = [1 4; 3 4] # note, this is another way to define a Matrix
 c = a
 a[1, 2] = 99
@@ -302,7 +323,7 @@ Type your answer here (to start editing, double click into this cell.  When done
 
 An assignment _binds_ the same array to both variables
 
-````julia:ex22
+````julia:ex23
 c = a
 c[1] = 8
 @assert a[1]==8 # as c and a are the same thing
@@ -314,7 +335,7 @@ Views vs copies:
 In Julia indexing with ranges will create a new array with copies of
 the original's entries. Consider
 
-````julia:ex23
+````julia:ex24
 a = rand(3,4)
 b = a[1:3, 1:2]
 b[1] = 99
@@ -327,7 +348,7 @@ But the memory footprint will be large if we work with large arrays and take sub
 
 Views to the rescue
 
-````julia:ex24
+````julia:ex25
 a = rand(3,4)
 b = @view a[1:3, 1:2]
 b[1] = 99
@@ -335,17 +356,17 @@ b[1] = 99
 
 check whether the change in `b` is reflected in `a`:
 
-````julia:ex25
+````julia:ex26
 # @assert ...
 ````
 
-### Detour: types
+### A small detour: types
 
 All values have types as we saw above.  Arrays store in their type what type the elements can be.
 
 > Arrays which have concrete element-types are more performant!
 
-````julia:ex26
+````julia:ex27
 typeof([1, 2]), typeof([1.0, 2.0])
 ````
 
@@ -353,26 +374,26 @@ Aside, they also store their dimension in the second parameter.
 
 The type can be specified at creation
 
-````julia:ex27
+````julia:ex28
 String["one", "two"]
 ````
 
-Create an array taking `Int` with no elements
+Create an array taking `Int` with no elements.  Push `1`, `1.0` and `1.5` to it.  What happens?
 
-````julia:ex28
+````julia:ex29
 #
 ````
 
 Make an array of type `Any` (which can store any value).  Push a value of type
 Int and one of type String to it.
 
-````julia:ex29
+````julia:ex30
 #
 ````
 
 Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
-````julia:ex30
+````julia:ex31
 #
 ````
 
@@ -381,13 +402,13 @@ Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 Create a uninitialised Matrix of size (3,3) and assign it to `a`.
 First look up the docs of Array with `?Array`
 
-````julia:ex31
+````julia:ex32
 #
 ````
 
 Test that its size is correct, see `size`
 
-````julia:ex32
+````julia:ex33
 #
 ````
 
@@ -415,7 +436,7 @@ Write a test which looks at the start of the string in variable `a`
 - "The " then set `b = "A noun"`
 - otherwise set `b = "no idea"`
 
-````julia:ex33
+````julia:ex34
 #
 ````
 
@@ -432,7 +453,7 @@ else
 end
 ```
 
-````julia:ex34
+````julia:ex35
 #
 ````
 
@@ -471,7 +492,7 @@ Read [https://docs.julialang.org/en/v1/manual/functions/](https://docs.julialang
 Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 
-````julia:ex35
+````julia:ex36
 #
 ````
 
@@ -482,7 +503,7 @@ does the same.  Map `sin` over the vector `1:10`.
 
 (Note, this is a higher-order function: a function which take a function as a argument)
 
-````julia:ex36
+````julia:ex37
 #
 ````
 
@@ -493,14 +514,14 @@ function over values.
 
 Exercise: apply the `sin` function to a vector `1:10`:
 
-````julia:ex37
+````julia:ex38
 #
 ````
 
 Broadcasting will extend row and column vectors into a matrix.
 Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
-````julia:ex38
+````julia:ex39
 #
 ````
 
@@ -509,7 +530,7 @@ Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 
-````julia:ex39
+````julia:ex40
 #
 ````
 
@@ -522,7 +543,7 @@ Read [https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
 Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
 function.
 
-````julia:ex40
+````julia:ex41
 #
 ````
 
@@ -547,7 +568,7 @@ JuliaCon 2019 presentation on the subject by Stefan Karpinski
 
 ## Functions: Multiple dispatch demo
 
-````julia:ex41
+````julia:ex42
 struct Rock end
 struct Paper end
 struct Scissors end
@@ -572,7 +593,7 @@ Can easily be extended later
 
 with new type:
 
-````julia:ex42
+````julia:ex43
 struct Pond end
 play(::Rock, ::Pond) = "Pond wins"
 play(::Paper, ::Pond) = "Paper wins"
@@ -583,7 +604,7 @@ play(Scissors(), Pond())
 
 with new function:
 
-````julia:ex43
+````julia:ex44
 combine(::Rock, ::Paper) = "Paperweight"
 combine(::Paper, ::Scissors) = "Two pieces of papers"
 # ...
@@ -609,12 +630,14 @@ using OrdinaryDiffEq, Plots
 This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
 and types available in the current session.
 
-````julia:ex44
+````julia:ex45
 using Plots
 plot( (1:10).^2 )
 ````
 
 ### Packages
+
+**Note** package installation does not work on the moodle-Jupyterhub.  But it will work on your local installation.
 
 All public Julia packages are listed on [https://juliahub.com/ui/Packages](https://juliahub.com/ui/Packages).
 
@@ -627,7 +650,7 @@ using UnPack
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
 
-````julia:ex45
+````julia:ex46
 # Install a package (maybe not a too big one, UnPack.jl is good that way),
 # use it, query help on the package itself
 ````
