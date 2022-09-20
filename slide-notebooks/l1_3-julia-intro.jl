@@ -35,6 +35,8 @@ md"""
 5. Lisp, Haskell, ...
 6. Assembler
 7. Coq, Brainfuck, ...
+
+https://docs.google.com/forms/d/13BF2S2HaKHN9m1aK3CyR6CHoUJskQHJpIK7L2DrmN3M/edit#responses
 """
 
 #src #########################################################################
@@ -49,8 +51,8 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.6.2 (09.2021)
-- thriving community, for instance there are currently around 6300 packages registered
+- current version 1.8.1 (09.2022)
+- thriving community, for instance there are currently around 8300 [packages registered](https://juliahub.com/ui/Packages)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -85,11 +87,13 @@ And its solution plotted
 """
 plot(sol, vars=(1,2,3)) # plot Lorenz attractor
 
+#md # ![lorenz](./figures/lorenz.png)
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.8.0
+Julia 1.0 released 2018, now at version 1.8.1
 
 Features:
 - general purpose language with a focus on technical computing
@@ -161,6 +165,25 @@ md"""
 ![](./figures/flux-vs-tensorflow.png)
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+###  Let's get our hands dirty!
+
+Head to the course's moodle page https://moodle-app2.let.ethz.ch/course/view.php?id=18084
+and fire up your JupyterHub.
+
+[Brief explanation on JupyterHub]
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Get this notebook (and other stuff), open a terminal on JupyterHub and run:
+
+    git clone https://tinyurl.com/pdeongpu
+"""
+
+https://tinyurl.com/pdeongpu
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
@@ -276,6 +299,8 @@ a = [2, 3]
 
 #md push!(b, 1)
 #md push!(b, 3, 4)
+
+##
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
@@ -394,7 +419,7 @@ b[1] = 99
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
-### Detour: types
+### A small detour: types
 
 All values have types as we saw above.  Arrays store in their type what type the elements can be.
 
@@ -407,7 +432,7 @@ typeof([1, 2]), typeof([1.0, 2.0])
 # The type can be specified at creation
 String["one", "two"]
 
-# Create an array taking `Int` with no elements
+# Create an array taking `Int` with no elements.  Push `1`, `1.0` and `1.5` to it.  What happens?
 
 ##
 
@@ -715,6 +740,8 @@ plot( (1:10).^2 )
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "subslide"}}
 md"""
 ### Packages
+
+**Note** package installation does not work on the moodle-Jupyterhub.  But it will work on your local installation.
 
 All public Julia packages are listed on [https://juliahub.com/ui/Packages](https://juliahub.com/ui/Packages).
 
