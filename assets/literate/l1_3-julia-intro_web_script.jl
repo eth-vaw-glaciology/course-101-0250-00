@@ -16,9 +16,7 @@ tspan = (0.0, 50.0)
 x₀ = [2.0, 0.0, 0.0]
 sol = solve(ODEProblem(lorenz, x₀, tspan), Tsit5())
 
-plot(sol, vars=(1,2,3)) # plot Lorenz attractor
-
-https://tinyurl.com/pdeongpu
+plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
 
 # ?cos
 
@@ -41,34 +39,34 @@ typeof(1.5)
 Dict("a"=>1, "b"=>cos)
 
 a = [2, 3]
-b = ...
-[ ; ]
+b = [4, 5]
+[a ; b]
 
-#
+push!(b, 1)
+push!(b, 3, 4)
 
-# [  ;  ]
+[1:10; [4,5]]
 
-#
+a = rand(3,3)
 
-# a[ ... ], a[ ... ]
+a[1,2], a[2,1]
 
-#
+[ a[1,2], a[2,1] ]
 
 a[1]
 a[1,1]
 
-# a[...]
-# a[..., ...]
+a[end]
+a[end, end]
 
-# a[... , ...]
+a[end, 1:end]
 
-# a[ ]
+a[1:2, 1:2]
 
 a = [1 4; 3 4] # note, this is another way to define a Matrix
 c = a
 a[1, 2] = 99
 @assert c[1,2] == a[1,2]
-@assert b[1] != a[1,2]
 
 c = a
 c[1] = 8
@@ -84,37 +82,71 @@ a = rand(3,4)
 b = @view a[1:3, 1:2]
 b[1] = 99
 
-# @assert ...
+@assert a[1] == 99
 
 typeof([1, 2]), typeof([1.0, 2.0])
 
 String["one", "two"]
 
-#
+a = Int[]
+push!(a, 1) ## works
+push!(a, 1.0) ## works
+push!(a, 1.5) ## errors as 1.5 cannot be converted to an Int
 
-#
+a = []
+push!(a, 5)
+push!(a, "a")
 
-#
+[1][1] = 1.5 ## errors
 
-#
+a = Array{Any}(undef, 3, 3)
 
-#
+size(a)
 
-#
+a = "Where are the flowers"
+if startswith(a, "Wh")
+  b = "Likely a question"
+elseif startswith(a, "The")
+  b = "Likely a noun"
+else
+  b = "no idea"
+end
 
-#
+a > 5 ? "really big" : "not so big"
 
-#
+for i = 1:3
+    println(i)
+end
 
-#
+for i in ["dog", "cat"] ## `in` and `=` are equivalent for writing loops
+    println(i)
+end
 
-#
+i = 1
+while i<4
+    println(i)
+    i += 1
+end
 
-#
+function fn(a, b)
+  if a> b
+    return a
+  else
+    return b
+  end
+end
 
-#
+mymap(fn, a) = [fn(aa) for aa in a]
+mymap(sin, 1:10)
 
-#
+sin.(1:10)
+
+(1:10) .+ (1:10)'
+
+x,y = 0:0.1:pi, -pi:0.1:pi
+sin.(x) .+ cos.(y')
+
+map(x -> sin(x) + cos(x), 1:10)
 
 struct Rock end
 struct Paper end
@@ -151,5 +183,8 @@ using Plots
 plot( (1:10).^2 )
 
 # Install a package (maybe not a too big one, UnPack.jl is good that way),
-# use it, query help on the package itself
+# use it, query help on the package itself:
+using Pkg
+Pkg.add("UnPack")
+##?UnPack ## to query help
 

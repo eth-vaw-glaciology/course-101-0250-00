@@ -63,7 +63,7 @@ Yes, this takes some time... Julia is Just-Ahead-of-Time compiled.  I.e. Julia i
 And its solution plotted
 
 ````julia:ex2
-plot(sol, vars=(1,2,3)) # plot Lorenz attractor
+plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
 ````
 
 ![lorenz](../assets/literate_figures/lorenz.png)
@@ -129,13 +129,13 @@ and fire up your JupyterHub.
 
 [Brief explanation on JupyterHub]
 
-Get this notebook (and other stuff), open a terminal on JupyterHub and run:
+This notebook and other should be on you JupyterHub in the folder
+
+    course-101-0250-00-JupyterLab.git/
+
+if not, to get this notebook (and other stuff), open a terminal on JupyterHub and run:
 
     git clone https://tinyurl.com/pdeongpu
-
-````julia:ex3
-https://tinyurl.com/pdeongpu
-````
 
 ###  Let's get our hands dirty!
 
@@ -151,14 +151,14 @@ There are also tutorials, see [https://julialang.org/learning/](https://julialan
 
 Furthermore, documentation can be gotten with `?xyz`
 
-````julia:ex4
+````julia:ex3
 # ?cos
 ````
 
 ## Variables, assignments, and types
 [https://docs.julialang.org/en/v1/manual/variables/](https://docs.julialang.org/en/v1/manual/variables/)
 
-````julia:ex5
+````julia:ex4
 a = 4
 b = "a string"
 c = b # now b and c bind to the same value
@@ -189,7 +189,7 @@ name `δ` can be entered by typing `\delta`-*tab*, or even `α̂⁽²⁾` by `\a
 that you don't know how to type, the REPL help will tell you: just type `?` and
 then paste the symbol.)
 
-````julia:ex6
+````julia:ex5
 #
 ````
 
@@ -200,25 +200,25 @@ then paste the symbol.)
 - arrays
 - dictionaries
 
-````julia:ex7
+````julia:ex6
 1     # 64 bit integer (or 32 bit if on a 32-bit OS)
 1.5   # Float64
 1//2  # Rational
 ````
 
-````julia:ex8
+````julia:ex7
 typeof(1.5)
 ````
 
-````julia:ex9
+````julia:ex8
 "a string", (1, 3.5) # and tuple
 ````
 
-````julia:ex10
+````julia:ex9
 [1, 2, 3,] # array of eltype Int
 ````
 
-````julia:ex11
+````julia:ex10
 Dict("a"=>1, "b"=>cos)
 ````
 
@@ -233,91 +233,92 @@ Datatypes belonging to AbstactArrays:
 
 Task: assign two vectors to `a`, and `b` and the concatenate them using `;`:
 
-````julia:ex12
+````julia:ex11
 a = [2, 3]
-b = ...
-[ ; ]
+b = [4, 5]
+[a ; b]
 ````
 
 Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 
-````julia:ex13
+````julia:ex12
 push!(b, 1)
 push!(b, 3, 4)
-
-#
 ````
 
 ### Array exercises
 
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 
-````julia:ex14
-# [  ;  ]
+````julia:ex13
+[1:10; [4,5]]
 ````
 
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 
-````julia:ex15
-#
+````julia:ex14
+a = rand(3,3)
 ````
 
 ### Array exercise: indexing
 
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 
-````julia:ex16
-# a[ ... ], a[ ... ]
+````julia:ex15
+a[1,2], a[2,1]
 ````
 
 Put those two values into a vector
 
-````julia:ex17
-#
+````julia:ex16
+[ a[1,2], a[2,1] ]
 ````
 
 Linear vs Cartesian indexing,
 access the first element:
 
-````julia:ex18
+````julia:ex17
 a[1]
 a[1,1]
 ````
 
 Access the last element (look up `?end`) both with linear and Cartesian indices
 
-````julia:ex19
-# a[...]
-# a[..., ...]
+````julia:ex18
+a[end]
+a[end, end]
 ````
 
 ### Array exercise: indexing by ranges
 
 Access the last row of `a` (hint use `1:end`)
 
-````julia:ex20
-# a[... , ...]
+````julia:ex19
+a[end, 1:end]
 ````
 
 Access a 2x2 sub-matrix
 
-````julia:ex21
-# a[ ]
+````julia:ex20
+a[1:2, 1:2]
 ````
 
 ### Array exercises: variable bindings and views
 
 What do you make of
 
-````julia:ex22
+````julia:ex21
 a = [1 4; 3 4] # note, this is another way to define a Matrix
 c = a
 a[1, 2] = 99
 @assert c[1,2] == a[1,2]
-@assert b[1] != a[1,2]
 ````
 
 Type your answer here (to start editing, double click into this cell.  When done shift+enter):
+
+````julia:ex22
+Both variables `a` and `c` refer to the same "thing".  Thus updating the array via one will show in the other.
+````
 
 ### Array exercises: variable bindings and views
 
@@ -357,7 +358,7 @@ b[1] = 99
 check whether the change in `b` is reflected in `a`:
 
 ````julia:ex26
-# @assert ...
+@assert a[1] == 99
 ````
 
 ### A small detour: types
@@ -381,20 +382,25 @@ String["one", "two"]
 Create an array taking `Int` with no elements.  Push `1`, `1.0` and `1.5` to it.  What happens?
 
 ````julia:ex29
-#
+a = Int[]
+push!(a, 1) ## works
+push!(a, 1.0) ## works
+push!(a, 1.5) ## errors as 1.5 cannot be converted to an Int
 ````
 
 Make an array of type `Any` (which can store any value).  Push a value of type
 Int and one of type String to it.
 
 ````julia:ex30
-#
+a = []
+push!(a, 5)
+push!(a, "a")
 ````
 
 Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
 ````julia:ex31
-#
+[1][1] = 1.5 ## errors
 ````
 
 ### Array exercises
@@ -403,18 +409,18 @@ Create a uninitialised Matrix of size (3,3) and assign it to `a`.
 First look up the docs of Array with `?Array`
 
 ````julia:ex32
-#
+a = Array{Any}(undef, 3, 3)
 ````
 
 Test that its size is correct, see `size`
 
 ````julia:ex33
-#
+size(a)
 ````
 
 ### Array exercises: ALL DONE
 
-The rest will be learning-by-doing
+The rest about Arrays you will learn-by-doing.
 
 ## Control flow
 
@@ -437,7 +443,14 @@ Write a test which looks at the start of the string in variable `a`
 - otherwise set `b = "no idea"`
 
 ````julia:ex34
-#
+a = "Where are the flowers"
+if startswith(a, "Wh")
+  b = "Likely a question"
+elseif startswith(a, "The")
+  b = "Likely a noun"
+else
+  b = "no idea"
+end
 ````
 
 ### Conditional evaluation: the "ternary operator" `?`
@@ -454,7 +467,7 @@ end
 ```
 
 ````julia:ex35
-#
+a > 5 ? "really big" : "not so big"
 ````
 
 ### Short circuit operators `&&` and `||`
@@ -468,8 +481,29 @@ a < 0 && error("Not valid input for `a`")
 ```
 
 Type your answer here (to start editing, double click into this cell.  When done shift+enter):
+
 If `a < 0` evaluates to `true` then the bit after the `&&` is evaluated too,
 i.e. an error is thrown.  Otherwise, only `a < 0` is evaluated and no error is thrown.
+
+### Loops: `for` and `while`
+
+[https://docs.julialang.org/en/v1/manual/control-flow/#man-loops](https://docs.julialang.org/en/v1/manual/control-flow/#man-loops)
+
+````julia:ex36
+for i = 1:3
+    println(i)
+end
+
+for i in ["dog", "cat"] ## `in` and `=` are equivalent for writing loops
+    println(i)
+end
+
+i = 1
+while i<4
+    println(i)
+    i += 1
+end
+````
 
 ## Functions
 
@@ -492,8 +526,14 @@ Read [https://docs.julialang.org/en/v1/manual/functions/](https://docs.julialang
 Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 
-````julia:ex36
-#
+````julia:ex37
+function fn(a, b)
+  if a> b
+    return a
+  else
+    return b
+  end
+end
 ````
 
 ### Functions: exercises
@@ -503,8 +543,9 @@ does the same.  Map `sin` over the vector `1:10`.
 
 (Note, this is a higher-order function: a function which take a function as a argument)
 
-````julia:ex37
-#
+````julia:ex38
+mymap(fn, a) = [fn(aa) for aa in a]
+mymap(sin, 1:10)
 ````
 
 ### Functions: dot-syntax
@@ -514,15 +555,15 @@ function over values.
 
 Exercise: apply the `sin` function to a vector `1:10`:
 
-````julia:ex38
-#
+````julia:ex39
+sin.(1:10)
 ````
 
 Broadcasting will extend row and column vectors into a matrix.
 Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
-````julia:ex39
-#
+````julia:ex40
+(1:10) .+ (1:10)'
 ````
 
 ### Functions: dot-syntax exercise
@@ -530,8 +571,9 @@ Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 
-````julia:ex40
-#
+````julia:ex41
+x,y = 0:0.1:pi, -pi:0.1:pi
+sin.(x) .+ cos.(y')
 ````
 
 ### Functions: anonymous functions
@@ -543,8 +585,8 @@ Read [https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
 Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
 function.
 
-````julia:ex41
-#
+````julia:ex42
+map(x -> sin(x) + cos(x), 1:10)
 ````
 
 ### Key feature: multiple dispatch functions
@@ -558,7 +600,7 @@ OO:
 Multiple dispatch:
 - methods are separate from objects
 - are selected based on all arguments
-- similar to overloading but method selection occurs at runtime
+- similar to overloading but method selection occurs at runtime and not compile-time (see also video below)
 > very natural for mathematical programming
 
 JuliaCon 2019 presentation on the subject by Stefan Karpinski
@@ -568,7 +610,7 @@ JuliaCon 2019 presentation on the subject by Stefan Karpinski
 
 ## Functions: Multiple dispatch demo
 
-````julia:ex42
+````julia:ex43
 struct Rock end
 struct Paper end
 struct Scissors end
@@ -593,7 +635,7 @@ Can easily be extended later
 
 with new type:
 
-````julia:ex43
+````julia:ex44
 struct Pond end
 play(::Rock, ::Pond) = "Pond wins"
 play(::Paper, ::Pond) = "Paper wins"
@@ -604,7 +646,7 @@ play(Scissors(), Pond())
 
 with new function:
 
-````julia:ex44
+````julia:ex45
 combine(::Rock, ::Paper) = "Paperweight"
 combine(::Paper, ::Scissors) = "Two pieces of papers"
 # ...
@@ -630,7 +672,7 @@ using OrdinaryDiffEq, Plots
 This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
 and types available in the current session.
 
-````julia:ex45
+````julia:ex46
 using Plots
 plot( (1:10).^2 )
 ````
@@ -650,9 +692,12 @@ using UnPack
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
 
-````julia:ex46
+````julia:ex47
 # Install a package (maybe not a too big one, UnPack.jl is good that way),
-# use it, query help on the package itself
+# use it, query help on the package itself:
+using Pkg
+Pkg.add("UnPack")
+##?UnPack ## to query help
 ````
 
 ## This concludes the rapid Julia tour
