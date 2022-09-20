@@ -474,29 +474,29 @@ main_fun&#40;&#41;</code></pre>
 
 @views function car_travel_1D&#40;&#41;
     # Physical parameters
-    #V     &#61;         # speed, km/h
-    #L     &#61;         # length of segment, km
-    #ttot  &#61;         # total time, h
+    V     &#61;         # speed, km/h
+    L     &#61;         # length of segment, km
+    ttot  &#61;         # total time, h
     # Numerical parameters
-    #dt    &#61; 0.1            # time step, h
-    #nt    &#61; Int&#40;cld&#40;ttot, dt&#41;&#41;  # number of time steps
+    dt    &#61; 0.1            # time step, h
+    nt    &#61; Int&#40;cld&#40;ttot, dt&#41;&#41;  # number of time steps
     # Array initialisation
-    #T     &#61;
-    #X     &#61;
+    T     &#61;
+    X     &#61;
     # Time loop
-    #for it &#61; 2:nt
-        #T&#91;it&#93; &#61; T&#91;it-1&#93; &#43; dt
-        #X&#91;it&#93; &#61;   # move the car
-        #if X&#91;it&#93; &gt; L
-                  # if beyond L, go back &#40;left&#41;
-        #elseif X&#91;it&#93; &lt; 0
-                   # if beyond 0, go back &#40;right&#41;
-        #end
-    #end
+    for it &#61; 2:nt
+        T&#91;it&#93; &#61; T&#91;it-1&#93; &#43; dt
+        X&#91;it&#93; &#61;   # move the car
+        if X&#91;it&#93; &gt; L
+                # if beyond L, go back &#40;left&#41;
+        elseif X&#91;it&#93; &lt; 0
+                # if beyond 0, go back &#40;right&#41;
+        end
+    end
     # Visualisation
-    #display&#40;scatter&#40;T, X, markersize&#61;5,
-                    #xlabel&#61;&quot;time, hrs&quot;, ylabel&#61;&quot;distance, km&quot;,
-                    #framestyle&#61;:box, legend&#61;:none&#41;&#41;
+    display&#40;scatter&#40;T, X, markersize&#61;5,
+                    xlabel&#61;&quot;time, hrs&quot;, ylabel&#61;&quot;distance, km&quot;,
+                    framestyle&#61;:box, legend&#61;:none&#41;&#41;
     return
 end
 
@@ -617,17 +617,17 @@ F_i = -G\frac{mM}{|r_i^2|}\frac{r_i}{|r_i|}~,
     # Numerics
     dt   &#61; 0.05
     # Initial conditions
-    #xpos &#61; ??
-    #ypos &#61; ??
+    xpos &#61; ??
+    ypos &#61; ??
     # TODO - add further initial conditions
     # Time loop
-    #for it &#61; 1:nt
+    for it &#61; 1:nt
         # TODO - Add physics equations
         # Visualisation
-        #display&#40;scatter&#33;&#40;&#91;xpos&#93;, &#91;ypos&#93;, title&#61;&quot;&#36;it&quot;,
-                         #aspect_ratio&#61;1, markersize&#61;5, markercolor&#61;:blue, framestyle&#61;:box,
-                         #legend&#61;:none, xlims&#61;&#40;-1.1, 1.1&#41;, ylims&#61;&#40;-1.1, 1.1&#41;&#41;&#41;
-    #end
+        display&#40;scatter&#33;&#40;&#91;xpos&#93;, &#91;ypos&#93;, title&#61;&quot;&#36;it&quot;,
+                         aspect_ratio&#61;1, markersize&#61;5, markercolor&#61;:blue, framestyle&#61;:box,
+                         legend&#61;:none, xlims&#61;&#40;-1.1, 1.1&#41;, ylims&#61;&#40;-1.1, 1.1&#41;&#41;&#41;
+    end
     return
 end
 
