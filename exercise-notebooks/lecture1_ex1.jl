@@ -95,5 +95,5 @@ car_travel_1D()
 md"""
 ### Question 1
 
-Once the code is running, test various time step increments `0.1 < dt < 0.01` and briefly comment on your findings.
+Once the code is running, test various time step increments `0.1 < dt < 1.0` and briefly comment on your findings.
 """
