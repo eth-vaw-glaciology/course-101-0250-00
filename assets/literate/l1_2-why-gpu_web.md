@@ -9,7 +9,7 @@
 </center>
 ~~~
 
-### An brief intro about GPU computing:
+### A brief intro about GPU computing:
 - Why we do it
 - Why it is cool (in Julia)
 - Examples from current research
@@ -17,10 +17,11 @@
 ### Propaganda
 #### Why we do it
 
-Predict the evolution of natural and engineered systems
-- e.g. ice cap evolution, stress distribution, etc...
+Predict the evolution of natural and engineered systems.
 
 ![ice2](../assets/literate_figures/ice2.png)
+
+_e.g. ice cap evolution, stress distribution, etc..._
 
 Physical processes that describe those systems are **complex** and often **nonlinear**
 - no or very limited analytical solution is available
@@ -75,16 +76,13 @@ GPUs are _massively_ parallel devices
 ![julia-gpu](../assets/literate_figures/julia-gpu.png)
 
 #### GPU are cool
-Price vs Performance
-- Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
+- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
 
 ![perf_gpu](../assets/literate_figures/perf_gpu.png)
 
-Availability (less fight for resources)
-- Still not many applications run on GPUs
+- Availability (less fight for resources); Still not many applications run on GPUs
 
-Workstation turns into a personal Supercomputers
-- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
+- Workstation turns into a personal Supercomputers; GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
 
 ![titan_node](../assets/literate_figures/titan_node.jpg)
 
