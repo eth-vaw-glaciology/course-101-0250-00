@@ -11,7 +11,6 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Why solve PDEs on GPUs?
-
 """
 
 #md # ~~~
@@ -20,9 +19,10 @@ md"""
 # </center>
 #md # ~~~
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### An brief intro about GPU computing:
+### A brief intro about GPU computing:
 - Why we do it
 - Why it is cool (in Julia)
 - Examples from current research
@@ -37,10 +37,11 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Predict the evolution of natural and engineered systems
-- e.g. ice cap evolution, stress distribution, etc...
+Predict the evolution of natural and engineered systems.
 
 ![ice2](./figures/ice2.png)
+
+_e.g. ice cap evolution, stress distribution, etc..._
 """
 
 #src #########################################################################
@@ -93,7 +94,8 @@ Computational costs increase
 
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
 #   <video width="80%" autoplay loop controls src="./figures/Stokes2D_vep.mp4"/>
@@ -144,8 +146,7 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### GPU are cool
-Price vs Performance
-- Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
+- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
 
 ![perf_gpu](./figures/perf_gpu.png)
 """
@@ -153,11 +154,9 @@ Price vs Performance
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Availability (less fight for resources)
-- Still not many applications run on GPUs
+- Availability (less fight for resources); Still not many applications run on GPUs
 
-Workstation turns into a personal Supercomputers
-- GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
+- Workstation turns into a personal Supercomputers; GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
 
 ![titan_node](./figures/titan_node.jpg)
 

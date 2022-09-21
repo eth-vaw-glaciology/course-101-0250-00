@@ -19,7 +19,7 @@ The goal of this exercise is to program two short 1D codes to experiment with no
 md"""
 ### Task 1
 
-Referring to the [nonlinear equations section](#nonlinear-equations) in lecture 2, implement the nonlinear power-law type parabolic PDE in 1D:
+Referring to the [nonlinear equations section](#nonlinear_equations) in lecture 2, implement the nonlinear power-law type parabolic PDE in 1D:
 
 $$
 \frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
@@ -49,7 +49,7 @@ Make sure your code reproduces the animation from the course.
 md"""
 ### Task 2
 
-Referring to the [nonlinear equations section](#nonlinear-equations) in lecture 2, implement the nonlinear advection __inviscid Burgers'_ equation in 1D:
+Referring to the [nonlinear equations section](#nonlinear_equations) in lecture 2, implement the nonlinear advection _inviscid Burgers'_ equation in 1D:
 
 $$
 \frac{\partial C}{\partial t} + \frac{\partial C^n}{\partial x} = 0

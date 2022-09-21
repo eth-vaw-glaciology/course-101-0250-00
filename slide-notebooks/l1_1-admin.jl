@@ -1,6 +1,7 @@
 #src # This is needed to make this run as normal Julia file
 using Markdown #src
 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 $\texttt{The small print of}$
@@ -8,7 +9,8 @@ $\texttt{The small print of}$
 # Solving partial differential equations in parallel on GPUs
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## The Team
 
@@ -64,7 +66,8 @@ Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with
   - Join the _**General**_ (course infos) and _**Helpdesk**_ (exercises Q&A) rooms.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Grading
 

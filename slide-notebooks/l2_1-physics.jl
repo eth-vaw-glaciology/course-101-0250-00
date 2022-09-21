@@ -39,6 +39,8 @@ A **partial differential equation (PDE)** is an equation which imposes relations
 #md #   $∇^2 u - b = 0$ (e.g. steady state diffusion, Laplacian)
 #md # }
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > _**Classification of second-order PDEs:**_
 #nb # >  - **Parabolic:**\
 #nb # >    $∂u/∂t - α ∇^2 u - b = 0$ (e.g. transient heat diffusion)
@@ -144,7 +146,8 @@ dc   = 1.0
 ```
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then we declare numerical parameters: the number of grid cells used to discretize the computational domain `nx`, and the frequency of updating the visualisation `nvis`:
 
@@ -242,7 +245,6 @@ plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, mark
 #nb # Let's implement the diffusion solver
 #nb using Plots,Plots.Measures,Printf
 #nb default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,labelfontsize=20,tickfontsize=20,titlefontsize=24)
-#nb 
 #nb @views function diffusion_1D()
 #nb     ## physics
 #nb     lx   = 20.0
@@ -262,9 +264,7 @@ plot!(xc[1:end-1].+dx/2, qx, label="flux of concentration", linewidth=:1.0, mark
 #nb     @gif for it = 1:nt
 #nb         qx          .= .-dc.*diff(C )./dx
 #nb         C[2:end-1] .-=   dt.*diff(qx)./dx
-#nb         plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1),
-#nb                         xlabel="lx", ylabel="Concentration",
-#nb                         title="time = $(round(it*dt,digits=1))")
+#nb         plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1), xlabel="lx", ylabel="Concentration", title="time = $(round(it*dt,digits=1))")
 #nb     end every nvis
 #nb end
 
@@ -300,13 +300,13 @@ md"""
 The wave equation is a second-order partial differential equation.
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 > The [wave equation](https://en.wikipedia.org/wiki/Wave_equation) is a second-order linear partial differential equation for the description of waves—as they occur in classical physics—such as mechanical waves (e.g. water waves, sound waves and seismic waves) or light waves. [_Wikipedia_](https://en.wikipedia.org/wiki/Wave_equation)
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The hyperbolic equation reads
 
@@ -339,8 +339,7 @@ md"""
 The objective is to implement the wave equation in 1D (spatial discretisation) using an explicit time integration (forward Euler) as for the diffusion physics.
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 Our first task will be to modify the diffusion equation...
 """
@@ -365,7 +364,8 @@ md"""
 We won't implement first the hyperbolic equation as introduced, but rather start from a first order system, similar to the one that we used to implement the diffusion equation.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 To this end, we can rewrite the second order wave equation
 
@@ -591,7 +591,11 @@ md"""
 ## Nonlinear equations
 
 Previously, we considered only linear equations, which means that the functions being differentiated depend only linearly on the unknown variables. A lot of important physical processes are essentially nonlinear, and could be only described by nonlinear PDEs.
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 A model nonlinear parabolic PDE frequently arising in physics features nonlinearity of a power-law type:
 
 $$
@@ -601,13 +605,14 @@ $$
 where $n$ is a power-law exponent. Such equations describe the deformation of shallow currents of fluids with high viscosity such as ice or lava under their own weight, or evolution of pressure in elastic porous media.
 """
 
-
 #md # ~~~
 # <center>
 #   <video width="80%" autoplay loop controls src="./figures/nonlinear_diffusion_1D.mp4"/>
 # </center>
 #md # ~~~
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 A model nonlinear advection equation is often referred to as _inviscid Burgers' equation_:
 
@@ -649,6 +654,7 @@ $$
 It doesn't depend on time! How do we solve it numerically then?
 """
 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Solution to the elliptic PDE...
@@ -665,6 +671,7 @@ $$
 when $t\rightarrow\infty$, and we know how to solve parabolic PDEs.
 """
 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Let's try to increase the number of time steps `nt` in our diffusion code to see whether the solution would converge, and decrease the frequency of plotting:
@@ -684,6 +691,7 @@ and see the results:
 # </center>
 #md # ~~~
 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 We approach the steady-state, but the number of time steps required to converge to a solution is proportional to `nx^2`.
