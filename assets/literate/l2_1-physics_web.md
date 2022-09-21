@@ -311,11 +311,29 @@ C[1:end-1] .-= dt.*vx.*diff(C)./dx # if vx<0
 
 ## Nonlinear equations
 
+Previously, we considered only linear equations, which means that the functions being differentiated depend only linearly on the unknown variables. A lot of important physical processes are essentially nonlinear, and could be only described by nonlinear PDEs.
+
+A model nonlinear paraboloc PDE frequently arising in physics features nonlinearity of a power-law type:
+
+$$
+\frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
+$$
+
+where $n$ is a power-law exponent. Such equations describe the deformation of shallow currents of fluids with high viscosity such as ice or lava under their own weight, or evolution of pressure in elastic porous media.
+
 ~~~
 <center>
   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
 </center>
 ~~~
+
+A model nonlinear advection equation is often referred to as _inviscid Burgers' equation_:
+
+$$
+\frac{\partial C}{\partial t} + \frac{\partial C^n}{\partial x} = 0
+$$
+
+where $n$ is often assumed to be equal to 2. This equation describes the formation of shock waves.
 
 ~~~
 <center>
