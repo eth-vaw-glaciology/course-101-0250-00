@@ -686,7 +686,7 @@ All public Julia packages are listed on [https://juliahub.com/ui/Packages](https
 You can install a package, say `UnPack.jl` by
 ```
 using Pkg
-Pkg.install("UnPack.jl")
+Pkg.add("UnPack.jl")
 using UnPack
 ```
 
@@ -695,9 +695,6 @@ In the REPL, there is also a package-mode (hit `]`) which is for interactive use
 ````julia:ex47
 # Install a package (maybe not a too big one, UnPack.jl is good that way),
 # use it, query help on the package itself:
-using Pkg
-Pkg.add("UnPack")
-##?UnPack ## to query help
 ````
 
 ## This concludes the rapid Julia tour
