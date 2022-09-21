@@ -17,7 +17,7 @@ The goal of this exercise is to combine advection and diffusion processes acting
 
 From what you learned in class, write an advection-diffusion code having following physical input parameters:
 
-```
+```julia
 # Physics
 lx   = 20.0  # domain length
 dc   = 0.1   # diffusion coefficient

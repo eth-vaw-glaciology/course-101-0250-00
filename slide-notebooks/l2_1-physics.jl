@@ -592,7 +592,7 @@ md"""
 
 Previously, we considered only linear equations, which means that the functions being differentiated depend only linearly on the unknown variables. A lot of important physical processes are essentially nonlinear, and could be only described by nonlinear PDEs.
 
-A model nonlinear paraboloc PDE frequently arising in physics features nonlinearity of a power-law type:
+A model nonlinear parabolic PDE frequently arising in physics features nonlinearity of a power-law type:
 
 $$
 \frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
