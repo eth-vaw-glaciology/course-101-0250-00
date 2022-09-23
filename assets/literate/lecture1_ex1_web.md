@@ -31,7 +31,7 @@ $$
 ````julia:ex1
 using Plots
 
-@views function main_fun()
+@views function car_travel_1D()
     # Physical parameters
 
     # Numerical parameters
@@ -45,7 +45,7 @@ using Plots
     return
 end
 
-main_fun()
+car_travel_1D()
 ````
 
 2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.

@@ -461,7 +461,7 @@ x_{t+\Delta t} = x_{t} + V \Delta t~.
 </ol>
 <pre><code class=language-julia >using Plots
 
-@views function main_fun&#40;&#41;
+@views function car_travel_1D&#40;&#41;
     # Physical parameters
 
     # Numerical parameters
@@ -475,7 +475,7 @@ x_{t+\Delta t} = x_{t} + V \Delta t~.
     return
 end
 
-main_fun&#40;&#41;</code></pre>
+car_travel_1D&#40;&#41;</code></pre>
 <ol start=2 >
 <li><p>Implement a condition to allow you doing U-turns whenever you reach the position \(x=0\) or \(x=200\).</p>
 

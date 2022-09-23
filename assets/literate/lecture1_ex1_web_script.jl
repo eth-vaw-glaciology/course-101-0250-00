@@ -2,7 +2,7 @@
 
 using Plots
 
-@views function main_fun()
+@views function car_travel_1D()
     # Physical parameters
 
     # Numerical parameters
@@ -16,7 +16,7 @@ using Plots
     return
 end
 
-main_fun()
+car_travel_1D()
 
 using Plots
 
