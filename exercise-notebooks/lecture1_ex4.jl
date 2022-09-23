@@ -17,7 +17,7 @@ The goal of this exercise is to reproduce an orbital around a fixed centre of ma
 $$
 \frac{dr_i}{dt}=v_i \\[10pt]
 \frac{dv_i}{dt}=\frac{F_i}{m} \\[10pt]
-F_i = -G\frac{mM}{|r_i^2|}\frac{r_i}{|r_i|}~,
+F_i = -G\frac{mM}{|r_i|^2}\frac{r_i}{|r_i|}~,
 $$
 where $r_i$ is the position vector, $v_i$ the velocity vector, $F_i$ the force vector, $G$ is the gravitational constant, $m$ is the mass of the orbiting object, $M$ is the mass of the centre of mass and $|r_i|$ is the norm of the position vector.
 
