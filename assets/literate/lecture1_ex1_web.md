@@ -50,8 +50,6 @@ car_travel_1D()
 
 2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.
 
----
-
 The sample code you can use to get started looks like:
 
 ````julia:ex2
@@ -87,6 +85,8 @@ end
 
 car_travel_1D()
 ````
+
+Note that you can extend the first code (from step 1) to include the U-turns and use your final code to reply to the question.
 
 ### Question 1
 
