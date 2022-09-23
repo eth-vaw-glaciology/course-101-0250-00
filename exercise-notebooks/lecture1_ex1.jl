@@ -55,8 +55,6 @@ car_travel_1D()
 md"""
 2. Implement a condition to allow you doing U-turns whenever you reach the position $x=0$ or $x=200$.
 
----
-
 The sample code you can use to get started looks like:
 """
 
@@ -93,6 +91,8 @@ end
 car_travel_1D()
 
 md"""
+Note that you can extend the first code (from step 1) to include the U-turns and use your final code to reply to the question.
+
 ### Question 1
 
 Once the code is running, test various time step increments `0.1 < dt < 1.0` and briefly comment on your findings.
