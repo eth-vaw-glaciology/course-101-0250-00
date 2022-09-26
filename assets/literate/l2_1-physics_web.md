@@ -245,7 +245,8 @@ Pr[2:end-1] .-= ...
 
 ### Compare the equations
 
-Comparing diffusive and wave physics, we can summarise following:
+Comparing diffusive and wave physics, we can summarise following
+
 | Diffusion                                                          | Wave propagation                                                                  |
 |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
 | $ q = -D\frac{\partial C}{\partial x} $                            | $ \frac{\partial V_x}{\partial t} = -\frac{1}{\rho}\frac{\partial P}{\partial x} $  |
