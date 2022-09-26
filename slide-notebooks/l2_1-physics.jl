@@ -72,7 +72,7 @@ Diffusive processes were also employed by Fick in 1855 with application to chemi
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The diffusion equation is often reported as a second order parabolic PDE, here for a multivariable function $C(x,t)$ showing derivatives in both temporal $∂t$ and spatial $∂x$ derivatives (here for the 1D case)
+The diffusion equation is often reported as a second order parabolic PDE, here for a multivariable function $C(x,t)$ showing derivatives in both temporal $∂t$ and spatial $∂x$ dimensions (here for the 1D case)
 
 $$
 \frac{∂C}{∂t} = D\frac{∂^2 C}{∂ x^2}~,
@@ -91,7 +91,7 @@ $$ q = -D\frac{∂C}{∂x}~,$$
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-and a conservation or flux balance equations:
+and a conservation or flux balance equation:
 
 $$ \frac{∂C}{∂t} = -\frac{∂q}{∂x}~. $$
 """
@@ -99,7 +99,7 @@ $$ \frac{∂C}{∂t} = -\frac{∂q}{∂x}~. $$
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To discretise the diffusion equation, we will keep the explicit forward Euler method as temporal discretisation and use [finite-differences](https://en.wikipedia.org/wiki/Finite_difference) for the spatial discretisation.
+To discretise the diffusion equation, we will keep the explicit forward [Euler method](https://en.wikipedia.org/wiki/Euler_method) as temporal discretisation and use [finite-differences](https://en.wikipedia.org/wiki/Finite_difference) for the spatial discretisation.
 
 Finite-differences discretisation on regular staggered grid allows for concise and performance oriented algorithms, because only neighbouring cell access is needed to evaluate gradient and data alignment is natively pretty optimal.
 """
@@ -107,7 +107,7 @@ Finite-differences discretisation on regular staggered grid allows for concise a
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-A long story short, we will approximate the gradient of concentration $C$ over a distance $∂x$, a first derivative $\frac{∂C}{∂x}$, we will perform following discrete operation
+A long story short, we will approximate the gradient of a quantity $C$ (e.g., concentration) over a distance $∂x$, a first derivative $\frac{∂C}{∂x}$, we will perform following discrete operation
 
 $$ \frac{C_{x+dx} - C_{x}}{dx}~, $$
 
@@ -297,7 +297,7 @@ md"""
 md"""
 ### The wave equation
 
-The wave equation is a second-order partial differential equation.
+... is a second-order partial differential equation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -328,7 +328,15 @@ $$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
 
 $$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
 
-where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances). The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
+where $m$ is the mass, $k$ de spring stiffness, and $x_+$, $x_-$ the oscillations of the masses (small distances).
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # $$ m⋅a(t)~~=~~k x_+ - k x_-~,$$
+md"""
+
+The acceleration $a(t)$ can be substituted by the second derivative of displacement $u$ as function of time $t$, $∂^2u/∂t^2$, while balancing $x_+ - x_-$ and taking the limit leads to $∂^2u/∂x^2$.
 """
 
 #src #########################################################################
@@ -429,9 +437,9 @@ Should be modified to account for pressure `Pr` instead of concentration `C`, th
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Comparing diffusive and wave physics, we can summarise following:
-
 ### Compare the equations
+
+Comparing diffusive and wave physics, we can summarise following:
 """
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
 #!nb # |:------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|
@@ -596,13 +604,13 @@ Previously, we considered only linear equations, which means that the functions 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-A model nonlinear parabolic PDE frequently arising in physics features nonlinearity of a power-law type:
+A model of nonlinear parabolic PDE frequently arising in physics features nonlinearity of a power-law type:
 
 $$
 \frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
 $$
 
-where $n$ is a power-law exponent. Such equations describe the deformation of shallow currents of fluids with high viscosity such as ice or lava under their own weight, or evolution of pressure in elastic porous media.
+where $n$ is a power-law exponent (here $n=4$).
 """
 
 #md # ~~~
@@ -614,7 +622,13 @@ where $n$ is a power-law exponent. Such equations describe the deformation of sh
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-A model nonlinear advection equation is often referred to as _inviscid Burgers' equation_:
+Such equations describe the deformation of shallow currents of fluids with high viscosity such as ice or lava under their own weight, or evolution of pressure in elastic porous media.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+A model of nonlinear advection equation is often referred to as _inviscid Burgers' equation_:
 
 $$
 \frac{\partial C}{\partial t} + \frac{\partial C^n}{\partial x} = 0
@@ -657,12 +671,12 @@ It doesn't depend on time! How do we solve it numerically then?
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Solution to the elliptic PDE...
+### Solution to the elliptic PDE
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-is the steady state limit of the time-dependent diffusion problem described by the parabolic PDE:
+... is the steady state limit of the time-dependent diffusion problem described by the parabolic PDE:
 
 $$
 \frac{\partial^2 C}{\partial x^2} - \frac{\partial C}{\partial t} = 0
@@ -709,7 +723,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We'll handle this problem in the next lecture, _stay tuned!_ :rocket:
+We'll handle this problem in the next lecture, _stay tuned!_ 🚀
 """
 
 #src #########################################################################
