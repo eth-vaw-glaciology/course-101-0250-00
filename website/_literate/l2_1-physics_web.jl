@@ -430,7 +430,7 @@ Pr[2:end-1] .-= ...
 md"""
 ### Compare the equations
 
-Comparing diffusive and wave physics, we can summarise following: 
+Comparing diffusive and wave physics, we can summarise following:
 """
 
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
