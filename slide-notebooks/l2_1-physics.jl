@@ -439,7 +439,7 @@ Should be modified to account for pressure `Pr` instead of concentration `C`, th
 md"""
 ### Compare the equations
 
-Comparing diffusive and wave physics, we can summarise following
+Comparing diffusive and wave physics, we can summarise following:
 """
 
 #!nb # | Diffusion                                                          | Wave propagation                                                                  |
