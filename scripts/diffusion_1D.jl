@@ -20,11 +20,11 @@ default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,
     for it = 1:nt
         qx          .= .-dc.*diff(C )./dx
         C[2:end-1] .-=   dt.*diff(qx)./dx
-        ((it%nvis) == 0) && display(
-        plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1),
-                        xlabel="lx", ylabel="Concentration",
-                        title="time = $(round(it*dt,digits=1))")
-        )
+        if it%nvis == 0
+            display( plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1),
+                          xlabel="lx", ylabel="Concentration",
+                          title="time = $(round(it*dt,digits=1))") )
+        end
     end
 end
 

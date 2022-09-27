@@ -20,11 +20,11 @@ default(size=(1200,400),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,
     for it = 1:nt
         Vx          .-= dt./ρ.*diff(Pr)./dx
         Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
-        ((it%nvis) == 0) && display(
-        plot(xc,[Pr_i,Pr];xlims=(0,lx), ylims=(-1.1,1.1),
+        if it%nvis == 0
+            display( plot(xc,[Pr_i,Pr];xlims=(0,lx), ylims=(-1.1,1.1),
                           xlabel="lx", ylabel="Pressure",
-                          title="time = $(round(it*dt,digits=1))")
-        )
+                          title="time = $(round(it*dt,digits=1))") )
+        end
     end
 end
 
