@@ -54,7 +54,7 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
 **Starting from lecture 3 and onwards**, homework script submission happens on GitHub:
-1. Create a private GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
+1. Create a **private** GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
 2. Share this private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
 3. **For each homework submission**, you will:
     - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
