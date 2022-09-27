@@ -522,8 +522,8 @@ In the `# array initialisation` section, initialise the quantity `C` as a Gaussi
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $
-#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
+#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $
+#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
