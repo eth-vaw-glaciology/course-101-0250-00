@@ -25,8 +25,8 @@ display(heatmap(rand(10,10)))
 
 ### Git repository
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
-1. Create a private GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
-2. Share this private repository on GitHub with the teaching staff: [luraess](https://github.com/luraess), [utkinis](https://github.com/utkinis), [mauro3](https://github.com/mauro3), [omlins](https://github.com/omlins)
+1. Create a **private** GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
+2. Share this private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
 3. **For each homework submission**, you will:
     - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
     - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). It will serve to control the material was pushed on time.
