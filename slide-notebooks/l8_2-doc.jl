@@ -163,7 +163,7 @@ jobs:
 
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1.6'
+          version: '1.8'
           arch: x64
 
       - uses: actions/cache@v1

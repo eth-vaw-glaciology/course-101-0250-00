@@ -7,7 +7,7 @@ md"""
 # Modelling multi-physics
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of lecture 4 is to combine the acquired knowledge of numerical modelling and develop the first practical application: thermal porous convection in 2D.
@@ -191,7 +191,7 @@ This can be achieved by typing entering the Pkg mode from the Julia REPL in the 
 ```julia-repl
 julia> ]
 
-(@v1.6) pkg> activate .
+(@v1.8) pkg> activate .
 
 (lectureXX) pkg> add Plots
 ```

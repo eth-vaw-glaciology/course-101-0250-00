@@ -41,12 +41,12 @@ Please follow along!
 If you don't have git installed, head to [JupyterHub (within Moodle)](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) and open a terminal. (And do install it on your computer!)
 
 - git setup:
-  
+
 ```sh
 git config --global user.name "Your Name"
 git config --global user.email "youremail@yourdomain.com"
 ```
-- make a repo
+- make a repo (`init`)
 - add some files (`add`, `commit`)
 - do some changes (`commit` some more)
 - make a feature branch (`branch`, `diff`, `difftool`)
