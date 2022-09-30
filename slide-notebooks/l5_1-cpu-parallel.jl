@@ -44,7 +44,7 @@ Use **parallel computing** (to address this):
 - The "memory wall" in ~ 2004
 - Single-core to multi-core devices
 
-![mem_wall](./figures/mem_wall.png)
+![mem_wall](./figures/l1_mem_wall.png)
 
 """
 
@@ -55,7 +55,7 @@ GPUs are massively parallel devices
 - SIMD machine (programmed using threads - SPMD) ([more](https://safari.ethz.ch/architecture/fall2020/lib/exe/fetch.php?media=onur-comparch-fall2020-lecture24-simdandgpu-afterlecture.pdf))
 - Further increases the Flop vs Bytes gap
 
-![cpu_gpu_evo](./figures/cpu_gpu_evo.png)
+![cpu_gpu_evo](./figures/l1_cpu_gpu_evo.png)
 
 """
 
@@ -237,14 +237,14 @@ md"""
 - Compute the elapsed time `t_toc` at the end of the time loop and report:
 
 ```julia
-#sol t_toc = Base.time() - t_tic
-#sol A_eff = (1*2)/1e9*nx*ny*sizeof(Float64)  # Effective main memory access per iteration [GB]
-#sol t_it  = t_toc/niter                      # Execution time per iteration [s]
-#sol T_eff = A_eff/t_it                       # Effective memory throughput [GB/s]
-#hint t_toc = ...
-#hint A_eff = ...          # Effective main memory access per iteration [GB]
-#hint t_it  = ...          # Execution time per iteration [s]
-#hint T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
+#sol=t_toc = Base.time() - t_tic
+#sol=A_eff = (1*2)/1e9*nx*ny*sizeof(Float64)  # Effective main memory access per iteration [GB]
+#sol=t_it  = t_toc/niter                      # Execution time per iteration [s]
+#sol=T_eff = A_eff/t_it                       # Effective memory throughput [GB/s]
+#hint=t_toc = ...
+#hint=A_eff = ...          # Effective main memory access per iteration [GB]
+#hint=t_it  = ...          # Execution time per iteration [s]
+#hint=T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
 ```
 """
 
@@ -255,8 +255,8 @@ md"""
 - Round `T_eff` to the 3rd significant digit.
 
 ```julia
-#sol @printf("Time = %1.3f sec, T_eff = %1.2f GB/s (niter = %d)\n", t_toc, round(T_eff, sigdigits=3), niter)
-#hint @printf("Time = %1.3f sec, ... \n", t_toc, ...)
+#sol=@printf("Time = %1.3f sec, T_eff = %1.2f GB/s (niter = %d)\n", t_toc, round(T_eff, sigdigits=3), niter)
+#hint=@printf("Time = %1.3f sec, ... \n", t_toc, ...)
 ```
 """
 
@@ -268,19 +268,19 @@ md"""
 - Define a `do_visu` flag set to `false`
 
 ```julia
-#sol @views function diffusion_2D(; do_visu=false)
-#hint @views function diffusion_2D(; ??)
+#sol=@views function diffusion_2D(; do_visu=false)
+#hint=@views function diffusion_2D(; ??)
 
-#hint    ...
+#hint=   ...
 
-#sol    if do_visu && (it % nout == 0)
-#sol        ...
-#sol    end
+#sol=   if do_visu && (it % nout == 0)
+#sol=       ...
+#sol=   end
     return
 end
 
-#sol diffusion_2D(; do_visu=false)
-#hint diffusion_2D(; ??)
+#sol=diffusion_2D(; do_visu=false)
+#hint=diffusion_2D(; ??)
 ```
 """
 
@@ -341,10 +341,10 @@ Storing flux calculations in `qx` and `qy` arrays is not needed and produces add
 Let's create macros and call them in the time loop:
 
 ```julia
-#sol macro qx()  esc(:( .-D_dx.*diff(C[:,2:end-1],dims=1) )) end
-#sol macro qy()  esc(:( .-D_dy.*diff(C[2:end-1,:],dims=2) )) end
-#hint macro qx()  esc(:( ... )) end
-#hint macro qy()  esc(:( ... )) end
+#sol=macro qx()  esc(:( .-D_dx.*diff(C[:,2:end-1],dims=1) )) end
+#sol=macro qy()  esc(:( .-D_dy.*diff(C[2:end-1,:],dims=2) )) end
+#hint=macro qx()  esc(:( ... )) end
+#hint=macro qy()  esc(:( ... )) end
 ```
 """
 
@@ -365,14 +365,14 @@ Also, we now have to ensure `C` is not read and written back in the same (will b
 Define `C2`, a copy of `C`, modify the physics computation line, and implement a pointer swap
 
 ```julia
-#sol C2      = copy(C)
-#sol # [...]
-#sol C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*(diff(@qx(),dims=1).*_dx .+ diff(@qy(),dims=2).*_dy)
-#sol C, C2 = C2, C # pointer swap
-#hint C2      = ...
-#hint # [...]
-#hint C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*( ... )
-#hint C, C2 = ... # pointer swap
+#sol=C2      = copy(C)
+#sol=# [...]
+#sol=C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*(diff(@qx(),dims=1).*_dx .+ diff(@qy(),dims=2).*_dy)
+#sol=C, C2 = C2, C # pointer swap
+#hint=C2      = ...
+#hint=# [...]
+#hint=C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*( ... )
+#hint=C, C2 = ... # pointer swap
 ```
 """
 
@@ -391,16 +391,16 @@ The goal is now to write out the diffusion physics in a loop fashion over $x$ an
 Implement a nested loop, taking car of bounds and staggering.
 
 ```julia
-#sol for iy=1:size(C,2)-2
-#sol     for ix=1:size(C,1)-2
-#sol         C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
-#sol     end
-#sol end
-#hint for iy=1:??
-#hint     for ix=1:??
-#hint         C2[??] = C[??] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
-#hint     end
-#hint end
+#sol=for iy=1:size(C,2)-2
+#sol=    for ix=1:size(C,1)-2
+#sol=        C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
+#sol=    end
+#sol=end
+#hint=for iy=1:??
+#hint=    for ix=1:??
+#hint=        C2[??] = C[??] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
+#hint=    end
+#hint=end
 ```
 """
 
@@ -412,10 +412,10 @@ Note that macros can take arguments, here `ix,iy`, and need updated definition.
 Macro argument can be used in definition appending `$`.
 
 ```julia
-#sol macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
-#sol macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
-#hint macro qx(ix,iy)  esc(:( ... C[$ix+1,$iy+1] ... )) end
-#hint macro qy(ix,iy)  ...
+#sol=macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
+#sol=macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
+#hint=macro qx(ix,iy)  esc(:( ... C[$ix+1,$iy+1] ... )) end
+#hint=macro qy(ix,iy)  ...
 ```
 """
 
@@ -446,18 +446,18 @@ md"""
 Create a `compute!()` function that takes input and output arrays and needed scalars as argument and returns nothing. 
 
 ```julia
-#sol function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
-#sol     for iy=1:size(C,2)-2
-#sol         for ix=1:size(C,1)-2
-#sol             C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
-#sol         end
-#sol     end
-#sol     return
-#sol end
-#hint function compute!(...)
-#hint     ...
-#hint     return
-#hint end
+#sol=function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
+#sol=    for iy=1:size(C,2)-2
+#sol=        for ix=1:size(C,1)-2
+#sol=            C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
+#sol=        end
+#sol=    end
+#sol=    return
+#sol=end
+#hint=function compute!(...)
+#hint=    ...
+#hint=    return
+#hint=end
 ```
 """
 
@@ -470,8 +470,8 @@ md"""
 The `compute!()` function can then be called within the time loop
 
 ```julia
-#sol compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
-#hint compute!(...)
+#sol=compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
+#hint=compute!(...)
 ```
 """
 

@@ -140,10 +140,10 @@ lam = _dx = _dy = dt = rand();
 
 #-
 ## solution
-#sol t_it = @belapsed begin diffusion2D_step!($T, $Ci, $qTx, $qTy, $dTdt, $lam, $dt, $_dx, $_dy); synchronize() end
-#sol T_tot_lb = 11*1/1e9*nx*ny*sizeof(Float64)/t_it
-#hint t_it = @belapsed begin ... end
-#hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+#sol=t_it = @belapsed begin diffusion2D_step!($T, $Ci, $qTx, $qTy, $dTdt, $lam, $dt, $_dx, $_dy); synchronize() end
+#sol=T_tot_lb = 11*1/1e9*nx*ny*sizeof(Float64)/t_it
+#hint=t_it = @belapsed begin ... end
+#hint=T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
 
 md"""
 Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do no longer need in order to save space:
@@ -231,17 +231,17 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 
 #-
 ## solution
-#sol @inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-#sol     T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.*Ci[2:end-1,2:end-1].*(                        # T_new = T_old + ∂t 1/cp (
-#sol                             .- (   (.-lam.*(T[3:end  ,2:end-1] .- T[2:end-1,2:end-1]).*_dx)
-#sol                                 .- (.-lam.*(T[2:end-1,2:end-1] .- T[1:end-2,2:end-1]).*_dx)).*_dx  #         - ∂(-λ ∂T/∂x)/∂x
-#sol                             .- (   (.-lam.*(T[2:end-1,3:end  ] .- T[2:end-1,2:end-1]).*_dy)
-#sol                                 .- (.-lam.*(T[2:end-1,2:end-1] .- T[2:end-1,1:end-2]).*_dy)).*_dy  #         - ∂(-λ ∂T/∂y)/∂y
-#sol                             )                                                                      #         )
-#sol end
-#hint @inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-#hint     T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
-#hint end
+#sol=@inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol=    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.*Ci[2:end-1,2:end-1].*(                        # T_new = T_old + ∂t 1/cp (
+#sol=                            .- (   (.-lam.*(T[3:end  ,2:end-1] .- T[2:end-1,2:end-1]).*_dx)
+#sol=                                .- (.-lam.*(T[2:end-1,2:end-1] .- T[1:end-2,2:end-1]).*_dx)).*_dx  #         - ∂(-λ ∂T/∂x)/∂x
+#sol=                            .- (   (.-lam.*(T[2:end-1,3:end  ] .- T[2:end-1,2:end-1]).*_dy)
+#sol=                                .- (.-lam.*(T[2:end-1,2:end-1] .- T[2:end-1,1:end-2]).*_dy)).*_dy  #         - ∂(-λ ∂T/∂y)/∂y
+#sol=                            )                                                                      #         )
+#sol=end
+#hint=@inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+#hint=    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
+#hint=end
 
 md"""
 ### Task 3 (Benchmarking)
@@ -250,16 +250,16 @@ Benchmark the new function `diffusion2D_step!` and compute the runtime speed-up 
 """
 #-
 ## solution
-#sol T2 = CUDA.zeros(Float64, nx, ny);
-#sol t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-#sol speedup = t_it_task1/t_it
-#sol T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-#sol ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
-#hint T2 = ...
-#hint t_it = @belapsed begin ...; synchronize() end
-#hint speedup = t_it_task1/t_it
-#hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
-#hint ratio_T_tot_lb = ...
+#sol=T2 = CUDA.zeros(Float64, nx, ny);
+#sol=t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+#sol=speedup = t_it_task1/t_it
+#sol=T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol=ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#hint=T2 = ...
+#hint=t_it = @belapsed begin ...; synchronize() end
+#hint=speedup = t_it_task1/t_it
+#hint=T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+#hint=ratio_T_tot_lb = ...
 
 md"""
 Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!):
@@ -295,37 +295,37 @@ Rewrite the function `diffusion2D_step!` using GPU kernel programming: from with
 
 #-
 ## solution
-#sol function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-#sol     threads = (32, 8)
-#sol     blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
-#sol     @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-#sol end
-#sol 
-#sol function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
-#sol         @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
-#sol                               - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
-#sol                               - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
-#sol                               ))
-#sol     end
-#sol     return
-#sol end
-#hint function diffusion2D_step!(...)
-#hint     threads = (..., ...)
-#hint     blocks  = (size(...)÷threads[1], size(...)÷threads[2])
-#hint     @cuda ...
-#hint end
-#hint 
-#hint function update_temperature!(...)
-#hint     ix = ...
-#hint     iy = ...
-#hint     if (ix... && iy... )
-#hint         @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*( ... ))
-#hint     end
-#hint     return
-#hint end
+#sol=function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol=    threads = (32, 8)
+#sol=    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
+#sol=    @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol=end
+#sol=
+#sol=function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+#sol=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
+#sol=        @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
+#sol=                              - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
+#sol=                              - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
+#sol=                              ))
+#sol=    end
+#sol=    return
+#sol=end
+#hint=function diffusion2D_step!(...)
+#hint=    threads = (..., ...)
+#hint=    blocks  = (size(...)÷threads[1], size(...)÷threads[2])
+#hint=    @cuda ...
+#hint=end
+#hint=
+#hint=function update_temperature!(...)
+#hint=    ix = ...
+#hint=    iy = ...
+#hint=    if (ix... && iy... )
+#hint=        @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*( ... ))
+#hint=    end
+#hint=    return
+#hint=end
 
 md"""
 ### Task 5 (Benchmarking)
@@ -334,14 +334,14 @@ Just like in Task 3, benchmark the new function `diffusion2D_step!` and compute 
 """
 #-
 ## solution
-#sol t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-#sol speedup = t_it_task1/t_it
-#sol T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-#sol ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
-#hint t_it = @belapsed begin ...; synchronize() end
-#hint speedup = ...
-#hint T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
-#hint ratio_T_tot_lb = ...
+#sol=t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+#sol=speedup = t_it_task1/t_it
+#sol=T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol=ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+#hint=t_it = @belapsed begin ...; synchronize() end
+#hint=speedup = ...
+#hint=T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+#hint=ratio_T_tot_lb = ...
 
 md"""
 The runtime speedup is probably even higher (a speedup of factor 5 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
@@ -369,16 +369,16 @@ Compute the effective memory throughput, $T_\mathrm{eff}$, for the solvers bench
 """
 #-
 ## solution
-#sol T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
-#sol T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
-#sol T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
-#sol speedup_Teff_task3 = T_eff_task3/T_eff_task1
-#sol speedup_Teff_task5 = T_eff_task5/T_eff_task1
-#hint T_eff_task1 = .../t_it_task1
-#hint T_eff_task3 = .../t_it_task3
-#hint T_eff_task5 = .../t_it
-#hint speedup_Teff_task3 = T_eff_task3/T_eff_task1
-#hint speedup_Teff_task5 = T_eff_task5/T_eff_task1
+#sol=T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
+#sol=T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
+#sol=T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+#sol=speedup_Teff_task3 = T_eff_task3/T_eff_task1
+#sol=speedup_Teff_task5 = T_eff_task5/T_eff_task1
+#hint=T_eff_task1 = .../t_it_task1
+#hint=T_eff_task3 = .../t_it_task3
+#hint=T_eff_task5 = .../t_it
+#hint=speedup_Teff_task3 = T_eff_task3/T_eff_task1
+#hint=speedup_Teff_task5 = T_eff_task5/T_eff_task1
 
 md"""
 Did the speedups you recomputed differ from the previous ones?

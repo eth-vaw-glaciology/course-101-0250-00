@@ -18,7 +18,7 @@ md"""
 
 You are familiar with git already:
 
-![git-survey](./figures/survey-git-question.png)
+![git-survey](./figures/l2_survey-git-question.png)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -100,7 +100,7 @@ md"""
 
 Make such that you can push and pull without entering a password
 
-![github-bar](./figures/github-bar.png)
+![github-bar](./figures/l2_github-bar.png)
 
 - local: tell git to store credentials:
   `git config --global credential.helper cache`
@@ -116,7 +116,7 @@ Make such that you can push and pull without entering a password
 md"""
 ## Let's get our repo onto GitHub
 
-![github-bar](./figures/github-bar.png)
+![github-bar](./figures/l2_github-bar.png)
 
 - create a repository on github.com: click the "+"
 - local: follow setup given on website
@@ -128,7 +128,7 @@ md"""
 md"""
 ## Work with other peoples code: fork
 
-![github-bar](./figures/github-bar.png)
+![github-bar](./figures/l2_github-bar.png)
 
 - fork a repository on github.com (top right)
 """
@@ -137,5 +137,5 @@ md"""
 md"""
 ## Git: questions?
 
-![git-me](./figures/git-me.png)
+![git-me](./figures/l2_git-me.png)
 """

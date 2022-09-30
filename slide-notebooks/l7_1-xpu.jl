@@ -34,7 +34,7 @@ Combining CPU and GPU implementation within a single code.
 md"""
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](./figures/l7-2lang_1.png)
+![two-lang problem](./figures/l7_2lang_1.png)
 """
 
 #src ######################################################################### 
@@ -42,7 +42,7 @@ You may certainly be familiar with this situation in scientific computing:
 md"""
 Which may turn out into a costly cycle:
 
-![two-lang problem](./figures/l7-2lang_2.png)
+![two-lang problem](./figures/l7_2lang_2.png)
 
 """
 
@@ -69,7 +69,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 """
 
 #md # @@img-med
-# ![two-lang problem](./figures/l7-2lang_3.png)
+# ![two-lang problem](./figures/l7_2lang_3.png)
 #md # @@
 
 #src ######################################################################### 
@@ -100,7 +100,7 @@ Wouldn't it be great? ... **YES**, and there is a Julia solution!
 """
 
 #md # @@img-med
-# ![ParallelStencil](./figures/ps_logo.png)
+# ![ParallelStencil](./figures/l7_ps_logo.png)
 #md # @@
 
 
@@ -110,7 +110,7 @@ md"""
 ## Backend portable XPU implementation
 """
 
-#nb # ![ParallelStencil](./figures/ps_logo.png)
+#nb # ![ParallelStencil](./figures/l7_ps_logo.png)
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -235,8 +235,8 @@ Now that we're done with `compute_q!`, your turn!
 By analogy, update `compute_C!`.
 """
 @parallel function compute_C!(C, qx, qy, dt, dx, dy)
-#hint    ## C = C - dt * (∂qx/dx + ∂qy/dy)
-#sol    @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
+#hint=   ## C = C - dt * (∂qx/dx + ∂qy/dy)
+#sol=   @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
     return
 end
 
@@ -525,14 +525,14 @@ Also, adding elastic shear rheology, we need to define the elastic shear modulus
 md"""
 Repeat this for the $yy$ normal stress component:
 ```julia
-#hint τyy  .= τyy .+ ??
-#sol τyy  .= τyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
+#hint=τyy  .= τyy .+ ??
+#sol=τyy  .= τyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
 ```
 
 We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
 ```julia
-#hint ∇V    .= ???
-#sol ∇V    .= diff(Vx,dims=1)./dx .+ diff(Vy,dims=2)./dy
+#hint=∇V    .= ???
+#sol=∇V    .= diff(Vx,dims=1)./dx .+ diff(Vy,dims=2)./dy
 ```
 """
 
@@ -552,7 +552,7 @@ This new addition should now permit to propagate a first elastic wave. However, 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 
 #md # @@img-med
-# ![elastic missing shear](./figures/l7-elast.gif)
+# ![elastic missing shear](./figures/l7_elast.gif)
 #md # @@
 
 #src ######################################################################### 

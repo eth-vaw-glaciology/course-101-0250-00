@@ -116,47 +116,47 @@ Modify the above `memcopy!` kernel to read in A and write B in a serial manner w
 #md # \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your memory copy kernel.}
 
 #-
-#hint ## hint
-#hint function memcopy!(B, A)
-#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#hint     for iz #...
-#hint         #...
-#hint     end
-#hint     return nothing
-#hint end
-#hint 
-#hint threads = (32, 8, 1)
-#hint blocks  = (nx÷threads[1], ny÷threads[2], 1)
-#hint #-
-#hint ## Verification
-#hint B .= 0.0;
-#hint @cuda #...
-#hint B ≈ A
-#hint #-
-#hint ## Performance
-#hint t_it = @belapsed begin #...# end
-#hint T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol function memcopy!(B, A)
-#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     for iz = 1:size(A,3)
-#sol         @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol threads = (32, 8, 1)
-#sol blocks  = (nx÷threads[1], ny÷threads[2], 1)
-#sol #-
-#sol ## Verification
-#sol B .= 0.0;
-#sol @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
-#sol B ≈ A
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-#sol T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function memcopy!(B, A)
+#hint=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint=    for iz #...
+#hint=        #...
+#hint=    end
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=threads = (32, 8, 1)
+#hint=blocks  = (nx÷threads[1], ny÷threads[2], 1)
+#hint=#-
+#hint=## Verification
+#hint=B .= 0.0;
+#hint=@cuda #...
+#hint=B ≈ A
+#hint=#-
+#hint=## Performance
+#hint=t_it = @belapsed begin #...# end
+#hint=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=function memcopy!(B, A)
+#sol=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    for iz = 1:size(A,3)
+#sol=        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=threads = (32, 8, 1)
+#sol=blocks  = (nx÷threads[1], ny÷threads[2], 1)
+#sol=#-
+#sol=## Verification
+#sol=B .= 0.0;
+#sol=@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+#sol=B ≈ A
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+#sol=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 Great! You just implemented a so called [grid-stride loop](https://developer.nvidia.com/blog/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/). It exhibits a good memory access pattern and it allows to easily reuse, e.g., intermediate results from previous iterations in the loop. You probably observe a `T_tot` that is a bit below the one measured in the previous experiment (measured 520 GB/s with the Tesla P100 GPU). There is certainly room to improve this memory copy kernel a bit, but we will consider it sufficient in order to continue with this exercise.
@@ -174,50 +174,50 @@ Write a kernel `cumsum_dim3!` which computes the cumulative sum over the 3rd dim
 #md # \note{The operator `≈` allows to check if two arrays contain the same values (within a tolerance). Use this to verify your results against `CUDA.cumsum!` (remember that for the verification, we already preallocated an array `B_ref` at the beginning, which you can use now).}
 
 #-
-#hint ## hint
-#hint function cumsum_dim3!(B, A)
-#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#hint     cumsum_iz = 0.0
-#hint     for iz #...
-#hint         #...
-#hint     end
-#hint     return nothing
-#hint end
-#hint 
-#hint ## Verification
-#hint @cuda #...
-#hint CUDA.cumsum!(B_ref, A; dims=3);
-#hint B ≈ B_ref
-#hint #-
-#hint ## Performance
-#hint t_it = @belapsed begin @cuda #...# end
-#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#hint #-
-#hint t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
-#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol function cumsum_dim3!(B, A)
-#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     cumsum_iz = 0.0
-#sol     for iz = 1:size(A,3)
-#sol         @inbounds cumsum_iz  += A[ix,iy,iz]
-#sol         @inbounds B[ix,iy,iz] = cumsum_iz
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol ## Verification
-#sol @cuda blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
-#sol CUDA.cumsum!(B_ref, A; dims=3);
-#sol B ≈ B_ref
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim3!($B, $A); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol #-
-#sol t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function cumsum_dim3!(B, A)
+#hint=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint=    cumsum_iz = 0.0
+#hint=    for iz #...
+#hint=        #...
+#hint=    end
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=## Verification
+#hint=@cuda #...
+#hint=CUDA.cumsum!(B_ref, A; dims=3);
+#hint=B ≈ B_ref
+#hint=#-
+#hint=## Performance
+#hint=t_it = @belapsed begin @cuda #...# end
+#hint=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=#-
+#hint=t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
+#hint=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=function cumsum_dim3!(B, A)
+#sol=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    cumsum_iz = 0.0
+#sol=    for iz = 1:size(A,3)
+#sol=        @inbounds cumsum_iz  += A[ix,iy,iz]
+#sol=        @inbounds B[ix,iy,iz] = cumsum_iz
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=## Verification
+#sol=@cuda blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
+#sol=CUDA.cumsum!(B_ref, A; dims=3);
+#sol=B ≈ B_ref
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim3!($B, $A); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=#-
+#sol=t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=3); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 You should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 1 (measured 520 GB/s with the Tesla P100 GPU). In fact, scalar variables defined in a kernel, like `cumsum_iz`, will be stored in registers as long as there are enough available (if not, then so called [register spilling](https://developer.download.nvidia.com/CUDA/training/register_spilling.pdf) to main memory takes place). As access to register is extremely fast, the summation added in this Task did certainly not reduce the measured performance. It is, once again, the memory copy speed that completely determines the performance of the kernel, because we have successfully controlled the use of registers!
@@ -231,43 +231,43 @@ md"""
 Modify the `memcopy!` kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension (index `iy`), i.e., with parallelization only over the first and the last dimensions (index `ix` and `iz`). Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension (i.e. use one thread in the second and third dimensions); adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute `T_tot` and explain the measured performance.
 """
 #-
-#hint ## hint
-#hint function memcopy!(B, A)
-#hint     #...
-#hint     return nothing
-#hint end
-#hint 
-#hint threads = (256, 1, 1)
-#hint blocks  = #...
-#hint #-
-#hint ## Verification
-#hint B .= 0.0;
-#hint @cuda #...
-#hint B ≈ A
-#hint #-
-#hint ## Performance
-#hint t_it = @belapsed begin @cuda #...# end
-#hint T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol function memcopy!(B, A)
-#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#sol     for iy = 1:size(A,2)
-#sol         @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol threads = (256, 1, 1)
-#sol blocks  = (nx÷threads[1], 1, nz÷threads[3])
-#sol #-
-#sol ## Verification
-#sol B .= 0.0;
-#sol @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
-#sol B ≈ A
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-#sol T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function memcopy!(B, A)
+#hint=    #...
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=threads = (256, 1, 1)
+#hint=blocks  = #...
+#hint=#-
+#hint=## Verification
+#hint=B .= 0.0;
+#hint=@cuda #...
+#hint=B ≈ A
+#hint=#-
+#hint=## Performance
+#hint=t_it = @belapsed begin @cuda #...# end
+#hint=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=function memcopy!(B, A)
+#sol=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#sol=    for iy = 1:size(A,2)
+#sol=        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=threads = (256, 1, 1)
+#sol=blocks  = (nx÷threads[1], 1, nz÷threads[3])
+#sol=#-
+#sol=## Verification
+#sol=B .= 0.0;
+#sol=@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+#sol=B ≈ A
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+#sol=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 You should observe no big difference between `T_tot` measured here and `T_tot` computed in Task 1 (measured 519 GB/s with the Tesla P100 GPU) as this kernel is accessing memory also in large contiguous chunks.
@@ -280,48 +280,48 @@ Write a kernel `cumsum_dim2!` which computes the cumulative sum over the 2nd dim
 """
 
 #-
-#hint ## hint
-#hint function cumsum_dim2!(B, A)
-#hint     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#hint     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#hint     cumsum_iy = 0.0
-#hint     #...
-#hint     return nothing
-#hint end
-#hint 
-#hint ## Verification
-#hint @cuda #...
-#hint CUDA.cumsum!(B_ref, A; dims=2);
-#hint B ≈ B_ref
-#hint #-
-#hint ## Performance
-#hint t_it = @belapsed begin #...# end
-#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#hint #-
-#hint t_it = @belapsed #...
-#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol function cumsum_dim2!(B, A)
-#sol     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-#sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#sol     cumsum_iy = 0.0
-#sol     for iy = 1:size(A,2)
-#sol         @inbounds cumsum_iy  += A[ix,iy,iz]
-#sol         @inbounds B[ix,iy,iz] = cumsum_iy
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol ## Verification
-#sol @cuda blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
-#sol CUDA.cumsum!(B_ref, A; dims=2);
-#sol B ≈ B_ref
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim2!($B, $A); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol #-
-#sol t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=2); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function cumsum_dim2!(B, A)
+#hint=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#hint=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#hint=    cumsum_iy = 0.0
+#hint=    #...
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=## Verification
+#hint=@cuda #...
+#hint=CUDA.cumsum!(B_ref, A; dims=2);
+#hint=B ≈ B_ref
+#hint=#-
+#hint=## Performance
+#hint=t_it = @belapsed begin #...# end
+#hint=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=#-
+#hint=t_it = @belapsed #...
+#hint=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=function cumsum_dim2!(B, A)
+#sol=    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
+#sol=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#sol=    cumsum_iy = 0.0
+#sol=    for iy = 1:size(A,2)
+#sol=        @inbounds cumsum_iy  += A[ix,iy,iz]
+#sol=        @inbounds B[ix,iy,iz] = cumsum_iy
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=## Verification
+#sol=@cuda blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
+#sol=CUDA.cumsum!(B_ref, A; dims=2);
+#sol=B ≈ B_ref
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads cumsum_dim2!($B, $A); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=#-
+#sol=t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=2); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 Again, you should observe no significant difference between `T_eff_cs` measured here and `T_tot` computed in Task 3 (measured 519 GB/s with the Tesla P100 GPU), as you probably expected.
@@ -336,41 +336,41 @@ Modify the `memcopy!` kernel given in the beginning to read in A and write B in 
 """
 
 #-
-#hint ## hint
-#hint function memcopy!(B, A)
-#hint     #...
-#hint     return nothing
-#hint end
-#hint 
-#hint threads = (1, 256, 1)
-#hint blocks  = #...
-#hint #-
-#hint ## Verification
-#hint #...
-#hint #-
-#hint ## Performance
-#hint t_it = #...
-#hint T_tot = #...
-#sol function memcopy!(B, A)
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#sol     for ix = 1:size(A,1)
-#sol         @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol threads = (1, 256, 1)
-#sol blocks  = (1, ny÷threads[2], nz÷threads[3])
-#sol #-
-#sol ## Verification
-#sol B .= 0.0;
-#sol @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
-#sol B ≈ A
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-#sol T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function memcopy!(B, A)
+#hint=    #...
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=threads = (1, 256, 1)
+#hint=blocks  = #...
+#hint=#-
+#hint=## Verification
+#hint=#...
+#hint=#-
+#hint=## Performance
+#hint=t_it = #...
+#hint=T_tot = #...
+#sol=function memcopy!(B, A)
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#sol=    for ix = 1:size(A,1)
+#sol=        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=threads = (1, 256, 1)
+#sol=blocks  = (1, ny÷threads[2], nz÷threads[3])
+#sol=#-
+#sol=## Verification
+#sol=B .= 0.0;
+#sol=@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+#sol=B ≈ A
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+#sol=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 You likely observe `T_tot` to be an order of magnitude or more below `T_tot` measured in Task 1 and 3 (measured 36 GB/s with the Tesla P100 GPU) because, in contrast to the previous kernels, this kernel accesses memory discontinuously with a large stride (of `nx` numbers) between each requested number.
@@ -387,42 +387,42 @@ Modify the `memcopy!` kernel from Task 5 to enable reading in 32 numbers at a ti
 #md # \note{You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension (however, we do not want to enable more then one block though in this dimension).}
 
 #-
-#hint ## hint
-#hint function memcopy!(B, A)
-#hint     #...
-#hint     return nothing
-#hint end
-#hint 
-#hint threads = #...
-#hint blocks  = #...
-#hint #-
-#hint ## Verification
-#hint #...
-#hint #-
-#hint ## Performance
-#hint t_it = #...
-#hint T_tot = #...
-#sol function memcopy!(B, A)
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#sol     for ix_offset = 0 : blockDim().x : size(A,1)-1
-#sol         ix = threadIdx().x + ix_offset
-#sol         @inbounds B[ix,iy,iz] = A[ix,iy,iz]
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol threads = (32, 1, 1)
-#sol blocks  = (1, ny÷threads[2], nz÷threads[3])
-#sol #-
-#sol ## Verification
-#sol B .= 0.0;
-#sol @cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
-#sol B ≈ A
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
-#sol T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function memcopy!(B, A)
+#hint=    #...
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=threads = #...
+#hint=blocks  = #...
+#hint=#-
+#hint=## Verification
+#hint=#...
+#hint=#-
+#hint=## Performance
+#hint=t_it = #...
+#hint=T_tot = #...
+#sol=function memcopy!(B, A)
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#sol=    for ix_offset = 0 : blockDim().x : size(A,1)-1
+#sol=        ix = threadIdx().x + ix_offset
+#sol=        @inbounds B[ix,iy,iz] = A[ix,iy,iz]
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=threads = (32, 1, 1)
+#sol=blocks  = (1, ny÷threads[2], nz÷threads[3])
+#sol=#-
+#sol=## Verification
+#sol=B .= 0.0;
+#sol=@cuda blocks=blocks threads=threads memcopy!(B, A); synchronize()
+#sol=B ≈ A
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() end
+#sol=T_tot = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 `T_tot` should now be similar to the one obtained in Task 1 and 3 or even a bit better (measured 534 GB/s with the Tesla P100 GPU) thanks to the additional concurrency compared to the other `memcopy!` versions. We are therefore ready to implement the cummulative sum over the 1st dimension.
@@ -437,59 +437,59 @@ Write a kernel `cumsum_dim1!` which computes the cumulative sum over the 1st dim
 #md # \note{If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.}
 
 #-
-#hint ## hint
-#hint function cumsum_dim1!(B, A)
-#hint     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#hint     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#hint     tx = threadIdx().x
-#hint     shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
-#hint     cumsum_ix = 0.0
-#hint     #...
-#hint     return nothing
-#hint end
-#hint 
-#hint ## Verification
-#hint #...
-#hint #-
-#hint ## Performance
-#hint t_it = #...
-#hint T_eff_cs = #...
-#hint #-
-#hint t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
-#hint T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol function cumsum_dim1!(B, A)
-#sol     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-#sol     iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
-#sol     tx = threadIdx().x
-#sol     shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
-#sol     cumsum_ix = 0.0
-#sol     for ix_offset = 0 : blockDim().x : size(A,1)-1
-#sol         ix = threadIdx().x + ix_offset
-#sol         @inbounds shmem[tx] = A[ix,iy,iz]       # Read the x-dimension chunk into shared memory.
-#sol         sync_threads()
-#sol         if tx == 1                            # Compute the cumsum only with the first thread, accessing only shared memory
-#sol             for i = 1:blockDim().x
-#sol                 @inbounds cumsum_ix += shmem[i]
-#sol                 @inbounds shmem[i] = cumsum_ix
-#sol             end
-#sol         end
-#sol         sync_threads()
-#sol         @inbounds B[ix,iy,iz] = shmem[tx]       # Write the x-dimension chunk to main memory.
-#sol     end
-#sol     return nothing
-#sol end
-#sol 
-#sol ## Verification
-#sol @cuda blocks=blocks threads=threads shmem=prod(threads)*sizeof(Float64) cumsum_dim1!(B, A); synchronize()
-#sol CUDA.cumsum!(B_ref, A; dims=1);
-#sol B ≈ B_ref
-#sol #-
-#sol ## Performance
-#sol t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=2*prod($threads)*sizeof(Float64) cumsum_dim1!($B, $A); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-#sol #-
-#sol t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
-#sol T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#hint=## hint
+#hint=function cumsum_dim1!(B, A)
+#hint=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#hint=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#hint=    tx = threadIdx().x
+#hint=    shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
+#hint=    cumsum_ix = 0.0
+#hint=    #...
+#hint=    return nothing
+#hint=end
+#hint=
+#hint=## Verification
+#hint=#...
+#hint=#-
+#hint=## Performance
+#hint=t_it = #...
+#hint=T_eff_cs = #...
+#hint=#-
+#hint=t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
+#hint=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=function cumsum_dim1!(B, A)
+#sol=    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
+#sol=    iz = (blockIdx().z-1) * blockDim().z + threadIdx().z
+#sol=    tx = threadIdx().x
+#sol=    shmem = @cuDynamicSharedMem(eltype(A), blockDim().x)
+#sol=    cumsum_ix = 0.0
+#sol=    for ix_offset = 0 : blockDim().x : size(A,1)-1
+#sol=        ix = threadIdx().x + ix_offset
+#sol=        @inbounds shmem[tx] = A[ix,iy,iz]       # Read the x-dimension chunk into shared memory.
+#sol=        sync_threads()
+#sol=        if tx == 1                            # Compute the cumsum only with the first thread, accessing only shared memory
+#sol=            for i = 1:blockDim().x
+#sol=                @inbounds cumsum_ix += shmem[i]
+#sol=                @inbounds shmem[i] = cumsum_ix
+#sol=            end
+#sol=        end
+#sol=        sync_threads()
+#sol=        @inbounds B[ix,iy,iz] = shmem[tx]       # Write the x-dimension chunk to main memory.
+#sol=    end
+#sol=    return nothing
+#sol=end
+#sol=
+#sol=## Verification
+#sol=@cuda blocks=blocks threads=threads shmem=prod(threads)*sizeof(Float64) cumsum_dim1!(B, A); synchronize()
+#sol=CUDA.cumsum!(B_ref, A; dims=1);
+#sol=B ≈ B_ref
+#sol=#-
+#sol=## Performance
+#sol=t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=2*prod($threads)*sizeof(Float64) cumsum_dim1!($B, $A); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
+#sol=#-
+#sol=t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
+#sol=T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 md"""
 `T_eff_cs` is probably significantly less good than the one obtained for the cumulative sums over the other dimensions, but still quite good if we keep in mind the `T_tot` achieved with the first memcopy manner in Task 5. A good strategy for tackling an optimal implementation would certainly be to use warp-level functions (and if needed a more complex summation algorithm).

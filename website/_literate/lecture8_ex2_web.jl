@@ -54,7 +54,7 @@ Here is a snapshot on what to expect:
 """
 
 #md # @@img-med
-#md # ![Acoustic 2D 4 procs](../assets/literate_figures/acoustic_2D_mxpu_2.gif)
+#md # ![Acoustic 2D 4 procs](../assets/literate_figures/l8_acoustic_2D_mxpu_2.gif)
 #md # @@
 
 md"""

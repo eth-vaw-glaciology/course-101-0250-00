@@ -107,7 +107,7 @@ md"""
 
 The CI will create a badge (a small picture) which reflects the status of the Action. Typically added to the `README.md`:
 
-![ci-badge](./figures/ci-badge.png)
+![ci-badge](./figures/l7_ci-badge.png)
 
 It can be found under
 ```

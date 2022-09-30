@@ -16,7 +16,7 @@ In this last exercise, you will implement a synthetic wave propagation solver, t
 
 Create a new Julia script `acoustic_2D_v4.jl` for this homework, starting from the code you developed for [exercise 2](#exercise_2_-_acoustic_waves_in_2d_-_v2).
 
-![wave-ex4-sketch](../assets/literate_figures/wave_ex4_sketch.png)
+![wave-ex4-sketch](../assets/literate_figures/l3_wave_ex4_sketch.png)
 
 ### Task 1
 Implement the following changes:
@@ -28,7 +28,7 @@ Implement the following changes:
 
 You should obtain a similar output for your figure (try saving it as .png from within Julia)
 
-![wave-ex4](../assets/literate_figures/wave_ex4.png)
+![wave-ex4](../assets/literate_figures/l3_wave_ex4.png)
 
 ### Task 2
 In a second step,

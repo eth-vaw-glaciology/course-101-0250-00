@@ -25,7 +25,7 @@ using Plots
 display(heatmap(rand(10,10)))
 ```
 
-![random-noise](../assets/literate_figures/random-noise.png)
+![random-noise](../assets/literate_figures/l2_random-noise.png)
 
 ### Git repository
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):

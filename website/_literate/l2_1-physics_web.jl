@@ -57,7 +57,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -317,7 +317,7 @@ where
 md"""
 The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
 
-![hook](../assets/literate_figures/hooke.png)
+![hook](../assets/literate_figures/l2_hooke.png)
 
 $$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
 
@@ -355,7 +355,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_acoustic_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -385,7 +385,7 @@ $$ \frac{∂P}{∂t}  = -\frac{1}{\beta}~\frac{∂V_x}{∂x}~.$$
 md"""
 Let's get started. 
 
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
+👉 [Download the `l2_diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
 
 #src #########################################################################
@@ -451,7 +451,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/advection_1D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_advection_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -512,8 +512,8 @@ C = exp.( ... )
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $
-#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
+#nb # > 💡 hint: Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $
+#md # \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -602,7 +602,7 @@ where $n$ is a power-law exponent (here $n=4$).
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_nonlinear_diffusion_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -626,7 +626,7 @@ where $n$ is often assumed to be equal to 2. This equation describes the formati
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_nonlinear_advection_1D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -688,7 +688,7 @@ and see the results:
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D_steady_state.mp4"/>
 # </center>
 #md # ~~~
 

@@ -66,7 +66,7 @@ The figure hereafter depicts the relation between the CUDA domain and the finite
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![cuda_grid](../assets/literate_figures/cuda_grid.png)
+![cuda_grid](../assets/literate_figures/l6_cuda_grid.png)
 """
 
 #src ######################################################################### 

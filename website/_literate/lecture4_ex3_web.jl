@@ -75,7 +75,7 @@ Reflect on the speed-up obtained by the second-order method and feel free to add
 md"""
 🎉 Well-done! This was a long one. Here is a sample output the code should produce:
 
-![steady_1D_ex4](../assets/literate_figures/steady_1D_ex4.png)
+![steady_1D_ex4](../assets/literate_figures/l4_steady_1D_ex4.png)
 """
 
 

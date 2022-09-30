@@ -46,5 +46,5 @@ Report graphically the distribution of concentration `C` as function of `x` and 
 md"""
 Here is a sample output the code should produce:
 
-![steady_2D_ex4](./figures/steady_2D_ex4.png)
+![steady_2D_ex4](./figures/l4_steady_2D_ex4.png)
 """

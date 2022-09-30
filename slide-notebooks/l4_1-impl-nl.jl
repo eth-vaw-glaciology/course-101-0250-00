@@ -115,7 +115,7 @@ Recall that we are using conservative finite-differences and thus a _staggered g
 
 For 2D grids, we will have to handle scalar quantity and two fluxes as depicted below, taking care about correct staggering:
 
-![staggered-grid](./figures/stagg_2D.png)
+![staggered-grid](./figures/l4_stagg_2D.png)
 """
 
 #src #########################################################################
@@ -148,7 +148,7 @@ display(heatmap(xc, yc, C'; opts...))
 md"""
 That's how the 2D diffusion looks like:
 
-![diffusion](./figures/diffusion_2D_1.gif)
+![diffusion](./figures/l4_diffusion_2D_1.gif)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -160,7 +160,7 @@ Let's get started with 2D.
 👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 """
 
-#sol #md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
+#sol=#md # 👉 [Download the `diffusion_2D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/).
 
 
 #src #########################################################################

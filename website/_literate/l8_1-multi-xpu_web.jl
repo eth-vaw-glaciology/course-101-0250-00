@@ -109,7 +109,7 @@ We can thus replicate a local problem multiple times in each dimension of the Ca
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![IGG](../assets/literate_figures/l8-igg.png)
+![IGG](../assets/literate_figures/l8_igg.png)
 """
 
 #src ######################################################################### 
@@ -133,7 +133,7 @@ Ideally, the parallel efficiency should stay close to 1 while increasing the num
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![Parallel scaling](../assets/literate_figures/l8-par_eff.png)
+![Parallel scaling](../assets/literate_figures/l8_par_eff.png)
 """
 
 #md # ---
@@ -172,7 +172,7 @@ In this "fake parallelisation" code, the computations for the left and right dom
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![1D Global grid](../assets/literate_figures/l8-1D_global_grid.png)
+![1D Global grid](../assets/literate_figures/l8_1D_global_grid.png)
 """
 
 #src ######################################################################### 
@@ -184,8 +184,8 @@ The idea of this fake parallelisation approach is the following:
 CL[2:end-1] .= CL[2:end-1] .+ dt*D*diff(diff(CL)/dx)/dx
 CR[2:end-1] .= CR[2:end-1] .+ dt*D*diff(diff(CR)/dx)/dx
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 # Global picture
 C .= [CL[1:end-1]; CR[2:end]]
 ```
@@ -211,15 +211,15 @@ Then, add the required boundary update:
 
 ```julia
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 ```
 
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
 #md # @@img-med
-#md # ![diffusion 1D 2 procs](../assets/literate_figures/l8-diff_1D_2procs_1.gif)
+#md # ![diffusion 1D 2 procs](../assets/literate_figures/l8_diff_1D_2procs_1.gif)
 #md # @@
 
 #src ######################################################################### 
@@ -232,8 +232,7 @@ for ip = 1:np # compute physics locally
     C[2:end-1,ip] .= C[2:end-1,ip] .+ dt*D*diff(diff(C[:,ip])/dxg)/dxg
 end
 for ip = 1:np-1 # update boundaries
-   C[end,ip  ] = C[    2,ip+1]
-   C[  1,ip+1] = C[end-1,ip  ]
+   # ...
 end
 for ip = 1:np # global picture
     i1 = 1 + (ip-1)*(nx-2)
@@ -261,7 +260,7 @@ md"""
 # Initial condition
 for ip = 1:np
     for ix = 1:nx
-       x[ix,ip] = ( (ip-1)*(nx-2) + (ix-0.5) )*dxg - 0.5*lx
+        x[ix,ip] = ...
         C[ix,ip] = exp(-x[ix,ip]^2)
     end
     i1 = 1 + (ip-1)*(nx-2)
@@ -282,7 +281,7 @@ Then run this code which is missing the boundary updates of the `n` fake process
 """
 
 #md # @@img-med
-#md # ![diffusion 1D n procs](../assets/literate_figures/l8-diff_1D_nprocs_1.gif)
+#md # ![diffusion 1D n procs](../assets/literate_figures/l8_diff_1D_nprocs_1.gif)
 #md # @@
 
 #src ######################################################################### 
@@ -412,7 +411,7 @@ Visualise the results after each run with the [`vizme2D_mpi.jl`](https://github.
 """
 
 #md # @@img-med
-#md # ![diffusion 2D MPI](../assets/literate_figures/l8-diffusion_2D_xpu_1.gif)
+#md # ![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_xpu_1.gif)
 #md # @@
 
 #src ######################################################################### 

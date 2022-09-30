@@ -86,7 +86,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: ['1.6']
+        julia-version: ['1.8']
         julia-arch: [x64]
         os: [ubuntu-latest]
 
@@ -107,7 +107,7 @@ md"""
 
 The CI will create a badge (a small picture) which reflects the status of the Action. Typically added to the `README.md`:
 
-![ci-badge](../assets/literate_figures/ci-badge.png)
+![ci-badge](../assets/literate_figures/l7_ci-badge.png)
 
 It can be found under
 ```

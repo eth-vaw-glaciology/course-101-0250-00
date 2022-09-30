@@ -15,7 +15,7 @@ md"""
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="./figures/porous_convection_2D.mp4"/>
+#   <video width="80%" autoplay loop controls src="./figures/l1_porous_convection_2D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -39,7 +39,7 @@ md"""
 md"""
 Predict the evolution of natural and engineered systems.
 
-![ice2](./figures/ice2.png)
+![ice2](./figures/l1_ice2.png)
 
 _e.g. ice cap evolution, stress distribution, etc..._
 """
@@ -98,7 +98,7 @@ Computational costs increase
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="./figures/Stokes2D_vep.mp4"/>
+#   <video width="80%" autoplay loop controls src="./figures/l1_Stokes2D_vep.mp4"/>
 # </center>
 #md # ~~~
 
@@ -109,7 +109,7 @@ Use **parallel computing** to address this:
 - The "memory wall" in ~ 2004
 - Single-core to multi-core devices
 
-![mem_wall](./figures/mem_wall.png)
+![mem_wall](./figures/l1_mem_wall.png)
 
 """
 
@@ -120,7 +120,7 @@ GPUs are _massively_ parallel devices
 - SIMD machine (programmed using threads - SPMD) ([more](https://safari.ethz.ch/architecture/fall2020/lib/exe/fetch.php?media=onur-comparch-fall2020-lecture24-simdandgpu-afterlecture.pdf))
 - Further increases the Flop vs Bytes gap
 
-![cpu_gpu_evo](./figures/cpu_gpu_evo.png)
+![cpu_gpu_evo](./figures/l1_cpu_gpu_evo.png)
 
 """
 
@@ -138,7 +138,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-![julia-gpu](./figures/julia-gpu.png)
+![julia-gpu](./figures/l1_julia-gpu.png)
 
 """
 
@@ -148,7 +148,7 @@ md"""
 #### GPU are cool
 - Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
 
-![perf_gpu](./figures/perf_gpu.png)
+![perf_gpu](./figures/l1_perf_gpu.png)
 """
 
 #src #########################################################################
@@ -158,7 +158,7 @@ md"""
 
 - Workstation turns into a personal Supercomputers; GPU vs CPUs peak memory bandwidth: theoretical 10x (practically more)
 
-![titan_node](./figures/titan_node.jpg)
+![titan_node](./figures/l1_titan_node.jpg)
 
 """
 
@@ -169,7 +169,7 @@ md"""
 Solution to the "two-language problem"
 - Single code for prototyping and production
 
-![two_lang](./figures/two_lang.png)
+![two_lang](./figures/l1_two_lang.png)
 """
 
 #src #########################################################################

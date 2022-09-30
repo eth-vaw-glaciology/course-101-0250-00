@@ -5,7 +5,7 @@ using Markdown #src
 md"""
 # Tool for the job: introduction to Julia
 
-![julia-logo](./figures/julia-logo.png)
+![julia-logo](./figures/l1_julia-logo.png)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -47,7 +47,7 @@ md"""
 [Julia](https://julialang.org/) is a modern, interactive, and high performance programming language.  It's a general purpose
 language with a bend on technical computing.
 
-![julia-logo](./figures/julia-logo-repl.png)
+![julia-logo](./figures/l1_julia-logo-repl.png)
 
 - first released in 2012
 - reached version 1.0 in 2018
@@ -87,7 +87,7 @@ And its solution plotted
 """
 plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
 
-#md # ![lorenz](./figures/lorenz.png)
+#md # ![lorenz](./figures/l1_lorenz.png)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -125,7 +125,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-![](./figures/ml.png)
+![](./figures/l1_ml.png)
 """
 
 #src #########################################################################
@@ -162,7 +162,7 @@ and also:
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-![](./figures/flux-vs-tensorflow.png)
+![](./figures/l1_flux-vs-tensorflow.png)
 """
 
 #src #########################################################################
