@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.1"
+julia_version = "1.8.2"
 manifest_format = "2.0"
 project_hash = "295af44e2b2895d22d708ef61d6e24cd2e05412c"
 
@@ -179,9 +179,9 @@ version = "1.3.0"
 
 [[deps.OpenSSL]]
 deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
-git-tree-sha1 = "f561403726db82fe98c0963a382b1b839e9287b1"
+git-tree-sha1 = "02be9f845cb58c2d6029a6d5f67f4e0af3237814"
 uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
-version = "1.1.2"
+version = "1.1.3"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -246,7 +246,7 @@ version = "1.0.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.0"
+version = "1.10.1"
 
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
