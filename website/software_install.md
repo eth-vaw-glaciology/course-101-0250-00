@@ -35,9 +35,9 @@ Check you have an active internet connexion and [download Julia v1.8](https://ju
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.8.1-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.8.1-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.1-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.8.2-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.8.2-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_64.tar.gz # Linux x86
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
