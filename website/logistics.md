@@ -49,6 +49,8 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
+Personal feedback and sample solution codes will be provided after submission deadline via a shared [Polybox](https://polyboxdoc.ethz.ch) folder. Make sure to register to the service and install the finder extension if possible.
+
 ### Submission
 - Submission of scripts (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
@@ -62,6 +64,8 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
+### Feedback
+After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it are available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). Personal feedback and points (not grades) for weekly homework will be shared individually among participants using a private file or folder on Polybox.
 
 ## Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) (& GitHub):
