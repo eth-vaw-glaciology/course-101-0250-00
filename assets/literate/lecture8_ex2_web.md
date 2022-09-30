@@ -49,7 +49,7 @@ Execute the `acoustic_2D_perf_mulixpu.jl` on 4 GPUs (on your octopus node) to ge
 Here is a snapshot on what to expect:
 
 @@img-med
-![Acoustic 2D 4 procs](../assets/literate_figures/acoustic_2D_mxpu_2.gif)
+![Acoustic 2D 4 procs](../assets/literate_figures/l8_acoustic_2D_mxpu_2.gif)
 @@
 
 ### Task 3

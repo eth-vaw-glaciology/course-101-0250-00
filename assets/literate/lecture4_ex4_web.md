@@ -34,5 +34,5 @@ Report graphically the distribution of concentration `C` as function of `x` and 
 
 Here is a sample output the code should produce:
 
-![steady_2D_ex4](../assets/literate_figures/steady_2D_ex4.png)
+![steady_2D_ex4](../assets/literate_figures/l4_steady_2D_ex4.png)
 

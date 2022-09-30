@@ -26,7 +26,7 @@ _**Classification of second-order PDEs:**_
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D.mp4"/>
 </center>
 ~~~
 
@@ -174,7 +174,7 @@ where
 
 The wave equation can be elegantly derived, e.g., from [Hooke's law](https://en.wikipedia.org/wiki/Wave_equation#From_Hooke's_law) and second law of Newton considering masses interconnected with springs.
 
-![hook](../assets/literate_figures/hooke.png)
+![hook](../assets/literate_figures/l2_hooke.png)
 
 $$ F_\mathrm{Newton}~~=~~F_\mathrm{Hook}~,$$
 
@@ -194,7 +194,7 @@ Our first task will be to modify the diffusion equation...
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_acoustic_1D.mp4"/>
 </center>
 ~~~
 
@@ -214,7 +214,7 @@ $$ \frac{∂P}{∂t}  = -\frac{1}{\beta}~\frac{∂V_x}{∂x}~.$$
 
 Let's get started.
 
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
+👉 [Download the `l2_diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 
 We can start modifying the diffusion code's, adding `ρ` and `β` in `# physics` section, and taking a Gaussian (centred in `lx/2`) as initial condition for the pressure `Pr`
 
@@ -256,7 +256,7 @@ Comparing diffusive and wave physics, we can summarise following:
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/advection_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_advection_1D.mp4"/>
 </center>
 ~~~
 
@@ -291,7 +291,7 @@ In the `# array initialisation` section, initialise the quantity `C` as a Gaussi
 C = exp.( ... )
 ```
 
-\note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(x_c - c)^2 $}
+\note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $}
 
 Update `C` as following:
 
@@ -326,7 +326,7 @@ where $n$ is a power-law exponent (here $n=4$).
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_diffusion_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_nonlinear_diffusion_1D.mp4"/>
 </center>
 ~~~
 
@@ -342,7 +342,7 @@ where $n$ is often assumed to be equal to 2. This equation describes the formati
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/nonlinear_advection_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_nonlinear_advection_1D.mp4"/>
 </center>
 ~~~
 
@@ -381,7 +381,7 @@ and see the results:
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D_steady_state.mp4"/>
 </center>
 ~~~
 

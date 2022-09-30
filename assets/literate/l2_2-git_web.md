@@ -10,7 +10,7 @@ Git is a version control software, useful to
 
 You are familiar with git already:
 
-![git-survey](../assets/literate_figures/survey-git-question.png)
+![git-survey](../assets/literate_figures/l2_survey-git-question.png)
 
 Questions:
 - how often do you use git?
@@ -70,7 +70,7 @@ Let's make one (because most of Julia development happens on GitHub)
 
 Make such that you can push and pull without entering a password
 
-![github-bar](../assets/literate_figures/github-bar.png)
+![github-bar](../assets/literate_figures/l2_github-bar.png)
 
 - local: tell git to store credentials:
   `git config --global credential.helper cache`
@@ -82,7 +82,7 @@ Make such that you can push and pull without entering a password
 
 ## Let's get our repo onto GitHub
 
-![github-bar](../assets/literate_figures/github-bar.png)
+![github-bar](../assets/literate_figures/l2_github-bar.png)
 
 - create a repository on github.com: click the "+"
 - local: follow setup given on website
@@ -91,11 +91,11 @@ Make such that you can push and pull without entering a password
 
 ## Work with other peoples code: fork
 
-![github-bar](../assets/literate_figures/github-bar.png)
+![github-bar](../assets/literate_figures/l2_github-bar.png)
 
 - fork a repository on github.com (top right)
 
 ## Git: questions?
 
-![git-me](../assets/literate_figures/git-me.png)
+![git-me](../assets/literate_figures/l2_git-me.png)
 

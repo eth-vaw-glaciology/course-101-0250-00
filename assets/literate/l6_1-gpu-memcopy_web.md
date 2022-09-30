@@ -31,7 +31,7 @@ In the CUDA programming model, `blocks` of `threads` compose the `grid`. In our 
 
 The figure hereafter depicts the relation between the CUDA domain and the finite-difference domain:
 
-![cuda_grid](../assets/literate_figures/cuda_grid.png)
+![cuda_grid](../assets/literate_figures/l6_cuda_grid.png)
 
 Indices `ix` and `iy` replace the loop indices providing a "vectorised" map of threads - the core to leverage GPU performance. We'll come back to this in a second part of this lecture.
 

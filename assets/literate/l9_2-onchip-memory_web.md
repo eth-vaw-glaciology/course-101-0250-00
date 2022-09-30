@@ -9,11 +9,11 @@ Let us first look at the different kinds of memory.
 
 There is memory private to each thread ("local memory"), shared between thread blocks ("shared memory") and shared between all threads of the grid ("global memory" or "main memory").
 
-![cuda_mem](../assets/literate_figures/cuda_mem.png)
+![cuda_mem](../assets/literate_figures/l9_cuda_mem.png)
 
 To use shared memory for our PDE solvers, we can use the strategy depicted in the following image:
 
-![cuda_domain](../assets/literate_figures/cuda_domain.png)
+![cuda_domain](../assets/literate_figures/l9_cuda_domain.png)
 
 In this approach, we allocate a cell in shared memory per each thread of the block, **plus a halo on all sides**.
 
@@ -31,5 +31,5 @@ In that case, the registers can store, e.g., intermediate results.
 
 The following image shows the scenario where each thread computes the results for a column of cells in z dimension (this can be achieved by simply doing a loop over the z dimension):
 
-![cuda_column](../assets/literate_figures/cuda_column.png)
+![cuda_column](../assets/literate_figures/l9_cuda_column.png)
 

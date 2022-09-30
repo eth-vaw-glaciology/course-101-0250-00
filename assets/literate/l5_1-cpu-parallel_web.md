@@ -21,13 +21,13 @@ Use **parallel computing** (to address this):
 - The "memory wall" in ~ 2004
 - Single-core to multi-core devices
 
-![mem_wall](../assets/literate_figures/mem_wall.png)
+![mem_wall](../assets/literate_figures/l1_mem_wall.png)
 
 GPUs are massively parallel devices
 - SIMD machine (programmed using threads - SPMD) ([more](https://safari.ethz.ch/architecture/fall2020/lib/exe/fetch.php?media=onur-comparch-fall2020-lecture24-simdandgpu-afterlecture.pdf))
 - Further increases the Flop vs Bytes gap
 
-![cpu_gpu_evo](../assets/literate_figures/cpu_gpu_evo.png)
+![cpu_gpu_evo](../assets/literate_figures/l1_cpu_gpu_evo.png)
 
 Taking a look at a recent GPU and CPU:
 - Nvidia Tesla A100 GPU
@@ -133,17 +133,17 @@ As first task, we'll compute the $T_\mathrm{eff}$ for the 2D diffusion code [`di
 - Compute the elapsed time `t_toc` at the end of the time loop and report:
 
 ```julia
-t_toc = Base.time() - t_tic
-A_eff = (1*2)/1e9*nx*ny*sizeof(Float64)  # Effective main memory access per iteration [GB]
-t_it  = t_toc/niter                      # Execution time per iteration [s]
-T_eff = A_eff/t_it                       # Effective memory throughput [GB/s]
+t_toc = ...
+A_eff = ...          # Effective main memory access per iteration [GB]
+t_it  = ...          # Execution time per iteration [s]
+T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
 ```
 
 - Report `t_toc`, `T_eff` and `niter` at the end of the code, formatting output using `@printf()` macro.
 - Round `T_eff` to the 3rd significant digit.
 
 ```julia
-@printf("Time = %1.3f sec, T_eff = %1.2f GB/s (niter = %d)\n", t_toc, round(T_eff, sigdigits=3), niter)
+@printf("Time = %1.3f sec, ... \n", t_toc, ...)
 ```
 
 ### Deactivate visualisation
@@ -151,16 +151,14 @@ T_eff = A_eff/t_it                       # Effective memory throughput [GB/s]
 - Define a `do_visu` flag set to `false`
 
 ```julia
-@views function diffusion_2D(; do_visu=false)
+@views function diffusion_2D(; ??)
 
+   ...
 
-   if do_visu && (it % nout == 0)
-       ...
-   end
     return
 end
 
-diffusion_2D(; do_visu=false)
+diffusion_2D(; ??)
 ```
 
 So far so good, we have now a timer.
@@ -196,8 +194,8 @@ Storing flux calculations in `qx` and `qy` arrays is not needed and produces add
 Let's create macros and call them in the time loop:
 
 ```julia
-macro qx()  esc(:( .-D_dx.*diff(C[:,2:end-1],dims=1) )) end
-macro qy()  esc(:( .-D_dy.*diff(C[2:end-1,:],dims=2) )) end
+macro qx()  esc(:( ... )) end
+macro qy()  esc(:( ... )) end
 ```
 
 Macro will be expanded at preprocessing stage (copy-paste)
@@ -211,10 +209,10 @@ Also, we now have to ensure `C` is not read and written back in the same (will b
 Define `C2`, a copy of `C`, modify the physics computation line, and implement a pointer swap
 
 ```julia
-C2      = copy(C)
+C2      = ...
 # [...]
-C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*(diff(@qx(),dims=1).*_dx .+ diff(@qy(),dims=2).*_dy)
-C, C2 = C2, C # pointer swap
+C2[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt.*( ... )
+C, C2 = ... # pointer swap
 ```
 
 ### 3. Back to loops I
@@ -226,9 +224,9 @@ The goal is now to write out the diffusion physics in a loop fashion over $x$ an
 Implement a nested loop, taking car of bounds and staggering.
 
 ```julia
-for iy=1:size(C,2)-2
-    for ix=1:size(C,1)-2
-        C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
+for iy=1:??
+    for ix=1:??
+        C2[??] = C[??] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
     end
 end
 ```
@@ -238,8 +236,8 @@ Note that macros can take arguments, here `ix,iy`, and need updated definition.
 Macro argument can be used in definition appending `$`.
 
 ```julia
-macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
-macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
+macro qx(ix,iy)  esc(:( ... C[$ix+1,$iy+1] ... )) end
+macro qy(ix,iy)  ...
 ```
 
 Performance is already quite better with the loop version. Reasons are that `diff()` are allocating tmp and that Julia is overall well optimised for executing loops.
@@ -255,12 +253,8 @@ In this last step, the goal is to define a `compute` function to hold the physic
 Create a `compute!()` function that takes input and output arrays and needed scalars as argument and returns nothing.
 
 ```julia
-function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
-    for iy=1:size(C,2)-2
-        for ix=1:size(C,1)-2
-            C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
-        end
-    end
+function compute!(...)
+    ...
     return
 end
 ```
@@ -270,7 +264,7 @@ end
 The `compute!()` function can then be called within the time loop
 
 ```julia
-compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
+compute!(...)
 ```
 
 This last implementation executes a bit faster as previous one, as functions allow Julia to further optimise during just-ahead-of-time compilation.

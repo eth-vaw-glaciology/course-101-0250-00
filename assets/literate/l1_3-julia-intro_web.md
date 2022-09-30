@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # Tool for the job: introduction to Julia
 
-![julia-logo](../assets/literate_figures/julia-logo.png)
+![julia-logo](../assets/literate_figures/l1_julia-logo.png)
 
 ## Aside 1: Jupyter Notebooks
 
@@ -29,7 +29,7 @@ https://docs.google.com/forms/d/13BF2S2HaKHN9m1aK3CyR6CHoUJskQHJpIK7L2DrmN3M/edi
 [Julia](https://julialang.org/) is a modern, interactive, and high performance programming language.  It's a general purpose
 language with a bend on technical computing.
 
-![julia-logo](../assets/literate_figures/julia-logo-repl.png)
+![julia-logo](../assets/literate_figures/l1_julia-logo-repl.png)
 
 - first released in 2012
 - reached version 1.0 in 2018
@@ -66,7 +66,7 @@ And its solution plotted
 plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
 ````
 
-![lorenz](../assets/literate_figures/lorenz.png)
+![lorenz](../assets/literate_figures/l1_lorenz.png)
 
 ### Julia in brief
 Julia 1.0 released 2018, now at version 1.8.1
@@ -94,7 +94,7 @@ Features:
 - Numpy (python -- C)
 - machine-learning: pytorch, tensorflow
 
-![](../assets/literate_figures/ml.png)
+![](../assets/literate_figures/l1_ml.png)
 
 ### The two language problem
 
@@ -120,7 +120,7 @@ Julia is:
 and also:
 - fast
 
-![](../assets/literate_figures/flux-vs-tensorflow.png)
+![](../assets/literate_figures/l1_flux-vs-tensorflow.png)
 
 ###  Let's get our hands dirty!
 
@@ -235,14 +235,15 @@ Task: assign two vectors to `a`, and `b` and the concatenate them using `;`:
 
 ````julia:ex11
 a = [2, 3]
-b = ...
-[ ; ]
+b = [4, 5]
+[a ; b]
 ````
 
 Add new elements to the end of Vector `b` (hint look up the documentation for `push!`)
 
 ````julia:ex12
-#
+push!(b, 1)
+push!(b, 3, 4)
 ````
 
 ### Array exercises
@@ -250,13 +251,13 @@ Add new elements to the end of Vector `b` (hint look up the documentation for `p
 Concatenate a Range, say `1:10`, with a Vector, say [4,5]:
 
 ````julia:ex13
-[  ;  ]
+[1:10; [4,5]]
 ````
 
 Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 
 ````julia:ex14
-#
+a = rand(3,3)
 ````
 
 ### Array exercise: indexing
@@ -264,13 +265,13 @@ Make a random array of size (3,3).  Look up `?rand`.  Assign it to `a`
 Access element `[1,2]` and `[2,1]` of Matrix `a` (hint use []):
 
 ````julia:ex15
-a[ ... ], a[ ... ]
+a[1,2], a[2,1]
 ````
 
 Put those two values into a vector
 
 ````julia:ex16
-#
+[ a[1,2], a[2,1] ]
 ````
 
 Linear vs Cartesian indexing,
@@ -284,8 +285,8 @@ a[1,1]
 Access the last element (look up `?end`) both with linear and Cartesian indices
 
 ````julia:ex18
-a[...]
-a[..., ...]
+a[end]
+a[end, end]
 ````
 
 ### Array exercise: indexing by ranges
@@ -293,13 +294,13 @@ a[..., ...]
 Access the last row of `a` (hint use `1:end`)
 
 ````julia:ex19
-a[... , ...]
+a[end, 1:end]
 ````
 
 Access a 2x2 sub-matrix
 
 ````julia:ex20
-a[ ]
+a[1:2, 1:2]
 ````
 
 ### Array exercises: variable bindings and views
@@ -315,11 +316,15 @@ a[1, 2] = 99
 
 Type your answer here (to start editing, double click into this cell.  When done shift+enter):
 
+````julia:ex22
+Both variables `a` and `c` refer to the same "thing".  Thus updating the array via one will show in the other.
+````
+
 ### Array exercises: variable bindings and views
 
 An assignment _binds_ the same array to both variables
 
-````julia:ex22
+````julia:ex23
 c = a
 c[1] = 8
 @assert a[1]==8 # as c and a are the same thing
@@ -331,7 +336,7 @@ Views vs copies:
 In Julia indexing with ranges will create a new array with copies of
 the original's entries. Consider
 
-````julia:ex23
+````julia:ex24
 a = rand(3,4)
 b = a[1:3, 1:2]
 b[1] = 99
@@ -344,7 +349,7 @@ But the memory footprint will be large if we work with large arrays and take sub
 
 Views to the rescue
 
-````julia:ex24
+````julia:ex25
 a = rand(3,4)
 b = @view a[1:3, 1:2]
 b[1] = 99
@@ -352,8 +357,8 @@ b[1] = 99
 
 check whether the change in `b` is reflected in `a`:
 
-````julia:ex25
-@assert ...
+````julia:ex26
+@assert a[1] == 99
 ````
 
 ### A small detour: types
@@ -362,7 +367,7 @@ All values have types as we saw above.  Arrays store in their type what type the
 
 > Arrays which have concrete element-types are more performant!
 
-````julia:ex26
+````julia:ex27
 typeof([1, 2]), typeof([1.0, 2.0])
 ````
 
@@ -370,27 +375,32 @@ Aside, they also store their dimension in the second parameter.
 
 The type can be specified at creation
 
-````julia:ex27
+````julia:ex28
 String["one", "two"]
 ````
 
 Create an array taking `Int` with no elements.  Push `1`, `1.0` and `1.5` to it.  What happens?
 
-````julia:ex28
-#
+````julia:ex29
+a = Int[]
+push!(a, 1) ## works
+push!(a, 1.0) ## works
+push!(a, 1.5) ## errors as 1.5 cannot be converted to an Int
 ````
 
 Make an array of type `Any` (which can store any value).  Push a value of type
 Int and one of type String to it.
 
-````julia:ex29
-#
+````julia:ex30
+a = []
+push!(a, 5)
+push!(a, "a")
 ````
 
 Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 
-````julia:ex30
-#
+````julia:ex31
+[1][1] = 1.5 ## errors
 ````
 
 ### Array exercises
@@ -398,14 +408,14 @@ Try to assgin 1.5 to the first element of an array of type Array{Int,1}
 Create a uninitialised Matrix of size (3,3) and assign it to `a`.
 First look up the docs of Array with `?Array`
 
-````julia:ex31
-#
+````julia:ex32
+a = Array{Any}(undef, 3, 3)
 ````
 
 Test that its size is correct, see `size`
 
-````julia:ex32
-#
+````julia:ex33
+size(a)
 ````
 
 ### Array exercises: ALL DONE
@@ -432,8 +442,15 @@ Write a test which looks at the start of the string in variable `a`
 - "The " then set `b = "A noun"`
 - otherwise set `b = "no idea"`
 
-````julia:ex33
-#
+````julia:ex34
+a = "Where are the flowers"
+if startswith(a, "Wh")
+  b = "Likely a question"
+elseif startswith(a, "The")
+  b = "Likely a noun"
+else
+  b = "no idea"
+end
 ````
 
 ### Conditional evaluation: the "ternary operator" `?`
@@ -449,8 +466,8 @@ else
 end
 ```
 
-````julia:ex34
-#
+````julia:ex35
+a > 5 ? "really big" : "not so big"
 ````
 
 ### Short circuit operators `&&` and `||`
@@ -465,11 +482,14 @@ a < 0 && error("Not valid input for `a`")
 
 Type your answer here (to start editing, double click into this cell.  When done shift+enter):
 
+If `a < 0` evaluates to `true` then the bit after the `&&` is evaluated too,
+i.e. an error is thrown.  Otherwise, only `a < 0` is evaluated and no error is thrown.
+
 ### Loops: `for` and `while`
 
 [https://docs.julialang.org/en/v1/manual/control-flow/#man-loops](https://docs.julialang.org/en/v1/manual/control-flow/#man-loops)
 
-````julia:ex35
+````julia:ex36
 for i = 1:3
     println(i)
 end
@@ -506,8 +526,14 @@ Read [https://docs.julialang.org/en/v1/manual/functions/](https://docs.julialang
 Define a function in long-form which takes two arguments.
 Use some if-else statements and the return keyword.
 
-````julia:ex36
-#
+````julia:ex37
+function fn(a, b)
+  if a> b
+    return a
+  else
+    return b
+  end
+end
 ````
 
 ### Functions: exercises
@@ -517,8 +543,9 @@ does the same.  Map `sin` over the vector `1:10`.
 
 (Note, this is a higher-order function: a function which take a function as a argument)
 
-````julia:ex37
-#
+````julia:ex38
+mymap(fn, a) = [fn(aa) for aa in a]
+mymap(sin, 1:10)
 ````
 
 ### Functions: dot-syntax
@@ -528,15 +555,15 @@ function over values.
 
 Exercise: apply the `sin` function to a vector `1:10`:
 
-````julia:ex38
-#
+````julia:ex39
+sin.(1:10)
 ````
 
 Broadcasting will extend row and column vectors into a matrix.
 Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 
-````julia:ex39
-#
+````julia:ex40
+(1:10) .+ (1:10)'
 ````
 
 ### Functions: dot-syntax exercise
@@ -544,8 +571,9 @@ Try `(1:10) .+ (1:10)'`  (Note the `'`, this is the transpose operator)
 Evaluate the function `sin(x) + cos(y)` for
 `x = 0:0.1:pi` and `y = -pi:0.1:pi`.  Remember to use `'`.
 
-````julia:ex40
-#
+````julia:ex41
+x,y = 0:0.1:pi, -pi:0.1:pi
+sin.(x) .+ cos.(y')
 ````
 
 ### Functions: anonymous functions
@@ -557,8 +585,8 @@ Read [https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions
 Map the function `f(x,y) = sin(x) + cos(x)` over `1:10` but define it as an anonymous
 function.
 
-````julia:ex41
-#
+````julia:ex42
+map(x -> sin(x) + cos(x), 1:10)
 ````
 
 ### Key feature: multiple dispatch functions
@@ -582,7 +610,7 @@ JuliaCon 2019 presentation on the subject by Stefan Karpinski
 
 ## Functions: Multiple dispatch demo
 
-````julia:ex42
+````julia:ex43
 struct Rock end
 struct Paper end
 struct Scissors end
@@ -607,7 +635,7 @@ Can easily be extended later
 
 with new type:
 
-````julia:ex43
+````julia:ex44
 struct Pond end
 play(::Rock, ::Pond) = "Pond wins"
 play(::Paper, ::Pond) = "Paper wins"
@@ -618,7 +646,7 @@ play(Scissors(), Pond())
 
 with new function:
 
-````julia:ex44
+````julia:ex45
 combine(::Rock, ::Paper) = "Paperweight"
 combine(::Paper, ::Scissors) = "Two pieces of papers"
 # ...
@@ -644,7 +672,7 @@ using OrdinaryDiffEq, Plots
 This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
 and types available in the current session.
 
-````julia:ex45
+````julia:ex46
 using Plots
 plot( (1:10).^2 )
 ````
@@ -664,7 +692,7 @@ using UnPack
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
 
-````julia:ex46
+````julia:ex47
 # Install a package (maybe not a too big one, UnPack.jl is good that way),
 # use it, query help on the package itself:
 ````

@@ -52,7 +52,7 @@ defining first the optimal local problem size to resolve on a single GPU and the
 
 We can thus replicate a local problem multiple times in each dimension of the Cartesian space to obtain a global grid, which is therefore defined implicitly. Local problems define each others local boundary conditions by exchanging internal boundary values using intra-node communication (e.g., message passing interface - [MPI](https://en.wikipedia.org/wiki/Message_Passing_Interface)), as depicted on the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
-![IGG](../assets/literate_figures/l8-igg.png)
+![IGG](../assets/literate_figures/l8_igg.png)
 
 ### Distributing computations - challenges
 
@@ -62,7 +62,7 @@ The parallel efficiency defines as the speedup divided by the numebr of processo
 
 Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources proportionally with the global problem size (i.e. keeping the constant local problem sizes), meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
-![Parallel scaling](../assets/literate_figures/l8-par_eff.png)
+![Parallel scaling](../assets/literate_figures/l8_par_eff.png)
 
 ---
 
@@ -80,7 +80,7 @@ As a first step, we will look at the below 1-D diffusion code which solves the l
 
 In this "fake parallelisation" code, the computations for the left and right domain are performed sequentially on one process, but they could be computed on two distinct processes if the needed boundary update (often referred to as halo update in literature) was done with MPI.
 
-![1D Global grid](../assets/literate_figures/l8-1D_global_grid.png)
+![1D Global grid](../assets/literate_figures/l8_1D_global_grid.png)
 
 The idea of this fake parallelisation approach is the following:
 ```julia
@@ -88,8 +88,8 @@ The idea of this fake parallelisation approach is the following:
 CL[2:end-1] .= CL[2:end-1] .+ dt*D*diff(diff(CL)/dx)/dx
 CR[2:end-1] .= CR[2:end-1] .+ dt*D*diff(diff(CR)/dx)/dx
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 # Global picture
 C .= [CL[1:end-1]; CR[2:end]]
 ```
@@ -104,14 +104,14 @@ Then, add the required boundary update:
 
 ```julia
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 ```
 
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 1D 2 procs](../assets/literate_figures/l8-diff_1D_2procs_1.gif)
+![diffusion 1D 2 procs](../assets/literate_figures/l8_diff_1D_2procs_1.gif)
 @@
 
 The next step will be to generalise the fake parallelisation with `2` fake processes to work with `n` fake processes. The idea of this generalised fake parallelisation approach is the following:
@@ -121,8 +121,7 @@ for ip = 1:np # compute physics locally
     C[2:end-1,ip] .= C[2:end-1,ip] .+ dt*D*diff(diff(C[:,ip])/dxg)/dxg
 end
 for ip = 1:np-1 # update boundaries
-   C[end,ip  ] = C[    2,ip+1]
-   C[  1,ip+1] = C[end-1,ip  ]
+   # ...
 end
 for ip = 1:np # global picture
     i1 = 1 + (ip-1)*(nx-2)
@@ -138,7 +137,7 @@ The previous simple initial conditions can be easily defined without computing a
 # Initial condition
 for ip = 1:np
     for ix = 1:nx
-       x[ix,ip] = ( (ip-1)*(nx-2) + (ix-0.5) )*dxg - 0.5*lx
+        x[ix,ip] = ...
         C[ix,ip] = exp(-x[ix,ip]^2)
     end
     i1 = 1 + (ip-1)*(nx-2)
@@ -154,7 +153,7 @@ Modify the initial condition in the 1-D diffusion code [`diffusion_1D_nprocs.jl`
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 1D n procs](../assets/literate_figures/l8-diff_1D_nprocs_1.gif)
+![diffusion 1D n procs](../assets/literate_figures/l8_diff_1D_nprocs_1.gif)
 @@
 
 ## Julia and MPI
@@ -241,7 +240,7 @@ Run the code [`diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/cours
 Visualise the results after each run with the [`vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/vizme2D_mpi.jl) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 2D MPI](../assets/literate_figures/l8-diffusion_2D_xpu_1.gif)
+![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_xpu_1.gif)
 @@
 
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.

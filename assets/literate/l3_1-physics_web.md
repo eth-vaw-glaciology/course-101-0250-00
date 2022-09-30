@@ -17,7 +17,7 @@ and discussed the limitation of this approach, for numerical modelling, i.e., th
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/diffusion_1D_steady_state.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D_steady_state.mp4"/>
 </center>
 ~~~
 
@@ -41,7 +41,7 @@ In the solution to the wave equation, the waves do not attenuate with time: _the
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/acoustic_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_acoustic_1D.mp4"/>
 </center>
 ~~~
 
@@ -118,7 +118,7 @@ If the implementation is correct, we should see this:
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/damped_diffusion_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_damped_diffusion_1D.mp4"/>
 </center>
 ~~~
 
@@ -140,7 +140,7 @@ Re-run the simulation and see the results:
 
 ~~~
 <center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/damped_diffusion_better_1D.mp4"/>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_damped_diffusion_better_1D.mp4"/>
 </center>
 ~~~
 

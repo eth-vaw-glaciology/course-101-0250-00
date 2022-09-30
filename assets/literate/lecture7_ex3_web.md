@@ -36,7 +36,7 @@ Make sure to correctly interpret [Einstein's notation](https://en.wikipedia.org/
 
 \note{Transforming [Einstein's notation](https://en.wikipedia.org/wiki/Einstein_notation) into code: rate of change of normal stress $∂τ_{xx}/∂t$ is defined as $2~μ~(∂v_x/∂x -1/3∇v)$, i.e. two $2μ$ times the normal strain-rate. For the rate of change of the shear stress $∂τ_{xy}/∂t$, the shear strain-rate defines as $1/2~(∂v_x/∂y + ∂v_y/∂x)$. Make sure to implement it consistently.}
 
-![2D staggered grid](../assets/literate_figures/stagg_elast_ex7.png)
+![2D staggered grid](../assets/literate_figures/l7_stagg_elast_ex7.png)
 
 The shear stress $τ_{xy}$ derivative needs then to be included into the momentum equations, used to compute the rate of change of velocity in both $x$ and $y$ direction (similarly to the normal stress).
 

@@ -14,11 +14,11 @@ Combining CPU and GPU implementation within a single code.
 
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](../assets/literate_figures/l7-2lang_1.png)
+![two-lang problem](../assets/literate_figures/l7_2lang_1.png)
 
 Which may turn out into a costly cycle:
 
-![two-lang problem](../assets/literate_figures/l7-2lang_2.png)
+![two-lang problem](../assets/literate_figures/l7_2lang_2.png)
 
 This situation is referred to as the **_two-language problem_**.
 
@@ -32,7 +32,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 - **_fast_**, compiled just ahead of time (before one uses it for the first time)
 
 @@img-med
-![two-lang problem](../assets/literate_figures/l7-2lang_3.png)
+![two-lang problem](../assets/literate_figures/l7_2lang_3.png)
 @@
 
 Julia provides a **_portable_** solution in many aspects (beyond performance portability).
@@ -46,7 +46,7 @@ Wouldn't it be great to have **single code that both executes on CPU and GPU?**
 Wouldn't it be great? ... **YES**, and there is a Julia solution!
 
 @@img-med
-![ParallelStencil](../assets/literate_figures/ps_logo.png)
+![ParallelStencil](../assets/literate_figures/l7_ps_logo.png)
 @@
 
 ## Backend portable XPU implementation
@@ -129,7 +129,7 @@ By analogy, update `compute_C!`.
 
 ````julia:ex3
 @parallel function compute_C!(C, qx, qy, dt, dx, dy)
-   @inn(C) = @inn(C) - dt*( @d_xa(qx)/dx + @d_ya(qy)/dy )
+   # C = C - dt * (∂qx/dx + ∂qy/dy)
     return
 end
 ````
@@ -324,12 +324,12 @@ Also, adding elastic shear rheology, we need to define the elastic shear modulus
 
 Repeat this for the $yy$ normal stress component:
 ```julia
-τyy  .= τyy .+ dt*(2.0.*μ.* (diff(Vy,dims=2)/dy) .- 1.0/3.0 .*∇V)
+τyy  .= τyy .+ ??
 ```
 
 We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
 ```julia
-∇V    .= diff(Vx,dims=1)./dx .+ diff(Vy,dims=2)./dy
+∇V    .= ???
 ```
 
 Having added elasticity to the acoustic process (elastic stresses instead of only pressure), we need to adapt the time step stability condition:
@@ -341,7 +341,7 @@ to take shear modulus $μ$ into account.
 This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor (see figure below).
 
 @@img-med
-![elastic missing shear](../assets/literate_figures/l7-elast.gif)
+![elastic missing shear](../assets/literate_figures/l7_elast.gif)
 @@
 
 We're soon done.
