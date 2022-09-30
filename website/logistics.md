@@ -65,7 +65,9 @@ Personal feedback and sample solution codes will be provided after submission de
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
 ### Feedback
-After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it are available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). Personal feedback and points (not grades) for weekly homework will be shared individually among participants using a private file or folder on Polybox.
+After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
+
+Personal feedback and points (not grades) for weekly homework exercises will be shared individually among participants using a private file or folder on Polybox.
 
 ## Evaluation
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) (& GitHub):
