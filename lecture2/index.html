@@ -386,7 +386,7 @@ ttot = <span class=hljs-number >20.0</span>  <span class=hljs-comment ># total s
 <p>Discretise your domain in 200 finite-difference cells such that the first cell centre is located at <code>dx/2</code> and the last cell centre at <code>lx-dx/2</code>. Use following explicit time step limiters:</p>
 <pre><code class="julia hljs">dt   = dx^<span class=hljs-number >2</span>/dc/<span class=hljs-number >2</span></code></pre>
 <p>As initial condition, define a Gaussian profile of concentration <code>C</code> of amplitude and standard deviation equal to 1, located at <code>lx/4</code>.</p>
-<p>Only update the concentration at the boundary points with the reaction process.</p>
+<p>Update all entries of the array for the reaction process &#40;ODE&#41; but only inner points for the diffusion process &#40;PDE&#41;, thus leading to the fact that boundary points will only be affected by reaction and not diffusion.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Don&#39;t forget to initialise &#40;pre-allocate&#41; all arrays &#40;vectors&#41; needed in the calculations.</div></div>
 <h3 id=question_1__2 ><a href="#question_1__2" class=header-anchor >Question 1</a></h3>
@@ -510,7 +510,7 @@ display(heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number 
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: September 30, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 01, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

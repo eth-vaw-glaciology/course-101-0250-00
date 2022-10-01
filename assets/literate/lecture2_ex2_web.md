@@ -34,7 +34,7 @@ dt   = dx^2/dc/2
 
 As initial condition, define a Gaussian profile of concentration `C` of amplitude and standard deviation equal to 1, located at `lx/4`.
 
-Only update the concentration at the boundary points with the reaction process.
+Update all entries of the array for the reaction process (ODE) but only inner points for the diffusion process (PDE), thus leading to the fact that boundary points will only be affected by reaction and not diffusion.
 
 \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
 
