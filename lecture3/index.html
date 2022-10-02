@@ -1,4 +1,4 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 3</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs & physical processes</a> <a class="sidebar-nav-item active" href="/lecture3/">Lecture 3 - Solving elliptic PDEs</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing & perf</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - XPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-XPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_3 ><a href="#lecture_3" class=header-anchor >Lecture 3</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Solving elliptic PDEs, 1D to 2D<br />💻 Personal Julia install, Julia&#39;s <code>Project</code> environment, Julia&#39;s package manager<br />🚧 Exercises:</p> <ul> <li><p>Damped wave equation in 2D</p> <li><p>Port 1D codes to 2D</p> </ul> </blockquote> <p><hr /> </p> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_3">Lecture 3</a><li><a href="#solving_elliptic_pdes">Solving elliptic PDEs</a><ol><li><a href="#accelerating_elliptic_solver_convergence_intuition">Accelerating elliptic solver convergence: intuition</a><li><a href="#problem_of_finding_the_iteration_parameters">Problem of finding the iteration parameters</a><li><a href="#pseudo-transient_method">Pseudo-transient method</a><li><a href="#multi-physics_steady_diffusion-reaction">Multi-physics: steady diffusion-reaction</a><li><a href="#going_2d">Going 2D</a><li><a href="#wrapping-up">Wrapping-up</a></ol><li><a href="#julias_repl_the_package_manager_pkgjl_and_essential_packages">Julia&#39;s REPL, the Package manager &#40;Pkg.jl&#41;, and essential packages</a><ol><li><a href="#julia_repl">Julia REPL</a><li><a href="#julia_package_manager">Julia Package manager</a><li><a href="#essential_packages_for_your_global_environment">Essential packages for your global environment</a></ol><li><a href="#exercises_-_lecture_3">Exercises - lecture 3</a><ol><li><a href="#exercise_1_-_acoustic_waves_in_2d">Exercise 1 - <strong>Acoustic waves in 2D</strong></a><li><a href="#exercise_2_-_acoustic_waves_in_2d_-_v2">Exercise 2 - <strong>Acoustic waves in 2D - v2</strong></a><li><a href="#exercise_3_-_acoustic_waves_in_2d_-_v3">Exercise 3 - <strong>Acoustic waves in 2D - v3</strong></a><li><a href="#exercise_4_-_seismic_p-waves">Exercise 4 - <strong>Seismic P-waves</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_3"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=solving_elliptic_pdes ><a href="#solving_elliptic_pdes" class=header-anchor >Solving elliptic PDEs</a></h1> <h3 id=the_goal_of_this_lecture_3_is_to_familiarise_or_refresh_with ><a href="#the_goal_of_this_lecture_3_is_to_familiarise_or_refresh_with" class=header-anchor >The goal of this lecture 3 is to familiarise &#40;or refresh&#41; with:</a></h3> <ul> <li><p>The damped wave equation</p> <li><p>Spectral analysis of linear PDEs</p> <li><p>Pseudo-transient method for solving elliptic PDEs</p> <li><p>Spatial discretisation: 1D and 2D</p> </ul> <p>In the previous lecture, we established that the solution to the elliptic PDE could be obtained through integrating in time a corresponding parabolic PDE:</p> \[ \frac{\partial C}{\partial t} - \frac{\partial^2 C}{\partial x^2} = 0 \] <p>and discussed the limitations of this approach for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.</p> <center> <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D_steady_state.mp4"/> </center> <h2 id=accelerating_elliptic_solver_convergence_intuition ><a href="#accelerating_elliptic_solver_convergence_intuition" class=header-anchor >Accelerating elliptic solver convergence: intuition</a></h2> <p>In this lecture, we&#39;ll improve the convergence rate of the elliptic solver, and consider the generalisation to higher dimensions</p> <p>Let&#39;s recall the stability conditions for diffusion and acoustic wave propagation:</p> <pre><code class=language-julia >dt &#61; dx^2/dc/2      # diffusion
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 3</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs & physical processes</a> <a class="sidebar-nav-item active" href="/lecture3/">Lecture 3 - Solving elliptic PDEs</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing & perf</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - XPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-XPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_3 ><a href="#lecture_3" class=header-anchor >Lecture 3</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Solving elliptic PDEs, 1D to 2D<br />💻 Personal Julia install, Julia&#39;s <code>Project</code> environment, Julia&#39;s package manager<br />🚧 Exercises:</p> <ul> <li><p>Damped wave equation in 1D and 2D</p> <li><p>Port 1D codes to 2D</p> </ul> </blockquote> <p><hr /> </p> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_3">Lecture 3</a><li><a href="#solving_elliptic_pdes">Solving elliptic PDEs</a><ol><li><a href="#accelerating_elliptic_solver_convergence_intuition">Accelerating elliptic solver convergence: intuition</a><li><a href="#problem_of_finding_the_iteration_parameters">Problem of finding the iteration parameters</a><li><a href="#pseudo-transient_method">Pseudo-transient method</a><li><a href="#multi-physics_steady_diffusion-reaction">Multi-physics: steady diffusion-reaction</a><li><a href="#going_2d">Going 2D</a><li><a href="#wrapping-up">Wrapping-up</a></ol><li><a href="#julias_repl_the_package_manager_pkgjl_and_essential_packages">Julia&#39;s REPL, the Package manager &#40;Pkg.jl&#41;, and essential packages</a><ol><li><a href="#julia_repl">Julia REPL</a><li><a href="#julia_package_manager">Julia Package manager</a><li><a href="#essential_packages_for_your_global_environment">Essential packages for your global environment</a></ol><li><a href="#exercises_-_lecture_3">Exercises - lecture 3</a><ol><li><a href="#exercise_1_-_implicit_transient_diffusion_using_dual_timestepping">Exercise 1 - <strong>Implicit transient diffusion using dual timestepping</strong></a><li><a href="#exercise_2_-_operator-splitting_for_advection-diffusion">Exercise 2 - ** Operator-splitting for advection-diffusion**</a><li><a href="#exercise_3_-_advection-diffusion_in_2d">Exercise 3 - <strong>Advection-diffusion in 2D</strong></a><li><a href="#exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method">Exercise 4 - <strong>Optimal iteration parameters for pseudo-transient method</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_3"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=solving_elliptic_pdes ><a href="#solving_elliptic_pdes" class=header-anchor >Solving elliptic PDEs</a></h1> <h3 id=the_goal_of_this_lecture_3_is_to_familiarise_or_refresh_with ><a href="#the_goal_of_this_lecture_3_is_to_familiarise_or_refresh_with" class=header-anchor >The goal of this lecture 3 is to familiarise &#40;or refresh&#41; with:</a></h3> <ul> <li><p>The damped wave equation</p> <li><p>Spectral analysis of linear PDEs</p> <li><p>Pseudo-transient method for solving elliptic PDEs</p> <li><p>Spatial discretisation: 1D and 2D</p> </ul> <p>In the previous lecture, we established that the solution to the elliptic PDE could be obtained through integrating in time a corresponding parabolic PDE:</p> \[ \frac{\partial C}{\partial t} - \frac{\partial^2 C}{\partial x^2} = 0 \] <p>and discussed the limitations of this approach for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.</p> <center> <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_diffusion_1D_steady_state.mp4"/> </center> <h2 id=accelerating_elliptic_solver_convergence_intuition ><a href="#accelerating_elliptic_solver_convergence_intuition" class=header-anchor >Accelerating elliptic solver convergence: intuition</a></h2> <p>In this lecture, we&#39;ll improve the convergence rate of the elliptic solver, and consider the generalisation to higher dimensions</p> <p>Let&#39;s recall the stability conditions for diffusion and acoustic wave propagation:</p> <pre><code class=language-julia >dt &#61; dx^2/dc/2      # diffusion
 dt &#61; dx/sqrt&#40;1/β/ρ&#41; # acoustic wave propagation</code></pre> <p>We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing <code>dx</code>, and not <code>dx^2</code> as for the diffusion.</p> <p>The number of time steps required for the wave to propagate through the domain is only proportional to the number of grid points <code>nx</code>.</p> <p>Can we use that information to reduce the time required for the elliptic solver to converge?</p> <p>In the solution to the wave equation, the waves do not attenuate with time: <em>there is no steady state&#33;</em></p> <center> <video width="80%" autoplay loop controls src="../assets/literate_figures/l2_acoustic_1D.mp4"/> </center> <h3 id=damped_wave_equation ><a href="#damped_wave_equation" class=header-anchor >Damped wave equation</a></h3> <p>Let&#39;s add diffusive properties to the wave equation by simply combining the physics:</p> \[\begin{aligned} \rho\frac{\partial V_x}{\partial t} &= -\frac{\partial P}{\partial x} \\[10pt] \beta\frac{\partial P}{\partial t} + \frac{P}{\eta} &= -\frac{\partial V_x}{\partial x} \end{aligned}\] <p>Note the addition of the new term \(\frac{P}{\eta}\) to the left-hand side of the mass balance equation, which could be interpreted physically as accounting for the bulk viscosity of the gas.</p> <p>Equvalently, we could add the time derivative to the diffusion equation</p> \[\begin{aligned} \rho\frac{\partial q}{\partial t} + \frac{q}{D} &= -\frac{\partial C}{\partial x} \\[10pt] \frac{\partial C}{\partial t} &= -\frac{\partial q}{\partial x} \end{aligned}\] <p>In that case, the new term would be \(\rho\frac{\partial q}{\partial t}\), which could be interpreted physically as adding the inertia to the momentum equation for diffusive flux.</p> <div class=note ><div class=title >💡 Note</div> <div class=messg >In 1D, both modifications are equivalent up to renaming the variables. The conceptual difference is that in the former case we add new terms to the vector quantity &#40;diffusive flux \(q\)&#41;, and in the latter case we modify the equation governing the evolution of the scalar quantity &#40;pressure \(P\)&#41;.</div></div> <p>Let&#39;s eliminate \(V_x\) and \(q\) in both systems to get one governing equation for \(P\) and \(C\), respectively:</p> \[\begin{aligned} \beta\frac{\partial^2 P}{\partial t^2} + \frac{1}{\eta}\frac{\partial P}{\partial t} &= \frac{1}{\rho}\frac{\partial^2 P}{\partial x^2} \\[10pt] \rho\frac{\partial^2 C}{\partial t^2} + \frac{1}{D}\frac{\partial C}{\partial t} &= \frac{\partial^2 C}{\partial x^2} \end{aligned}\] <p>We refer to such equations as the <em>damped wave equations</em>. They combine wave propagation with diffusion, which manifests as wave attenuation, or decay. The damped wave equation is a hyperbolic PDE.</p> <h3 id=implementing_the_damped_wave_equation ><a href="#implementing_the_damped_wave_equation" class=header-anchor >Implementing the damped wave equation</a></h3> <p>In the following, we&#39;ll use the damped wave equation for concentration \(C\) obtained by augmenting the diffusion equation with density \(\rho\).</p> <p>Starting from the existing code implementing time-dependent diffusion, let&#39;s add the intertial term \(\rho\frac{\partial q}{\partial t}\).</p> <p>👉 You can use the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>l2_diffusion_1D.jl</code> script</a> as starting point.</p> <p>First step is to add the new physical parameter \(\rho\) to the <code># physics</code> section:</p> <pre><code class=language-julia ># physics
 ...
 ρ   &#61; 20.0</code></pre> <p>And to change the initial conditions to have more interesting time evolution:</p> <pre><code class=language-julia ># array initialisation
@@ -218,137 +218,34 @@ end</code></pre>
 <h1 id=exercises_-_lecture_3 ><a href="#exercises_-_lecture_3" class=header-anchor >Exercises - lecture 3</a></h1>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Starting from this week&#39;s lecture 3, all exercises have to be handed in as monolithic Julia scripts &#40;one code per script&#41; and uploaded to your private &#40;shared&#41; GitHub repository, in a <strong>specific folder for each lecture</strong>. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/homework">more</a>&#41;.</div></div>
-<h2 id=exercise_1_-_acoustic_waves_in_2d ><a href="#exercise_1_-_acoustic_waves_in_2d" class=header-anchor >Exercise 1 - <strong>Acoustic waves in 2D</strong></a></h2>
+<h2 id=exercise_1_-_implicit_transient_diffusion_using_dual_timestepping ><a href="#exercise_1_-_implicit_transient_diffusion_using_dual_timestepping" class=header-anchor >Exercise 1 - <strong>Implicit transient diffusion using dual timestepping</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Implement 2D wave equation</p>
+<li><p>Implement transient diffusion solver with implicit time integration using pseudo-transient method</p>
 
-<li><p>Consolidate the finite-difference discretisation</p>
-
-<li><p>Familiarise with visualisation</p>
+<li><p>Grasp the difference between physical time stepping and pseudo-transient iterations</p>
 
 </ul>
-<p>The goal of this first exercise is to repeat the steps we did in class with the diffusion codes going from the 1D to the 2D implementation.</p>
-<p>Starting from the 1D acoustic wave equation we discussed in lecture 3, extend the 1D code to a 2D configuration. Use the same parameters for the \(y\)-direction quantities as the one for the \(x\)-direction.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >Don&#39;t forget to initialise &#40;pre-allocate&#41; all arrays &#40;vectors&#41; needed in the calculations.</div></div>
-<h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
-<p>Create a new Julia script <code>acoustic_2D_v1.jl</code> for this homework. The script should produce a <code>heatmap&#40;&#41;</code> plot that updates upon time steps, with labelled axes and physical time displayed as title.</p>
-<p>Use <code>nx &#61; 128</code> and <code>ny &#61; 129</code> grid points.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >During development, having <code>nx ≠ ny</code> may prevent errors with staggering to occur.</div></div>
-<h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
-<p>Record the pressure at position \((x,y) = (5,7)\) during the entire simulation and report it as a subplot &#40;pressure as function of time&#41;.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >Check out e.g. <a href="https://docs.juliaplots.org/latest/tutorial/#Combining-Multiple-Plots-as-Subplots">here</a> for inspiration about subplots.</div></div>
+<p>Dual time-stepping. Introduce formal equivalence between diffusion-reaction &#40;that we code on the lecture&#41; and Euler time integration, task to wrap code in the time loop.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
-<h2 id=exercise_2_-_acoustic_waves_in_2d_-_v2 ><a href="#exercise_2_-_acoustic_waves_in_2d_-_v2" class=header-anchor >Exercise 2 - <strong>Acoustic waves in 2D - v2</strong></a></h2>
+<h2 id=exercise_2_-_operator-splitting_for_advection-diffusion ><a href="#exercise_2_-_operator-splitting_for_advection-diffusion" class=header-anchor >Exercise 2 - ** Operator-splitting for advection-diffusion**</a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
-<p>The goal of this exercise is to:</p>
-<ul>
-<li><p>Implement 2D wave equation</p>
-
-<li><p>Consolidate the finite-difference discretisation</p>
-
-<li><p>Familiarise with visualisation</p>
-
-</ul>
-<p>In this second exercise, you will implement a more concise version of the 2D wave equation.</p>
-<p>Starting from the 2D wave equation code from exercise 1, reformulate the physics calculation without the explicit definition of the \(q_x, q_y\) terms; only use velocities \(V_x, V_y\) and pressure \(P\).</p>
-<h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
-<p>Create a new Julia script <code>acoustic_2D_v2.jl</code> for this homework. The script should produce a <code>heatmap&#40;&#41;</code> plot that updates upon time steps, with labelled axes and physical time displayed as title.</p>
-<p>Use <code>nx &#61; 128</code> and <code>ny &#61; 129</code> grid points and the same parameters as for exercise 1.</p>
-<h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
-<p>Create a 3-panels plot that shows the 2D pressure \(P\) and the velocity \(V_x\) fields, as well as the 1D cross-section of the pressure field at \(Ly/2\).</p>
+<p>Operator-splitting for advection-diffusion, we do the implicit diffusion in PT-loop, followed by one step of advection, thus we could use optimal time step for advection</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
-<h2 id=exercise_3_-_acoustic_waves_in_2d_-_v3 ><a href="#exercise_3_-_acoustic_waves_in_2d_-_v3" class=header-anchor >Exercise 3 - <strong>Acoustic waves in 2D - v3</strong></a></h2>
+<h2 id=exercise_3_-_advection-diffusion_in_2d ><a href="#exercise_3_-_advection-diffusion_in_2d" class=header-anchor >Exercise 3 - <strong>Advection-diffusion in 2D</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
-<p>The goal of this exercise is to:</p>
-<ul>
-<li><p>Implement 2D wave equation</p>
-
-<li><p>Consolidate the finite-difference discretisation</p>
-
-<li><p>Familiarise with visualisation</p>
-
-</ul>
-<p>In this third exercise, implement the second-order wave equation as reported at the <a href="#the_wave_equation">beginning of lecture 3</a>,</p>
-\[ \frac{∂^2P}{∂t^2} = c^2 ∇^2 P~, \]
-<p>where</p>
-<ul>
-<li><p>\(P\) is pressure,</p>
-
-<li><p>\(c\) a non-negative real constant, here the speed of sound.</p>
-
-</ul>
-<p>Verify that \(c=\sqrt(K/ρ)\) and add <code>c</code> as new parameter to a <code># Derived physics</code> section in the code.</p>
-<p>The challenge here is to implement the second-order time derivative of the pressure \(P\), which expands as</p>
-\[  \frac{∂^2P}{∂t^2} = P^{t+∆t} - 2~P^{t} + P^{t-∆t}~,\]
-<p>reason you actually need 3 explicit time integration layer, \(P_\mathrm{new},~P_\mathrm{current},~P_\mathrm{old}\), updating \(P_\mathrm{new}\) as from the two others and using \(P_\mathrm{current}\) in the spatial derivatives.</p>
-<p>Also, make sure to initialise all 3 pressure arrays with the same Gaussian initial condition.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >You may need to use 3 arrays for the pressure update, <code>Pold</code>, <code>P</code> and <code>Pnew</code>; in <code>Pold</code> you can store the values at time <code>&#40;it-1&#41;</code>, while you can use the array <code>P</code> for holding current <code>&#40;it&#41;</code> pressure values and finally use <code>Pnew</code> for prediction at <code>&#40;it&#43;1&#41;</code>. Don&#39;t forget to assign the appropriate updates at the end of the time loop.</div></div>
-<h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
-<p>Create a new Julia script <code>acoustic_2D_v3.jl</code> for this homework. The script should produce a <code>heatmap&#40;&#41;</code> plot that updates upon time steps, with labelled axes and physical time displayed as title.</p>
-<p>Use <code>nx &#61; 128</code> and <code>ny &#61; 129</code> grid points and the same parameters as for exercise 1 and 2.</p>
+<p>Extend the above in 2D with upwinding and constant velocity field</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
-<h2 id=exercise_4_-_seismic_p-waves ><a href="#exercise_4_-_seismic_p-waves" class=header-anchor >Exercise 4 - <strong>Seismic P-waves</strong></a></h2>
+<h2 id=exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method ><a href="#exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method" class=header-anchor >Exercise 4 - <strong>Optimal iteration parameters for pseudo-transient method</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
-<p>The goal of this exercise is to:</p>
-<ul>
-<li><p>Implement 2D wave equation</p>
-
-<li><p>Record the signal on a synthetic seismic array</p>
-
-<li><p>Train visualisation</p>
-
-</ul>
-<p>In this last exercise, you will implement a synthetic wave propagation solver, to resolve seismic pressure &#40;P-&#41;wave propagation in a sandstone. You will deploy an array of synthetic geophones &#40;receivers&#41; and record the seismic signal.</p>
-<p>Create a new Julia script <code>acoustic_2D_v4.jl</code> for this homework, starting from the code you developed for <a href="#exercise_2_-_acoustic_waves_in_2d_-_v2">exercise 2</a>.</p>
-<p><img src="../assets/literate_figures/l3_wave_ex4_sketch.png" alt=wave-ex4-sketch  /></p>
-<h3 id=task_1__4 ><a href="#task_1__4" class=header-anchor >Task 1</a></h3>
-<p>Implement the following changes:</p>
-<ul>
-<li><p>Change the domain extend to \(L_x=1000\) m, \(L_y=500\) m &#40;with origin located in the bottom left corner of the model&#41;</p>
-
-<li><p>For sandstone, set the elastic moduli \(K=40\) GPa and the density \(ρ=2400\) Kg/m\(^3\)</p>
-
-<li><p>Define a Gaussian function for the source at \(t=0\), with centre location \((x_s, y_s)\) at \(x_s = 200\) and at \(50\) m below the surface. Use a standard deviation of \(5\) m and an amplitude of \(1\) Pa.</p>
-
-<li><p>Run the experiment for a total \(t_\mathrm{tot}=0.2\) sec</p>
-
-<li><p>Set pressure values as <code>P&#91;:,end&#93; .&#61; P&#91;:,end-1&#93;</code> in order to minimise boundary effects on the top boundary</p>
-
-</ul>
-<p>You should obtain a similar output for your figure &#40;try saving it as .png from within Julia&#41;</p>
-<p><img src="../assets/literate_figures/l3_wave_ex4.png" alt=wave-ex4  /></p>
-<h3 id=task_2__3 ><a href="#task_2__3" class=header-anchor >Task 2</a></h3>
-<p>In a second step,</p>
-<ul>
-<li><p>Add 5 monitoring stations located at \(y_\mathrm{monit}\) ~\(20\) m below the ground between \(x=500\) and \(900\) m, distant from each other by \(100\) m.</p>
-
-<li><p>Record and store the pressure in each monitoring station throughout the entire simulation</p>
-
-<li><p>For the first station &#40;located at \(x=500\) m&#41;, find the arrival time for which the pressure \(P > 0.02\) Pa</p>
-
-<li><p>Knowing at which time the wave hit the first station, you can post-process and <strong>report following &#40;as formatted output in the REPL or on a figure&#41;</strong>:</p>
-<ul>
-<li><p>First wave arrival time &#40;in s&#41; at station \(x_s=500\) m</p>
-
-<li><p>Distance &#40;<code>∆_dist</code>&#41; the wave travelled</p>
-
-<li><p>\(x\)-location of the seismic source</p>
-
-</ul>
-
-</ul>
+<p>Make a sweep over PT parameters to determine the optimal values for the parameter <code>re</code> numerically</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
