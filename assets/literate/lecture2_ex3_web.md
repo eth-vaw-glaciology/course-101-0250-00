@@ -65,7 +65,7 @@ xc   = LinRange(dx/2,lx-dx/2,nx)
 ```
 As initial condition, define a Gaussian profile of the quantity $C$ of amplitude and standard deviation equal to 1, located at `lx/4`.
 
-In the time-loop, make sure to include a condition that would change de direction of the velocity `vx` at time `ttot/2`.
+In the time-loop, include a condition that would change de direction of the velocity `vx` at time `ttot/2`.
 
 Make sure your code reproduces the animation from the course (alternatively, provide 5 snapshot-plots of the simulation evolution).
 

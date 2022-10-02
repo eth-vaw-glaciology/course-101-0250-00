@@ -335,7 +335,7 @@ Such equations describe the deformation of shallow currents of fluids with high 
 A model of nonlinear advection equation is often referred to as _inviscid Burgers' equation_:
 
 $$
-\frac{\partial C}{\partial t} + \frac{\partial C^n}{\partial x} = 0
+\frac{\partial C}{\partial t} + v_x \frac{\partial C^n}{\partial x} = 0
 $$
 
 where $n$ is often assumed to be equal to 2. This equation describes the formation of shock waves.
