@@ -29,7 +29,7 @@ $$
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-and discussed the limitation of this approach, for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.
+and discussed the limitations of this approach for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.
 """
 
 #md # ~~~
@@ -57,8 +57,7 @@ dt = dx/sqrt(1/β/ρ) # acoustic wave propagation
 ```
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, and not `dx^2` as for the diffusion.
 """
@@ -71,6 +70,11 @@ The number of time steps required for the wave to propagate through the domain i
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 Can we use that information to reduce the time required for the elliptic solver to converge?
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 In the solution to the wave equation, the waves do not attenuate with time: _there is no steady state!_
 """
 
@@ -83,7 +87,7 @@ In the solution to the wave equation, the waves do not attenuate with time: _the
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Damped wave equation
+### Damped wave equation
 
 Let's add diffusive properties to the wave equation by simply combining the physics:
 
@@ -172,7 +176,8 @@ C    = @. exp(-(xc-lx/4)^2); C_i = copy(C); C[1] = 1
 ```
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then we modify the time loop to incorporate the new physics:
 
@@ -202,7 +207,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-If the implementation is correct, we should see this:
+If the implementation is correct, we should see something like this:
 """
 
 #md # ~~~
@@ -259,7 +264,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We noticed that depending on the value of the parameter `ρ`, the convergence to steady-state can be faster or slower. If `ρ` is too small, the process becomes diffusion-dominated, and we're back to the non-accelerated version. If `ρ` is too large, waves decay too slow.
+We notice that depending on the value of the parameter `ρ`, the convergence to steady-state can be faster or slower. If `ρ` is too small, the process becomes diffusion-dominated, and we're back to the non-accelerated version. If `ρ` is too large, waves decay too slow.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -270,19 +275,20 @@ If the parameter `ρ` has optimal value, the convergence to steady-state could b
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Historical perspective
+For linear PDEs it is possible to determine the optimal value for `ρ` analytically:
+```julia
+ρ    = (lx/(dc*2π))^2
+```
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+How does one derive the optimal values for other problems and boundary conditions?
+Unfortunately, we don't have time to dive into details in this course...
 
 The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the _second-order Richardson method_
-"""
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-In this course, we call this and any method that builds upon the analogy to transient physics... the _pseudo-transient_ method.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Using this analogy proves useful when studying multi-physics and nonlinear processes. The pseudo-transient method isn't restricted to solving the Poisson problems, but can be applied to a wide range of problems that are modeled with PDEs.
+If interested, [this paper](https://gmd.copernicus.org/articles/15/5757/2022/) is a good starting point
 """
 
 #src #########################################################################
@@ -290,6 +296,16 @@ Using this analogy proves useful when studying multi-physics and nonlinear proce
 md"""
 ## Pseudo-transient method
 
+In this course, we call any method that builds upon the analogy to the transient physics the _pseudo-transient_ method.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Using this analogy proves useful when studying multi-physics and nonlinear processes. The pseudo-transient method isn't restricted to solving the Poisson problems, but can be applied to a wide range of problems that are modeled with PDEs.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 In a pseudo-transient method, we are interested only in a steady-state distributions of the unknown field variables such as concentration, temperature, etc.
 """
 
@@ -298,13 +314,13 @@ md"""
 We consider time steps as iterations in a numerical method. Therefore, we replace the time $t$ in the equations with _pseudo-time_ $\tau$, and a time step `it` with iteration counter `iter`. When a pseudo-transient method converges, all the pseudo-time derivatives $\partial/\partial\tau$, $\partial^2/\partial\tau^2$ etc., vanish.
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
+⚠ We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 For example, consider the damped acoustic problem that we introduced in the beggining:
 
@@ -333,19 +349,240 @@ In other words: only add those new terms to the governing equations that vanish 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Dispersion analysis of the PDEs
+### Visualising convergence
 
-We don't want to guess the optimal parameter values for every problem.
-For linear problems with constant coefficients, there is a way to get an exact optimal value for any combination of phyisics and boundary conditions. Analytics is hard, so we'll consider only the simplest elliptic problem with constant values at boundaries:
+Let's modify the code structure of the new elliptic solver. We need to monitor convergence and stop iterations when the error has reached predefined tolerance
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+To define the measure of error, we introduce the residual:
+
+$$
+r_C = D\frac{\partial^2 \widehat{C}}{\partial x^2}
+$$
+
+where $\widehat{C}$ is the pseudo-transient solution
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+There are many ways to define the error as the norm of the residual, the most popular ones are the $L_2$ norm and $L_\infty$ norm. We will use the $L_\infty$ norm here:
+
+$$
+\|\boldsymbol{r}\|_\infty = \max_i(|r_i|)
+$$
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Let's try this value:
+Add new parameters to the `# numerics` section of the code:
 
 ```julia
-ρ    = (lx/(dc*2π))^2
+# numerics
+nx      = 200
+ϵtol    = 1e-8
+maxiter = 20nx
+ncheck  = ceil(Int,0.25nx)
+```
+
+Here `ϵtol` is the tolerance for the pseudo-transient iterations, `maxiter` is the maximal number of iterations, that we use now insead of number of time steps `nt`, and `ncheck` is the frequency of evaluating the residual and the norm of the residual, which is a costly operation.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We turn the time loop into the iteration loop, add the arrays to store the evolution of the error:
+
+```julia
+# iteration loop
+iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = Float64[]
+while err >= ϵtol && iter <= maxiter
+    qx         .-= ...
+    C[2:end-1] .-= ...
+    if iter % ncheck == 0
+        err = maximum(abs.(diff(dc.*diff(C)./dx)./dx))
+        push!(iter_evo,iter/nx); push!(err_evo,err)
+        p1 = plot(xc,[C_i,C];xlims=(0,lx),ylims=(-0.1,2.0),
+                  xlabel="lx",ylabel="Concentration",title="iter/nx=$(round(iter/nx,sigdigits=3))")
+        p2 = plot(iter_evo,err_evo;xlabel="iter/nx",ylabel="err",
+                  yscale=:log10,grid=true,markershape=:circle,markersize=10)
+        display(plot(p1,p2;layout=(2,1)))
+    end
+    iter += 1
+end
 ```
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Note that we save the number of iteration per grid cell `iter/nx`
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+If the value of pseudo-transient parameter `ρ` is optimal, the number of iterations required for convergence should be proportional to `nx`, thus the `iter/nx` should be approximately constant.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+👉 Try to check that by changing the resolution `nx`.
+
+![steady-diffusion](./figures/l3_steady_diffusion.png)
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Multi-physics: steady diffusion-reaction
+
+Let's implement our first pseudo-transient multi-physics solver by adding chemical reaction:
+
+$$
+D\frac{\partial^2 C}{\partial x^2} = \frac{C - C_{eq}}{\xi}
+$$
+
+As you might remember from the exercises, characteristic time scales of diffusion and reaction can be related through non-dimensional Damköhler number $\mathrm{Da}=l_x^2/D/\xi$.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+👉 Let's add the new physical parameters and modify the iteration loop:
+
+```julia
+# physics
+...
+C_eq    = 0.1
+da      = 10.0
+ξ       = lx^2/dc/da
+...
+# iteration loop
+iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = Float64[]
+while err >= ϵtol && iter <= maxiter
+    ...
+    #hint=# C[2:end-1] .-= ...
+    #sol=C[2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1] .- C_eq)./ξ .+ diff(qx)./dx)
+    ...
+end
+```
+
+Hint: don't forget to modify the residual!
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Run the simulation and see the results:
+![steady-diffusion-reaction](./figures/l3_steady_diffusion_reaction.png)
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+As a final touch, let's refactor the code and extract the magical constant `2π` from the definition of numerical density `ρ`:
+
+```julia
+re      = 2π
+ρ       = (lx/(dc*re))^2
+```
+
+We call this new parameter `re` due to it's association to the non-dimensional [Reynolds number](https://en.wikipedia.org/wiki/Reynolds_number) relating intertial and dissipative forces into the momentum balance.
+
+Interestingly, the convergence rate of the diffusion-reaction systems could be improved significantly by modifying `re` to depend on the previously defined Damköhler number `da`:
+
+```julia
+re      = π + sqrt(π^2 + da)
+```
+👉 Verify that the number of iterations is indeed lower for the higher values of the Damköhler number.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Going 2D
+
+Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration.
+Firstly, we introduce the domain extent and the number of grid points in the y-direction:
+
+```julia
+# physics
+lx,ly   = 20.0,20.0
+...
+# numerics
+nx,ny   = 100,100
+```
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Then, we calculate the grid spacing, grid cell centers locations, and modify the time step to comply with the 2D stability criteria:
+
+```julia
+# derived numerics
+dx,dy   = lx/nx,ly/ny
+xc,yc   = LinRange(dx/2,lx-dx/2,nx),LinRange(dy/2,ly-dy/2,ny)
+dτ      = dx/sqrt(1/ρ)/sqrt(2)
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We allocate 2D arrays for concentration and fluxes:
+
+```julia
+# array initialisation
+C       = @. 1.0 + exp(-(xc-lx/4)^2-(yc'-ly/4)^2) - xc/lx
+qx,qy   = zeros(nx-1,ny),zeros(nx,ny-1)
+```
+
+and add the physics for the second dimension:
+
+```julia
+while err >= ϵtol && iter <= maxiter
+    #hint=# qx                 .-= ...
+    #hint=# qy                 .-= ...
+    #hint=# C[2:end-1,2:end-1] .-= ...
+    #sol=qx                 .-= dτ./(ρ + dτ/dc).*(qx./dc .+ diff(C,dims=1)./dx)
+    #sol=qy                 .-= dτ./(ρ + dτ/dc).*(qy./dc .+ diff(C,dims=2)./dy)
+    #sol=C[2:end-1,2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1,2:end-1] .- C_eq)./ξ .+ diff(qx[:,2:end-1],dims=1)./dx .+
+    #sol=                                                                            diff(qy[2:end-1,:],dims=2)./dy)
+    ...
+end
+```
+
+Note that now we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Last thing to fix is the visualisation, as now we want the top-down view of the computational domain:
+```julia
+p1 = heatmap(xc,yc,C';xlims=(0,lx),ylims=(0,ly),clims=(0,1),aspect_ratio=1,
+             xlabel="lx",ylabel="ly",title="iter/nx=$(round(iter/nx,sigdigits=3))")
+```
+
+Let's run the simulation:
+"""
+
+#md # ~~~
+# <center>
+#   <video width="80%" autoplay loop controls src="./figures/l3_steady_diffusion_reaction_2D.mp4"/>
+# </center>
+#md # ~~~
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Wrapping-up
+
+- Switching from parabolic to hyperbolic PDE allows to approach the steady-state in number of iterations, proportional to the number of grid points
+- Pseudo-transient (PT) method is the matrix-free iterative method to solve elliptic (and other) PDEs by utilising the analogy to transient physics
+- Using the optimal iteration parameters is essential to ensure the fast convergence of the PT method
+- Extending the codes to 2D and 3D is straightforward with explicit time integration
+"""
