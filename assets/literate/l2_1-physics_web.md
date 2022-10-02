@@ -319,7 +319,7 @@ Previously, we considered only linear equations, which means that the functions 
 A model of nonlinear parabolic PDE frequently arising in physics features nonlinearity of a power-law type:
 
 $$
-\frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
+\frac{\partial C}{\partial t} - D\frac{\partial^2 C^n}{\partial x^2} = 0
 $$
 
 where $n$ is a power-law exponent (here $n=4$).

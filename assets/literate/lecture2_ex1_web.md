@@ -31,6 +31,8 @@ dt   = min(dtd, dta)
 
 As initial condition, define a Gaussian profile of concentration `C` of amplitude and standard deviation equal to 1, located at `lx/4`.
 
+In the time-loop, add a condition that would change de direction of the velocity `vx` at time `ttot/2`.
+
 Keep the concentration at the boundaries at `C=0`.
 
 \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
