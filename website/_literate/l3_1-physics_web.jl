@@ -27,7 +27,8 @@ $$
 $$
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 and discussed the limitations of this approach for numerical modelling, i.e., the quadratic dependence of the number of time steps on the number of grid points in spatial discretisation.
 """
@@ -62,7 +63,8 @@ md"""
 We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, and not `dx^2` as for the diffusion.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The number of time steps required for the wave to propagate through the domain is only proportional to the number of grid points `nx`.
 """
@@ -99,7 +101,7 @@ Let's add diffusive properties to the wave equation by simply combining the phys
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Note the addition of the new term $\frac{Pr}{\eta}$ to the left-hand side of the mass balance equation, which could be interpreted physically as accounting for the bulk viscosity of the gas.
+Note the addition of the new term $\frac{P}{\eta}$ to the left-hand side of the mass balance equation, which could be interpreted physically as accounting for the bulk viscosity of the gas.
 """
 
 #src #########################################################################
@@ -120,11 +122,11 @@ In that case, the new term would be $\rho\frac{\partial q}{\partial t}$, which c
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Note that in 1D the both modifications are equivalent up to renaming the variables. The conceptual difference is that in the former case we add new terms to the vector quantity (diffusive flux $q$), and in the latter case we modify the equation governing the evolution of the scalar quantity (pressure $P$). 
-"""
+#nb # > 💡 note: In 1D, both modifications are equivalent up to renaming the variables. The conceptual difference is that in the former case we add new terms to the vector quantity (diffusive flux $q$), and in the latter case we modify the equation governing the evolution of the scalar quantity (pressure $P$).
+#md # \note{In 1D, both modifications are equivalent up to renaming the variables. The conceptual difference is that in the former case we add new terms to the vector quantity (diffusive flux $q$), and in the latter case we modify the equation governing the evolution of the scalar quantity (pressure $P$).}
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Let's eliminate $V_x$ and $q$ in both systems to get one governing equation for $P$ and $C$, respectively:
 """
@@ -153,9 +155,12 @@ In the following, we'll use the damped wave equation for concentration $C$ obtai
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 Starting from the existing code implementing time-dependent diffusion, let's add the intertial term $\rho\frac{\partial q}{\partial t}$.
+
+👉 You can use the [`l2_diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) as starting point.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 First step is to add the new physical parameter $\rho$ to the `# physics` section:
 
@@ -192,12 +197,13 @@ end
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-👉 Your turn. Try to add the intertial term.
+👉 Your turn. Try to add the inertial term.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-> Hint: There are two ways of adding the intertial term into the update rule.
+> **Hint**: There are two ways of adding the inertial term into the update rule.
 > - We could either take the known flux `q` in `q/dc` from the previous time step (explicit time integration), or the unknown flux from the next time step (implicit time integration).
 > - Could we treat the flux implicitly without having to solve the linear system?
 > - What are the benefits of the implicit time integration compared to the explicit one?
@@ -223,7 +229,9 @@ The waves decay, now there is a steady state! 🎉 The time it takes to converge
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Now we solve the hyperbolic PDE, and with the implicit flux term treatment, the time step should be now proportional to the grid spacing `dx` instead of `dx^2`. Looking at the damped wave equation for $C$, and recalling the stability condition for wave propagation, we modify the time step, reduce the total number of time steps, and increase the frequency of plotting calls:
+Now we solve the hyperbolic PDE, and with the implicit flux term treatment, the time step should become proportional to the grid spacing `dx` instead of `dx^2`.
+
+Looking at the damped wave equation for $C$, and recalling the stability condition for wave propagation, we modify the time step, reduce the total number of time steps, and increase the frequency of plotting calls:
 
 ```julia
 # numerics
@@ -258,12 +266,12 @@ Now, this is much better! We observe that in less time steps, we get a much fast
 md"""
 ## Problem of finding the iteration parameters
 
-👉 Try changing the new parameter `ρ`, increase and decrease it. What happens to the solution?
+👉 Try changing the new parameter `ρ`, increasing and decreasing it. What happens to the solution?
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-We notice that depending on the value of the parameter `ρ`, the convergence to steady-state can be faster or slower. If `ρ` is too small, the process becomes diffusion-dominated, and we're back to the non-accelerated version. If `ρ` is too large, waves decay too slow.
+We notice that depending on the value of the parameter `ρ`, the convergence to steady-state can be faster or slower. If `ρ` is too small, the process becomes diffusion-dominated, and we're back to the non-accelerated version. If `ρ` is too large, waves decay slowly.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -287,7 +295,7 @@ Unfortunately, we don't have time to dive into details in this course...
 
 The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the _second-order Richardson method_
 
-If interested, [this paper](https://gmd.copernicus.org/articles/15/5757/2022/) is a good starting point
+If interested, [Räss et al. (2021)](https://gmd.copernicus.org/articles/15/5757/2022/) paper is a good starting point 👀
 """
 
 #src #########################################################################
@@ -300,7 +308,7 @@ In this course, we call any method that builds upon the analogy to the transient
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Using this analogy proves useful when studying multi-physics and nonlinear processes. The pseudo-transient method isn't restricted to solving the Poisson problems, but can be applied to a wide range of problems that are modeled with PDEs.
+Using this analogy proves useful when studying multi-physics and nonlinear processes. The pseudo-transient method isn't restricted to solving the Poisson problems, but can be applied to a wide range of problems that are modelled with PDEs.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -308,20 +316,20 @@ md"""
 In a pseudo-transient method, we are interested only in a steady-state distributions of the unknown field variables such as concentration, temperature, etc.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 We consider time steps as iterations in a numerical method. Therefore, we replace the time $t$ in the equations with _pseudo-time_ $\tau$, and a time step `it` with iteration counter `iter`. When a pseudo-transient method converges, all the pseudo-time derivatives $\partial/\partial\tau$, $\partial^2/\partial\tau^2$ etc., vanish.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-⚠ We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
-"""
+#nb # > ⚠️ Warning: We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
+#md # \warn{We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-For example, consider the damped acoustic problem that we introduced in the beggining:
+For example, consider the damped acoustic problem that we introduced in the beginning:
 
 \begin{align}
 \rho\frac{\partial V_x}{\partial\tau}                 &= -\frac{\partial P}{\partial x} \\[10pt]
@@ -329,7 +337,8 @@ For example, consider the damped acoustic problem that we introduced in the begg
 \end{align}
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 At the steady-state, the second equation reads:
 
@@ -337,7 +346,7 @@ $$
 \frac{P}{\eta} = -\frac{\partial V_x}{\partial x}
 $$
 
-The velocity divergence is proportional to the pressure. If we wanted to solve the incompressible problem (i.e. the velocty divergence = 0), and were interested in the velocity distribution, this approach would lead to incorrect results. If we only want to solve the Laplace problem $\partial^2 P/\partial x^2 = 0$, we could consider $V_x$ purely as a numerical variable.
+The velocity divergence is proportional to the pressure. If we wanted to solve the incompressible problem (i.e. the velocity divergence = 0), and were interested in the velocity distribution, this approach would lead to incorrect results. If we only want to solve the Laplace problem $\partial^2 P/\partial x^2 = 0$, we could consider $V_x$ purely as a numerical variable.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -350,7 +359,7 @@ In other words: only add those new terms to the governing equations that vanish 
 md"""
 ### Visualising convergence
 
-Let's modify the code structure of the new elliptic solver. We need to monitor convergence and stop iterations when the error has reached predefined tolerance
+Let's modify the code structure of the new elliptic solver. We need to monitor convergence and stop iterations when the error has reached predefined tolerance.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -364,7 +373,8 @@ $$
 where $\widehat{C}$ is the pseudo-transient solution
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 There are many ways to define the error as the norm of the residual, the most popular ones are the $L_2$ norm and $L_\infty$ norm. We will use the $L_\infty$ norm here:
 
@@ -386,7 +396,7 @@ maxiter = 20nx
 ncheck  = ceil(Int,0.25nx)
 ```
 
-Here `ϵtol` is the tolerance for the pseudo-transient iterations, `maxiter` is the maximal number of iterations, that we use now insead of number of time steps `nt`, and `ncheck` is the frequency of evaluating the residual and the norm of the residual, which is a costly operation.
+Here `ϵtol` is the tolerance for the pseudo-transient iterations, `maxiter` is the maximal number of iterations, that we use now instead of number of time steps `nt`, and `ncheck` is the frequency of evaluating the residual and the norm of the residual, which is a costly operation.
 """
 
 #src #########################################################################
@@ -423,13 +433,13 @@ Note that we save the number of iteration per grid cell `iter/nx`
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 If the value of pseudo-transient parameter `ρ` is optimal, the number of iterations required for convergence should be proportional to `nx`, thus the `iter/nx` should be approximately constant.
+
+👉 Try to check that by changing the resolution `nx`.
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-👉 Try to check that by changing the resolution `nx`.
-
 ![steady-diffusion](../assets/literate_figures/l3_steady_diffusion.png)
 """
 
@@ -444,7 +454,7 @@ $$
 D\frac{\partial^2 C}{\partial x^2} = \frac{C - C_{eq}}{\xi}
 $$
 
-As you might remember from the exercises, characteristic time scales of diffusion and reaction can be related through non-dimensional Damköhler number $\mathrm{Da}=l_x^2/D/\xi$.
+As you might remember from the exercises, characteristic time scales of diffusion and reaction can be related through the non-dimensional Damköhler number $\mathrm{Da}=l_x^2/D/\xi$.
 """
 
 #src #########################################################################
@@ -467,8 +477,11 @@ while err >= ϵtol && iter <= maxiter
     ...
 end
 ```
+"""
 
-Hint: don't forget to modify the residual!
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+> **Hint**: don't forget to modify the residual!
 """
 
 #src #########################################################################
@@ -489,7 +502,11 @@ re      = 2π
 ```
 
 We call this new parameter `re` due to it's association to the non-dimensional [Reynolds number](https://en.wikipedia.org/wiki/Reynolds_number) relating intertial and dissipative forces into the momentum balance.
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Interestingly, the convergence rate of the diffusion-reaction systems could be improved significantly by modifying `re` to depend on the previously defined Damköhler number `da`:
 
 ```julia
@@ -515,7 +532,8 @@ nx,ny   = 100,100
 ```
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, we calculate the grid spacing, grid cell centers locations, and modify the time step to comply with the 2D stability criteria:
 
@@ -537,7 +555,11 @@ We allocate 2D arrays for concentration and fluxes:
 C       = @. 1.0 + exp(-(xc-lx/4)^2-(yc'-ly/4)^2) - xc/lx
 qx,qy   = zeros(nx-1,ny),zeros(nx,ny-1)
 ```
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 and add the physics for the second dimension:
 
 ```julia
@@ -548,9 +570,10 @@ while err >= ϵtol && iter <= maxiter
     ...
 end
 ```
-
-Note that now we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
 """
+
+#nb # > 💡 note: we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
+#md # \note{we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -560,7 +583,11 @@ Last thing to fix is the visualisation, as now we want the top-down view of the 
 p1 = heatmap(xc,yc,C';xlims=(0,lx),ylims=(0,ly),clims=(0,1),aspect_ratio=1,
              xlabel="lx",ylabel="ly",title="iter/nx=$(round(iter/nx,sigdigits=3))")
 ```
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Let's run the simulation:
 """
 
