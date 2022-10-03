@@ -54,5 +54,5 @@ As a first task, rename the `C_eq` to `C_old` and `ξ` to `dt`. Make `C_old` an 
 ### Task 2
 Perform the numerical experiment using the developed code. Report your results in a 2-panel gif, plotting a) the spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution, and b) the error as function of iteration/nx. Include the gif in the README and provide one or two sentence of description.
 
-\note{Use the `@animate` macro as in the provided code snippet to realise a gif of your simulation results. Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
+\note{Use the `@animate` macro as in the provided code snippet to realise a gif of your simulation results. Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure or animation in the `README.md`.}
 
