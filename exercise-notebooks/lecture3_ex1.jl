@@ -31,14 +31,16 @@ A close look at the equation with the discretised time derivative reveals that t
 At each physical time step the implicit problem could be solved using the PT method. Thus, there are present time derivatives both in physical time and in pseudo-time. This approach is therefore called _the dual-time method_. The code structure would include the two nested loops, one for the physical time and one for the pseudo-transient iterations:
 
 ```julia
-for it = 1:nt
+anim = @animate for it = 1:nt
     C_old .= C
-    iter = 1; iter_evo = Float64[]; err_evo = []
+    iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = []
     while err < ϵtol && iter <= maxiter
         ...
         iter += 1
     end
     # visualisation
+    ...
+    gif(anim,"anim.gif";fps=2)
 end
 ```
 
@@ -55,13 +57,13 @@ md"""
 
 md"""
 ### Task 1
-As a first task, rename the `C_eq` to `C_old` and `ξ` to `dt`. Make `C_old` an array and initialise it with copy of `C`. Set the `da` number equal to 10. Add the new parameter `nt = 5` indicating the number of physical time steps. Wrap the iteration loop in the outer `for`-loop to make physical time steps. Move the visualisation from the iteration loop, so that the plots are only updated once per physical timestep.
+As a first task, rename the `C_eq` to `C_old` and `ξ` to `dt`. Make `C_old` an array and initialise it with copy of `C`. Set the `da` number equal to 1000.0. Add the new parameter `nt = 10` indicating the number of physical time steps. Wrap the iteration loop in the outer `for`-loop to make physical time steps. Move the visualisation outside from the iteration loop, so that the plots are only updated once per physical timestep (keeping error checking for iterations).
 """
 
 md"""
 ### Task 2
-Perform the numerical experiment using the developed code. Report your results in a figure, plotting a spatial distribution of concentration `C` after `nt=5` time steps, on top of the plot of the initial concentration distribution. Include the figure in the README and provide one or two sentence of description.
+Perform the numerical experiment using the developed code. Report your results in a 2-panel gif, plotting a) the spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution, and b) the error as function of iteration/nx. Include the gif in the README and provide one or two sentence of description.
 """
 
-#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
-#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
+#nb # > 💡 hint: Use the `@animate` macro as in the provided code snippet to realise a gif of your simulation results. Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
+#md # \note{Use the `@animate` macro as in the provided code snippet to realise a gif of your simulation results. Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
