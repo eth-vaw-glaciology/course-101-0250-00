@@ -1,30 +1,23 @@
 md"""
-## Exercise 2 - **Acoustic waves in 2D - v2**
+## Exercise 2 - ** Operator-splitting for advection-diffusion**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
-The goal of this exercise is to:
-- Implement 2D wave equation
-- Consolidate the finite-difference discretisation
-- Familiarise with visualisation
+The goal of this exercise is to implement the advection-diffusion with implicit timestepping for diffusion. Start from the time-dependent code you developed in Exercise 1. Then add advection step after the iteration loop so that the concentration is advected only once per physical time step.
 """
 
 md"""
-In this second exercise, you will implement a more concise version of the 2D wave equation.
-
-Starting from the 2D wave equation code from exercise 1, reformulate the physics calculation without the explicit definition of the $q_x, q_y$ terms; only use velocities $V_x, V_y$ and pressure $P$.
-
 ### Task 1
+Add advection to the implicit diffusion code. Use the stability criteria for advection to specify the physical timestep:
 
-Create a new Julia script `acoustic_2D_v2.jl` for this homework. The script should produce a `heatmap()` plot that updates upon time steps, with labelled axes and physical time displayed as title.
+```julia
+dt = dx/abs(vx)
+```
 
-Use `nx = 128` and `ny = 129` grid points and the same parameters as for exercise 1.
+Note that now one doesn't need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly.
 
-### Task 2
-
-Create a 3-panels plot that shows the 2D pressure $P$ and the velocity $V_x$ fields, as well as the 1D cross-section of the pressure field at $Ly/2$.
+Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution.
 """
-
 

@@ -1,45 +1,31 @@
 md"""
-## Exercise 3 - **Acoustic waves in 2D - v3**
+## Exercise 3 - **Advection-diffusion in 2D**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
-The goal of this exercise is to:
-- Implement 2D wave equation
-- Consolidate the finite-difference discretisation
-- Familiarise with visualisation
+The goal of this exercise is to
+- Extend the advection-diffusion solver with implicit diffusion step from 1D to 2D
+- Implement the upwind advection scheme in 2D
+
+👉 Download the `steady_diffusion_reaction_2D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 """
-
-md"""
-In this third exercise, implement the second-order wave equation as reported at the [beginning of lecture 3](#the_wave_equation),
-
-$$ \frac{∂^2P}{∂t^2} = c^2 ∇^2 P~, $$
-
-where
-- $P$ is pressure,
-- $c$ a non-negative real constant, here the speed of sound.
-
-Verify that $c=\sqrt(K/ρ)$ and add `c` as new parameter to a `# Derived physics` section in the code.
-
-The challenge here is to implement the second-order time derivative of the pressure $P$, which expands as
-
-$$  \frac{∂^2P}{∂t^2} = P^{t+∆t} - 2~P^{t} + P^{t-∆t}~,$$
-
-reason you actually need 3 explicit time integration layer, $P_\mathrm{new},~P_\mathrm{current},~P_\mathrm{old}$, updating $P_\mathrm{new}$ as from the two others and using $P_\mathrm{current}$ in the spatial derivatives.
-
-Also, make sure to initialise all 3 pressure arrays with the same Gaussian initial condition.
-"""
-
-#nb # > 💡 hint: You may need to use 3 arrays for the pressure update, `Pold`, `P` and `Pnew`; in `Pold` you can store the values at time `(it-1)`, while you can use the array `P` for holding current `(it)` pressure values and finally use `Pnew` for prediction at `(it+1)`. Don't forget to assign the appropriate updates at the end of the time loop.
-#md # \note{You may need to use 3 arrays for the pressure update, `Pold`, `P` and `Pnew`; in `Pold` you can store the values at time `(it-1)`, while you can use the array `P` for holding current `(it)` pressure values and finally use `Pnew` for prediction at `(it+1)`. Don't forget to assign the appropriate updates at the end of the time loop.}
 
 md"""
 ### Task 1
+Repeat the steps from the Exercise 1 to make the implicit time-dependent 2D solver. Make a short animation showing the time evolution of the concentration field `C` during `nt=5` physical time steps.
+"""
 
-Create a new Julia script `acoustic_2D_v3.jl` for this homework. The script should produce a `heatmap()` plot that updates upon time steps, with labelled axes and physical time displayed as title.
+md"""
+### Task 2
+Add the advection step in a similar way to the 1D case from the previous exercise. Choose the time step according to the stability criterion:
 
-Use `nx = 128` and `ny = 129` grid points and the same parameters as for exercise 1 and 2.
+```julia
+dt = min(dx/abs(vx),dy/abs(vy))/2
+```
+
+Make a short animation showing the time evolution of the concentration field `C` during `nt=10` physical time steps.
 """
 
 

@@ -5,5 +5,9 @@ md"""
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
-Make a sweep over PT parameters to determine the optimal values for the parameter `re` numerically
+The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters.
+"""
+
+md"""
+### Task 1
 """
