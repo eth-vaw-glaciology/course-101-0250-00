@@ -9,6 +9,12 @@ The goal of this exercise is to implement the advection-diffusion with implicit 
 """
 
 md"""
+### Getting started
+1. Duplicate the file `implicit_transient_diffusion_1D.jl` in the folder `lecture3` and name it `implicit_transient_advection_diffusion_1D.jl`.
+4. Modify that script so that it includes the advection step as follows.
+"""
+
+md"""
 ### Task 1
 Add advection to the implicit diffusion code. Use the stability criteria for advection to specify the physical timestep:
 
@@ -17,6 +23,17 @@ dt = dx/abs(vx)
 ```
 
 Note that now one doesn't need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly.
+
+Now the physical timestep `dt` is defined by advection velocity, so the `da` number that is needed for calculating the optimal PT parameters, has to be computed from `dt`:
+
+```julia
+# derived numerics
+dt      = dx/abs(vx)
+da      = lx^2/dc/dt
+re      = ...
+ρ       = ...
+dτ      = ...
+```
 
 Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution.
 """
