@@ -304,7 +304,28 @@ end</code></pre>
 <h2 id=exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method ><a href="#exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method" class=header-anchor >Exercise 4 - <strong>Optimal iteration parameters for pseudo-transient method</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters.</p>
+<p>You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter <code>re</code> on a regular grid of values.</p>
+<p>👉 Download the <code>steady_diffusion_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
 <h3 id=task_1__4 ><a href="#task_1__4" class=header-anchor >Task 1</a></h3>
+<p>Start from the 1D elliptic solver. Add the new variable storing the range of factors to multiply the <code>re</code> parameter with to the <code># numerics</code> section. Add new array to store the number of iterations per grid block for each value of this factor:</p>
+<pre><code class=language-julia ># numerics
+fact &#61; 0.5:0.1:1.5
+conv &#61; zeros&#40;size&#40;fact&#41;&#41;</code></pre>
+<p>Wrap the <code># array initialisation</code> and <code># iteration loop</code> sections of the code in a <code>for</code>-loop over indices of <code>fact</code>:</p>
+<pre><code class=language-julia >for ifact in eachindex&#40;fact&#41;
+    # array initialisation
+    ...
+    # iteration loop
+    while ...
+    end
+end</code></pre>
+<p>Move the definition of <code>ρ</code> to the beginning of the new loop. Extract the value <code>2π</code> and store in the variable <code>re</code>, multiplying by the corresponding value from <code>fact</code>:</p>
+<pre><code class=language-julia >for ifact in eachindex&#40;fact&#41;
+    re &#61; 2π*fact&#91;ifact&#93;
+    ρ  &#61; &#40;lx/&#40;dc*re&#41;&#41;^2
+    ...
+end</code></pre>
+<p>After every elliptic solve, store the <code>iter/nx</code> value in the <code>conv&#91;ifact&#93;</code>. Report the results as a figure, plotting the <code>conv</code> vs <code>fact</code>.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
