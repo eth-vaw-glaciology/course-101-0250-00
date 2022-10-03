@@ -45,7 +45,7 @@ end
 ### Getting started
 1. Create a new folder `lecture3` in your private GitHub repository.
 2. Add a `README.md` to that folder.
-3. Add a copy of the `steady_diffusion_reaction_1D.jl` script we did in class to your exercise folder and rename it `implicit_transient_diffusion_1D.jl`.
+3. Add a copy of the `steady_diffusion_reaction_1D.jl` script we did in class to your exercise folder and rename it `implicit_diffusion_1D.jl`.
 4. Modify that script so that it includes the physical time loop and performs the numerical experiment as follows.
 
 ### Task 1

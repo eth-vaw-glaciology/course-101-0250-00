@@ -9,6 +9,8 @@ You will make the systematic study of the convergence rate of the pseudo-transie
 
 👉 Download the `steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 
+Create a new code for this exercise and add it to the `lecture3` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
+
 ### Task 1
 
 Start from the 1D elliptic solver.

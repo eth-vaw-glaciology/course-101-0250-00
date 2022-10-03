@@ -259,7 +259,7 @@ end</code></pre>
 
 <li><p>Add a <code>README.md</code> to that folder.</p>
 
-<li><p>Add a copy of the <code>steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder and rename it <code>implicit_transient_diffusion_1D.jl</code>.</p>
+<li><p>Add a copy of the <code>steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder and rename it <code>implicit_diffusion_1D.jl</code>.</p>
 
 <li><p>Modify that script so that it includes the physical time loop and performs the numerical experiment as follows.</p>
 
@@ -308,6 +308,7 @@ dτ      &#61; ...</code></pre>
 
 </ul>
 <p>👉 Download the <code>steady_diffusion_reaction_2D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
+<p>Create a code <code>implicit_advection_diffusion_2D.jl</code> for this exercise and add it to the <code>lecture3</code> folder in your private GitHub repo. Report the results of this exercise within a new section in the <code>README</code>.</p>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
 <p>Repeat the steps from the Exercise 1 to make the implicit time-dependent 2D solver. Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt&#61;5</code> physical time steps.</p>
 <h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
@@ -322,6 +323,7 @@ dτ      &#61; ...</code></pre>
 <p>The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters.</p>
 <p>You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter <code>re</code> on a regular grid of values.</p>
 <p>👉 Download the <code>steady_diffusion_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
+<p>Create a new code for this exercise and add it to the <code>lecture3</code> folder in your private GitHub repo. Report the results of this exercise within a new section in the <code>README</code>.</p>
 <h3 id=task_1__4 ><a href="#task_1__4" class=header-anchor >Task 1</a></h3>
 <p>Start from the 1D elliptic solver. Add the new variable storing the range of factors to multiply the <code>re</code> parameter with to the <code># numerics</code> section. Add new array to store the number of iterations per grid block for each value of this factor:</p>
 <pre><code class=language-julia ># numerics
