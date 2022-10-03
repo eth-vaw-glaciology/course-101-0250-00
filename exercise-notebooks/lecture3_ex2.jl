@@ -35,5 +35,5 @@ re      = ...
 dτ      = ...
 ```
 
-Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution.
+Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution. Add the figure to the README.md file.
 """
