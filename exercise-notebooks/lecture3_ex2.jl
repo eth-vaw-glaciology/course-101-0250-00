@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - ** Operator-splitting for advection-diffusion**
+## Exercise 2 - **Operator-splitting for advection-diffusion**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

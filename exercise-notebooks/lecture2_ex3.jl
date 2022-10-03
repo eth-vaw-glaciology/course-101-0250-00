@@ -22,7 +22,7 @@ md"""
 Referring to the [nonlinear equations section](#nonlinear_equations) in lecture 2, implement the nonlinear power-law type parabolic PDE in 1D:
 
 $$
-\frac{\partial C}{\partial t} + D\frac{\partial^2 C^n}{\partial x^2} = 0
+\frac{\partial C}{\partial t} - D\frac{\partial^2 C^n}{\partial x^2} = 0
 $$
 
 Use one of your previous scripts or the [`diffusion_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started. Use the following parameters:
@@ -43,7 +43,7 @@ xc   = LinRange(dx/2,lx-dx/2,nx)
 ```
 and initialising your quantity to diffuse as `0.5cos(9π*xc/lx)+0.5`.
 
-Make sure your code reproduces the animation from the course.
+Make sure your code reproduces the animation from the course (alternatively, provide 5 snapshot-plots of the simulation evolution).
 """
 
 md"""
@@ -52,7 +52,7 @@ md"""
 Referring to the [nonlinear equations section](#nonlinear_equations) in lecture 2, implement the nonlinear advection _inviscid Burgers'_ equation in 1D:
 
 $$
-\frac{\partial C}{\partial t} + \frac{\partial C^n}{\partial x} = 0
+\frac{\partial C}{\partial t} + v_x \frac{\partial C^n}{\partial x} = 0
 $$
 
 Use one of your previous scripts or the [`diffusion_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started. Use the following parameters:
@@ -73,5 +73,7 @@ xc   = LinRange(dx/2,lx-dx/2,nx)
 ```
 As initial condition, define a Gaussian profile of the quantity $C$ of amplitude and standard deviation equal to 1, located at `lx/4`.
 
-Make sure your code reproduces the animation from the course.
+In the time-loop, include a condition that would change de direction of the velocity `vx` at time `ttot/2`.
+
+Make sure your code reproduces the animation from the course (alternatively, provide 5 snapshot-plots of the simulation evolution).
 """

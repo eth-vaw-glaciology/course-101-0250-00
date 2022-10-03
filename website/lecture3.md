@@ -12,7 +12,7 @@ noeval = true
 > :books: Solving elliptic PDEs, 1D to 2D\
 > :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
-> - Damped wave equation in 2D
+> - Damped wave equation in 1D and 2D
 > - Port 1D codes to 2D
 
 --- 
