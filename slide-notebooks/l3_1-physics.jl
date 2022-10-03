@@ -296,7 +296,7 @@ Unfortunately, we don't have time to dive into details in this course...
 
 The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the _second-order Richardson method_
 
-If interested, [Räss et al. (2021)](https://gmd.copernicus.org/articles/15/5757/2022/) paper is a good starting point 👀
+If interested, [Räss et al. (2022)](https://gmd.copernicus.org/articles/15/5757/2022/) paper is a good starting point 👀
 """
 
 #src #########################################################################
