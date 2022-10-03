@@ -241,14 +241,16 @@ D\frac{\partial^2 C}{\partial x^2} = \frac{\partial C}{\partial t}
 <p>where \(\mathrm{d}t\) is the physical time step, and \(C_\mathrm{old}\) is the concentration at the previous time step. If we discretise the spatial derivatives is a usual way and update \(C\) using the explicit update rule, the maximum value for the time step is restricted by the stability criteria, and is proportional to the grid spacing \(\mathrm{d}x\). However, if we consider the \(C\) to be from the implicit layer of the time integration scheme, we don&#39;t have that restriction anymore and are free to use any time step. The downside is that in this case we have to solve the linear system to get the values at the next time step.</p>
 <p>A close look at the equation with the discretised time derivative reveals that this equation is mathematically identical to the diffusion-reaction equation that we already learned how to solve&#33; The value for the concentration at the old time step \(C_\mathrm{old}\) and the physical time step \(\mathrm{d}t\) correspond to the equilibrium concentration \(C_\mathrm{eq}\) and the time scale of reaction, respectively.</p>
 <p>At each physical time step the implicit problem could be solved using the PT method. Thus, there are present time derivatives both in physical time and in pseudo-time. This approach is therefore called <em>the dual-time method</em>. The code structure would include the two nested loops, one for the physical time and one for the pseudo-transient iterations:</p>
-<pre><code class=language-julia >for it &#61; 1:nt
+<pre><code class=language-julia >anim &#61; @animate for it &#61; 1:nt
     C_old .&#61; C
-    iter &#61; 1; iter_evo &#61; Float64&#91;&#93;; err_evo &#61; &#91;&#93;
+    iter &#61; 1; err &#61; 2ϵtol; iter_evo &#61; Float64&#91;&#93;; err_evo &#61; &#91;&#93;
     while err &lt; ϵtol &amp;&amp; iter &lt;&#61; maxiter
         ...
         iter &#43;&#61; 1
     end
     # visualisation
+    ...
+    gif&#40;anim,&quot;anim.gif&quot;;fps&#61;2&#41;
 end</code></pre>
 <p>👉 Download the <code>steady_diffusion_reaction_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
 <h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
@@ -263,11 +265,11 @@ end</code></pre>
 
 </ol>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
-<p>As a first task, rename the <code>C_eq</code> to <code>C_old</code> and <code>ξ</code> to <code>dt</code>. Make <code>C_old</code> an array and initialise it with copy of <code>C</code>. Set the <code>da</code> number equal to 10. Add the new parameter <code>nt &#61; 5</code> indicating the number of physical time steps. Wrap the iteration loop in the outer <code>for</code>-loop to make physical time steps. Move the visualisation from the iteration loop, so that the plots are only updated once per physical timestep.</p>
+<p>As a first task, rename the <code>C_eq</code> to <code>C_old</code> and <code>ξ</code> to <code>dt</code>. Make <code>C_old</code> an array and initialise it with copy of <code>C</code>. Set the <code>da</code> number equal to 1000.0. Add the new parameter <code>nt &#61; 10</code> indicating the number of physical time steps. Wrap the iteration loop in the outer <code>for</code>-loop to make physical time steps. Move the visualisation outside from the iteration loop, so that the plots are only updated once per physical timestep &#40;keeping error checking for iterations&#41;.</p>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
-<p>Perform the numerical experiment using the developed code. Report your results in a figure, plotting a spatial distribution of concentration <code>C</code> after <code>nt&#61;5</code> time steps, on top of the plot of the initial concentration distribution. Include the figure in the README and provide one or two sentence of description.</p>
+<p>Perform the numerical experiment using the developed code. Report your results in a 2-panel gif, plotting a&#41; the spatial distribution of concentration <code>C</code> after <code>nt&#61;10</code> time steps, on top of the plot of the initial concentration distribution, and b&#41; the error as function of iteration/nx. Include the gif in the README and provide one or two sentence of description.</p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a figure in the <code>README.md</code>.</div></div>
+<div class=messg >Use the <code>@animate</code> macro as in the provided code snippet to realise a gif of your simulation results. Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a figure in the <code>README.md</code>.</div></div>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
