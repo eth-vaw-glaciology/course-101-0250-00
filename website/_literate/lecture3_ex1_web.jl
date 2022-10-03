@@ -60,3 +60,4 @@ Perform the numerical experiment using the developed code. Report with figure, p
 #nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
 #md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
 
+
