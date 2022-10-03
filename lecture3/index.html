@@ -276,10 +276,24 @@ end</code></pre>
 <h2 id=exercise_2_-_operator-splitting_for_advection-diffusion ><a href="#exercise_2_-_operator-splitting_for_advection-diffusion" class=header-anchor >Exercise 2 - <strong>Operator-splitting for advection-diffusion</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to implement the advection-diffusion with implicit timestepping for diffusion. Start from the time-dependent code you developed in Exercise 1. Then add advection step after the iteration loop so that the concentration is advected only once per physical time step.</p>
+<h3 id=getting_started__2 ><a href="#getting_started__2" class=header-anchor >Getting started</a></h3>
+<ol>
+<li><p>Duplicate the file <code>implicit_transient_diffusion_1D.jl</code> in the folder <code>lecture3</code> and name it <code>implicit_transient_advection_diffusion_1D.jl</code>.</p>
+
+<li><p>Modify that script so that it includes the advection step as follows.</p>
+
+</ol>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>Add advection to the implicit diffusion code. Use the stability criteria for advection to specify the physical timestep:</p>
 <pre><code class=language-julia >dt &#61; dx/abs&#40;vx&#41;</code></pre>
 <p>Note that now one doesn&#39;t need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly.</p>
+<p>Now the physical timestep <code>dt</code> is defined by advection velocity, so the <code>da</code> number that is needed for calculating the optimal PT parameters, has to be computed from <code>dt</code>:</p>
+<pre><code class=language-julia ># derived numerics
+dt      &#61; dx/abs&#40;vx&#41;
+da      &#61; lx^2/dc/dt
+re      &#61; ...
+ρ       &#61; ...
+dτ      &#61; ...</code></pre>
 <p>Report with the figure, plotting a spatial distribution of concentration <code>C</code> after <code>nt&#61;10</code> time steps, on top of the plot of the initial concentration distribution.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
