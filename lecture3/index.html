@@ -251,11 +251,21 @@ D\frac{\partial^2 C}{\partial x^2} = \frac{\partial C}{\partial t}
     # visualisation
 end</code></pre>
 <p>👉 Download the <code>steady_diffusion_reaction_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
-<p>Add a copy of the <code>steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder. Modify that script so that it includes the physical time loop and perform the numerical experiment.</p>
+<h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
+<ol>
+<li><p>Create a new folder <code>lecture3</code> in your private GitHub repository.</p>
+
+<li><p>Add a <code>README.md</code> to that folder.</p>
+
+<li><p>Add a copy of the <code>steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder and rename it <code>implicit_transient_diffusion_1D.jl</code>.</p>
+
+<li><p>Modify that script so that it includes the physical time loop and performs the numerical experiment as follows.</p>
+
+</ol>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
 <p>As a first task, rename the <code>C_eq</code> to <code>C_old</code> and <code>ξ</code> to <code>dt</code>. Make <code>C_old</code> an array and initialise it with copy of <code>C</code>. Set the <code>da</code> number equal to 10. Add the new parameter <code>nt &#61; 5</code> indicating the number of physical time steps. Wrap the iteration loop in the outer <code>for</code>-loop to make physical time steps. Move the visualisation from the iteration loop, so that the plots are only updated once per physical timestep.</p>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
-<p>Perform the numerical experiment using the developed code. Report with figure, plotting a spatial distribution of concentration <code>C</code> after <code>nt&#61;5</code> time steps, on top of the plot of the initial concentration distribution.</p>
+<p>Perform the numerical experiment using the developed code. Report your results in a figure, plotting a spatial distribution of concentration <code>C</code> after <code>nt&#61;5</code> time steps, on top of the plot of the initial concentration distribution. Include the figure in the README and provide one or two sentence of description.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a figure in the <code>README.md</code>.</div></div>
 

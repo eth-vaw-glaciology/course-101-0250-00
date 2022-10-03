@@ -40,13 +40,17 @@ end
 
 👉 Download the `steady_diffusion_reaction_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 
-Add a copy of the `steady_diffusion_reaction_1D.jl` script we did in class to your exercise folder. Modify that script so that it includes the physical time loop and perform the numerical experiment.
+### Getting started
+1. Create a new folder `lecture3` in your private GitHub repository.
+2. Add a `README.md` to that folder.
+3. Add a copy of the `steady_diffusion_reaction_1D.jl` script we did in class to your exercise folder and rename it `implicit_transient_diffusion_1D.jl`.
+4. Modify that script so that it includes the physical time loop and performs the numerical experiment as follows.
 
 ### Task 1
 As a first task, rename the `C_eq` to `C_old` and `ξ` to `dt`. Make `C_old` an array and initialise it with copy of `C`. Set the `da` number equal to 10. Add the new parameter `nt = 5` indicating the number of physical time steps. Wrap the iteration loop in the outer `for`-loop to make physical time steps. Move the visualisation from the iteration loop, so that the plots are only updated once per physical timestep.
 
 ### Task 2
-Perform the numerical experiment using the developed code. Report with figure, plotting a spatial distribution of concentration `C` after `nt=5` time steps, on top of the plot of the initial concentration distribution.
+Perform the numerical experiment using the developed code. Report your results in a figure, plotting a spatial distribution of concentration `C` after `nt=5` time steps, on top of the plot of the initial concentration distribution. Include the figure in the README and provide one or two sentence of description.
 
 \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
 
