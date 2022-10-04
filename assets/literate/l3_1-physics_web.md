@@ -93,11 +93,18 @@ First step is to add the new physical parameter $\rho$ to the `# physics` sectio
 ρ   = 20.0
 ```
 
-And to change the initial conditions to have more interesting time evolution:
+Then we increase the number of time steps and reduce the frequency of plotting, and modify the initial conditions to have more interesting time evolution:
 
 ```julia
+# numerics
+nvis = 50
+...
+# derived numerics
+...
+nt   = nx^2 ÷ 5
+...
 # array initialisation
-C    = @. exp(-(xc-lx/4)^2); C_i = copy(C); C[1] = 1
+    C    = @. 1.0 + exp(-(xc-lx/4)^2) - xc/lx; C_i = copy(C)
 ```
 
 Then we modify the time loop to incorporate the new physics:
