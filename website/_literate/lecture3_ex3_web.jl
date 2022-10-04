@@ -9,8 +9,6 @@ The goal of this exercise is to
 - Extend the advection-diffusion solver with implicit diffusion step from 1D to 2D
 - Implement the upwind advection scheme in 2D
 
-👉 Download the `l3_steady_diffusion_reaction_2D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
-
 Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it to the `lecture3` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
 """
 
