@@ -44,11 +44,13 @@ Move the definition of `ρ` to the beginning of the new loop. Extract the value 
 for ifact in eachindex(fact)
     re = 2π*fact[ifact]
     ρ  = (lx/(dc*re))^2
+    dτ = ...
     ...
 end
 ```
 
-After every elliptic solve, store the `iter/nx` value in the `conv[ifact]`. Report the results as a figure, plotting the `conv` vs `fact`.
+After every elliptic solve, store the `iter/nx` value in the `conv[ifact]`. Report the results as a figure, plotting the `conv` vs `fact`. You should get a picture like this:
 
+![checkmark](../assets/literate_figures/l3_checkmark.png)
 """
 
