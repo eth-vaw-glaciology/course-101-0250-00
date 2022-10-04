@@ -45,6 +45,8 @@ _any further relevant suggestions are welcome - open a PR_
   <iframe width="560" height="315" src="https://www.youtube.com/embed/vPsfZUqI4_0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   ~~~
 
+- [Julia for High-Performance Computing](https://github.com/carstenbauer/JuliaHLRS22)
+
 ### Other courses and workshops
 
 - [Introduction to Computational Thinking @MIT](https://computationalthinking.mit.edu/Spring21/)
