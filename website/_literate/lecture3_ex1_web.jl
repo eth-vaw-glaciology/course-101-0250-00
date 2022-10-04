@@ -44,7 +44,7 @@ anim = @animate for it = 1:nt
 end
 ```
 
-👉 Download the `steady_diffusion_reaction_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
+👉 Download the `l3_steady_diffusion_reaction_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 """
 
 md"""
