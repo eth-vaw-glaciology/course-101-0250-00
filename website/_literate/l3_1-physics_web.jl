@@ -184,7 +184,7 @@ nvis = 50
 nt   = nx^2 ÷ 5
 ...
 # array initialisation
-    C    = @. 1.0 + exp(-(xc-lx/4)^2) - xc/lx; C_i = copy(C)
+C    = @. 1.0 + exp(-(xc-lx/4)^2) - xc/lx; C_i = copy(C)
 ```
 """
 
