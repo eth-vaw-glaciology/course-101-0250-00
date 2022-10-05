@@ -43,7 +43,7 @@ Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.l
 
 [Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
 
-Homework **due date will be Thursday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
+Homework **due date will be Wednesday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
 
 Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a personal version of the homework_**.
 
