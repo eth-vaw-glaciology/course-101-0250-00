@@ -43,7 +43,7 @@ Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.l
 
 [Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
 
-Homework **due date will be Wednesday 23h59 CET** every following week (9 days) to allow for Q&A during the following in-class exercise session.
+Homework **due date will be Wednesday 23h59 CET** every following week (8 days) to allow for Q&A during the following in-class exercise session.
 
 Homework assignments can be carried-out by groups of 2. However, **_note that every student has to hand in a personal version of the homework_**.
 
@@ -61,6 +61,8 @@ Personal feedback and sample solution codes will be provided after submission de
 3. **For each homework submission**, you will:
     - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
     - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). It will serve to control the material was pushed on time.
+
+\warn{Make sure to only include the `lectureX` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
 
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
