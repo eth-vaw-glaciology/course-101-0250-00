@@ -21,7 +21,7 @@ default(size=(1200,800),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,
     # iteration loop
     iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = Float64[]
     while err >= ϵtol && iter <= maxiter
-        qx         .-= dτ./(ρ*dc + dτ).*(qx + dc.*diff(C)./dx)
+        qx         .-= dτ./(ρ*dc .+ dτ).*(qx .+ dc.*diff(C)./dx)
         C[2:end-1] .-= dτ.*diff(qx)./dx
         if iter%ncheck == 0
             err = maximum(abs.(diff(dc.*diff(C)./dx)./dx))
