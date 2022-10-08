@@ -127,9 +127,9 @@ version = "2.14.0"
 
 [[deps.LiveServer]]
 deps = ["HTTP", "MIMEs", "Pkg", "Sockets"]
-git-tree-sha1 = "97eb7d407d0296a294de417b498876dc19f0f41b"
+git-tree-sha1 = "af11a3662103715954be5042747bd98cb1dc4229"
 uuid = "16fef848-5104-11e9-1b77-fb7a48bbb589"
-version = "1.0.3"
+version = "1.1.0"
 
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
