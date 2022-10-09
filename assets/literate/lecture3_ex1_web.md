@@ -30,7 +30,7 @@ At each physical time step the implicit problem could be solved using the PT met
 anim = @animate for it = 1:nt
     C_old .= C
     iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = []
-    while err < ϵtol && iter <= maxiter
+    while err >= ϵtol && iter <= maxiter
         ...
         iter += 1
     end

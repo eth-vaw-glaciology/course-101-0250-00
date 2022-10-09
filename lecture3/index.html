@@ -251,7 +251,7 @@ D\frac{\partial^2 C}{\partial x^2} = \frac{\partial C}{\partial t}
 <pre><code class=language-julia >anim &#61; @animate for it &#61; 1:nt
     C_old .&#61; C
     iter &#61; 1; err &#61; 2ϵtol; iter_evo &#61; Float64&#91;&#93;; err_evo &#61; &#91;&#93;
-    while err &lt; ϵtol &amp;&amp; iter &lt;&#61; maxiter
+    while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
         ...
         iter &#43;&#61; 1
     end
