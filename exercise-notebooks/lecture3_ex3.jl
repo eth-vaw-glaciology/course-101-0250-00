@@ -82,13 +82,7 @@ display(plot(p1,p2;layout=(2,1)))
 
 md"""
 ### Task 2
-Add the advection step in a similar way to the 1D case from the previous exercise, i.e., after the iteration loop. Use following advection velocities
-
-```julia
-vx = 1.0
-vy = -1.0
-```
-taking care in implementing the "upwind" strategy discussed in Lecture 2.
+Include now the advection step in a similar way as in the 1D case from the previous exercise, i.e., adding them after the iteration loop within the time loop. Use advection velocities and parameters listed above, taking care in implementing the "upwind" strategy discussed in Lecture 2.
 
 Make a short animation showing the time evolution of the concentration field `C` during `nt = 50` physical time steps using the same figure layout as for Task 1.
 """
