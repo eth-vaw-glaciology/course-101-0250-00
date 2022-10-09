@@ -27,7 +27,7 @@ and use the stability criteria for advection to specify the physical timestep:
 dt = dx/abs(vx)
 ```
 
-Note that now one doesn't need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly.
+Note that now one doesn't need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly. Also, we do not consider any change in velocity direction at mid-simulation.
 
 Now the physical timestep `dt` is defined by advection velocity, so the `da` number that is needed for calculating the optimal PT parameters, has to be computed from `dt`:
 
