@@ -362,10 +362,7 @@ p2 &#61; plot&#40;iter_evo,err_evo;xlabel&#61;&quot;iter/nx&quot;,ylabel&#61;&qu
         yscale&#61;:log10,grid&#61;true,markershape&#61;:circle,markersize&#61;10&#41;
 display&#40;plot&#40;p1,p2;layout&#61;&#40;2,1&#41;&#41;&#41;</code></pre>
 <h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
-<p>Add the advection step in a similar way to the 1D case from the previous exercise, i.e., after the iteration loop. Use following advection velocities</p>
-<pre><code class=language-julia >vx &#61; 1.0
-vy &#61; -1.0</code></pre>
-<p>taking care in implementing the &quot;upwind&quot; strategy discussed in Lecture 2.</p>
+<p>Include now the advection step in a similar way as in the 1D case from the previous exercise, i.e., adding them after the iteration loop within the time loop. Use advection velocities and parameters listed above, taking care in implementing the &quot;upwind&quot; strategy discussed in Lecture 2.</p>
 <p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 50</code> physical time steps using the same figure layout as for Task 1.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
