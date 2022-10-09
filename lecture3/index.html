@@ -266,7 +266,7 @@ gif&#40;anim,&quot;anim.gif&quot;;fps&#61;2&#41;</code></pre>
 
 <li><p>Add a <code>README.md</code> to that folder.</p>
 
-<li><p>Add a copy of the <code>steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder and rename it <code>implicit_diffusion_1D.jl</code>.</p>
+<li><p>Add a copy of the <code>l3_steady_diffusion_reaction_1D.jl</code> script we did in class to your exercise folder and rename it <code>implicit_diffusion_1D.jl</code>.</p>
 
 <li><p>Modify that script so that it includes the physical time loop and performs the numerical experiment as follows.</p>
 
@@ -285,13 +285,15 @@ gif&#40;anim,&quot;anim.gif&quot;;fps&#61;2&#41;</code></pre>
 <p>The goal of this exercise is to implement the advection-diffusion with implicit timestepping for diffusion. Start from the time-dependent code you developed in Exercise 1. Then add advection step after the iteration loop so that the concentration is advected only once per physical time step.</p>
 <h3 id=getting_started__2 ><a href="#getting_started__2" class=header-anchor >Getting started</a></h3>
 <ol>
-<li><p>Duplicate the file <code>implicit_transient_diffusion_1D.jl</code> in the folder <code>lecture3</code> and name it <code>implicit_transient_advection_diffusion_1D.jl</code>.</p>
+<li><p>Duplicate the file <code>implicit_diffusion_1D.jl</code> in the folder <code>lecture3</code> and name it <code>implicit_advection_diffusion_1D.jl</code>.</p>
 
 <li><p>Modify that script so that it includes the advection step as follows.</p>
 
 </ol>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
-<p>Add advection to the implicit diffusion code. Use the stability criteria for advection to specify the physical timestep:</p>
+<p>Add advection to the implicit diffusion code, using an advection velocity of</p>
+<pre><code class=language-julia >vx &#61; 1.0</code></pre>
+<p>Also, use the stability criteria for advection to specify the physical timestep:</p>
 <pre><code class=language-julia >dt &#61; dx/abs&#40;vx&#41;</code></pre>
 <p>Note that now one doesn&#39;t need to take the minimum between the time steps for diffusion and advection, since the diffusion that is more restrictive is resolved implicitly.</p>
 <p>Now the physical timestep <code>dt</code> is defined by advection velocity, so the <code>da</code> number that is needed for calculating the optimal PT parameters, has to be computed from <code>dt</code>:</p>
@@ -357,7 +359,7 @@ end</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 08, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 09, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

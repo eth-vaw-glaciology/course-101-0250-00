@@ -6,11 +6,17 @@
 The goal of this exercise is to implement the advection-diffusion with implicit timestepping for diffusion. Start from the time-dependent code you developed in Exercise 1. Then add advection step after the iteration loop so that the concentration is advected only once per physical time step.
 
 ### Getting started
-1. Duplicate the file `implicit_transient_diffusion_1D.jl` in the folder `lecture3` and name it `implicit_transient_advection_diffusion_1D.jl`.
+1. Duplicate the file `implicit_diffusion_1D.jl` in the folder `lecture3` and name it `implicit_advection_diffusion_1D.jl`.
 4. Modify that script so that it includes the advection step as follows.
 
 ### Task 1
-Add advection to the implicit diffusion code. Use the stability criteria for advection to specify the physical timestep:
+Add advection to the implicit diffusion code, using an advection velocity of
+
+```julia
+vx = 1.0
+```
+
+Also, use the stability criteria for advection to specify the physical timestep:
 
 ```julia
 dt = dx/abs(vx)
