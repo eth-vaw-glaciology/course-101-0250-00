@@ -315,18 +315,58 @@ dτ      &#61; ...</code></pre>
 
 <li><p>Implement the upwind advection scheme in 2D</p>
 
+<li><p>Modify the problem configuration</p>
+
 </ul>
 <p>Create a code <code>implicit_advection_diffusion_2D.jl</code> for this exercise and add it to the <code>lecture3</code> folder in your private GitHub repo. Report the results of this exercise within a new section in the <code>README</code>.</p>
+<h3 id=getting_started__3 ><a href="#getting_started__3" class=header-anchor >Getting started</a></h3>
+<ol>
+<li><p>Duplicate the the <code>implicit_diffusion_1D.jl</code> code you created in Exercise 2 and name it <code>implicit_advection_diffusion_2D.jl</code>.</p>
+
+<li><p>Extend the 1D calculations to 2D</p>
+
+<li><p>Add advection as in Exercise 2</p>
+
+</ol>
+<p>Modify the initial conditions to include following parameters in the <code># physics</code> section:</p>
+<pre><code class=language-julia ># physics
+lx,ly   &#61; 10.0,10.0
+dc      &#61; 1.0
+vx      &#61; 10.0
+vy      &#61; -10.0</code></pre>
+<p>and implement following initial condition</p>
+<pre><code class=language-julia ># array initialisation
+C       &#61; @. exp&#40;-&#40;xc-lx/4&#41;^2 -&#40;yc&#39;-3ly/4&#41;^2&#41;
+C_old   &#61; copy&#40;C&#41;</code></pre>
+<p>Choose the time step according to the following &#40;stability&#41; criterion:</p>
+<pre><code class=language-julia >dt &#61; min&#40;dx/abs&#40;vx&#41;,dy/abs&#40;vy&#41;&#41;/2</code></pre>
+<p>Also make sure to use the following numerical parameters &#40;in number of grid points <code>nx,ny</code>&#41;</p>
+<pre><code class=language-julia ># numerics
+nx,ny   &#61; 200,201
+ϵtol    &#61; 1e-8
+maxiter &#61; 10nx
+ncheck  &#61; ceil&#40;Int,0.02nx&#41;
+nt      &#61; 50</code></pre>
+<p>Note that the iterative pseudo-timestep limitation should be updated to</p>
+<pre><code class=language-julia >dτ &#61; min&#40;dx,dy&#41;/sqrt&#40;1/ρ&#41;/sqrt&#40;2&#41;</code></pre>
+<p>for 2D configurations.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Make sure to update the flux array initialisation and include the flux in the y-direction <code>qy</code> and use now 2D arrays: <code>qx,qy &#61; zeros&#40;nx-1,??&#41;, zeros&#40;??,ny-1&#41;</code>.</div></div>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
-<p>Repeat the steps from the Exercise 1 to create the implicit time-dependent 2D solver. Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt&#61;5</code> physical time steps.</p>
+<p>Repeat the steps from the Exercise 1 to create the implicit time-dependent diffusion solver but in 2D. <strong>Do not include advection yet.</strong> Pay attention to add information relative to the second dimension whenever it&#39;s needed.</p>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 50</code> physical time steps. The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field and the second the evolution of the by <code>nx</code> normalised iteration count:</p>
+<pre><code class=language-julia ># visualisation
+p1 &#61; heatmap&#40;xc,yc,C&#39;;xlims&#61;&#40;0,lx&#41;,ylims&#61;&#40;0,ly&#41;,clims&#61;&#40;0,1&#41;,aspect_ratio&#61;1,
+                 xlabel&#61;&quot;lx&quot;,ylabel&#61;&quot;ly&quot;,title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter/nx,sigdigits&#61;3&#41;&#41;&quot;&#41;
+p2 &#61; plot&#40;iter_evo,err_evo;xlabel&#61;&quot;iter/nx&quot;,ylabel&#61;&quot;err&quot;,
+        yscale&#61;:log10,grid&#61;true,markershape&#61;:circle,markersize&#61;10&#41;
+display&#40;plot&#40;p1,p2;layout&#61;&#40;2,1&#41;&#41;&#41;</code></pre>
 <h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
-<p>Add the advection step in a similar way to the 1D case from the previous exercise. Use following advection velocities</p>
+<p>Add the advection step in a similar way to the 1D case from the previous exercise, i.e., after the iteration loop. Use following advection velocities</p>
 <pre><code class=language-julia >vx &#61; 1.0
 vy &#61; -1.0</code></pre>
 <p>taking care in implementing the &quot;upwind&quot; strategy discussed in Lecture 2.</p>
-<p>Choose the time step according to the stability criterion:</p>
-<pre><code class=language-julia >dt &#61; min&#40;dx/abs&#40;vx&#41;,dy/abs&#40;vy&#41;&#41;/2</code></pre>
-<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt&#61;10</code> physical time steps.</p>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 50</code> physical time steps using the same figure layout as for Task 1.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -334,7 +374,7 @@ vy &#61; -1.0</code></pre>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver &#40;e.g., solving steady-state diffusion&#41;.</p>
 <p>You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter <code>re</code> on a regular grid of values.</p>
-<h3 id=getting_started__3 ><a href="#getting_started__3" class=header-anchor >Getting started</a></h3>
+<h3 id=getting_started__4 ><a href="#getting_started__4" class=header-anchor >Getting started</a></h3>
 <ol>
 <li><p>👉 Download the <code>l3_steady_diffusion_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
 
