@@ -14,12 +14,20 @@ Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it 
 
 md"""
 ### Task 1
-Repeat the steps from the Exercise 1 to make the implicit time-dependent 2D solver. Make a short animation showing the time evolution of the concentration field `C` during `nt=5` physical time steps.
+Repeat the steps from the Exercise 1 to create the implicit time-dependent 2D solver. Make a short animation showing the time evolution of the concentration field `C` during `nt=5` physical time steps.
 """
 
 md"""
 ### Task 2
-Add the advection step in a similar way to the 1D case from the previous exercise. Choose the time step according to the stability criterion:
+Add the advection step in a similar way to the 1D case from the previous exercise. Use following advection velocities
+
+```julia
+vx = 1.0
+vy = -1.0
+```
+taking care in implementing the "upwind" strategy discussed in Lecture 2.
+
+Choose the time step according to the stability criterion:
 
 ```julia
 dt = min(dx/abs(vx),dy/abs(vy))/2

@@ -5,7 +5,8 @@ default(size=(1200,800),framestyle=:box,label=false,grid=false,margin=10mm,lw=6,
     # physics
     lx      = 20.0
     dc      = 1.0
-    ρ       = (lx/(dc*2π))^2
+    re      = 2π
+    ρ       = (lx/(dc*re))^2
     # numerics
     nx      = 100
     ϵtol    = 1e-8
