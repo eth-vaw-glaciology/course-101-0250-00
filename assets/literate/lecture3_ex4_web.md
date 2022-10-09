@@ -3,13 +3,15 @@
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
-The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters.
+The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver (e.g., solving steady-state diffusion).
 
 You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter `re` on a regular grid of values.
 
-👉 Download the `l3_steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
+### Getting started
 
-Create a new code for this exercise and add it to the `lecture3` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
+1. 👉 Download the `l3_steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
+2. Create a new code `steady_diffusion_parametric_1D.jl` for this exercise and add it to the `lecture3` folder in your private GitHub repo.
+3. Report the results of this exercise within a new section in the `README.md`.
 
 ### Task 1
 

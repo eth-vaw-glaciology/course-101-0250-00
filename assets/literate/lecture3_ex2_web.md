@@ -15,8 +15,7 @@ Add advection to the implicit diffusion code, using an advection velocity of
 ```julia
 vx = 1.0
 ```
-
-Also, use the stability criteria for advection to specify the physical timestep:
+and use the stability criteria for advection to specify the physical timestep:
 
 ```julia
 dt = dx/abs(vx)
@@ -35,5 +34,5 @@ re      = ...
 dτ      = ...
 ```
 
-Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution. Add the figure to the README.md file.
+Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution. Add the figure to the `README.md` file.
 
