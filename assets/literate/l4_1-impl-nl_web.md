@@ -14,9 +14,7 @@
 Convection is a fluid flow driven by any instability arising from the interaction between the fluid properties such as density, and external forces such as gravity. If a layer of denser fluid lays on top of a layer of fluid with lower density, they will eventually mix and swap. An example of such fluids would be oil and water. In thermal convection, the density difference is caused by the thermal expansion of the fluid, i.e., the dependence of density on temperature. Usually, higher temperatures correspond to the lower densities.
 
 ~~~
-<center>
-  <video width="80%" autoplay loop controls src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Lava_lamp_%28oT%29_07_ies.ogv"/>
-</center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zbo6jUGrwdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ~~~
 
 Fluid flows in porous materials such as rocks and soil could also be a result of convection. In this course, we only consider porous convection since it build on the already acquired knowledge of steady-state and transient diffusion processes. Porous convection often arises in nature and geoengineering. For example, water circulation in hydrothermal systems is caused by thermal convection, and mixing of CO$_2$ with saline water during geological storage results from chemical convection.
@@ -28,7 +26,7 @@ In the following, we will introduce the equation governing the thermal porous co
 Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\varphi$ -- the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
 
 $$
-\frac{\partial\varphi\rho}{\partial t} + \nabla\cdot(\rho\varphi\boldsymbol{v}) = 0
+\frac{\partial\rho\varphi}{\partial t} + \nabla\cdot(\rho\varphi\boldsymbol{v}) = 0
 $$
 
 Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e. $\varphi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
@@ -51,7 +49,7 @@ where $k$ is the proportionality coefficient called _permeability_, $\eta$ is th
 ### Diffusion equation for pressure
 Substituting the Darcy's law into the mass conservation law for incompressible fluid, we obtain the steady-state diffusion equation for the pressure $p$:
 $$
--\nabla\cdot\left[\frac{k}{\eta}(\nabla p - \rho\boldsymbol{g})\right] = 0
+\nabla\cdot\left[\frac{k}{\eta}(\nabla p - \rho\boldsymbol{g})\right] = 0
 $$
 
 ### Heat convection in porous media
@@ -98,7 +96,9 @@ $$
 
 ## Solving thermal porous convection using the pseudo-transient method
 
-We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations. Let's do this for the porous convection!
+We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations. Let's do this for the thermal porous convection!
+
+The thermal porous convection is a coupled system of equations. However, the
 
 But let's first look at the equation, augmenting the Table we just started to fill
 
