@@ -122,7 +122,7 @@ This is the transient advection-diffusion equation. The temperature is advected 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Modeling buoyancy: Boussinesq approximaiton
+### Modelling buoyancy: Boussinesq approximation
 
 Now the transient pressure diffusion and steady pressure diffusion are coupled in a one-way fashion through the Darcy flux in the temperature equation. To model convection, we need to incorporate the dependency of the density on temperature in the equations. The simplest way is to introduce the linear dependency:
 
@@ -194,7 +194,7 @@ md"""
 More advanced implementation, one can define the plotting options and apply them in the `heatmap()` call:
 
 ```julia
-opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
+opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
 display(heatmap(xc, yc, C'; opts...))
 ```
 """

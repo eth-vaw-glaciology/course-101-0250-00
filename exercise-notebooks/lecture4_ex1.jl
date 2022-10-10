@@ -46,7 +46,7 @@ Add new fields for the temperature evolution (advection and diffusion). Add the 
 md"""
 ### Task 5
 
-Add two-way coupling using the Boussinesq approximaiton, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.
+Add two-way coupling using the Boussinesq approximation, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.
 
 ```julia
 Vscale = 1/maximum(sqrt.(Vxp.^2 + Vyp.^2)) * dx*(st-1)
