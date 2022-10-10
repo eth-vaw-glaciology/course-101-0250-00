@@ -129,7 +129,7 @@ md"""
 Now the transient pressure diffusion and steady pressure diffusion are coupled in a one-way fashion through the Darcy flux in the temperature equation. To model convection, we need to incorporate the dependency of the density on temperature in the equations. The simplest way is to introduce the linear dependency:
 
 $$
-\rho = \rho_0\left\[1-\alpha (T-T_0)\right\]
+\rho = \rho_0\left[1-\alpha (T-T_0)\right]
 $$
 where $\alpha$ is the thermal expansion coefficient.
 
