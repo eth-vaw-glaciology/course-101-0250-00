@@ -27,17 +27,31 @@ md"""
 md"""
 ## What is convection and why we want to model it
 
-Convection is a fluid flow driven by any instability arising from the interaction between the fluid properties such as density, and external forces such as gravity. If a layer of denser fluid lays on top of a layer of fluid with lower density, they will eventually mix and swap. An example of such fluids would be oil and water. In thermal convection, the density difference is caused by the thermal expansion of the fluid, i.e., the dependence of density on temperature. Usually, higher temperatures correspond to the lower densities.
-
-~~~
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zbo6jUGrwdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-~~~
+Convection is a fluid flow driven by any instability arising from the interaction between the fluid properties such as density, and external forces such as gravity. If a layer of denser fluid lays on top of a layer of fluid with lower density, they will eventually mix and swap.
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Fluid flows in porous materials such as rocks and soil could also be a result of convection. In this course, we only consider porous convection since it build on the already acquired knowledge of steady-state and transient diffusion processes. Porous convection often arises in nature and geoengineering. For example, water circulation in hydrothermal systems is caused by thermal convection, and mixing of CO$_2$ with saline water during geological storage results from chemical convection.
+An example of such fluids would be oil and water. In thermal convection, the density difference is caused by the thermal expansion of the fluid, i.e., the dependence of density on temperature. Usually, higher temperatures correspond to lower densities.
+"""
+
+#md # ~~~
+#md # <iframe width="560" height="315" src="https://www.youtube.com/embed/zbo6jUGrwdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+#md # ~~~
+
+#nb # <center>
+#nb #  <video width="80%" autoplay loop controls src="../assets/literate_figures/l1_porous_convection_2D.mp4"/>
+#nb # </center>
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Fluid flows in porous materials such as rocks and soil could also be a result of convection.
+
+In this course, we only consider porous convection since it build on the already acquired knowledge of steady-state and transient diffusion processes.
+
+Porous convection often arises in nature and geoengineering. For example, water circulation in hydrothermal systems is caused by thermal convection, and mixing of CO$_2$ with saline water during geological storage results from chemical convection.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -50,13 +64,13 @@ In the following, we will introduce the equation governing the thermal porous co
 md"""
 ## Thermal porous convection: a physical model
 
-Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\varphi$ -- the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
+Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\varphi$, the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
 
 $$
 \frac{\partial\rho\varphi}{\partial t} + \nabla\cdot(\rho\varphi\boldsymbol{v}) = 0
 $$
 
-Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e. $\varphi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
+Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e., $\varphi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
 
 $$
 \nabla\cdot(\varphi\boldsymbol{v}) = 0
@@ -129,6 +143,7 @@ Now the transient pressure diffusion and steady pressure diffusion are coupled i
 $$
 \rho = \rho_0\left[1-\alpha (T-T_0)\right]
 $$
+
 where $\alpha$ is the thermal expansion coefficient.
 
 However, the equations were formulated for the incompressible case!
@@ -142,7 +157,7 @@ In convection problems, the gravity term $\rho\boldsymbol{g}$ makes the dominant
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Using the Boussinesq approximation, the incompressible equations remain valid, and the only place where the modified densities is the definition of the Darcy flux:
+Using the Boussinesq approximation, the incompressible equations remain valid, and the modified densities only appear in the definition of the Darcy flux:
 
 $$
 \boldsymbol{q_D} = -\frac{k}{\eta}(\nabla P - \rho_0\left[1-\alpha (T-T_0)\right]\boldsymbol{g})
@@ -154,7 +169,9 @@ $$
 md"""
 ## Solving thermal porous convection using the pseudo-transient method
 
-We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations. Let's do this for the thermal porous convection!
+We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations.
+
+Let's apply this strategy to solve the thermal porous convection!
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -189,7 +206,8 @@ _note the transpose `'`_
 Use `display()` to force the display of the plot, e.g., in the time loop every `nout`.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 More advanced implementation, one can define the plotting options and apply them in the `heatmap()` call:
 
