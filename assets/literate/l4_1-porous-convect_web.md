@@ -98,18 +98,7 @@ $$
 
 We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations. Let's do this for the thermal porous convection!
 
-The thermal porous convection is a coupled system of equations. However, the
-
-But let's first look at the equation, augmenting the Table we just started to fill
-
-|  Physics       |  1D formulation  |  2D formulation  |
-| :------------: | :--------------: | :--------------: |
-| Diffusion      | $q_x = -D\frac{∂C}{∂x}$            | $q_x = -D\frac{∂C}{∂x}$ |
-|                |                                    | $q_y = -D\frac{∂C}{∂y}$ |
-|                | $\frac{∂C}{∂t} = -\frac{∂q_x}{∂x}$ | $\frac{∂C}{∂t} = -\left(\frac{∂q_x}{∂x} + \frac{∂q_y}{∂y} \right)$ |
-| Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
-|                |                                                | $\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$ |
-|                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$           | $\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$ |
+The thermal porous convection is a coupled system of equations.
 
 #### Initialise arrays
 
@@ -136,12 +125,6 @@ More advanced implementation, one can define the plotting options and apply them
 opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
 display(heatmap(xc, yc, C'; opts...))
 ```
-
-Let's get started with 2D.
-
-**It's time to launch Julia on your computer** 🚀
-
-👉 [Download the `diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started
 
 # Julia's Project environment
 
