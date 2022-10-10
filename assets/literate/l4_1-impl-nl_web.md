@@ -9,11 +9,96 @@
 - Finite-differences and staggered grids
 - Accelerated pseudo-transient method
 
-## From 1D to 2D
+## What is convection and why we want to model it
 
-Let's discuss how to implement the acoustic wave equation (and the diffusion equation from last week's material) in 2D.
+Convection is a fluid flow driven by any instability arising from the interaction between the fluid properties such as density, and external forces such as gravity. If a layer of denser fluid lays on top of a layer of fluid with lower density, they will eventually mix and swap. An example of such fluids would be oil and water. In thermal convection, the density difference is caused by the thermal expansion of the fluid, i.e., the dependence of density on temperature. Usually, higher temperatures correspond to the lower densities.
 
-We want the $x$ and $y$ axis to represent spatial extend, and solve in each grid point for the pressure or the concentration, for the acoustic and diffusion process, respectively.
+~~~
+<center>
+  <video width="80%" autoplay loop controls src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Lava_lamp_%28oT%29_07_ies.ogv"/>
+</center>
+~~~
+
+Fluid flows in porous materials such as rocks and soil could also be a result of convection. In this course, we only consider porous convection since it build on the already acquired knowledge of steady-state and transient diffusion processes. Porous convection often arises in nature and geoengineering. For example, water circulation in hydrothermal systems is caused by thermal convection, and mixing of CO$_2$ with saline water during geological storage results from chemical convection.
+
+In the following, we will introduce the equation governing the thermal porous convection, demonstrate that in the simple cases these equations reduce to the already familiar steady-state and transient diffusion equations.
+
+## Thermal porous convection: a physical model
+
+Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\varphi$ -- the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
+
+$$
+\frac{\partial\varphi\rho}{\partial t} + \nabla\cdot(\rho\varphi\boldsymbol{v}) = 0
+$$
+
+Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e. $\varphi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
+
+$$
+\nabla\cdot(\varphi\boldsymbol{v}) = 0
+$$
+
+### Darcy's law
+
+We define the quantity $\boldsymbol{q_D} = \varphi\boldsymbol{v}$, which is called the _Darcy flux_ or _Darcy velocity_ and is the volumetric flow rate per unit area of the porous media.
+Standard approximation is the linear dependence between $\boldsymbol{q_D}$ and the pressure gradient, known as the [_Darcy's law_](https://en.wikipedia.org/wiki/Darcy's_law):
+
+$$
+\boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho \boldsymbol{g})
+$$
+
+where $k$ is the proportionality coefficient called _permeability_, $\eta$ is the fluid viscosity, $p$ is pressure, $\boldsymbol{g}$ is the gravity vector.
+
+### Diffusion equation for pressure
+Substituting the Darcy's law into the mass conservation law for incompressible fluid, we obtain the steady-state diffusion equation for the pressure $p$:
+$$
+-\nabla\cdot\left[\frac{k}{\eta}(\nabla p - \rho\boldsymbol{g})\right] = 0
+$$
+
+### Heat convection in porous media
+
+In the following, we assume for simplicity that the porosity is constant: $\varphi=\mathrm{const}$.
+
+Conservation of energy in the fluid results in the following equation for the temperature $T$:
+$$
+\rho c_p \frac{\partial T}{\partial t} + \rho c_p\boldsymbol{v}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+$$
+Here, $c_p$ is the specific heat capacity of the fluid, and $\boldsymbol{q_T}$ is the conductive heat flux. Note that the time $t$ here is the physical time.
+
+In a very similar manner to the Darcy's law, we relate the heat flux to the gradient of temperature (Fourier's law):
+
+$$
+\boldsymbol{q_T} = -\lambda\nabla T
+$$
+
+where $\lambda$ is the _thermal conductivity_. Assuming $\lambda=\mathrm{const}$, substituting the Fourier's law into the energy equation, and using the definition of the Darcy flux we obtain:
+$$
+\frac{\partial T}{\partial t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T - \frac{\lambda}{\rho c_p} \nabla\cdot\nabla T = 0
+$$
+
+This is the transient advection-diffusion equation. The temperature is advected with the fluid velocity $\boldsymbol{q_D}/\varphi$ and diffused with the diffusion coefficient $\lambda/(\rho c_p)$
+
+### Modeling buoyancy: Boussinesq approximaiton
+
+Now the transient pressure diffusion and steady pressure diffusion are coupled in a one-way fashion through the Darcy flux in the temperature equation. To model convection, we need to incorporate the dependency of the density on temperature in the equations. The simplest way is to introduce the linear dependency:
+
+$$
+\rho = \rho_0\left\[1-\alpha (T-T_0)\right\]
+$$
+where $\alpha$ is the thermal expansion coefficient.
+
+However, the equations were formulated for the incompressible case!
+
+In convection problems, the gravity term $\rho\boldsymbol{g}$ makes the dominant contribution to the force balance. Therefore, variations in density due to thermal expansion are often accounted for only in the $\rho\boldsymbol{g}$ term and are neglected in other places. This is called the [_Boussinesq approximation_](https://en.wikipedia.org/wiki/Boussinesq_approximation_(buoyancy)).
+
+Using the Boussinesq approximation, the incompressible equations remain valid, and the only place where the modified densities is the definition of the Darcy flux:
+
+$$
+\boldsymbol{q_D} = -\frac{k}{\eta}(\nabla P - \rho_0\left[1-\alpha (T-T_0)\right]\boldsymbol{g})
+$$
+
+## Solving thermal porous convection using the pseudo-transient method
+
+We already discussed how the steady-state and transient equations could be solved efficiently by adding the pseudo-transient terms to the governing equations. Let's do this for the porous convection!
 
 But let's first look at the equation, augmenting the Table we just started to fill
 
@@ -25,36 +110,6 @@ But let's first look at the equation, augmenting the Table we just started to fi
 | Acoustic waves | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ | $\frac{∂V_x}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂x}$ |
 |                |                                                | $\frac{∂V_y}{∂t} = -\frac{1}{ρ}~\frac{∂P}{∂y}$ |
 |                | $\frac{∂P}{∂t} = -K~\frac{∂V_x}{∂x}$           | $\frac{∂P}{∂t} = -K~\left(\frac{∂V_x}{∂x} + \frac{∂V_y}{∂y} \right)$ |
-
-For both physics
-- The fluxes which are directional or vector quantities have a new $y$-direction component
-- The balance equation or divergence, now balances the sum of the fluxes from all dimensions
-
-Let's get started first with the diffusion equation, then the wave equation (as homework).
-
-### To dos:
-- Add $y$-direction physics and numerics
-- Update time step definition
-- Update initial Gaussian condition
-- Initialise all new arrays
-- Update physics calculations in the time loop
-- Update plotting
-
-#### $y$-direction physics and numerics
-
-You can make multi-statement lines for scalars:
-
-```julia
-Lx, Ly = 10.0, 10.0
-```
-
-#### Time step definition
-
-Take now the most restrictive condition, e.g.:
-
-```julia
-dt = min(dx, dy)/...
-```
 
 #### Initialise arrays
 
@@ -82,10 +137,6 @@ opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0
 display(heatmap(xc, yc, C'; opts...))
 ```
 
-That's how the 2D diffusion looks like:
-
-![diffusion](../assets/literate_figures/l4_diffusion_2D_1.gif)
-
 Let's get started with 2D.
 
 **It's time to launch Julia on your computer** 🚀
@@ -98,7 +149,7 @@ On GitHub, make sure to create a new folder for each week's exercises.
 
 Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
 
-This can be achieved by typing entering the Pkg mode from the Julia REPL in the tatrget folder
+This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
 
 ```julia-repl
 julia> ]
