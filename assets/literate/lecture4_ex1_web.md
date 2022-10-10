@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Nonlinear diffusion in 2D**
+## Exercise 1 - **Thermal porous convection in 2D**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
@@ -14,12 +14,27 @@ Starting from the 1D nonlinear diffusion equation we discussed in lecture 4, ext
 \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations. You will also need to handle the effective diffusivities in both $x$ and $y$ directions to account for correct staggering.}
 
 ### Task 1
+Create a new folder in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script `porous_convection_2D.jl` for this homework. Take 1D steady diffusion script `l3_steady_diffusion_1D.jl` as a basis. Rename variables so that we solve it for the pressure.
 
-Create a new folder in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script `diffusion_nl_2D.jl` for this homework. The script should produce a `heatmap()` plot that updates upon time steps, with labelled axes and physical time displayed as title.
+### Task 2
+Convert this script to 2D. The script should produce a `heatmap()` plot after the iterations converge.
 
 Use `nx = 128` and `ny = 129` grid points.
 
-### Task 2
+### Task 3
 
-Track the maximal ice thickness over time and report it in a plot as function of time.
+Wrap the iteration loop into a time loop. Make `nt=10` time steps.
+
+### Task 4
+
+Add new fields for the temperature evolution (advection and diffusion). Add the temperature update after the iteration loop. Don't forget updwind! Implement initial and boundary conditions.
+
+### Task 5
+
+Add two-way coupling using the Boussinesq approximaiton, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.
+
+```julia
+Vscale = 1/maximum(sqrt.(Vxp.^2 + Vyp.^2)) * dx*(st-1)
+quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=0.1, c=:blue); frame(anim)
+```
 
