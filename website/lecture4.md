@@ -26,7 +26,7 @@ noeval = true
 
 ---
 
-\literate{/_literate/l4_1-impl-nl_web.jl}
+\literate{/_literate/l4_1-porous-convect_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
@@ -42,17 +42,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture4_ex2_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture4_ex3_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture4_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
