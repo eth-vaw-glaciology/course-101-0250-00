@@ -43,15 +43,12 @@ display(heatmap(xc, yc, C&#x27;; opts...))</code></pre>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Implement a 2D nonlinear diffusion equation</p>
+<li><p>Implement coupled diffusion equations in 2D</p>
 
-<li><p>Consolidate the finite-difference discretisation</p>
+<li><p>Consolidate the implicit updates and dual timestepping</p>
 
 </ul>
-<p>In this first exercise, you will port the shallow ice-like 1D nonlinear diffusion code we did in class to a 2D implementation.</p>
-<p>Starting from the 1D nonlinear diffusion equation we discussed in lecture 4, extend the 1D code to a 2D configuration. Use the same parameters for the <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>-dimension quantities as the one you already have for the <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>-dimension.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >Don&#39;t forget to initialise &#40;pre-allocate&#41; all arrays &#40;vectors&#41; needed in the calculations. You will also need to handle the effective diffusivities in both <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> and <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> directions to account for correct staggering.</div></div>
+<p>In this first exercise, you will finalise the thermal porous convection discussed and implemented in class.</p>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
 <p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 4&#41; exercises. In there, create a new Julia script <code>porous_convection_2D.jl</code> for this homework. Take 1D steady diffusion script <code>l3_steady_diffusion_1D.jl</code> as a basis. Rename variables so that we solve it for the pressure.</p>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
@@ -62,7 +59,7 @@ display(heatmap(xc, yc, C&#x27;; opts...))</code></pre>
 <h3 id=task_4 ><a href="#task_4" class=header-anchor >Task 4</a></h3>
 <p>Add new fields for the temperature evolution &#40;advection and diffusion&#41;. Add the temperature update after the iteration loop. Don&#39;t forget updwind&#33; Implement initial and boundary conditions.</p>
 <h3 id=task_5 ><a href="#task_5" class=header-anchor >Task 5</a></h3>
-<p>Add two-way coupling using the Boussinesq approximaiton, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.</p>
+<p>Add two-way coupling using the Boussinesq approximation, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.</p>
 <pre><code class="julia hljs">Vscale = <span class=hljs-number >1</span>/maximum(sqrt.(Vxp.^<span class=hljs-number >2</span> + Vyp.^<span class=hljs-number >2</span>)) * dx*(st-<span class=hljs-number >1</span>)
 quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs-number >0.1</span>, c=:blue); frame(anim)</code></pre>
 
@@ -72,21 +69,12 @@ quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Investigate second-order acceleration</p>
+<li><p>Implicit advection diffusion and dual-timestepping</p>
 
-<li><p>Derive scaling relation &#40;number of iterations as function of number of grid points&#41;</p>
-
-</ul>
-<p>In this exercise you will investigate the scalability of the first and second order iterative schemes discussed during lecture 4.</p>
-<p>Start from the <code>Laplacian_damped.jl</code> script we realised in class, which should contain two &quot;switches&quot;:</p>
-<ul>
-<li><p><code>order</code> &#40;1st or 2nd order scheme&#41;</p>
-
-<li><p><code>fact</code> &#40;factor to multiply the number of grid points&#41;</p>
+<li><p>Build your intuition about convection and the Rayleigh number</p>
 
 </ul>
-<p>👉 Download the <code>Laplacian_damped.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
-<p>Add a copy of the <code>Laplacian_damped.jl</code> script we did in class to your exercise folder. Modify that script to perform systematics to assess the scalability of the damped versus the non-damped Laplacian 2D implementation.</p>
+<p>In this exercise you will xyz</p>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>Move the temperature update into the iteration loop.</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># action</span>

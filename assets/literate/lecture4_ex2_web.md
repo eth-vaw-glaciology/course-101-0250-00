@@ -4,18 +4,10 @@
 👉 See [Logistics](/logistics/#submission) for submission details.
 
 The goal of this exercise is to:
-- Investigate second-order acceleration
-- Derive scaling relation (number of iterations as function of number of grid points)
+- Implicit advection diffusion and dual-timestepping
+- Build your intuition about convection and the Rayleigh number
 
-In this exercise you will investigate the scalability of the first and second order iterative schemes discussed during lecture 4.
-
-Start from the `Laplacian_damped.jl` script we realised in class, which should contain two "switches":
-- `order` (1st or 2nd order scheme)
-- `fact` (factor to multiply the number of grid points)
-
-👉 Download the `Laplacian_damped.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
-
-Add a copy of the `Laplacian_damped.jl` script we did in class to your exercise folder. Modify that script to perform systematics to assess the scalability of the damped versus the non-damped Laplacian 2D implementation.
+In this exercise you will xyz
 
 ### Task 1
 Move the temperature update into the iteration loop.
