@@ -48,20 +48,92 @@ display(heatmap(xc, yc, C&#x27;; opts...))</code></pre>
 <li><p>Consolidate the implicit updates and dual timestepping</p>
 
 </ul>
-<p>In this first exercise, you will finalise the thermal porous convection discussed and implemented in class.</p>
+<p>In this first exercise, you will finalise the thermal porous convection discussed and implemented in class. The following tasks combine the major steps needed to program 2D thermal porous convection starting from 1D steady state diffusion.</p>
+<h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
+<p>Create a new folder named <code>lecture4</code> in your GitHub repository for this week&#39;s &#40;lecture 4&#41; exercises. In there, create a new Julia script named <code>porous_convection_2D.jl</code> for this homework. Take the 1D steady diffusion script <code>l3_steady_diffusion_1D.jl</code> as a basis.</p>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
-<p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 4&#41; exercises. In there, create a new Julia script <code>porous_convection_2D.jl</code> for this homework. Take 1D steady diffusion script <code>l3_steady_diffusion_1D.jl</code> as a basis. Rename variables so that we solve it for the pressure.</p>
+<p>Rename variables so that we solve it for the pressure:</p>
+<ul>
+<li><p><code>C</code> should now be replaced by <code>Pf</code></p>
+
+<li><p><code>qx</code> becomes <code>qDx</code> and should be initialised with size <code>nx&#43;1</code>. Modify the rest of the code accordingly such that entire <code>Pf</code> array can be updated having the boundary condition set on the flux.</p>
+
+<li><p><code>dc</code> becomes <code>k_ηf</code> which is now the permeability over fluid viscosity</p>
+
+<li><p><code>dτ./&#40;ρ*dc .&#43; dτ&#41;</code> from flux update becomes <code>1.0./&#40;1.0 &#43; θ_dτ&#41;</code></p>
+
+<li><p><code>dτ</code> from pressure update becomes <code>β_dτ</code></p>
+
+</ul>
+<p>Use following definition for <code>θ_dτ</code> and <code>β_dτ</code>:</p>
+<pre><code class="julia hljs">θ_dτ    = lx/re/cfl/dx
+β_dτ    = (re*k_ηf)/(cfl*dx*lx)</code></pre>
+<p>and introduce <code>cfl &#61; 1.0/sqrt&#40;2.1&#41;</code> in the numerics section. Also, <code>ρ</code> is no longer needed and we can move <code>re</code> to numerics section as well.</p>
+<p>Finally, update residual and error checking calculation as following &#40;initialising <code>r_Pf</code> accordingly&#41;</p>
+<pre><code class="julia hljs">r_Pf  .= diff(qDx)./dx
+err_Pf = maximum(abs.(r_Pf))</code></pre>
+<p>renaming <code>err</code> to <code>err_Pf</code>.</p>
 <h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
-<p>Convert this script to 2D. The script should produce a <code>heatmap&#40;&#41;</code> plot after the iterations converge.</p>
-<p>Use <code>nx &#61; 128</code> and <code>ny &#61; 129</code> grid points.</p>
+<p>Convert this script to 2D. The script should produce a <code>heatmap&#40;&#41;</code> plot after the iterations converge. Start by renaming the main function <code>porous_convection_2D</code>.</p>
+<p>Use <code>lx&#61;40.0</code> and <code>ly&#61;20.0</code> and make sure the <code>dx</code> and <code>dy</code> cell size to be equal by selecting the appropriate number of grid points <code>ny</code> in <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> direction.</p>
+<p>In the numerical parameters, take <code>min&#40;dx,dy&#41;</code>, <code>max&#40;lx,ly&#41;</code> and <code>max&#40;nx,ny&#41;</code> whenever possible.</p>
+<p>Make the initial condition a Gaussian distribution in 2D; you can use following</p>
+<pre><code class="julia hljs">@. exp(-(xc-lx/<span class=hljs-number >4</span>)^<span class=hljs-number >2</span> -(yc&#x27;-ly/<span class=hljs-number >4</span>)^<span class=hljs-number >2</span>)</code></pre>
+<p>taking care not to omit the transpose <code>&#39;</code>.</p>
+<p>Also, initialise the flux in the <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> direction <code>qDy</code>. Update the residual calculation to account for the 2D setup.</p>
+<p>Add a line to print out the convergence results within the <code>ncheck</code> block. You can take inspiration from:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;  iter/nx=%.1f, err_Pf=%1.3e\n&quot;</span>,iter/nx,err_Pf)</code></pre>
+<p>Finally, remove the error saving procedure used to plot convergence.</p>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
-<p>Wrap the iteration loop into a time loop. Make <code>nt&#61;10</code> time steps.</p>
+<p>Wrap the iteration loop into a time loop. Make <code>nt&#61;10</code> time steps. Move visualisation part out of the iteration loop and ass also an error monitoring step after the iteration loop as</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;it = %d, iter/nx=%.1f, err_Pf=%1.3e\n&quot;</span>,it,iter/nx,err_Pf)</code></pre>
+<p>to verify convergence.</p>
 <h3 id=task_4 ><a href="#task_4" class=header-anchor >Task 4</a></h3>
-<p>Add new fields for the temperature evolution &#40;advection and diffusion&#41;. Add the temperature update after the iteration loop. Don&#39;t forget updwind&#33; Implement initial and boundary conditions.</p>
+<p>Add new fields for the temperature evolution &#40;advection and diffusion&#41; using a fully explicit update approach outside of the iteration loop, right before visualisation. Don&#39;t forget to use an upwind scheme&#33;</p>
+<p>Use following time step definition &#40;and compute it right before the temperature update&#41;</p>
+<pre><code class="julia hljs">dt_adv = ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/<span class=hljs-number >2.1</span>
+dt     = min(dt_diff,dt_adv)</code></pre>
+<p>The temperature update part could conatin one update for the diffusion-related process and one for advection:</p>
+<pre><code class="julia hljs">T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+= dt.*λ_ρCp.*(...)
+T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .-= dt./ϕ.*(...)</code></pre>
+<p>Make sure to add following to the initialisation</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
+αρgx,αρgy = <span class=hljs-number >0.0</span>,<span class=hljs-number >1.0</span>
+αρg       = sqrt(αρgx^<span class=hljs-number >2</span>+αρgy^<span class=hljs-number >2</span>)
+ΔT        = <span class=hljs-number >200.0</span>
+ϕ         = <span class=hljs-number >0.1</span>
+Ra        = <span class=hljs-number >100</span>
+λ_ρCp     = <span class=hljs-number >1</span>/Ra*(αρg*k_ηf*ΔT*ly/ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span>
+<span class=hljs-comment ># numerics</span>
+dt_diff   = min(dx,dy)^<span class=hljs-number >2</span>/λ_ρCp/<span class=hljs-number >4.1</span></code></pre>
+<p>Implement initial and boundary conditions; Initialise temperature array <code>T</code> as following taking care of setting upper and lower boundary initial conditions as well; heating from below and cooling from above.</p>
+<pre><code class="julia hljs">T         = @. ΔT*exp(-xc^<span class=hljs-number >2</span> - (yc&#x27;+ly/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>)
+T[:,<span class=hljs-number >1</span>] .= ΔT/<span class=hljs-number >2</span>; T[:,<span class=hljs-keyword >end</span>] .= -ΔT/<span class=hljs-number >2</span></code></pre>
+<p>Left and right boundaries of the temperature field should have an adiabatic condition, i.e.,</p>
+<pre><code class="julia hljs">T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:] .= T[[<span class=hljs-number >2</span>,<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>],:]</code></pre>
+<p>In addition, also centre the <code>xc</code> and <code>yc</code> coordinates such that they span for <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> direction, from <code>lx/2&#43;dx/2</code> to <code>lx/2-dx/2</code>. For <code>ly</code>, define coordinates such the they span from <code>-ly&#43;dy/2</code> to <code>dy/2</code> &#40;having the 0 at the upper surface&#41;.</p>
 <h3 id=task_5 ><a href="#task_5" class=header-anchor >Task 5</a></h3>
-<p>Add two-way coupling using the Boussinesq approximation, i.e., the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution and arrows for velocities.</p>
-<pre><code class="julia hljs">Vscale = <span class=hljs-number >1</span>/maximum(sqrt.(Vxp.^<span class=hljs-number >2</span> + Vyp.^<span class=hljs-number >2</span>)) * dx*(st-<span class=hljs-number >1</span>)
-quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs-number >0.1</span>, c=:blue); frame(anim)</code></pre>
+<p>Add two-way coupling using the Boussinesq approximation, i.e., add the dependence of density on temperature in the Darcy flux. Produce the animation displaying the temperature evolution including arrows &#40;quiver plot&#41; for velocities.</p>
+<p>Change parameters as following: <code>nt&#61;500</code>, <code>nx&#61;127</code> and <code>Ra&#61;1000.0</code>.</p>
+<p>For visualisation, embed the plotting into a <code>nvis</code> statement setting <code>nvis&#61;5</code>. Below you&#39;ll find a sample code for visualisation:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># visualisation</span>
+<span class=hljs-keyword >if</span> it % nvis == <span class=hljs-number >0</span>
+    qDxc  .= <span class=hljs-comment ># average qDx in x</span>
+    qDyc  .= <span class=hljs-comment ># average qDx in y</span>
+    qDmag .= sqrt.(qDxc.^<span class=hljs-number >2</span> .+ qDyc.^<span class=hljs-number >2</span>)
+    qDxc  ./= qDmag
+    qDyc  ./= qDmag
+    qDx_p = qDxc[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>,<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>]
+    qDy_p = qDyc[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>,<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>]
+    heatmap(xc,yc,T&#x27;;xlims=(xc[<span class=hljs-number >1</span>],xc[<span class=hljs-keyword >end</span>]),ylims=(yc[<span class=hljs-number >1</span>],yc[<span class=hljs-keyword >end</span>]),aspect_ratio=<span class=hljs-number >1</span>,c=:turbo)
+    display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=<span class=hljs-number >0.5</span>, c=:black))
+<span class=hljs-keyword >end</span></code></pre>
+<p>where <code>Xp</code> and <code>Yp</code> could be initialised as following before the time loop:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># visualisation init</span>
+st        = ceil(<span class=hljs-built_in >Int</span>,nx/<span class=hljs-number >25</span>)
+Xc, Yc    = [x <span class=hljs-keyword >for</span> x=xc, y=yc], [y <span class=hljs-keyword >for</span> x=xc,y=yc]
+Xp, Yp    = Xc[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>,<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>], Yc[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>,<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>]</code></pre>
+<p>Well done 🚀 - you made it. Add the produced gif or animation to the <code>README.md</code> within your <code>lecture4</code> folder.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -69,12 +141,12 @@ quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Implicit advection diffusion and dual-timestepping</p>
+<li><p>Implement implicit advection-diffusion and dual-timestepping</p>
 
 <li><p>Build your intuition about convection and the Rayleigh number</p>
 
 </ul>
-<p>In this exercise you will xyz</p>
+<p>In this exercise you will implement the fully implicit and fully coupled solver for the thermal porous convection problem.</p>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>Move the temperature update into the iteration loop.</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># action</span>
@@ -111,7 +183,7 @@ quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs
         <span class=hljs-keyword >end</span>
         iter += <span class=hljs-number >1</span>
     <span class=hljs-keyword >end</span>
-    <span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;it = %d, iter/nx=%.1f, err_Pf=%1.3e, err_T=%1.3e\n&quot;</span>,it,iter/nx,err_Pf,err_T)
+    <span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;it = %d, iter/nx=%.1f\n&quot;</span>,it,iter/nx)
     <span class=hljs-comment ># visualisation</span>
     <span class=hljs-keyword >if</span> it % nvis == <span class=hljs-number >0</span>
         qDx_c .= avx(qDx)
@@ -123,13 +195,12 @@ quiver!(Xp[:], Yp[:], quiver=(Vxp[:]*Vscale, Vyp[:]*Vscale), lw=<span class=hljs
         qDy_p = qDy_c[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>,<span class=hljs-number >1</span>:st:<span class=hljs-keyword >end</span>]
         heatmap(xc,yc,T&#x27;;xlims=(xc[<span class=hljs-number >1</span>],xc[<span class=hljs-keyword >end</span>]),ylims=(yc[<span class=hljs-number >1</span>],yc[<span class=hljs-keyword >end</span>]),aspect_ratio=<span class=hljs-number >1</span>,c=:turbo)
         display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=<span class=hljs-number >0.5</span>, c=:black))
-        iframe += <span class=hljs-number >1</span>
     <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span></code></pre>
 <h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
 <p>Introduce the Rayleigh number:</p>
-<pre><code class="julia hljs">Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</code></pre>
-<p>Calculate the thermal diffusivity <code>λ_ρCp</code> using the specified <code>Ra&#61;2e3</code> number. Using this modified code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of <code>Ra</code> above which there is convection is approximately <code>40</code>. Confirm that <code>Ra &lt; 40</code> results in no convection, and values of <code>Ra &gt; 40</code> result in convection development. Try the range of values <code>10</code>, <code>40</code>, <code>100</code>, <code>1000</code>. Produce the final figure after <code>nt&#61;100</code> timesteps.</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span></code></pre>
+<p>Calculate the thermal diffusivity <code>λ_ρCp</code> using the specified value of <code>Ra</code>. Using this modified code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of <code>Ra</code> above which there is convection is approximately <code>40</code>. Confirm that <code>Ra &lt; 40</code> results in no convection, and values of <code>Ra &gt; 40</code> result in the development of convection. Try the range of values <code>10</code>, <code>40</code>, <code>100</code>, <code>1000</code>. Produce the final figure after <code>nt&#61;100</code> timesteps for each value.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Use <code>&#33;&#91;fig_name&#93;&#40;./&lt;relative-path&gt;/my_fig.png&#41;</code> to insert a figure in the <code>README.md</code>.</div></div>
 
