@@ -6,12 +6,12 @@ md"""
 
 md"""
 The goal of this exercise is to:
-- Implicit advection diffusion and dual-timestepping
+- Implement implicit advection-diffusion and dual-timestepping
 - Build your intuition about convection and the Rayleigh number
 """
 
 md"""
-In this exercise you will xyz
+In this exercise you will implement the fully implicit and fully coupled solver for the thermal porous convection problem.
 """
 
 md"""
@@ -53,7 +53,7 @@ for it = 1:nt
         end
         iter += 1
     end
-    @printf("it = %d, iter/nx=%.1f, err_Pf=%1.3e, err_T=%1.3e\n",it,iter/nx,err_Pf,err_T)
+    @printf("it = %d, iter/nx=%.1f\n",it,iter/nx)
     # visualisation
     if it % nvis == 0
         qDx_c .= avx(qDx)
@@ -65,7 +65,6 @@ for it = 1:nt
         qDy_p = qDy_c[1:st:end,1:st:end]
         heatmap(xc,yc,T';xlims=(xc[1],xc[end]),ylims=(yc[1],yc[end]),aspect_ratio=1,c=:turbo)
         display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=0.5, c=:black))
-        iframe += 1
     end
 end
 ```
@@ -73,11 +72,11 @@ end
 ### Task 2
 Introduce the Rayleigh number:
 ```julia
-Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ
+# Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ
 ```
 
-Calculate the thermal diffusivity `λ_ρCp` using the specified `Ra=2e3` number.
-Using this modified code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection, and values of `Ra > 40` result in convection development. Try the range of values `10`, `40`, `100`, `1000`. Produce the final figure after `nt=100` timesteps.
+Calculate the thermal diffusivity `λ_ρCp` using the specified value of `Ra`.
+Using this modified code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection, and values of `Ra > 40` result in the development of convection. Try the range of values `10`, `40`, `100`, `1000`. Produce the final figure after `nt=100` timesteps for each value.
 """
 
 #nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
