@@ -114,7 +114,7 @@ In addition, to reduce the number of independent variables in the code, instead 
 With these reformulations in mind, the full system of equations to solve is:
 
 $$
-\boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\boldsymbol{g}T)
+\boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\alpha\boldsymbol{g}T)
 $$
 
 $$
@@ -132,7 +132,7 @@ $$
 We formulate the pseudo-transient system of equations by augmenting the system with pseudo-physical terms. We add inertial terms to the Darcy and temperature diffusion fluxes:
 
 $$
-\theta_D\frac{\boldsymbol{q_D}}{\partial\tau} + \boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\boldsymbol{g}T)
+\theta_D\frac{\boldsymbol{q_D}}{\partial\tau} + \boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\alpha\boldsymbol{g}T)
 $$
 $$
 \theta_T\frac{\boldsymbol{q_T}}{\partial\tau} + \boldsymbol{q_T} = -\frac{\lambda}{\rho_0 c_p}\nabla T
