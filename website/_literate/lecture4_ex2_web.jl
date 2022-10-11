@@ -11,15 +11,26 @@ The goal of this exercise is to:
 """
 
 md"""
-In this exercise you will implement the fully implicit and fully coupled solver for the thermal porous convection problem.
+In this exercise you will implement the fully implicit and fully coupled solver for the thermal porous convection problem. Starting from the working solver that uses the explicit update for the temperature, you will introduce the pseudo-transient parameters for the implicit transient diffusion problem, and move the temperature update to the iteration loop. Then you will introduce the [Rayleigh number](https://en.wikipedia.org/wiki/Rayleigh_number) that characterises the intensity of the buoyancy-driven convection, and verify that your numerical code confirms the analytical predictions for the critical Rayleigh number separating the heat diffusion- and advection-dominated flow regimes.
 """
 
 md"""
 ### Task 1
-Move the temperature update into the iteration loop.
+Copy the file `porous_convection_2D.jl` and name it `porous_convection_implicit_2D.jl`. Rename the pseudo-transient variables for fluid pressure diffusion to avoid conflicts with the variables for temperature:
+
+- `re` should be replaced with `re_D`
+- `θ_dτ` should be replaced with `θ_dτ_D`
+- `β_dτ` should be replaced with `β_dτ_D`
+
+Adjust the value of `re_D` since the physics is now fully coupled:
 
 ```julia
-# action
+re_D        = 4π
+```
+
+Move the time step definition into the beginning of the time loop. For the first time step, use different definition to avoid division by 0:
+
+```julia
 for it = 1:nt
     T_old .= T
     # time step
@@ -28,58 +39,95 @@ for it = 1:nt
     else
         ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1
     end
-    re_therm    = 1.5*(π + sqrt(π^2 + ly^2/λ_ρCp/dt))
-    θ_dτ_therm  = max(lx,ly)/re_therm/cfl/min(dx,dy)
-    β_dτ_therm  = (re_therm*λ_ρCp)/(cfl*min(dx,dy)*max(lx,ly))
-    # iteration loop
-    iter = 1; err_Pf = 2ϵtol; err_T = 2ϵtol
-    while max(err_Pf,err_T) >= ϵtol && iter <= maxiter
-        # hydro
-        qDx[2:end-1,:] .-= ...
-        qDy[:,2:end-1] .-= ...
-        Pf             .-= ...
-        # thermo
-        qTx            .-= ...
-        qTy            .-= ...
-        dTdt           .= (T[2:end-1,2:end-1] .- T_old[2:end-1,2:end-1])./dt .+ (...)./ϕ
-        T[2:end-1,2:end-1] .-= ...
-        T[[1,end],:]        .= T[[2,end-1],:]
-        if iter % ncheck == 0
-            r_Pf  .= ...
-            r_T   .= ...
-            err_Pf = maximum(abs.(r_Pf))
-            err_T  = maximum(abs.(r_T))
-            @printf("  iter/nx=%.1f, err_Pf=%1.3e, err_T=%1.3e\n",iter/nx,err_Pf,err_T)
-        end
-        iter += 1
-    end
-    @printf("it = %d, iter/nx=%.1f\n",it,iter/nx)
-    # visualisation
-    if it % nvis == 0
-        qDx_c .= avx(qDx)
-        qDy_c .= avy(qDy)
-        qDmag .= sqrt.(qDx_c.^2 .+ qDy_c.^2)
-        qDx_c ./= qDmag
-        qDy_c ./= qDmag
-        qDx_p = qDx_c[1:st:end,1:st:end]
-        qDy_p = qDy_c[1:st:end,1:st:end]
-        heatmap(xc,yc,T';xlims=(xc[1],xc[end]),ylims=(yc[1],yc[end]),aspect_ratio=1,c=:turbo)
-        display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=0.5, c=:black))
-    end
+    ...
 end
 ```
 
-### Task 2
-Introduce the Rayleigh number:
+Introduce the pseudo-transient parameters for the temperature update. Recall that the temperature evolution equation is equivalent to the diffuison-reaction equation with advection. Now, the physical timestep `dt` is determined from the CFL condition and changes every iteration of the time loop. Thus, the pseudo-transient parameters should also be updated every time step:
+
 ```julia
-# Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ
+# time step
+# dt = ...
+re_T    = π + sqrt(π^2 + ly^2/λ_ρCp/dt)
+θ_dτ_T  = max(lx,ly)/re_T/cfl/min(dx,dy)
+β_dτ_T  = (re_T*λ_ρCp)/(cfl*min(dx,dy)*max(lx,ly))
+...
 ```
 
-Calculate the thermal diffusivity `λ_ρCp` using the specified value of `Ra`.
-Using this modified code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection, and values of `Ra > 40` result in the development of convection. Try the range of values `10`, `40`, `100`, `1000`. Produce the final figure after `nt=100` timesteps for each value.
-"""
+Add new arrays to the `# array initialisation` section to store the physical time derivative of temperature, temperature equation residual, and the temperature diffusion fluxes:
 
-#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.
-#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a figure in the `README.md`.}
+```julia
+dTdt        = zeros(nx-2,ny-2)
+r_T         = zeros(nx-2,ny-2)
+qTx         = zeros(nx-1,ny-2)
+qTy         = zeros(nx-2,ny-1)
+```
+
+Note that the sizes of the arrays `qTx` and `qTy` are different from the arrays for the Darcy fluxes `qDx` and `qDy`. The reason for this is that we use the different boundary conditions for the temperature, and don't want to update the temperature at the domain boundaries.
+
+### Task 2
+Move the temperature update into the iteration loop. Rename the variable `err` to `err_D` to avoid confuision. Introduce the new variable `err_T` to store the residual for the temperature evolution equation and modify the exit critera to break iterations when both errors are less than tolerance:
+```julia
+# iteration loop
+iter = 1; err_Pf = 2ϵtol; err_T = 2ϵtol
+while max(err_D,err_T) >= ϵtol && iter <= maxiter
+...
+end
+```
+
+Annotate the Darcy fluxes and pressure update with a comment, and introduce the new section for temperature update:
+
+```julia
+while max(err_Pf,err_T) >= ϵtol && iter <= maxiter
+    # fluid pressure update
+    qDx[2:end-1,:] .-= ...
+    qDy[:,2:end-1] .-= ...
+    Pf             .-= ...
+    # temperature update
+    ...
+end
+```
+
+Add the temperature diffusion flux update analogous the the Darcy flux update, but using the different iteration parameters:
+
+```julia
+# temperature update
+qTx            .-= ...
+qTy            .-= ...
+```
+
+Compute the material physical time derivative as a combination of partial derivative `(T - T_old)./dt` and upwind advection:
+
+```julia
+dTdt           .= (T[2:end-1,2:end-1] .- T_old[2:end-1,2:end-1])./dt .+ (...)./ϕ
+```
+
+The upwind advection part could be simply copied from the previous explicit version, ignoring the `dt` factor.
+Finally, compute the temperature update and move the boundary conditions to the iteration loop:
+
+```julia
+T[2:end-1,2:end-1] .-= (dTdt .+ ...)./(1.0/dt + β_dτ_T)
+T[[1,end],:]       .= T[[2,end-1],:]
+```
+
+Add the residual calculation for the temperature evolution equation and the iteration progress reporting:
+
+```julia
+if iter % ncheck == 0
+    r_Pf  .= ...
+    r_T   .= dTdt .+ ...
+    err_D  = maximum(abs.(r_Pf))
+    err_T  = maximum(abs.(r_T))
+    @printf("  iter/nx=%.1f, err_D=%1.3e, err_T=%1.3e\n",iter/nx,err_D,err_T)
+end
+```
+
+Run the code, make sure that it works as expected, produce the animation and add it to the README.md within your lecture4 folder. Well done! 🔥. Did the number of iterations requred for convergence change compared to the version with the explicit temperature update? Try to come up with the explanation for why the number of iterations changed the way it changed and write a sentence about your thoughts on the topic.
+
+### Task 3
+Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the README.md within your lecture4 folder.
+
+What is the difference in the results for the different values of `Ra`, is there an observable trend? Write a comment explaining your observations.
+"""
 
 
