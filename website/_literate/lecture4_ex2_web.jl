@@ -43,7 +43,7 @@ for it = 1:nt
 end
 ```
 
-Introduce the pseudo-transient parameters for the temperature update. Recall that the temperature evolution equation is equivalent to the diffuison-reaction equation with advection. Now, the physical timestep `dt` is determined from the CFL condition and changes every iteration of the time loop. Thus, the pseudo-transient parameters should also be updated every time step:
+Introduce the pseudo-transient parameters for the temperature update. Recall that the temperature evolution equation is equivalent to the diffusion-reaction equation with advection. Now, the physical timestep `dt` is determined from the CFL condition and changes every iteration of the time loop. Thus, the pseudo-transient parameters should also be updated every time step:
 
 ```julia
 # time step
@@ -66,7 +66,7 @@ qTy         = zeros(nx-2,ny-1)
 Note that the sizes of the arrays `qTx` and `qTy` are different from the arrays for the Darcy fluxes `qDx` and `qDy`. The reason for this is that we use the different boundary conditions for the temperature, and don't want to update the temperature at the domain boundaries.
 
 ### Task 2
-Move the temperature update into the iteration loop. Rename the variable `err` to `err_D` to avoid confuision. Introduce the new variable `err_T` to store the residual for the temperature evolution equation and modify the exit critera to break iterations when both errors are less than tolerance:
+Move the temperature update into the iteration loop. Rename the variable `err` to `err_D` to avoid confusion. Introduce the new variable `err_T` to store the residual for the temperature evolution equation and modify the exit criteria to break iterations when both errors are less than tolerance:
 ```julia
 # iteration loop
 iter = 1; err_Pf = 2ϵtol; err_T = 2ϵtol
@@ -122,10 +122,12 @@ if iter % ncheck == 0
 end
 ```
 
-Run the code, make sure that it works as expected, produce the animation and add it to the README.md within your lecture4 folder. Well done! 🔥. Did the number of iterations requred for convergence change compared to the version with the explicit temperature update? Try to come up with the explanation for why the number of iterations changed the way it changed and write a sentence about your thoughts on the topic.
+Run the code, make sure that it works as expected, produce the animation and add it to the README.md within your `lecture4` folder. Well done! 🔥.
+
+Did the number of iterations required for convergence change compared to the version with the explicit temperature update? Try to come up with the explanation for why the number of iterations changed the way it changed and write a sentence about your thoughts on the topic.
 
 ### Task 3
-Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the README.md within your lecture4 folder.
+Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
 
 What is the difference in the results for the different values of `Ra`, is there an observable trend? Write a comment explaining your observations.
 """
