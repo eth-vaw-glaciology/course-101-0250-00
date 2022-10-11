@@ -123,5 +123,5 @@ Did the number of iterations required for convergence change compared to the ver
 ### Task 3
 Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
 
-What is the difference in the results for the different values of `Ra`, is there an observable trend? Write a comment explaining your observations.
+**Question:** What is the difference in the results for the different values of `Ra`, is there an observable trend? Write a comment explaining your observations.
 
