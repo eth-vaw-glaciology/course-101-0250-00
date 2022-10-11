@@ -64,14 +64,14 @@ In the following, we assume for simplicity that the porosity is constant: $\varp
 
 Conservation of energy in the fluid results in the following equation for the temperature $T$:
 $$
-\rho c_p \frac{\partial T}{\partial t} + \rho c_p\boldsymbol{v}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+\rho c_p \frac{\partial T}{\partial t} + \rho c_p\boldsymbol{v}\cdot\nabla T + \nabla\cdot\boldsymbol{q_F} = 0
 $$
-Here, $c_p$ is the specific heat capacity of the fluid, and $\boldsymbol{q_T}$ is the conductive heat flux. Note that the time $t$ here is the physical time.
+Here, $c_p$ is the specific heat capacity of the fluid, and $\boldsymbol{q_F}$ is the conductive heat flux. Note that the time $t$ here is the physical time.
 
 In a very similar manner to the Darcy's law, we relate the heat flux to the gradient of temperature (Fourier's law):
 
 $$
-\boldsymbol{q_T} = -\lambda\nabla T
+\boldsymbol{q_F} = -\lambda\nabla T
 $$
 
 where $\lambda$ is the _thermal conductivity_. Assuming $\lambda=\mathrm{const}$, substituting the Fourier's law into the energy equation, and using the definition of the Darcy flux we obtain:
@@ -107,7 +107,48 @@ We already discussed how the steady-state and transient equations could be solve
 
 Let's apply this strategy to solve the thermal porous convection!
 
-The thermal porous convection is a coupled system of equations.
+The thermal porous convection is a coupled system of equations describing the evolution of pressure and temperature. To simplify the equations, we solve not for the absolute values for pressure and temperature, but for the deviation of pressure from hydrostatic gradient $\int_{z}\rho g\,dz$, and deviation of temperature from the reference value $T_0$. Also, to reduce the number of independent variables in the code, instead of using the Fourier heat flux $\boldsymbol{q_T}$ we use the temperature diffusion flux $\boldsymbol{q_T}=\boldsymbol{q_F}/(\rho_0 c_p)$. With these reformulations in mind, the full system of equations to solve is:
+
+$$
+\boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\boldsymbol{g}T)
+$$
+
+$$
+\nabla\cdot\boldsymbol{q_D} = 0
+$$
+
+$$
+\boldsymbol{q_T} = -\frac{\lambda}{\rho_0 c_p}\nabla T
+$$
+
+$$
+\frac{\partial T}{\partial t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+$$
+
+We formulate the pseudo-transient system of equations by augmenting the system with pseudo-physical terms. We add inertial terms to the Darcy and temperature diffusion fluxes:
+
+$$
+\theta_D\frac{\boldsymbol{q_D}}{\partial\tau} + \boldsymbol{q_D} = -\frac{k}{\eta}(\nabla p - \rho_0\boldsymbol{g}T)
+$$
+$$
+\theta_T\frac{\boldsymbol{q_T}}{\partial\tau} + \boldsymbol{q_T} = -\frac{\lambda}{\rho_0 c_p}\nabla T
+$$
+Here, $\theta_D$ and $\theta_T$ are the characteristic relaxation times for pressure and heat diffusion, respectively, and $\tau$ is the pseudo-time.
+
+Then, we add the pseudo-compressibility to the mass balance equation. Then, for each physical time step we discretise the physical time derivative and add the pseudo-time derivative (dual-time method):
+$$
+\beta\frac{\partial p}{\partial\tau} - \nabla\cdot\boldsymbol{q_D} = 0
+$$
+
+$$
+\frac{\partial T}{\partial \tau} + \frac{T-T_\mathrm{old}}{\mathrm{d}t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+$$
+
+Here, $\beta$ is the pseudo-compressibility, $\mathrm{d}t$ is the physical time step, and $T_\mathrm{old}$ is the distribution of temperature at the previous physical time step.
+
+This new system of equations is amendable to the efficient solution by the pseudo-transient method. We'll implement the porous convection solver in 2 stages: at the first stage, we'll program the efficient elliptic solver for the pressure, leaving the temperature update explicit, and in the second stage, we'll make the temperature solver also implicit.
+
+### Useful information
 
 #### Initialise arrays
 
