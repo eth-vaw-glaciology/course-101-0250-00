@@ -104,7 +104,7 @@ Left and right boundaries of the temperature field should have an adiabatic cond
 T[[1,end],:] .= T[[2,end-1],:]
 ```
 
-In addition, also centre the `xc` and `yc` coordinates such that they span for $x$ direction, from `lx/2+dx/2` to `lx/2-dx/2`. For `ly`, define coordinates such the they span from `-ly+dy/2` to `dy/2` (having the 0 at the upper surface).
+In addition, also centre the `xc` and `yc` coordinates such that they span for $x$ direction, from `-lx/2+dx/2` to `lx/2-dx/2`. For `ly`, define coordinates such the they span from `-ly+dy/2` to `dy/2` (having the 0 at the upper surface).
 
 ### Task 5
 
