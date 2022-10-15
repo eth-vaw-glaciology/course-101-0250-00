@@ -148,6 +148,3 @@ md"""
 - Tests can be grouped into sets using `@testset`.
 - We'll later see how tests can be used in CI.
 """
-
-
-
