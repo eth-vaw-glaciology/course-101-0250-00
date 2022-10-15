@@ -1,40 +1,95 @@
 md"""
-## Exercise 2 - **Performance implementation: Acoustic 2D**
+## Exercise 2 - **Performance evaluation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
 The goal of this exercise is to:
-- Apply the optimisation steps done for the diffusion 2D to the acoustic wave propagation 2D code (velocity-pressure formulation)
+- Create a script to assess $T_\mathrm{peak}$, using memory-copy
+- Assess $T_\mathrm{peak}$ of your CPU
+- Perform a strong-scaling test: assess $T_\mathrm{eff}$ for the fluid pressure diffusion 2D solver as function of number of grid points and implementation
 """
 
 md"""
-For this second exercise, you will implement a performance oriented implementation of the 2D acoustic scripts from lecture 5.
-
+For this exercise, you will write a code to assess the peak memory throughput of your CPU and run a strong scaling benchmark using the fluid pressure diffusion 2D solver and report performance.
 """
-
-#md # 👉 If needed, download the [`acoustic_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started.
 
 md"""
 ### Task 1
 
-In the folder in your GitHub repository for this week's (lecture 5) exercises, create a new subfolder `acoustic2D` where you will add following script:
-- `acoustic_2D_Teff.jl`
-  - Implement the `T_eff` metric to the acoustic wave in 2D. Since we are using the velocity-pressure formulation, think about how many arrays are read / written at every iterations and define `A_Eff` accordingly.
-  - Use `@printf()` to report `t_toc`, `T_eff` and `niter`.
-  - Boost the number of grid points to `nx = ny = 512`.
-  - Implement a flag to deactivate visualisation using kwargs.
-- `acoustic_2D_perf.jl`
-  - Replace divisions by multiplications.
-  - When possible, fuse scalar computations in preprocessing.
-- `acoustic_2D_perf_loop.jl`
-  - Perform the computations of `Vx`, `Vy` and `P` in nested loops. Take care of the staggering and loop range.
-- `acoustic_2D_perf_loop_fun.jl`
-  - Move the physics computations inside functions (kernels) and call them within the time loop. Use the minimal amount of functions that would ensure correct results.
-  - Implement multi-threading using both `Threads.@threads` and `@tturbo` (the latter from [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl)).
+In the `Pf_diffusion_2D` folder, create a new script named `memcopy.jl`. You can use as starting point the `diffusion_2D_loop_fun.jl` script from lecture 5 (or exercise 1).
 
+1. Rename the "main" function `memcopy()`
+2. Modify the script to only keep following in the initialisation:
 """
 
-#nb # > 💡 hint: Refer to [this section](#timer_and_performance) in lecture 5 to capture the starting point describing which features are specific to each version of the diffusion 2D codes.
-#md # \note{Refer to [this section](#timer_and_performance) in lecture 5 to capture the starting point describing which features are specific to each version of the diffusion 2D codes.}
+## Numerics
+nx, ny  = 512, 512
+nt      = 2e4
+## array initialisation
+C       = rand(Float64, nx, ny)
+C2      = copy(C)
+A       = copy(C)
+
+md"""
+3. Implement 2 compute functions to perform the following operation `C2 = C + A`, replacing the previous calculations:
+    - create an "array programming"-based function called `compute_ap!()` that includes a broadcasted version of the memory copy operation;
+    - create a second "kernel programming"-based function called `compute_kp!()` that uses a loop-based implementation with multi-threading.
+4. Update the `A_eff` formula accordingly.
+5. Implement a switch to monitor performance using either a manual approach or `BenchmarkTools` and pass the `bench` value as kwarg to the `memcopy()` main function including a default:
+"""
+
+if bench == :loop
+    ## iteration loop
+    t_tic = 0.0
+    for iter=1:nt
+      ...
+    end
+    t_toc = Base.time() - t_tic
+elseif bench == :btool
+    t_toc = @belapsed ...
+end
+
+
+md"""
+Then, create a `README.md` file in the `Pf_diffusion_2D` folder to report the results for each of the following tasks (including a .png of the figure when instructed)
+"""
+
+#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a .png figure in the `README.md`.
+#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a .png figure in the `README.md`.}
+
+md"""
+### Task 2
+
+Report on a figure $T_\mathrm{eff}$ of your `memcopy.jl` code as function of number of grid points `nx × ny` for the array and kernel programming approaches, respectively, using the `BenchmarkTools` implementation. Vary `nx`and `ny` such that
+"""
+
+nx = ny = 16 * 2 .^ (1:8)
+
+md"""
+_($T_\mathrm{eff}$ of your `memcopy.jl` code represents $T_\mathrm{peak}$, the peak memory throughput you can achieve on your CPU for a given implementation.)_
+"""
+
+md"""
+On the same figure, report the best value of memcopy obtained using the manual loop-based approach (manual timer) to assess $T_\mathrm{peak}$.
+"""
+
+#nb # > 💡 hint: For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.
+#md # \note{For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.}
+
+md"""
+Add the above figure in a new section of the `Pf_diffusion_2D/README.md`, and provide a minimal description of 1) the performed test, and 2) a short description of the result. Figure out the vendor-announced peak memory bandwidth for your CPU, add it to the figure and use it to discuss your results.
+"""
+
+md"""
+### Task 3
+
+Repeat the strong scaling benchmark you just realised in Task 2 using the various fluid pressure diffusion 2D codes (`Pf_diffusion_2D_Teff.jl`; `Pf_diffusion_2D_perf.jl`; `Pf_diffusion_2D_loop_fun.jl` - `for`, `Threads.@threads` for the latter).
+
+Report on a figure $T_\mathrm{eff}$ of the 4 diffusion solvers' implementations as function of number of grid points `nx × ny`. Vary `nx`and `ny` such that `nx = ny = 16 * 2 .^ (1:8)`. **Use the `BenchmarlTools`-based evaluation approach.**
+
+On the same figure, report also the best memory copy value (as, e.g, dashed lines) and vendor announced values (if available - optional).
+
+Add this second figure in a new section of the `Pf_diffusion_2D/README.md`, and provide a minimal description of 1) the performed test, and 2) a short description of the result.
+"""

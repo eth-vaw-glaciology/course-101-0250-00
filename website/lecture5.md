@@ -12,7 +12,7 @@ noeval = true
 > :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
 > :computer: Unit testing in Julia\
 > :construction: Exercises:
-> - CPU perf. codes for diffusion and acoustic waves
+> - CPU perf. codes for 2D diffusion
 > - Unit tests and testset implementation
 
 --- 
@@ -52,11 +52,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture5_ex3_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture5_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
