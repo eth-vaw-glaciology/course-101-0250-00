@@ -12,7 +12,7 @@ noeval = true
 > :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
 > :computer: Unit testing in Julia\
 > :construction: Exercises:
-> - CPU perf. codes for 2D diffusion
+> - CPU perf. codes for 2D diffusion and memcopy
 > - Unit tests and testset implementation
 
 --- 
