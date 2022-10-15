@@ -16,26 +16,59 @@ _1_θ_dτ = 1.0./(1.0 + θ_dτ)
 
 _dx, _dy = 1.0/dx, 1.0/dy
 
-for iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    Pf[??]  -= ??
+for iy=??
+    for ix=??
+        Pf[??]  -= ??
+    end
 end
 
 macro d_xa(A)  esc(:( $A[??]-$A[??] )) end
 macro d_ya(A)  esc(:( $A[??]-$A[??] )) end
 
-for iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    Pf[??]  -= ??
+for iy=??
+    for ix=??
+        Pf[??]  -= ??
+    end
 end
+
+function compute_flux!(...)
+    nx,ny=size(Pf)
+    ...
+    return nothing
+end
+
+function update_Pf!(Pf,...)
+    nx,ny=size(Pf)
+    ...
+    return nothing
+end
+
+function compute!(Pf,qDx,qDy, ???)
+    compute_flux!(...)
+    update_Pf!(...)
+    return nothing
+end
+
+t_toc = @belapsed compute!($Pf,$qDx,$qDy,???)
+niter = ???
 

@@ -60,31 +60,43 @@ T_eff = A_eff/t_it   <span class=hljs-comment ># Effective memory throughput [GB
 <p>As first, duplicate <code>Pf_diffusion_2D_perf.jl</code> and rename it as <code>Pf_diffusion_2D_perf_loop.jl</code>.</p>
 <p>The goal is now to write out the diffusion physics in a loop fashion over <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> and <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> dimensions.</p>
 <p>Implement a nested loop, taking car of bounds and staggering.</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >for</span> iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+<pre><code class="julia hljs"><span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span>
-<span class=hljs-keyword >for</span> iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+<span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span>
-<span class=hljs-keyword >for</span> iy=??, ix=??
-    Pf[??]  -= ??
+<span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        Pf[??]  -= ??
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span></code></pre>
 <p>We could now use macros to make the code nicer and clearer. Macro expression will be replaced during pre-processing &#40;prior to compilation&#41;. Also, macro can take arguments by appending <code>&#36;</code> in their definition.</p>
 <p>Let&#39;s use macros to replace the derivative implementations</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >macro</span> d_xa(A)  esc(:( $A[??]-$A[??] )) <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >macro</span> d_ya(A)  esc(:( $A[??]-$A[??] )) <span class=hljs-keyword >end</span></code></pre>
 <p>And update the code within the iteration loop:</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >for</span> iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+<pre><code class="julia hljs"><span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span>
-<span class=hljs-keyword >for</span> iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+<span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span>
-<span class=hljs-keyword >for</span> iy=??, ix=??
-    Pf[??]  -= ??
+<span class=hljs-keyword >for</span> iy=??
+    <span class=hljs-keyword >for</span> ix=??
+        Pf[??]  -= ??
+    <span class=hljs-keyword >end</span>
 <span class=hljs-keyword >end</span></code></pre>
 <p>Performance is already quite better with the loop version 🚀.</p>
-<p>Reasons are that <code>diff&#40;&#41;</code> are allocating tmp and that Julia is overall well optimised for executing loops.</p>
+<p>Reasons are that <code>diff&#40;&#41;</code> are allocating and that Julia is overall well optimised for executing loops.</p>
 <p>Let&#39;s now implement the final step.</p>
 <h3 id=ol_start4_back_to_loops_ii ><a href="#ol_start4_back_to_loops_ii" class=header-anchor ><ol start=4 >
 <li><p>Back to loops II</p>
@@ -92,42 +104,60 @@ T_eff = A_eff/t_it   <span class=hljs-comment ># Effective memory throughput [GB
 </ol>
 </a></h3>
 <p>Duplicate <code>Pf_diffusion_2D_perf_loop.jl</code> and rename it as <code>Pf_diffusion_2D_perf_loop_fun.jl</code>.</p>
-<p>In this last step, the goal is to define a <code>compute</code> function to hold the physics calculations, and to call it within the time loop.</p>
-<p>Create a <code>compute&#33;&#40;&#41;</code> function that takes input and output arrays and needed scalars as argument and returns nothing.</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >function</span> compute!(...)
+<p>In this last step, the goal is to define <code>compute</code> functions to hold the physics calculations, and to call those within the time loop.</p>
+<p>Create a <code>compute_flux&#33;&#40;&#41;</code> and <code>compute_Pf&#33;&#40;&#41;</code> functions that take input and output arrays and needed scalars as argument and return nothing.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> compute_flux!(...)
+    nx,ny=size(Pf)
     ...
-    <span class=hljs-keyword >return</span>
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-keyword >function</span> update_Pf!(Pf,...)
+    nx,ny=size(Pf)
+    ...
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span></code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Functions that modify arguments take a <code>&#33;</code> in their name, a Julia convention.</div></div>
-<p>The <code>compute&#33;&#40;&#41;</code> function can then be called within the time loop</p>
-<pre><code class="julia hljs">compute!(...)</code></pre>
+<p>The <code>compute_flux&#33;&#40;&#41;</code> and <code>compute_Pf&#33;&#40;&#41;</code> functions can then be called within the time loop.</p>
 <p>This last implementation executes a bit faster as previous one, as functions allow Julia to further optimise during just-ahead-of-time compilation.</p>
-<p>Let&#39;s now see how to implement multi-threading and use <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">advanced vector extensions &#40;AVX&#41;</a>.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >For optimal performance assessment, bound-checking should be deactivated. This can be achieved by adding <code>@inbounds</code> in front of the compute statement, or running the scripts &#40;or launching Julia&#41; with the <code>--check-bounds&#61;no</code> option.</div></div>
+<p>Various timing and benchmarking tools are available in Julia&#39;s ecosystem to <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">track performance issues</a>. Julia&#39;s <code>Base</code> exposes the <code>@time</code> macro which returns timing and allocation estimation. <a href="https://github.com/JuliaCI/BenchmarkTools.jl">BenchmarkTools.jl</a> package provides finer grained timing and benchmarking tooling, namely the <code>@btime</code>, <code>@belapsed</code> and <code>@benchmark</code> macros, among others.</p>
+<p>Let&#39;s evaluate the performance of our code using <code>BenchmarkTools</code>. We will need to wrap the two compute kernels into a <code>compute&#33;&#40;&#41;</code> function in order to be able to call that one using <code>@belapsed</code>. Query <code>? @belapsed</code> in Julia&#39;s REPL to know more.</p>
+<p>The <code>compute&#33;&#40;&#41;</code> function:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> compute!(Pf,qDx,qDy, ???)
+    compute_flux!(...)
+    update_Pf!(...)
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>can then be called using <code>@belapsed</code> to return elapsed time for a single iteration, letting <code>BenchmarkTools</code> taking car about sampling</p>
+<pre><code class="julia hljs">t_toc = <span class=hljs-meta >@belapsed</span> compute!($Pf,$qDx,$qDy,???)
+niter = ???</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Note that variables need to be interpolated into the function call, thus taking a <code>&#36;</code> in front.</div></div>
 <h2 id=shared_memory_parallelisation ><a href="#shared_memory_parallelisation" class=header-anchor >Shared memory parallelisation</a></h2>
-<h3 id=multi-threading_native ><a href="#multi-threading_native" class=header-anchor >Multi-threading &#40;native&#41;</a></h3>
-<p>Julia ships with it&#39;s <code>base</code> feature the possibility to enable <a href="https://docs.julialang.org/en/v1/manual/multi-threading/">multi-threading</a>.</p>
+<p>Julia ships with it&#39;s <code>Base</code> feature the possibility to enable <a href="https://docs.julialang.org/en/v1/manual/multi-threading/">multi-threading</a>.</p>
 <p>The only 2 modifications needed to enable it in our code are:</p>
 <ol>
 <li><p>Place <code>Threads.@threads</code> in front of the outer loop definition</p>
 
-<li><p>Export the desired amount of threads, e.g., <code>export JULIA_NUM_THREADS&#61;4</code>, to be activate prior to launching Julia &#40;or executing the script from the shell&#41;</p>
+<li><p>Export the desired amount of threads, e.g., <code>export JULIA_NUM_THREADS&#61;4</code>, to be activate prior to launching Julia &#40;or executing the script from the shell&#41;. You can also launch Julia with <code>-t</code> option setting the desired numbers of threads. Setting <code>-t auto</code> will most likely automatically use as many hardware threads as available on a machine.</p>
 
 </ol>
+<p>The number of threads can be queried within a Julia session as following: <code>Threads.nthreads&#40;&#41;</code></p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU.</div></div>
-<h3 id=multi-threading_and_avx ><a href="#multi-threading_and_avx" class=header-anchor >Multi-threading and AVX</a></h3>
-<p>Relying on Julia&#39;s <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> package, it is possible to combine multi-threading with AVX optimisations, relying on extensions to the x86 instruction set architecture.</p>
-<p>To enable it in our code:</p>
+<div class=messg >For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU &#40;hardware threads&#41;.</div></div>
+<h3 id=multi-threading_and_avx_currently_refactored ><a href="#multi-threading_and_avx_currently_refactored" class=header-anchor >Multi-threading and AVX &#40;🚧 currently refactored&#41;</a></h3>
+<p>Relying on Julia&#39;s <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> package, it is possible to combine multi-threading with <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">advanced vector extensions &#40;AVX&#41;</a> optimisations, leveraging extensions to the x86 instruction set architecture.</p>
+<p>To enable it:</p>
 <ol>
 <li><p>Add <code>using LoopVectorization</code> at the top of the script</p>
 
-<li><p>Replace <code>Threads.@threads</code> by <code>@tturbo</code> in front of the outer loop in the <code>compute&#33;&#40;&#41;</code> kernel</p>
+<li><p>Replace <code>Threads.@threads</code> by <code>@tturbo</code></p>
 
 </ol>
 <p>And here we go 🚀</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >For optimal performance assessment, bound-checking should be deactivated. This can be achieved by adding <code>@inbounds</code> in front of the compute statement, or running the scripts &#40;or launching Julia&#41; with the <code>--check-bounds&#61;no</code> option.</div></div>
 <h3 id=wrapping-up ><a href="#wrapping-up" class=header-anchor >Wrapping-up</a></h3>
 <ul>
 <li><p>We discussed main performance limiters</p>
@@ -137,8 +167,6 @@ T_eff = A_eff/t_it   <span class=hljs-comment ># Effective memory throughput [GB
 <li><p>We optimised the Julia 2D diffusion code &#40;multi-threading and AVX&#41;</p>
 
 </ul>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >Various timing and benchmarking tools are available in Julia&#39;s ecosystem to <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">track performance issues</a>. Julia&#39;s base exposes the <code>@time</code> macro which returns timing and allocation estimation. <a href="https://github.com/JuliaCI/BenchmarkTools.jl">BenchmarkTools.jl</a> package provides finer grained timing and benchmarking tooling, namely the <code>@btime</code> and <code>@benchmark</code> macros, among others.</div></div>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=unit_testing_in_julia ><a href="#unit_testing_in_julia" class=header-anchor >Unit testing in Julia</a></h1>

@@ -207,14 +207,20 @@ The goal is now to write out the diffusion physics in a loop fashion over $x$ an
 Implement a nested loop, taking car of bounds and staggering.
 
 ````julia:ex6
-for iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    Pf[??]  -= ??
+for iy=??
+    for ix=??
+        Pf[??]  -= ??
+    end
 end
 ````
 
@@ -230,20 +236,26 @@ macro d_ya(A)  esc(:( $A[??]-$A[??] )) end
 And update the code within the iteration loop:
 
 ````julia:ex8
-for iy=??, ix=??
-    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=??
+    for ix=??
+        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+    end
 end
-for iy=??, ix=??
-    Pf[??]  -= ??
+for iy=??
+    for ix=??
+        Pf[??]  -= ??
+    end
 end
 ````
 
 Performance is already quite better with the loop version 🚀.
 
-Reasons are that `diff()` are allocating tmp and that Julia is overall well optimised for executing loops.
+Reasons are that `diff()` are allocating and that Julia is overall well optimised for executing loops.
 
 Let's now implement the final step.
 
@@ -251,60 +263,80 @@ Let's now implement the final step.
 
 Duplicate `Pf_diffusion_2D_perf_loop.jl` and rename it as `Pf_diffusion_2D_perf_loop_fun.jl`.
 
-In this last step, the goal is to define a `compute` function to hold the physics calculations, and to call it within the time loop.
+In this last step, the goal is to define `compute` functions to hold the physics calculations, and to call those within the time loop.
 
-Create a `compute!()` function that takes input and output arrays and needed scalars as argument and returns nothing.
+Create a `compute_flux!()` and `compute_Pf!()` functions that take input and output arrays and needed scalars as argument and return nothing.
 
-```julia
-function compute!(...)
+````julia:ex9
+function compute_flux!(...)
+    nx,ny=size(Pf)
     ...
-    return
+    return nothing
 end
-```
+
+function update_Pf!(Pf,...)
+    nx,ny=size(Pf)
+    ...
+    return nothing
+end
+````
 
 \note{Functions that modify arguments take a `!` in their name, a Julia convention.}
 
-The `compute!()` function can then be called within the time loop
-
-```julia
-compute!(...)
-```
+The `compute_flux!()` and `compute_Pf!()` functions can then be called within the time loop.
 
 This last implementation executes a bit faster as previous one, as functions allow Julia to further optimise during just-ahead-of-time compilation.
 
-Let's now see how to implement multi-threading and use [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions).
+\note{For optimal performance assessment, bound-checking should be deactivated. This can be achieved by adding `@inbounds` in front of the compute statement, or running the scripts (or launching Julia) with the `--check-bounds=no` option.}
+
+Various timing and benchmarking tools are available in Julia's ecosystem to [track performance issues](https://docs.julialang.org/en/v1/manual/performance-tips/). Julia's `Base` exposes the `@time` macro which returns timing and allocation estimation. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package provides finer grained timing and benchmarking tooling, namely the `@btime`, `@belapsed` and `@benchmark` macros, among others.
+
+Let's evaluate the performance of our code using `BenchmarkTools`. We will need to wrap the two compute kernels into a `compute!()` function in order to be able to call that one using `@belapsed`. Query `? @belapsed` in Julia's REPL to know more.
+
+The `compute!()` function:
+
+````julia:ex10
+function compute!(Pf,qDx,qDy, ???)
+    compute_flux!(...)
+    update_Pf!(...)
+    return nothing
+end
+````
+
+can then be called using `@belapsed` to return elapsed time for a single iteration, letting `BenchmarkTools` taking car about sampling
+
+````julia:ex11
+t_toc = @belapsed compute!($Pf,$qDx,$qDy,???)
+niter = ???
+````
+
+\note{Note that variables need to be interpolated into the function call, thus taking a `$` in front.}
 
 ## Shared memory parallelisation
 
-### Multi-threading (native)
-
-Julia ships with it's `base` feature the possibility to enable [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/).
+Julia ships with it's `Base` feature the possibility to enable [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/).
 
 The only 2 modifications needed to enable it in our code are:
-
 1. Place `Threads.@threads` in front of the outer loop definition
-2. Export the desired amount of threads, e.g., `export JULIA_NUM_THREADS=4`, to be activate prior to launching Julia (or executing the script from the shell)
+2. Export the desired amount of threads, e.g., `export JULIA_NUM_THREADS=4`, to be activate prior to launching Julia (or executing the script from the shell). You can also launch Julia with `-t` option setting the desired numbers of threads. Setting `-t auto` will most likely automatically use as many hardware threads as available on a machine.
 
-\note{For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU.}
+The number of threads can be queried within a Julia session as following: `Threads.nthreads()`
 
-### Multi-threading and AVX
+\note{For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU (hardware threads).}
 
-Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with AVX optimisations, relying on extensions to the x86 instruction set architecture.
+### Multi-threading and AVX (🚧 currently refactored)
 
-To enable it in our code:
+Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
 
+To enable it:
 1. Add `using LoopVectorization` at the top of the script
-2. Replace `Threads.@threads` by `@tturbo` in front of the outer loop in the `compute!()` kernel
+2. Replace `Threads.@threads` by `@tturbo`
 
 And here we go 🚀
-
-\note{For optimal performance assessment, bound-checking should be deactivated. This can be achieved by adding `@inbounds` in front of the compute statement, or running the scripts (or launching Julia) with the `--check-bounds=no` option.}
 
 ### Wrapping-up
 
 - We discussed main performance limiters
 - We implemented the effective memory throughput metric $T_\mathrm{eff}$
 - We optimised the Julia 2D diffusion code (multi-threading and AVX)
-
-\note{Various timing and benchmarking tools are available in Julia's ecosystem to [track performance issues](https://docs.julialang.org/en/v1/manual/performance-tips/). Julia's base exposes the `@time` macro which returns timing and allocation estimation. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package provides finer grained timing and benchmarking tooling, namely the `@btime` and `@benchmark` macros, among others.}
 
