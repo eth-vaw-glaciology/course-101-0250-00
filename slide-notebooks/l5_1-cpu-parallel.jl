@@ -215,13 +215,13 @@ Defining the $T_\mathrm{eff}$ metric, we assume that:
 md"""
 As first task, we'll compute the $T_\mathrm{eff}$ for the 2D fluid pressure (diffusion) solver at the core of the porous convection algorithm from previous lecture.
 
-👉 Download the script [`Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get started.
+👉 Download the script [`l5_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get started.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 **To-do list:**
-- copy [`Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/), rename it to `Pf_diffusion_2D_Teff.jl`
+- copy [`l5_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/), rename it to `Pf_diffusion_2D_Teff.jl`
 - add a timer
 - include the performance metric formulas
 - deactivate visualisation
