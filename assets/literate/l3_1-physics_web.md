@@ -111,7 +111,7 @@ Then we modify the time loop to incorporate the new physics:
 
 ```julia
 for it = 1:nt
-    #qx         .-= ...
+    qx         .-= dt./(ρ*dc + dt).*(qx + dc.*diff(C)./dx)
     C[2:end-1] .-= dt.*diff(qx)./dx
     ...
 end
@@ -289,7 +289,7 @@ da      = 10.0
 iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = Float64[]
 while err >= ϵtol && iter <= maxiter
     ...
-    # C[2:end-1] .-= ...
+    C[2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1] .- C_eq)./ξ .+ diff(qx)./dx)
     ...
 end
 ```
@@ -349,9 +349,10 @@ and add the physics for the second dimension:
 
 ```julia
 while err >= ϵtol && iter <= maxiter
-    # qx                 .-= ...
-    # qy                 .-= ...
-    # C[2:end-1,2:end-1] .-= ...
+    qx                 .-= dτ./(ρ + dτ/dc).*(qx./dc .+ diff(C,dims=1)./dx)
+    qy                 .-= dτ./(ρ + dτ/dc).*(qy./dc .+ diff(C,dims=2)./dy)
+    C[2:end-1,2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1,2:end-1] .- C_eq)./ξ .+ diff(qx[:,2:end-1],dims=1)./dx .+
+                                                                                diff(qy[2:end-1,:],dims=2)./dy)
     ...
 end
 ```

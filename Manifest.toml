@@ -185,9 +185,9 @@ version = "1.2.1"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "a94dc0169bffbf7e5250fb7e1efb1a85b09105c7"
+git-tree-sha1 = "e60321e3f2616584ff98f0a4f18d98ae6f89bbb3"
 uuid = "458c3c95-2e84-50aa-8efc-19380b2a3a95"
-version = "1.1.18+0"
+version = "1.1.17+0"
 
 [[deps.OrderedCollections]]
 git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"

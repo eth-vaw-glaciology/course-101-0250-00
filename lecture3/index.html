@@ -10,7 +10,7 @@ nt   &#61; nx^2 ÷ 5
 ...
 # array initialisation
 C    &#61; @. 1.0 &#43; exp&#40;-&#40;xc-lx/4&#41;^2&#41; - xc/lx; C_i &#61; copy&#40;C&#41;</code></pre> <p>Then we modify the time loop to incorporate the new physics:</p> <pre><code class=language-julia >for it &#61; 1:nt
-    #qx         .-&#61; ...
+    qx         .-&#61; dt./&#40;ρ*dc &#43; dt&#41;.*&#40;qx &#43; dc.*diff&#40;C&#41;./dx&#41;
     C&#91;2:end-1&#93; .-&#61; dt.*diff&#40;qx&#41;./dx
     ...
 end</code></pre> <p>👉 Your turn. Try to add the inertial term.</p> <blockquote> <p><strong>Hint</strong>: There are two ways of adding the inertial term into the update rule.</p> <ul> <li><p>We could either take the known flux <code>q</code> in <code>q/dc</code> from the previous time step &#40;explicit time integration&#41;, or the unknown flux from the next time step &#40;implicit time integration&#41;.</p> <li><p>Could we treat the flux implicitly without having to solve the linear system?</p> <li><p>What are the benefits of the implicit time integration compared to the explicit one?</p> </ul> </blockquote> <p>If the implementation is correct, we should see something like this:</p> <center> <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_damped_diffusion_1D.mp4"/> </center> <p>The waves decay, now there is a steady state&#33; 🎉 The time it takes to converge, however, doesn&#39;t seem to improve...</p> <p>Now we solve the hyperbolic PDE, and with the implicit flux term treatment, the time step should become proportional to the grid spacing <code>dx</code> instead of <code>dx^2</code>.</p> <p>Looking at the damped wave equation for \(C\), and recalling the stability condition for wave propagation, we modify the time step, reduce the total number of time steps, and increase the frequency of plotting calls:</p> <pre><code class=language-julia ># numerics
@@ -97,7 +97,7 @@ da      &#61; 10.0
 iter &#61; 1; err &#61; 2ϵtol; iter_evo &#61; Float64&#91;&#93;; err_evo &#61; Float64&#91;&#93;
 while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
     ...
-    # C&#91;2:end-1&#93; .-&#61; ...
+    C&#91;2:end-1&#93; .-&#61; dτ./&#40;1 &#43; dτ/ξ&#41; .*&#40;&#40;C&#91;2:end-1&#93; .- C_eq&#41;./ξ .&#43; diff&#40;qx&#41;./dx&#41;
     ...
 end</code></pre>
 <blockquote>
@@ -129,9 +129,10 @@ C       &#61; @. 1.0 &#43; exp&#40;-&#40;xc-lx/4&#41;^2-&#40;yc&#39;-ly/4&#41;^2
 qx,qy   &#61; zeros&#40;nx-1,ny&#41;,zeros&#40;nx,ny-1&#41;</code></pre>
 <p>and add the physics for the second dimension:</p>
 <pre><code class=language-julia >while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
-    # qx                 .-&#61; ...
-    # qy                 .-&#61; ...
-    # C&#91;2:end-1,2:end-1&#93; .-&#61; ...
+    qx                 .-&#61; dτ./&#40;ρ &#43; dτ/dc&#41;.*&#40;qx./dc .&#43; diff&#40;C,dims&#61;1&#41;./dx&#41;
+    qy                 .-&#61; dτ./&#40;ρ &#43; dτ/dc&#41;.*&#40;qy./dc .&#43; diff&#40;C,dims&#61;2&#41;./dy&#41;
+    C&#91;2:end-1,2:end-1&#93; .-&#61; dτ./&#40;1 &#43; dτ/ξ&#41; .*&#40;&#40;C&#91;2:end-1,2:end-1&#93; .- C_eq&#41;./ξ .&#43; diff&#40;qx&#91;:,2:end-1&#93;,dims&#61;1&#41;./dx .&#43;
+                                                                                diff&#40;qy&#91;2:end-1,:&#93;,dims&#61;2&#41;./dy&#41;
     ...
 end</code></pre>
 <div class=note ><div class=title >💡 Note</div>
@@ -407,7 +408,7 @@ end</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 13, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 15, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
