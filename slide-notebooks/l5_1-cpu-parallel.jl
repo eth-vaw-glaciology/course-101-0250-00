@@ -349,23 +349,35 @@ md"""
 Implement a nested loop, taking car of bounds and staggering.
 """
 
-#sol=for iy=1:ny, ix=1:nx-1
-#sol=    qDx[ix+1,iy] -= (qDx[ix,iy] + k_ηf_dx*(Pf[ix+1,iy]-Pf[ix,iy]))*_1_θ_dτ
+#sol=for iy=1:ny
+#sol=    for ix=1:nx-1
+#sol=        qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*(Pf[ix+1,iy]-Pf[ix,iy]))*_1_θ_dτ
+#sol=    end
 #sol=end
-#sol=for iy=1:ny-1, ix=1:nx
-#sol=    qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*(Pf[ix,iy+1]-Pf[ix,iy]))*_1_θ_dτ
+#sol=for iy=1:ny-1
+#sol=    for ix=1:nx
+#sol=        qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*(Pf[ix,iy+1]-Pf[ix,iy]))*_1_θ_dτ
+#sol=    end
 #sol=end
-#sol=for iy=1:ny, ix=1:nx
-#sol=    Pf[ix,iy]  -= ((qDx[ix+1,iy]-qDx[ix,iy])*_dx + (qDy[ix,iy+1]-qDy[ix,iy])*_dy)*_β_dτ
+#sol=for iy=1:ny
+#sol=    for ix=1:nx
+#sol=        Pf[ix,iy]  -= ((qDx[ix+1,iy]-qDx[ix,iy])*_dx + (qDy[ix,iy+1]-qDy[ix,iy])*_dy)*_β_dτ
+#sol=    end
 #sol=end
-#hint=for iy=??, ix=??
-#hint=    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+#hint=    end
 #hint=end
-#hint=for iy=??, ix=??
-#hint=    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+#hint=    end
 #hint=end
-#hint=for iy=??, ix=??
-#hint=    Pf[??]  -= ??
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        Pf[??]  -= ??
+#hint=    end
 #hint=end
 
 #src #########################################################################
@@ -384,23 +396,35 @@ Let's use macros to replace the derivative implementations
 md"""
 And update the code within the iteration loop:
 """
-#sol=for iy=1:ny, ix=1:nx-1
-#sol=    qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
+#sol=for iy=1:ny
+#sol=    for ix=1:nx-1
+#sol=        qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
+#sol=    end
 #sol=end
-#sol=for iy=1:ny-1, ix=1:nx
-#sol=    qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+#sol=for iy=1:ny-1
+#sol=    for ix=1:nx
+#sol=        qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+#sol=    end
 #sol=end
-#sol=for iy=1:ny, ix=1:nx
-#sol=    Pf[ix,iy]  -= (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
+#sol=for iy=1:ny
+#sol=    for ix=1:nx
+#sol=        Pf[ix,iy]  -= (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
+#sol=    end
 #sol=end
-#hint=for iy=??, ix=??
-#hint=    qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+#hint=    end
 #hint=end
-#hint=for iy=??, ix=??
-#hint=    qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+#hint=    end
 #hint=end
-#hint=for iy=??, ix=??
-#hint=    Pf[??]  -= ??
+#hint=for iy=??
+#hint=    for ix=??
+#hint=        Pf[??]  -= ??
+#hint=    end
 #hint=end
 
 #src #########################################################################
@@ -408,7 +432,7 @@ And update the code within the iteration loop:
 md"""
 Performance is already quite better with the loop version 🚀.
 
-Reasons are that `diff()` are allocating tmp and that Julia is overall well optimised for executing loops.
+Reasons are that `diff()` are allocating and that Julia is overall well optimised for executing loops.
 
 Let's now implement the final step.
 """
@@ -423,29 +447,50 @@ Duplicate `Pf_diffusion_2D_perf_loop.jl` and rename it as `Pf_diffusion_2D_perf_
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-In this last step, the goal is to define a `compute` function to hold the physics calculations, and to call it within the time loop.
+In this last step, the goal is to define `compute` functions to hold the physics calculations, and to call those within the time loop.
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Create a `compute!()` function that takes input and output arrays and needed scalars as argument and returns nothing. 
+Create a `compute_flux!()` and `compute_Pf!()` functions that take input and output arrays and needed scalars as argument and return nothing. 
+"""
 
-```julia
-#sol=function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
-#sol=    for iy=1:size(C,2)-2
-#sol=        for ix=1:size(C,1)-2
-#sol=            C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
+#sol=function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+#sol=    nx,ny=size(Pf)
+#sol=    for iy=1:ny,
+#sol=        for ix=1:nx-1
+#sol=            qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
 #sol=        end
 #sol=    end
-#sol=    return
+#sol=    for iy=1:ny-1
+#sol=        for ix=1:nx
+#sol=            qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+#sol=        end
+#sol=    end
+#sol=    return nothing
 #sol=end
-#hint=function compute!(...)
+#sol=
+#sol=function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+#sol=    nx,ny=size(Pf)
+#sol=    for iy=1:ny
+#sol=        for ix=1:nx
+#sol=            Pf[ix,iy]  -= (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
+#sol=        end
+#sol=    end
+#sol=    return nothing
+#sol=end
+#hint=function compute_flux!(...)
+#hint=    nx,ny=size(Pf)
 #hint=    ...
-#hint=    return
+#hint=    return nothing
 #hint=end
-```
-"""
+#hint=
+#hint=function update_Pf!(Pf,...)
+#hint=    nx,ny=size(Pf)
+#hint=    ...
+#hint=    return nothing
+#hint=end
 
 #nb # > 💡 note: Functions that modify arguments take a `!` in their name, a Julia convention.
 #md # \note{Functions that modify arguments take a `!` in their name, a Julia convention.}
@@ -453,63 +498,9 @@ Create a `compute!()` function that takes input and output arrays and needed sca
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The `compute!()` function can then be called within the time loop
+The `compute_flux!()` and `compute_Pf!()` functions can then be called within the time loop.
 
-```julia
-#sol=compute!(C2, C, D_dx, D_dy, dt, _dx, _dy)
-#hint=compute!(...)
-```
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
 This last implementation executes a bit faster as previous one, as functions allow Julia to further optimise during just-ahead-of-time compilation.
-
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Let's now see how to implement multi-threading and use [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions).
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## Shared memory parallelisation
-
-### Multi-threading (native)
-
-Julia ships with it's `base` feature the possibility to enable [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/).
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-The only 2 modifications needed to enable it in our code are:
-
-1. Place `Threads.@threads` in front of the outer loop definition
-2. Export the desired amount of threads, e.g., `export JULIA_NUM_THREADS=4`, to be activate prior to launching Julia (or executing the script from the shell)
-"""
-
-#nb # > 💡 note: For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU.
-#md # \note{For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU.}
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-### Multi-threading and AVX
-
-Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with AVX optimisations, relying on extensions to the x86 instruction set architecture.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-To enable it in our code:
-
-1. Add `using LoopVectorization` at the top of the script
-2. Replace `Threads.@threads` by `@tturbo` in front of the outer loop in the `compute!()` kernel
-
-And here we go 🚀
 """
 
 #src #########################################################################
@@ -520,11 +511,90 @@ And here we go 🚀
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Various timing and benchmarking tools are available in Julia's ecosystem to [track performance issues](https://docs.julialang.org/en/v1/manual/performance-tips/). Julia's `Base` exposes the `@time` macro which returns timing and allocation estimation. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package provides finer grained timing and benchmarking tooling, namely the `@btime`, `@belapsed` and `@benchmark` macros, among others.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Let's evaluate the performance of our code using `BenchmarkTools`. We will need to wrap the two compute kernels into a `compute!()` function in order to be able to call that one using `@belapsed`. Query `? @belapsed` in Julia's REPL to know more.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+The `compute!()` function:
+"""
+
+#sol=function compute!(Pf,qDx,qDy,k_ηf_dx,k_ηf_dy,_1_θ_dτ,_dx,_dy,_β_dτ)
+#sol=    compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+#sol=    update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+#sol=    return nothing
+#sol=end
+#hint=function compute!(Pf,qDx,qDy, ???)
+#hint=    compute_flux!(...)
+#hint=    update_Pf!(...)
+#hint=    return nothing
+#hint=end
+
+md"""
+can then be called using `@belapsed` to return elapsed time for a single iteration, letting `BenchmarkTools` taking car about sampling
+"""
+
+#sol=t_toc = @belapsed compute!($Pf,$qDx,$qDy,$k_ηf_dx,$k_ηf_dy,$_1_θ_dτ,$_dx,$_dy,$_β_dτ)
+#sol=niter = 1
+#hint=t_toc = @belapsed compute!($Pf,$qDx,$qDy,???)
+#hint=niter = ???
+
+#nb # > 💡 note: Variables need to be interpolated into the function call, thus taking a `$` in front.
+#md # \note{Note that variables need to be interpolated into the function call, thus taking a `$` in front.}
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Shared memory parallelisation
+
+Julia ships with it's `Base` feature the possibility to enable [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/).
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+The only 2 modifications needed to enable it in our code are:
+1. Place `Threads.@threads` in front of the outer loop definition
+2. Export the desired amount of threads, e.g., `export JULIA_NUM_THREADS=4`, to be activate prior to launching Julia (or executing the script from the shell). You can also launch Julia with `-t` option setting the desired numbers of threads. Setting `-t auto` will most likely automatically use as many hardware threads as available on a machine.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+The number of threads can be queried within a Julia session as following: `Threads.nthreads()`
+"""
+
+#nb # > 💡 note: For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU (hardware threads).
+#md # \note{For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU (hardware threads).}
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### Multi-threading and AVX (🚧 currently refactored)
+
+Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+To enable it:
+1. Add `using LoopVectorization` at the top of the script
+2. Replace `Threads.@threads` by `@tturbo`
+
+And here we go 🚀
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 ### Wrapping-up
 
 - We discussed main performance limiters
 - We implemented the effective memory throughput metric $T_\mathrm{eff}$
 - We optimised the Julia 2D diffusion code (multi-threading and AVX)
 """
-
-#md # \note{Various timing and benchmarking tools are available in Julia's ecosystem to [track performance issues](https://docs.julialang.org/en/v1/manual/performance-tips/). Julia's base exposes the `@time` macro which returns timing and allocation estimation. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package provides finer grained timing and benchmarking tooling, namely the `@btime` and `@benchmark` macros, among others.}
