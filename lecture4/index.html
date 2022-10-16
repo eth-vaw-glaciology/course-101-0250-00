@@ -106,7 +106,7 @@ Ra        = <span class=hljs-number >100</span>
 λ_ρCp     = <span class=hljs-number >1</span>/Ra*(αρg*k_ηf*ΔT*ly/ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span>
 <span class=hljs-comment ># numerics</span>
 dt_diff   = min(dx,dy)^<span class=hljs-number >2</span>/λ_ρCp/<span class=hljs-number >4.1</span></code></pre>
-<p>Implement initial and boundary conditions; Initialise temperature array <code>T</code> as following taking care of setting upper and lower boundary initial conditions as well; heating from below and cooling from above.</p>
+<p>Implement initial and boundary conditions; Remove the fluid pressure perturbation and initialise temperature array <code>T</code> as following taking care of setting upper and lower boundary initial conditions as well; heating from below and cooling from above.</p>
 <pre><code class="julia hljs">T         = @. ΔT*exp(-xc^<span class=hljs-number >2</span> - (yc&#x27;+ly/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>)
 T[:,<span class=hljs-number >1</span>] .= ΔT/<span class=hljs-number >2</span>; T[:,<span class=hljs-keyword >end</span>] .= -ΔT/<span class=hljs-number >2</span></code></pre>
 <p>Left and right boundaries of the temperature field should have an adiabatic condition, i.e.,</p>
@@ -226,7 +226,7 @@ T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:]   
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 15, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 16, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
