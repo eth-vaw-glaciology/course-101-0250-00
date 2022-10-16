@@ -149,4 +149,11 @@ Xp, Yp    = Xc[1:st:end,1:st:end], Yc[1:st:end,1:st:end]
 ```
 
 Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
+
+The final convection animation you produced should be similar to the one displayed hereafter (using the parameters listed above):
 """
+#md # ~~~
+# <center>
+#   <video width="90%" autoplay loop controls src="./figures/l4_porous_convection_2D_ex1.mp4"/>
+# </center>
+#md # ~~~
