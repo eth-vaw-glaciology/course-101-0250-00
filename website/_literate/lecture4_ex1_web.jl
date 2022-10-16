@@ -103,7 +103,7 @@ Ra        = 100
 dt_diff   = min(dx,dy)^2/λ_ρCp/4.1
 ```
 
-Implement initial and boundary conditions; Initialise temperature array `T` as following taking care of setting upper and lower boundary initial conditions as well; heating from below and cooling from above.
+Implement initial and boundary conditions; Remove the fluid pressure perturbation and initialise temperature array `T` as following taking care of setting upper and lower boundary initial conditions as well; heating from below and cooling from above.
 ```julia
 T         = @. ΔT*exp(-xc^2 - (yc'+ly/2)^2)
 T[:,1] .= ΔT/2; T[:,end] .= -ΔT/2
