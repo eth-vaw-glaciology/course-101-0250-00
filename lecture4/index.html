@@ -164,14 +164,14 @@ Xp, Yp    = Xc[<span class=hljs-number >1</span>:st:<span class=hljs-keyword >en
 </ul>
 <p>Adjust the value of <code>re_D</code> since the physics is now fully coupled:</p>
 <pre><code class="julia hljs">re_D        = <span class=hljs-number >4</span><span class=hljs-literal >π</span></code></pre>
-<p>Move the time step definition into the beginning of the time loop. For the first time step, use different definition to avoid division by 0:</p>
+<p>Move the time step definition into the beginning of the time loop. For the first time step, use different definition to avoid division by 0. For the time steps &gt; 1, choose among the minimum between scale or flux based definition:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >for</span> it = <span class=hljs-number >1</span>:nt
     T_old .= T
     <span class=hljs-comment ># time step</span>
     dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
         <span class=hljs-number >0.1</span>*min(dx,dy)/(αρg*ΔT*k_ηf)
     <span class=hljs-keyword >else</span>
-        ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/<span class=hljs-number >2.1</span>
+        min(<span class=hljs-number >0.1</span>*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/<span class=hljs-number >2.1</span>)
     <span class=hljs-keyword >end</span>
     ...
 <span class=hljs-keyword >end</span></code></pre>
@@ -231,7 +231,7 @@ T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:]   
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 16, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 17, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

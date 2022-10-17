@@ -22,7 +22,7 @@ Adjust the value of `re_D` since the physics is now fully coupled:
 re_D        = 4π
 ```
 
-Move the time step definition into the beginning of the time loop. For the first time step, use different definition to avoid division by 0:
+Move the time step definition into the beginning of the time loop. For the first time step, use different definition to avoid division by 0. For the time steps > 1, choose among the minimum between scale or flux based definition:
 
 ```julia
 for it = 1:nt
@@ -31,7 +31,7 @@ for it = 1:nt
     dt = if it == 1
         0.1*min(dx,dy)/(αρg*ΔT*k_ηf)
     else
-        ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1
+        min(0.1*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1)
     end
     ...
 end
