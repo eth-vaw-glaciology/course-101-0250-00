@@ -22,7 +22,7 @@ Rename variables so that we solve it for the pressure:
  - `qx` becomes `qDx` and should be initialised with size `nx+1`. Modify the rest of the code accordingly such that entire `Pf` array can be updated having the boundary condition set on the flux.
  - `dc` becomes `k_ηf` which is now the permeability over fluid viscosity
  - `dτ./(ρ*dc .+ dτ)` from flux update becomes `1.0./(1.0 + θ_dτ)`
- - `dτ` from pressure update becomes `β_dτ`
+ - `dτ` from pressure update becomes `β_dτ`. Note that instead of multiplying by `dτ` one should divide by `β_dτ` 
 
 Use following definition for `θ_dτ` and `β_dτ`:
 ```julia

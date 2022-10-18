@@ -223,7 +223,7 @@ Here, $\theta_D$ and $\theta_T$ are the characteristic relaxation times for pres
 md"""
 Then, we add the pseudo-compressibility to the mass balance equation. For each physical time step we discretise the physical time derivative and add the pseudo-time derivative (dual-time method):
 $$
-\beta\frac{\partial p}{\partial\tau} - \nabla\cdot\boldsymbol{q_D} = 0
+\beta\frac{\partial p}{\partial\tau} + \nabla\cdot\boldsymbol{q_D} = 0
 $$
 
 $$
