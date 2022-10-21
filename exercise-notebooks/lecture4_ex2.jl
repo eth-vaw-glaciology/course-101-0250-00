@@ -37,7 +37,7 @@ for it = 1:nt
     dt = if it == 1
         0.1*min(dx,dy)/(αρg*ΔT*k_ηf)
     else
-        min(0.1*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1)
+        min(5.0*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1)
     end
     ...
 end
