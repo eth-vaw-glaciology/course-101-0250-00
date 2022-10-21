@@ -93,7 +93,7 @@ err_Pf = maximum(abs.(r_Pf))</code></pre>
 <p>Use following time step definition &#40;and compute it right before the temperature update&#41;</p>
 <pre><code class="julia hljs">dt_adv = ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/<span class=hljs-number >2.1</span>
 dt     = min(dt_diff,dt_adv)</code></pre>
-<p>The temperature update part could conatin one update for the diffusion-related process and one for advection:</p>
+<p>The temperature update part could contain one update for the diffusion-related process and one for advection:</p>
 <pre><code class="julia hljs">T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .+= dt.*λ_ρCp.*(...)
 T[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .-= dt./ϕ.*(...)</code></pre>
 <p>Make sure to add following to the initialisation</p>
@@ -231,7 +231,7 @@ T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:]   
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 18, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 21, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

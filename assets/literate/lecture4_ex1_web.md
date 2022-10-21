@@ -74,7 +74,7 @@ dt_adv = ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1
 dt     = min(dt_diff,dt_adv)
 ```
 
-The temperature update part could conatin one update for the diffusion-related process and one for advection:
+The temperature update part could contain one update for the diffusion-related process and one for advection:
 ```julia
 T[2:end-1,2:end-1] .+= dt.*λ_ρCp.*(...)
 T[2:end-1,2:end-1] .-= dt./ϕ.*(...)
