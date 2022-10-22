@@ -23,7 +23,7 @@ ytest = Int(cld(0.5*ly, dy))
 for
 
 ````julia:ex2
-nx = ny = 16 * 2 .^ (2:5)
+nx = ny = 16 * 2 .^ (2:5) .- 1
 maxiter = 500
 ````
 
