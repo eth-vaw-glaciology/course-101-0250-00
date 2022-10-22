@@ -360,7 +360,7 @@ A       = copy(C)</code></pre>
 <p>For this exercise, you will implement a test set of basic unit tests to verify the implementation of the diffusion and acoustic 2D solvers.</p>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
 <p>In the <code>Pf_diffusion_2D</code> folder, duplicate the <code>Pf_diffusion_2D_perf_loop_fun.jl</code> script and rename it <code>Pf_diffusion_2D_test.jl</code>.</p>
-<p>Implement a test set in order to test <code>Pf&#91;xtest, ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>.</p>
+<p>Implement a test set in order to test <code>Pf&#91;xtest, ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>. Make sure to set <code>do_check &#61; false</code>.</p>
 <pre><code class="julia hljs">xtest = [<span class=hljs-number >5</span>, <span class=hljs-built_in >Int</span>(cld(<span class=hljs-number >0.6</span>*lx, dx)), nx-<span class=hljs-number >10</span>]
 ytest = <span class=hljs-built_in >Int</span>(cld(<span class=hljs-number >0.5</span>*ly, dy))</code></pre>
 <p>for</p>
