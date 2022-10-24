@@ -18,7 +18,7 @@ Prerequisites:
 
 👉 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it *(you should have a copy on it in your `lecture06` folder on octopus)*.
 
-\note{Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
+\note{Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU.}
 
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
@@ -326,8 +326,8 @@ Most importantly though, comparing a measured $T_\mathrm{eff}$ with $T_\mathrm{p
 Compute by how much percent you can improve the performance of the solver at most:
 
 ````julia:ex16
-#solution for V100
-T_peak = ... # Peak memory throughput of the Tesla V100 GPU
+#solution for P100
+T_peak = ... # Peak memory throughput of the Tesla P100 GPU
 @show T_eff/T_peak
 ````
 

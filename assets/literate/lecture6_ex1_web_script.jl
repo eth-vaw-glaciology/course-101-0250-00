@@ -159,7 +159,7 @@ T_eff_task5 = .../t_it
 speedup_Teff_task3 = T_eff_task3/T_eff_task1
 speedup_Teff_task5 = T_eff_task5/T_eff_task1
 
-#solution for V100
-T_peak = ... # Peak memory throughput of the Tesla V100 GPU
+#solution for P100
+T_peak = ... # Peak memory throughput of the Tesla P100 GPU
 @show T_eff/T_peak
 
