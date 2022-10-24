@@ -169,6 +169,8 @@ $ Hello world, I am 3 of 3</code></pre>
 Password <span class=hljs-keyword >for</span> &lt;username&gt;@CSCS.CH: (current password) 
 Enter new password: (new password) 
 Enter it again: (new password)</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >👉 For Lecture 6, you can jump directly to the <a href="#jupyterlab_access_on_piz_daint">JupyterLab</a> setup.</div></div>
 <ol start=4 >
 <li><p>Generate a <code>ed25519</code> keypair as described in the <a href="https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor">CSCS user website</a>. On your local machine &#40;not ela&#41;, do <code>ssh-keygen</code> leaving the passphrase empty. Then copy your public key to the remote server &#40;ela&#41; using <code>ssh-copy-id</code>. Alternatively, you can copy the keys manually as described in the <a href="https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor">CSCS user website</a>.</p>
 
@@ -303,6 +305,11 @@ srun julia -O3 --check-bounds=no my_julia_gpu_script.jl</code></pre>
 <h3 id=jupyterlab_access_on_piz_daint ><a href="#jupyterlab_access_on_piz_daint" class=header-anchor >JupyterLab access on Piz Daint</a></h3>
 <p>Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient <a href="https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup">JupyterLab access</a>.</p>
 <ol>
+<li><p>If possible, create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code> &#40;do this on daint&#41;:</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre>
+<ol start=2 >
 <li><p>Head to <a href="https://jupyter.cscs.ch/">https://jupyter.cscs.ch/</a>.</p>
 
 <li><p>Login with your username and password you&#39;ve set for in the <a href="#account_setup">Account setup</a> step</p>

@@ -92,13 +92,14 @@ With this short overview we should have the important concepts in mind to get st
 
 In order to get started, we need to connect to a machine which has GPU(s).
 
-Let's take a few minutes to get started.
+Let's take some time to get started.
 
-👉 Head to:
-- [Software install](/software_install/#accessing_the_gpu_resources_on_octopus) for the directions and,
-- [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-0) for some secret infos.
+👉 Getting started:
+- Fetch your login infos in the `daint_login.md` file within your personal Polybox folder, and
+- Head to [Software install](/software_install/#gpu_computing_on_piz_daint) for the directions.
+- Finally, fetch the `l6_*.ipynb` notebooks for this lecture in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder and upload them to your scratch on Piz Daint.
 
-\note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU. You are running on Nvidia Tesla V100 32GB SXM2. Comparing the values you get - it may show that one cannot expect a fine tuned strategy to work always 100% well on future (or past) architectures.}
+\note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU.}
 
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 
@@ -167,7 +168,7 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 \note{The factor `2` comes from the fact that the data is read and written (`2` operations).}
 
-Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006), for the Nvidia Tesla V100 GPUs, it is 837 GB/s).
+Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006).
 
 \note{Achievable peak memory throughput is usually significantly lower than the *theoretical peak bandwidth* announced by the vendor (for the [Tesla P100 GPUs](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf), the latter is 732 GB/s as noted already earlier).}
 
