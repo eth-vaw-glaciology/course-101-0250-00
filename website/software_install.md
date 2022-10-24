@@ -267,6 +267,8 @@ Enter new password: (new password)
 Enter it again: (new password)
 ```
 
+\note{👉 For Lecture 6, you can jump directly to the [JupyterLab](#jupyterlab_access_on_piz_daint) setup.}
+
 4. Generate a `ed25519` keypair as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor). On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`. Alternatively, you can copy the keys manually as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor).
 ```sh
 ssh-keygen -t ed25519
@@ -416,10 +418,15 @@ srun julia -O3 --check-bounds=no my_julia_gpu_script.jl
 ### JupyterLab access on Piz Daint
 Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup).
 
-1. Head to [https://jupyter.cscs.ch/](https://jupyter.cscs.ch/).
+1. If possible, create a soft link from your `$HOME` pointing to `$SCRATCH` (do this on daint):
+```sh
+ln -s $SCRATCH scratch
+```
 
-2. Login with your username and password you've set for in the [Account setup](#account_setup) step
+2. Head to [https://jupyter.cscs.ch/](https://jupyter.cscs.ch/).
 
-3. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
+3. Login with your username and password you've set for in the [Account setup](#account_setup) step
 
-4. From with JupyterLab, upload the notebook to work on and get started!
+4. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
+
+5. From with JupyterLab, upload the notebook to work on and get started!
