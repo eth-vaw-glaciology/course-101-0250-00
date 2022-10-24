@@ -235,3 +235,191 @@ and add `-host localhost` to the execution script:
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
+
+## GPU computing on Piz Daint
+GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system. 
+
+\warn{Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.}
+
+The login procedure is as follow. First a login to the front-end (or login) machine Ela (hereafter referred to as "ela") is needed before one can log into Piz Daint. Login is performed using `ssh`. We will set-up a proxy-jump in order to simplify the procedure and directly access Piz Daint (hereafter referred to as "daint")
+
+Both daint and ela share a `home` folder. However, the `scratch` folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint's scratch directly. We will use Julia module to have all Julia-related tools ready.
+
+Please follow the steps listed hereafter to get ready and set-up on daint.
+
+### Account setup
+1. Fetch your personal username and password credentials from the shared Polybox folder, stored in a `daint_login.md` file.
+
+2. Open a terminal (in Windows, use a tool as e.g. [PuTTY]() or [OpenSSH](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui)) and `ssh` to ela and enter the password:
+```sh
+ssh <username>@ela.cscs.ch
+```
+
+3. On ela, change the password to another one and remember it! Password policy. The new password should comply with the following: 
+   - be at least 12 characters
+   - include upper and lower case letters
+   - include numeric digits
+   - include special characters like `# , . / : = ? @ [ ] ^ { } ~`
+```sh
+[test@ela1 ~]$ kpasswd
+Password for <username>@CSCS.CH: (current password) 
+Enter new password: (new password) 
+Enter it again: (new password)
+```
+
+4. Generate a `ed25519` keypair as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor). On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`. Alternatively, you can copy the keys manually as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor).
+```sh
+ssh-keygen -t ed25519
+ssh-copy-id <username>@ela.cscs.ch
+ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
+```
+
+5. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
+```sh
+Host ela
+  HostName ela.cscs.ch
+  User <username>
+  IdentityFile ~/.ssh/id_ed25519
+
+Host daint
+  HostName daint.cscs.ch
+  User <username>
+  IdentityFile ~/.ssh/id_ed25519
+  ProxyJump ela
+  RequestTTY yes
+  RemoteCommand module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda && bash -l
+
+Host nid*
+  HostName %h
+  User <username>
+  IdentityFile ~/.ssh/id_ed25519
+  ProxyJump daint
+  RequestTTY yes
+  RemoteCommand module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda && bash -l
+``` 
+
+6. Now you should be able to perform password-less login to daint as following
+```sh
+ssh daint
+``` 
+Moreover, you will get the Julia related modules loaded as we add the `RemoteCommand`
+
+> At this stage, you are logged into daint, but still on a login node and not a compute node.
+
+You can reach your home folder upon typing `$HOME`, and your scratch space upon typing `$SCRATCH`. Always make sure to run and save files from scratch folder.
+
+\note{To make things easier, you can create a soft link from your `$HOME` pointing to `$SCRATCH` as this will also be useful in a JupyterLab setting
+```sh
+ln -s $SCRATCH scratch
+```
+}
+
+\warn{There is interactive visualisation on daint. Make sure to produce `png` or `gifs`. Also to avoid plotting to fail, make sure to set the following `ENV["GKSwstype"]="nul"` in the code. Also, it may be good practice to define the animation directory to avoid filling a `tmp`, such as
+```julia
+ENV["GKSwstype"]="nul"
+if isdir("viz_out")==false mkdir("viz_out") end
+loadpath = "./viz_out/"; anim = Animation(loadpath,String[])
+println("Animation directory: $(anim.dir)")
+```
+}
+
+### Running Julia interactively on Piz Daint
+So now, how do we actually run some GPU Julia code on Piz Daint?
+
+1. Open a terminal (other than from within VS code) and login to daint:
+```sh
+ssh daint
+```
+
+2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) and one process (`n1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
+```sh
+salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
+```
+
+\note{You can check the status of the allocation typing `squeue -u <username>`.}
+
+👉 *Running **remote job** instead? [Jump right there](#running_a_remote_job_on_piz_daint)*
+
+3. Make sure to remember the **node number** returned upon successful allocation, e.g., `salloc: Nodes nid02145 are ready for job`
+
+4. Once you have your allocation and the node (here `nid02145`) you requested, open another terminal (tab) **without closing the previous one** and `ssh` to your node replacing the `XXXXX` with appropriate node id from step 2. If needed, accept the key fingerprint prompt and you should be on the node with Julia environment loaded.
+```sh
+ssh nidXXXXX
+```
+
+4. You should not be able to launch Julia
+```sh
+julia
+```
+
+#### :eyes: ONLY the first time
+1. Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status `] st` and add `CUDA`:
+```julia-repl
+(@1.7-daint-gpu) pkg> st
+  Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu`
+      Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.7-daint-gpu/Project.toml` (empty project)
+
+(@1.7-daint-gpu) pkg> add CUDA
+```
+
+2. Then load it and query version info
+```julia-repl
+julia> using CUDA
+
+julia> CUDA.versioninfo()
+  Downloaded artifact: CUDA_compat
+CUDA toolkit 11.0, local installation
+NVIDIA driver 470.57.2, for CUDA 11.4
+CUDA driver 11.7
+```
+
+3. Try out your first calculation on the P100 GPU
+```julia-repl
+julia> a = CUDA.ones(3,4);
+
+julia> b = CUDA.rand(3,4);
+
+julia> c = CUDA.zeros(3,4);
+
+julia> c. = a .+ b
+```
+
+If you made it up to here, you're all set 🚀
+
+\note{Alternatively, you can also access a compute node after having performed the `salloc` step by following:
+```sh
+srun -n1 --pty /bin/bash -l
+module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda
+```
+}
+
+### Running a remote job on Piz Daint
+If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `submit.sh` you can launch (without need of an allocation) as `sbatch submit.sh`:
+```sh
+#!/bin/bash -l
+#SBATCH --job-name="my_gpu_run"
+#SBATCH --output=my_gpu_run.%j.o
+#SBATCH --error=my_gpu_run.%j.e
+#SBATCH --time=00:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --partition=normal
+#SBATCH --constraint=gpu
+#SBATCH --account class04
+
+module load daint-gpu
+module load Julia/1.7.2-CrayGNU-21.09-cuda
+
+srun julia -O3 --check-bounds=no my_julia_gpu_script.jl
+```
+
+### JupyterLab access on Piz Daint
+Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup).
+
+1. Head to [https://jupyter.cscs.ch/](https://jupyter.cscs.ch/).
+
+2. Login with your username and password you've set for in the [Account setup](#account_setup) step
+
+3. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
+
+4. From with JupyterLab, upload the notebook to work on and get started!
