@@ -104,6 +104,7 @@ Let's take some time to get started.
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 
 ````julia:ex2
+import Pkg; Pkg.add("BenchmarkTools")
 using CUDA
 using BenchmarkTools
 ````

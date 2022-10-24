@@ -18,6 +18,7 @@ B       =  CUDA.rand(Float64, nx, ny)
 @cuda blocks=blocks threads=threads copy!(A, B)
 synchronize()
 
+import Pkg; Pkg.add("BenchmarkTools")
 using CUDA
 using BenchmarkTools
 
