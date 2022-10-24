@@ -183,6 +183,7 @@ md"""
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 """
 
+import Pkg; Pkg.add("BenchmarkTools")
 using CUDA
 using BenchmarkTools
 #src #using IJulia
