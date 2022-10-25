@@ -58,13 +58,15 @@ to make sure that the Julia REPL (aka terminal) starts. Then you should ba able 
 If you'd enjoy a more IDE type of environment, [check out VS Code](https://code.visualstudio.com). Follow the [installation directions](https://github.com/julia-vscode/julia-vscode#getting-started) for the [Julia VS Code extension](https://www.julia-vscode.org).
 
 #### VS Code Remote - SSH setup
-VS Code's [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem ([more](https://code.visualstudio.com/docs/remote/ssh)).
+VS Code's [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem ([more](https://code.visualstudio.com/docs/remote/ssh)).
 
 1. To get started, follow [the install steps](https://code.visualstudio.com/docs/remote/ssh#_installation).
 2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
 3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#connect_to_the_machine_and_to_your_compute_node_from_vs_code).
 
 \note{This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.}
+
+\warn{The Remote-SSH setup is limited on Piz Daint because of a security issue, not allowing direct node execution nor supporting remote command execution which would be needed to correctly launch the Julia extension to allow for e.g. graphics redirection (more [here](https://user.cscs.ch/news/#23-10-2020-remote-vscode-configuration)).}
 
 ## Running Julia
 
@@ -237,6 +239,7 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 }
 
 ## GPU computing on Piz Daint
+
 GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system. 
 
 \warn{Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.}
@@ -395,6 +398,32 @@ module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda
 ```
 }
 
+#### Monitoring GPU usage
+YOu can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
+```julia-repl
+shell> nvidia-smi
+Tue Oct 25 08:18:11 2022       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
+| N/A   23C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+```
+
 ### Running a remote job on Piz Daint
 If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `submit.sh` you can launch (without need of an allocation) as `sbatch submit.sh`:
 ```sh
@@ -430,3 +459,12 @@ ln -s $SCRATCH scratch
 4. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
 
 5. From with JupyterLab, upload the notebook to work on and get started!
+
+### Transferring files on Piz Daint
+Given that daint's `scratch` is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.
+
+To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs_code_remote_-_ssh_setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
+
+The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
+
+\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda`.}
