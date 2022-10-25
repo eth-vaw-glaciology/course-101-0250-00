@@ -167,7 +167,7 @@ In order to get started, we need to connect to a machine which has GPU(s).
 Let's take some time to get started.
 
 👉 Getting started:
-- Fetch your login infos in the `daint_login.md` file within your personal Polybox folder, and
+- Fetch your login infos in the `daint_login.md` file within your personal Polybox folder.
 - Head to [Software install](/software_install/#gpu_computing_on_piz_daint) for the directions.
 - Finally, fetch the [`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb) notebooks for this lecture and upload them to your `scratch` on Piz Daint.
 """
@@ -183,7 +183,7 @@ md"""
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 """
 
-import Pkg; Pkg.add("BenchmarkTools")
+import Pkg; Pkg.add("BenchmarkTools");
 using CUDA
 using BenchmarkTools
 #src #using IJulia
