@@ -39,12 +39,12 @@ compute!(...)
 ```
 into
 ```julia
-@cuda blocks threads compute!(...)
+@cuda blocks blocks=blocks threads=threads compute!(...)
 synchronize()
 ```
 or alternatively
 ```julia
-CUDA.@sync @cuda blocks threads compute!(...)
+CUDA.@sync @cuda blocks=blocks threads=threads compute!(...)
 ```
 
 \warn{Don't forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.}

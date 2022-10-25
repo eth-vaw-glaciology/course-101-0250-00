@@ -589,10 +589,10 @@ iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx
 <p>Moving to the <code># Time loop</code>, you&#39;ll now have to add information in order to allow the compute function to execute on the GPU. This can be achieved by adding <code>@cuda blocks threads</code> prior to the function call, turning, e.g.,</p>
 <pre><code class="julia hljs">compute!(...)</code></pre>
 <p>into</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@cuda</span> blocks threads compute!(...)
+<pre><code class="julia hljs"><span class=hljs-meta >@cuda</span> blocks blocks=blocks threads=threads compute!(...)
 synchronize()</code></pre>
 <p>or alternatively</p>
-<pre><code class="julia hljs">CUDA.<span class=hljs-meta >@sync</span> <span class=hljs-meta >@cuda</span> blocks threads compute!(...)</code></pre>
+<pre><code class="julia hljs">CUDA.<span class=hljs-meta >@sync</span> <span class=hljs-meta >@cuda</span> blocks=blocks threads=threads compute!(...)</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Don&#39;t forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.</div></div>
 <p>Finally, for visualisation, you&#39;ll need to &quot;gather&quot; information from the GPU array &#40;<code>CuArray</code>&#41; back to the CPU array &#40;<code>Array</code>&#41; in order to plot it. This can be achieved by calling <code>Array&#40;Pf&#41;</code> in your visualisation routine.</p>
