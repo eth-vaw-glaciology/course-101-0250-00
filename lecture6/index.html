@@ -203,7 +203,7 @@ T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<spa
 
 <li><p>create a test-suite for a small project of your</p>
 
-<li><p>learn to use <a href="https://github.com/JuliaTesting/ReferenceTests.jl">ReferenceTests.jl</a></p>
+<li><p>learn to do reference-tests &#40;besides unit-tests&#41;</p>
 
 </ul>
 <p>&#40;How to setup CI as part of a project of yours will be taught later&#41;</p>
@@ -221,7 +221,12 @@ T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<spa
 <p>💻 -&gt; &quot;demo&quot;</p>
 <h3 id=registered_packages_test_locally ><a href="#registered_packages_test_locally" class=header-anchor >Registered Packages: test locally</a></h3>
 <p>Using: <a href="https://github.com/mauro3/UnPack.jl">UnPack.jl</a></p>
-<p><code>dev</code> the package:</p>
+<p>Installed packages can be tested:</p>
+<pre><code class="julia hljs">pkg&gt; add UnPack
+
+pkg&gt; test UnPack</code></pre>
+<h3 id=registered_packages_test_locally__2 ><a href="#registered_packages_test_locally__2" class=header-anchor >Registered Packages: test locally</a></h3>
+<p>Going one step further.  Make and test changes of a package. <code>dev</code> the package:</p>
 <pre><code class="julia hljs">pkg&gt; dev UnPack</code></pre>
 <p>This will checkout the package to <code>~/.julia/dev/UnPack</code>.</p>
 <p>Re-Start Julia with this package activated:</p>
@@ -246,7 +251,7 @@ $ julia --project</code></pre>
 
 <li><p>include scripts to just run-through</p>
 
-<li><p>use ReferenceTests.jl as integration tests</p>
+<li><p>use &quot;reference-tests&quot; as integration tests</p>
 
 </ul>
 <p>Another day:</p>
@@ -254,9 +259,6 @@ $ julia --project</code></pre>
 <li><p>setup CI on Github</p>
 
 </ul>
-<p><strong>NOTE</strong>: floating-point comparisons should only be done approximately:</p>
-<pre><code class="julia hljs">julia&gt; <span class=hljs-literal >ℯ</span> + <span class=hljs-literal >π</span> - <span class=hljs-literal >ℯ</span> == <span class=hljs-literal >π</span>
-<span class=hljs-literal >false</span></code></pre>
 <h3 id=write_your_own_tests_demo_with_car_traveljl_from_lecture_1 ><a href="#write_your_own_tests_demo_with_car_traveljl_from_lecture_1" class=header-anchor >Write your own tests: demo with &quot;car_travel.jl&quot; from Lecture 1</a></h3>
 <pre><code class="julia hljs"><span class=hljs-keyword >using</span> Plots
 pyplot()
@@ -294,11 +296,11 @@ T, X = car_travel_1D()</code></pre>
 <ol>
 <li><p><code>generate</code> a project and add <code>scripts/car_travel.jl</code></p>
 
+<li><p>use reference tests</p>
+
 <li><p>add some unit tests in-line</p>
 
-<li><p>move tests to <code>test/</code></p>
-
-<li><p>use ReferenceTests.jl</p>
+<li><p>move the tests to <code>test/runtests.jl</code></p>
 
 </ol>
 <div class=note ><div class=title >💡 Note</div>
@@ -635,7 +637,7 @@ synchronize()</code></pre>
 
 <li><p>Make two unit tests for <code>Diff&#40;A&#41;</code> function; wrap them in a <code>@testset</code></p>
 
-<li><p>Make a ReferenceTest.jl which tests the value at 20 random indices of <code>C</code> and <code>qx</code> against a truth.</p>
+<li><p>Make a reference-test which tests the value at 20 random indices of <code>C</code> and <code>qx</code> against a truth.</p>
 
 <li><p>Make sure that all tests run and pass when called via package-mode <code>test</code></p>
 
