@@ -22,9 +22,9 @@ md"""
 
 👉 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it.
 
-- Create a new folder in your GitHub repository for this week's (lecture 6) exercises, including a `README` (as usual).
+- Create a new folder in your GitHub repository for this week's (`lecture6`) exercises, including a `README.md` (as usual).
 - Hand-in the finalised notebook in your GitHub lectrue 6 folder and;
-- Report the output of Task 7 in the `README`.
+- Report the output of Task 7 in the `README.md`.
 """
 
 #nb # > 💡 note: Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU.
@@ -402,5 +402,5 @@ T_peak = ... # Peak memory throughput of the Tesla P100 GPU
 @show T_eff/T_peak
 
 md"""
-Report the value and potentially a short explanation in the `README` on GitHub, within lecture 6 folder (do not forget to upload this finalised notebook as well).
+Report the value and potentially a short explanation in the `README.md` on GitHub, within lecture 6 folder (do not forget to upload this finalised notebook as well).
 """
