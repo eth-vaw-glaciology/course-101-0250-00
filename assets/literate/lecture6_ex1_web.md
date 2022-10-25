@@ -16,7 +16,11 @@ Prerequisites:
 
 ### Getting started
 
-👉 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it *(you should have a copy on it in your `lecture06` folder on octopus)*.
+👉 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it.
+
+- Create a new folder in your GitHub repository for this week's (lecture 6) exercises, including a `README` (as usual).
+- Hand-in the finalised notebook in your GitHub lectrue 6 folder and;
+- Report the output of Task 7 in the `README`.
 
 \note{Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU.}
 
@@ -34,7 +38,7 @@ Before we go further, make sure we select the GPU we want to run on (if running 
 Then, in Julia, add following if you decide to, e.g., use GPU 7:
 
 ````julia:ex2
-GPU_ID = 7 # select a GPU between 0-7
+GPU_ID = 0
 device!(GPU_ID)
 ````
 
@@ -330,4 +334,6 @@ Compute by how much percent you can improve the performance of the solver at mos
 T_peak = ... # Peak memory throughput of the Tesla P100 GPU
 @show T_eff/T_peak
 ````
+
+Report the value and potentially a short explanation in the `README` on GitHub, within lecture 6 folder (do not forget to upload this finalised notebook as well).
 

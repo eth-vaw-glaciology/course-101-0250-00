@@ -5,7 +5,7 @@ using CUDA
 using BenchmarkTools
 using Plots
 
-GPU_ID = 7 # select a GPU between 0-7
+GPU_ID = 0
 device!(GPU_ID)
 
 function diffusion2D()

@@ -340,7 +340,15 @@ julia&gt; <span class=hljs-keyword >using</span> Pkg; Pkg.generate(<span class=h
 </ul>
 <p><a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md"><em>This content is distributed under MIT licence. Authors: S. Omlin &#40;CSCS&#41;, L. Räss &#40;ETHZ&#41;.</em></a></p>
 <h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
-<p>👉 Download the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb"><code>lecture6_ex1.ipynb</code></a> notebook and edit it <em>&#40;you should have a copy on it in your <code>lecture06</code> folder on octopus&#41;</em>.</p>
+<p>👉 Download the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb"><code>lecture6_ex1.ipynb</code></a> notebook and edit it.</p>
+<ul>
+<li><p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 6&#41; exercises, including a <code>README</code> &#40;as usual&#41;.</p>
+
+<li><p>Hand-in the finalised notebook in your GitHub lectrue 6 folder and;</p>
+
+<li><p>Report the output of Task 7 in the <code>README</code>.</p>
+
+</ul>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU.</div></div>
 <p>We will again use the packages <code>CUDA</code>, <code>BenchmarkTools</code> and <code>Plots</code> to create a little performance laboratory:</p>
@@ -350,7 +358,7 @@ julia&gt; <span class=hljs-keyword >using</span> Pkg; Pkg.generate(<span class=h
 <span class=hljs-keyword >using</span> Plots</code></pre>
 <p>Before we go further, make sure we select the GPU we want to run on &#40;if running on a multi-GPU node&#41;. In the terminal or Julia REPL in shell mode &#40;typing <code>;</code>&#41;, type <code>nvidia-smi</code> command to list visible GPUs. Remember the GPU_ID you want to use.</p>
 <p>Then, in Julia, add following if you decide to, e.g., use GPU 7:</p>
-<pre><code class="julia hljs">GPU_ID = <span class=hljs-number >7</span> <span class=hljs-comment ># select a GPU between 0-7</span>
+<pre><code class="julia hljs">GPU_ID = <span class=hljs-number >0</span>
 device!(GPU_ID)</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Having multiple users accessing the same GPU will result in severe performance deprecation.</div></div>
@@ -563,6 +571,7 @@ speedup_Teff_task5 = T_eff_task5/T_eff_task1</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment >#solution for P100</span>
 T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla P100 GPU</span>
 <span class=hljs-meta >@show</span> T_eff/T_peak</code></pre>
+<p>Report the value and potentially a short explanation in the <code>README</code> on GitHub, within lecture 6 folder &#40;do not forget to upload this finalised notebook as well&#41;.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
