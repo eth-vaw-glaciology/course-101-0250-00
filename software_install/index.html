@@ -6,7 +6,7 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_
 <h3 id=vs_code ><a href="#vs_code" class=header-anchor >VS Code</a></h3>
 <p>If you&#39;d enjoy a more IDE type of environment, <a href="https://code.visualstudio.com">check out VS Code</a>. Follow the <a href="https://github.com/julia-vscode/julia-vscode#getting-started">installation directions</a> for the <a href="https://www.julia-vscode.org">Julia VS Code extension</a>.</p>
 <h4 id=vs_code_remote_-_ssh_setup ><a href="#vs_code_remote_-_ssh_setup" class=header-anchor >VS Code Remote - SSH setup</a></h4>
-<p>VS Code&#39;s <a href="https://marketplace.visualstudio.com/items?itemName&#61;ms-vscode-remote.remote-ssh">Remote - SSH</a> extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem &#40;<a href="https://code.visualstudio.com/docs/remote/ssh">more</a>&#41;.</p>
+<p>VS Code&#39;s <a href="https://marketplace.visualstudio.com/items?itemName&#61;ms-vscode-remote.remote-ssh">Remote-SSH</a> extension allows you to connect and open a remote folder on any remote machine with a running SSH server. Once connected to a server, you can interact with files and folders anywhere on the remote filesystem &#40;<a href="https://code.visualstudio.com/docs/remote/ssh">more</a>&#41;.</p>
 <ol>
 <li><p>To get started, follow <a href="https://code.visualstudio.com/docs/remote/ssh#_installation">the install steps</a>.</p>
 
@@ -17,6 +17,8 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_
 </ol>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >This remote configuration supports Julia graphics to render within VS Code&#39;s plot pane. However, this &quot;remote&quot; visualisation option is only functional when plotting from a Julia instance launched as <code>Julia: Start REPL</code> from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal &#40;which allows, e.g., to include custom options such as <code>ENV</code> variables or load modules&#41; will fail. To work around this limitation, select <code>Julia: Connect external REPL</code> from the Command Palette and follow the prompted instructions.</div></div>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >The Remote-SSH setup is limited on Piz Daint because of a security issue, not allowing direct node execution nor supporting remote command execution which would be needed to correctly launch the Julia extension to allow for e.g. graphics redirection &#40;more <a href="https://user.cscs.ch/news/#23-10-2020-remote-vscode-configuration">here</a>&#41;.</div></div>
 <h2 id=running_julia ><a href="#running_julia" class=header-anchor >Running Julia</a></h2>
 <h3 id=first_steps ><a href="#first_steps" class=header-anchor >First steps</a></h3>
 <p>Now that you have a running Julia install, launch Julia &#40;e.g. by typing <code>julia</code> in the shell since it should be on path&#41;</p>
@@ -285,6 +287,29 @@ CUDA driver 11.7</code></pre>
 <div class=messg ><p>Alternatively, you can also access a compute node after having performed the <code>salloc</code> step by following:</p>
 <pre><code class="sh hljs">srun -n1 --pty /bin/bash -l
 module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda</code></pre></div></div>
+<h4 id=monitoring_gpu_usage ><a href="#monitoring_gpu_usage" class=header-anchor >Monitoring GPU usage</a></h4>
+<p>YOu can use the <code>nvidia-smi</code> command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia&#39;s REPL &#40;in shell mode&#41;:</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metas>shell&gt;</span> nvidia-smi
+Tue Oct 25 08:18:11 2022       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
+| N/A   23C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+</code></pre>
 <h3 id=running_a_remote_job_on_piz_daint ><a href="#running_a_remote_job_on_piz_daint" class=header-anchor >Running a remote job on Piz Daint</a></h3>
 <p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>submit.sh</code> you can launch &#40;without need of an allocation&#41; as <code>sbatch submit.sh</code>:</p>
 <pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
@@ -319,10 +344,16 @@ srun julia -O3 --check-bounds=no my_julia_gpu_script.jl</code></pre>
 <li><p>From with JupyterLab, upload the notebook to work on and get started&#33;</p>
 
 </ol>
+<h3 id=transferring_files_on_piz_daint ><a href="#transferring_files_on_piz_daint" class=header-anchor >Transferring files on Piz Daint</a></h3>
+<p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
+<p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
+<p>The next step should work out of the box. You should be able to select <code>daint</code> from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at <code>/scratch/snx3000/&lt;username&gt;/</code>. Just drag and drop files in there to transfer them.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You can also use VS code&#39;s integrated terminal to launch Julia on daint. However, you can&#39;t use the Julia extension nor the direct node login and would have to use <code>srun -n1 --pty /bin/bash -l</code> and load the needed modules, namely <code>module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda</code>.</div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 24, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 25, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
