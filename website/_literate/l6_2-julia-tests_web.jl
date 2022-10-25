@@ -30,7 +30,7 @@ md"""
 - how to run tests for registered packages on your computer
 - how to use tests of packages as "documentation"
 - create a test-suite for a small project of your
-- learn to use [ReferenceTests.jl](https://github.com/JuliaTesting/ReferenceTests.jl)
+- learn to do reference-tests (besides unit-tests)
 
 (How to setup CI as part of a project of yours will be taught later)
 """
@@ -58,6 +58,20 @@ md"""
 
 Using: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
+Installed packages can be tested:
+```julia
+pkg> add UnPack
+
+pkg> test UnPack
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+### Registered Packages: test locally
+
+Going one step further.  Make and test changes of a package.
 `dev` the package:
 ```julia
 pkg> dev UnPack
@@ -91,16 +105,10 @@ Start easy:
 Step up:
 - move tests to `test/runtests.jl`, the standard location
 - include scripts to just run-through
-- use ReferenceTests.jl as integration tests
+- use "reference-tests" as integration tests
 
 Another day:
 - setup CI on Github
-
-**NOTE**: floating-point comparisons should only be done approximately:
-```julia
-julia> ℯ + π - ℯ == π
-false
-```
 """
 
 #src #########################################################################
@@ -147,9 +155,9 @@ md"""
 
 Steps:
 1. `generate` a project and add `scripts/car_travel.jl`
-2. add some unit tests in-line
-3. move tests to `test/`
-4. use ReferenceTests.jl
+2. use reference tests
+3. add some unit tests in-line
+4. move the tests to `test/runtests.jl`
 """
 
 #nb # > 💡 note: To make the `pkg> test` run, you have to have a file `src/MyPkg.jl`, even if it is just empty.
