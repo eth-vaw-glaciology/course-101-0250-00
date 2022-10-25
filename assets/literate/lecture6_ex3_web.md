@@ -21,5 +21,3 @@ Task:
 - Make a reference-test which tests the value at 20 random indices of `C` and `qx` against a truth.
 - Make sure that all tests run and pass when called via package-mode `test`
 
-*Remember to check-in all the files into the repo; in particular the reference `*.bson`.
-

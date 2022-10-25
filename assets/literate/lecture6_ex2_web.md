@@ -9,8 +9,6 @@ The goal of this exercise is to:
 
 ### Task 1
 
-Create a new folder in your GitHub repository for this week's (lecture 6) exercises.
-
 In there, place the `Pf_diffusion_2D_perf_loop_fun.jl` script you created for Lecture 5 homework (Exercise 1, Task 1). Duplicate the script and rename it `Pf_diffusion_2D_perf_gpu.jl`.
 
 Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `Pf_diffusion_2D_perf_gpu.jl` code in order to enable it to execute on the Nvidia P100 GPU. For this task, _**use a kernel programming approach**_.

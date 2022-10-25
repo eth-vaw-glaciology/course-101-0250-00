@@ -342,11 +342,11 @@ julia&gt; <span class=hljs-keyword >using</span> Pkg; Pkg.generate(<span class=h
 <h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
 <p>👉 Download the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb"><code>lecture6_ex1.ipynb</code></a> notebook and edit it.</p>
 <ul>
-<li><p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 6&#41; exercises, including a <code>README</code> &#40;as usual&#41;.</p>
+<li><p>Create a new folder in your GitHub repository for this week&#39;s &#40;<code>lecture6</code>&#41; exercises, including a <code>README.md</code> &#40;as usual&#41;.</p>
 
 <li><p>Hand-in the finalised notebook in your GitHub lectrue 6 folder and;</p>
 
-<li><p>Report the output of Task 7 in the <code>README</code>.</p>
+<li><p>Report the output of Task 7 in the <code>README.md</code>.</p>
 
 </ul>
 <div class=note ><div class=title >💡 Note</div>
@@ -571,7 +571,7 @@ speedup_Teff_task5 = T_eff_task5/T_eff_task1</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment >#solution for P100</span>
 T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla P100 GPU</span>
 <span class=hljs-meta >@show</span> T_eff/T_peak</code></pre>
-<p>Report the value and potentially a short explanation in the <code>README</code> on GitHub, within lecture 6 folder &#40;do not forget to upload this finalised notebook as well&#41;.</p>
+<p>Report the value and potentially a short explanation in the <code>README.md</code> on GitHub, within lecture 6 folder &#40;do not forget to upload this finalised notebook as well&#41;.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -585,7 +585,6 @@ T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla P10
 
 </ul>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
-<p>Create a new folder in your GitHub repository for this week&#39;s &#40;lecture 6&#41; exercises.</p>
 <p>In there, place the <code>Pf_diffusion_2D_perf_loop_fun.jl</code> script you created for Lecture 5 homework &#40;Exercise 1, Task 1&#41;. Duplicate the script and rename it <code>Pf_diffusion_2D_perf_gpu.jl</code>.</p>
 <p>Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the <code>Pf_diffusion_2D_perf_gpu.jl</code> code in order to enable it to execute on the Nvidia P100 GPU. For this task, <em><strong>use a kernel programming approach</strong></em>.</p>
 <p>Hereafter, a step-wise list of changes you&#39;ll need to perform starting from your <code>Pf_diffusion_2D_perf_loop_fun.jl</code> code.</p>
@@ -651,7 +650,6 @@ synchronize()</code></pre>
 <li><p>Make sure that all tests run and pass when called via package-mode <code>test</code></p>
 
 </ul>
-<p>*Remember to check-in all the files into the repo; in particular the reference <code>*.bson</code>.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
