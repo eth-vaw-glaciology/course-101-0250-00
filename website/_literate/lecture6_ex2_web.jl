@@ -43,12 +43,12 @@ compute!(...)
 ```
 into
 ```julia
-@cuda blocks threads compute!(...)
+@cuda blocks blocks=blocks threads=threads compute!(...)
 synchronize()
 ```
 or alternatively
 ```julia
-CUDA.@sync @cuda blocks threads compute!(...)
+CUDA.@sync @cuda blocks=blocks threads=threads compute!(...)
 ```
 """
 
