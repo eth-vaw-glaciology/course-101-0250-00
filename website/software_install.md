@@ -399,7 +399,7 @@ module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda
 }
 
 #### Monitoring GPU usage
-YOu can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
+You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
 ```julia-repl
 shell> nvidia-smi
 Tue Oct 25 08:18:11 2022       
