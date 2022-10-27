@@ -116,7 +116,7 @@ if iter % ncheck == 0
 end
 ```
 
-Run the code, make sure that it works as expected, produce the animation and add it to the README.md within your `lecture4` folder. Well done! 🔥.
+Run the code, make sure that it works as expected, produce the animation and add it to the `README.md` within your `lecture4` folder. Well done! 🔥
 
 Did the number of iterations required for convergence change compared to the version with the explicit temperature update? Try to come up with the explanation for why the number of iterations changed the way it changed and write a sentence about your thoughts on the topic.
 
