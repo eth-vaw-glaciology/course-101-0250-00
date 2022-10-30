@@ -249,7 +249,7 @@ Here we go 🚀 The `Pf_diffusion_2D_perf_xpu.jl` code is ready and should squee
 
 _What about multi-xPU support and distributed memory parallelisation?_
 
-ParallelStencil is seamlessly interoperable with [`ImplicitGlobalGrid.jl`](), which enables distributed parallelisation of stencil-based xPU applications on a regular staggered grid and enables close to ideal weak scaling of real-world applications on thousands of GPUs.
+ParallelStencil is seamlessly interoperable with [`ImplicitGlobalGrid.jl`](https://github.com/eth-cscs/ImplicitGlobalGrid.jl), which enables distributed parallelisation of stencil-based xPU applications on a regular staggered grid and enables close to ideal weak scaling of real-world applications on thousands of GPUs.
 
 Moreover, ParallelStencil enables hiding communication behind computation with a simple macro call and without any particular restrictions on the package used for communication.
 
