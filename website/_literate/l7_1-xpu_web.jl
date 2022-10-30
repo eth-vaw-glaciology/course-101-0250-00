@@ -4,7 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 7_
 md"""
-# Julia XPU: the two-language solution
+# Julia xPU: the two-language solution
 """
 
 #src ######################################################################### 
@@ -13,8 +13,8 @@ md"""
 ### The goal of this lecture 7:
 
 - Address the **_two-language problem_**
-- Backend portable XPU implementation
-- Towards Stokes I: acoustic to elastic
+- Backend portable xPU implementation
+- Towards 3D porous convection
 - Reference testing, GitHub CI and workflows
 """
 
@@ -107,7 +107,7 @@ Wouldn't it be great? ... **YES**, and there is a Julia solution!
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Backend portable XPU implementation
+## Backend portable xPU implementation
 """
 
 #nb # ![ParallelStencil](../assets/literate_figures/l7_ps_logo.png)
@@ -132,16 +132,17 @@ ParallelStencil enables to:
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 ParallelStencil relies on the native kernel programming capabilities of:
-- [CUDA.jl](https://cuda.juliagpu.org/stable/) for high-performance computations on GPUs
+- [CUDA.jl](https://cuda.juliagpu.org/stable/) for high-performance computations on Nvidia GPUs
 - [Base.Threads](https://docs.julialang.org/en/v1/base/multi-threading/#Base.Threads) for high-performance computations on CPUs
+- And _to be released soon_ [AMDGPU.jl](https://amdgpu.juliagpu.org/stable/) for high-performance computations on AMD GPUs
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Short tour of ParallelStencil's README
+### Short tour of ParallelStencil's `README`
 
-Before we start our push-up exercises, let's have a rapid tour of [ParallelStencil](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
+Before we start our exercises, let's have a rapid tour of [ParallelStencil](https://github.com/omlins/ParallelStencil.jl)'s repo and [`README`](https://github.com/omlins/ParallelStencil.jl).
 
 """
 
@@ -150,7 +151,7 @@ Before we start our push-up exercises, let's have a rapid tour of [ParallelStenc
 md"""
 _So, how does it work?_
 
-As first hands-on for this lecture, let's _**merge**_ the diffusion 2D solvers [`diffusion_2D_perf_loop_fun.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) into a single _**XPU**_ code using ParallelStencil.
+As first hands-on for this lecture, let's _**merge**_ the 2D fluid pressure diffusion solvers [`diffusion_2D_perf_loop_fun.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) into a single _**xPU**_ code using ParallelStencil.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -166,7 +167,7 @@ md"""
 
 Let's get started with using the ParallelStencil.jl module and the `ParallelStencil.FiniteDifferences2D` submodule to enable math-close notation.
 
-💻 We'll start from the [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) (available in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it at hand from lecture 6) to create the `diffusion_2D_xpu.jl` script.
+💻 We'll start from the `Pf_diffusion_2D_perf_gpu.jl` (available later in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it from lecture 6) to create the `Pf_diffusion_2D_xpu.jl` script.
 """
 
 #src ######################################################################### 
@@ -182,26 +183,20 @@ using ParallelStencil.FiniteDifferences2D
 else
     @init_parallel_stencil(Threads, Float64, 2)
 end
-using Plots, Printf
+using Plots,Plots.Measures,Printf
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Then, we need to create two compute functions , `compute_q!` to compute the fluxes, and `compute_C!` for computing the update of `C`, the quantity we diffusion (e.g. concentration).
-"""
+Then, we need to update the two compute functions , `compute_flux!` and `update_Pf!`.
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Let's start with `compute_q!`. There we want to program the following fluxes
-
-$$ q_x = -D\frac{∂C}{∂x} ~,~~ q_y = -D\frac{∂C}{∂y} ~.$$
-
+Let's start with `compute_flux!`.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-ParallelStencil's `FiniteDifferences2D` submodule provides macros we need: `@all()`, `@d_xi()`, `@d_yi()`.
+ParallelStencil's `FiniteDifferences2D` submodule provides macros we need: `@inn_x()`, `@inn_y()`, `@d_xa()`, `@d_ya()`.
 
 The macros used in this example are described in the Module documentation callable from the Julia REPL / IJulia:
 ```julia
@@ -209,34 +204,35 @@ julia> using ParallelStencil.FiniteDifferences2D
 
 julia>?
 
-help?> @all
+help?> @inn_x
+  @inn_x(A): Select the inner elements of A in dimension x. Corresponds to A[2:end-1,:].
 ```
-This would, e.g., give you more infos about the `@all` macro. 
+This would, e.g., give you more infos about the `@inn_x` macro. 
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-So, back to our compute function (kernel). The `compute_q!` function gets the `@parallel` macro in its definition and returns nothing.
+So, back to our compute function (kernel). The `compute_flux!` function gets the `@parallel` macro in its definition and returns nothing.
 
 Inside, we define the flux definition as following:
 """
-@parallel function compute_q!(qx, qy, C, D, dx, dy)
-    @all(qx) = -D*@d_xi(C)/dx
-    @all(qy) = -D*@d_yi(C)/dy
-    return
+@parallel function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+    @inn_x(qDx) = @inn_x(qDx) - (@inn_x(qDx) + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
+    @inn_y(qDy) = @inn_y(qDy) - (@inn_y(qDy) + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+    return nothing
 end
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Now that we're done with `compute_q!`, your turn!
+Note that currently the shorthand `-=` notation is not supported and we need to explicitly write out the equality. Now that we're done with `compute_flux!`, your turn!
 
-By analogy, update `compute_C!`.
+By analogy, update `update_Pf!`.
 """
-@parallel function compute_C!(C, qx, qy, dt, dx, dy)
-   ## C = C - dt * (∂qx/dx + ∂qy/dy)
-    return
+@parallel function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+    Pf = ...
+    return nothing
 end
 
 #src ######################################################################### 
@@ -244,16 +240,14 @@ end
 md"""
 So far so good. We are done with the kernels. Let's see what changes are needed in the main part of the script.
 
-In the `# Physics` section, change total time to `ttot = 1e2`. The `# Numerics` only needs `nx`, `ny` and `nout`; the kernel launch parameters being now automatically adapted:
+In the `# numerics` section, `threads` and `blocks` are no longer needed; the kernel launch parameters being now automatically adapted:
 """
-@views function diffusion_2D(; do_visu=false)
-    ## Physics
-    Lx, Ly  = 10.0, 10.0
-    D       = 1.0
-    ttot    = 1e2
-    ## Numerics
-    nx, ny  = 32*4, 32*4 # number of grid points
-    nout    = 50
+function Pf_diffusion_2D(;do_check=false)
+    ## physics
+    ## [...]
+    ## numerics
+    nx, ny  = 16*32, 16*32 # number of grid points
+    maxiter = 500
     ## [...]
     return
 end
@@ -261,44 +255,33 @@ end
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the `# Derived numerics`, we can skip the scalar pre-processing, keeping only
+In the `# array initialisation` section, we need to wrap the Gaussian by `Data.Array` (instead of `CuArray`) and use the `@zeros` to initialise the other arrays:
 """
 ## [...]
-## Derived numerics
-dx, dy  = Lx/nx, Ly/ny
-dt      = min(dx,dy)^2/D/4.1
-nt      = cld(ttot, dt)
-xc, yc  = LinRange(dx/2, Lx-dx/2, nx), LinRange(dy/2, Ly-dy/2, ny)
+## array initialisation
+Pf      = Data.Array( @. exp(-(xc-lx/2)^2 -(yc'-ly/2)^2) )
+qDx     = @zeros(nx+1,ny  )
+qDy     = @zeros(nx  ,ny+1)
+r_Pf    = @zeros(nx  ,ny  )
 ## [...]
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-In the `# Array initialisation` section, we need to wrap the Gaussian by `Data.Array` (instead of `CuArray`) and initialise the flux arrays:
+In the `# iteration loop`, only the kernel call needs to be worked out. We can here re-use the single `@parallel` macro which now serves to launch the computations on the chosen backend:
 """
 ## [...]
-## Array initialisation
-C       = Data.Array(exp.(.-(xc .- Lx/2).^2 .-(yc' .- Ly/2).^2))
-qx      = @zeros(nx-1,ny-2)
-qy      = @zeros(nx-2,ny-1)
-## [...]
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-In the `# Time loop`, only the kernel call needs to be worked out. We can here re-use the single `@parallel` macro which now serves to launch the computations on the chosen backend:
-"""
-## [...]
+## iteration loop
+iter = 1; err_Pf = 2ϵtol
 t_tic = 0.0; niter = 0
-## Time loop
-for it = 1:nt
-    if (it==11) t_tic = Base.time(); niter = 0 end
-    @parallel compute_q!(qx, qy, C, D, dx, dy)
-    @parallel compute_C!(C, qx, qy, dt, dx, dy)
-    niter += 1
-    if do_visu && (it % nout == 0)
-        ## visualisation unchanged
+while err_Pf >= ϵtol && iter <= maxiter
+    if (iter==11) t_tic = Base.time(); niter = 0 end
+    @parallel compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+    @parallel update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+    if do_check && (iter%ncheck == 0)
+        ##  [...]
     end
+    iter += 1; niter += 1
 end
 ## [...]
 
@@ -331,42 +314,41 @@ ParallelStencil also allows for more explicit kernel programming, enabled by `@p
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-As the macro name suggests, kernels defined using `@parallel_indices` allow for explicit indices handling within the kernel operations. This approach is _**currently**_ more performant than using `@parallel` kernel definitions.
+As the macro name suggests, kernels defined using `@parallel_indices` allow for explicit indices handling within the kernel operations. This approach is _**currently**_ slightly more performant than using `@parallel` kernel definitions.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-As second push-up, let's transform the `diffusion_2D_xpu.jl` into `diffusion_2D_perf_xpu.jl`.
+As second step, let's transform the `Pf_diffusion_2D_xpu.jl` into `Pf_diffusion_2D_perf_xpu.jl`.
 
-💻 We'll need bits from both [`diffusion_2D_perf_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) and `diffusion_2D_xpu.jl`.
+💻 We'll need bits from both `Pf_diffusion_2D_perf_gpu.jl` and `Pf_diffusion_2D_xpu.jl`.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We can keep the package handling and initialisation identical to what we implemented in the `diffusion_2D_xpu.jl` script.
+We can keep the package handling and initialisation identical to what we implemented in the `Pf_diffusion_2D_xpu.jl` script, but start again from the `Pf_diffusion_2D_perf_gpu.jl` script.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Then, we can start from the flux macro an compute function definition from the `diffusion_2D_perf_gpu.jl` script, removing the `ix`, `iy` indices as those are now handled by ParallelStencil. The function definition takes however the `@parallel_indices` macro and the `(ix,iy)` tuple:
+Then, we can modify the `compute_flux!` function definition from the `diffusion_2D_perf_gpu.jl` script, removing the `ix`, `iy` indices as those are now handled by ParallelStencil. The function definition takes however the `@parallel_indices` macro and the `(ix,iy)` tuple:
 """
-## macros to avoid array allocation
-macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
-macro qy(ix,iy)  esc(:( -D_dy*(C[$ix+1,$iy+1] - C[$ix+1,$iy]) )) end
+macro d_xa(A)  esc(:( $A[ix+1,iy]-$A[ix,iy] )) end
+macro d_ya(A)  esc(:( $A[ix,iy+1]-$A[ix,iy] )) end
 
-@parallel_indices (ix,iy) function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
-    if (ix<=size_C1_2 && iy<=size_C2_2)
-        C2[ix+1,iy+1] = C[ix+1,iy+1] - dt*( (@qx(ix+1,iy) - @qx(ix,iy))*_dx + (@qy(ix,iy+1) - @qy(ix,iy))*_dy )
-    end
-    return
+@parallel_indices (ix,iy) function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+    nx,ny=size(Pf)
+    if (ix<=nx-1 && iy<=ny  )  qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ  end
+    if (ix<=nx   && iy<=ny-1)  qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ  end
+    return nothing
 end
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The `# Physics` section remains unchanged, and the `# Numerics section` is identical to the previous `xpu` script, i.e., no need for explicit block and thread definition.
+The `# physics` section remains unchanged, and the `# numerics section` is identical to the previous `xpu` script, i.e., no need for explicit block and thread definition.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -376,40 +358,44 @@ The `# Physics` section remains unchanged, and the `# Numerics section` is ident
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We can then keep the scalar preprocessing (`D_dx`, `D_dy`, `_dx`, `_dy`) in the `# Derived numerics` section.
+We can then keep the scalar preprocessing in the `# derived numerics` section.
 
-In the `# Array initialisation`, make sure wrapping the Gaussian by `Data.Array`. The `cuthreads` and `cublocks` tuples are no longer needed.
+In the `# array initialisation`, make sure to wrap the Gaussian by `Data.Array`, initialise zeros with the `@zeros` macro and remove information about precision (`Float64`)from there.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The `# Time loop` gets very concise; XPU kernels are launched here also with `@parallel` macro (that implicitly includes `synchronize()` statement):
+The `# iteration loop` remains concise; xPU kernels are launched here also with `@parallel` macro (that implicitly includes `synchronize()` statement):
 """
-## Time loop
-for it = 1:nt
-    if (it==11) t_tic = Base.time(); niter = 0 end
-    @parallel compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
-    C, C2 = C2, C # pointer swap
-    niter += 1
-    if do_visu && (it % nout == 0)
-        ## visu unchanged
+## [...]
+## iteration loop
+iter = 1; err_Pf = 2ϵtol
+t_tic = 0.0; niter = 0
+while err_Pf >= ϵtol && iter <= maxiter
+    if (iter==11) t_tic = Base.time(); niter = 0 end
+    @parallel compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+    @parallel update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+    if do_check && (iter%ncheck == 0)
+        ## [...]
     end
+    iter += 1; niter += 1
 end
+## [...]
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Here we go 🚀 The `diffusion_2D_perf_xpu.jl` code is ready and should squeeze the performance out of your CPU or GPU, running as fast as the exclusive Julia multi-threaded or Julia GPU implementations, respectively.
+Here we go 🚀 The `Pf_diffusion_2D_perf_xpu.jl` code is ready and should squeeze the performance out of your CPU or GPU, running as fast as the exclusive Julia multi-threaded or Julia GPU implementations, respectively.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Multi-XPU support
+### Multi-xPU support
 
-_What about multi-XPU support and distributed memory parallelisation?_
+_What about multi-xPU support and distributed memory parallelisation?_
 
-ParallelStencil is seamlessly interoperable with [`ImplicitGlobalGrid.jl`](), which enables distributed parallelisation of stencil-based XPU applications on a regular staggered grid and enables close to ideal weak scaling of real-world applications on thousands of GPUs.
+ParallelStencil is seamlessly interoperable with [`ImplicitGlobalGrid.jl`](), which enables distributed parallelisation of stencil-based xPU applications on a regular staggered grid and enables close to ideal weak scaling of real-world applications on thousands of GPUs.
 
 Moreover, ParallelStencil enables hiding communication behind computation with a simple macro call and without any particular restrictions on the package used for communication.
 """
@@ -428,144 +414,9 @@ _This will be material for next lectures._
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Towards Stokes flow I: acoustic to elastic
-"""
+## Towards 3D thermal porous convection
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Pursuing the exploration of various physical processes, we are missing two important categories: solid mechanics (e.g., Navier-Cauchy equations) and fluid mechanics (e.g., Navier-Stokes equations).
-
-The goal of this part of the lecture is to explore the elastic wave propagation processes, building upon acoustic waves from lecture 3.
-
-We'll use a practical approach to familiarise with stress, strain, strain-rates and elastic rheology, i.e., the elastic shear and bulk modulus. (We'll concentrate on the fluid mechanics in a following lecture.)
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-The [Navier-Cauchy equation](https://en.wikipedia.org/wiki/Linear_elasticity#Elastodynamics_in_terms_of_displacements) we are interested in reads as following, when expressed (linearised) in terms of velocities ($v=∂^2u/∂t^2$):
-
-$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
-
-$$ \frac{∂τ}{∂t} = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
-
-$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
-
-where $P$ is the pressure, $v$ the velocity, $K$ the bulk modulus, $μ$ the elastic shear modulus, $τ$ the deviatoric stress tensor, $ρ$ the density, and $\delta_{ij}$ the Kronecker delta. 
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-One can recognise the terms from the acoustic wave equation, namely:
-
-$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
-
-$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( - P δ_{ij} \right)~,$$
-
-which suggests only volumetric or bulk effects to be considered in the latter.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Note that the original constitutive relation in linear elasticity (elastic rheology) is
-
-$$ σ = -P + μ \left(∇_i u_j + ∇_j u_i \right) ~.$$
-
-However, we here consider deviatoric stresses $(τ)$ (removing the trace of the stress tensor - the pressure $P$) and derive the expression w.r.t. time to express it as function of strain-rates $(v)$.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-### Task 1 - starting from acoustic
-The task is now to implement the Navier-Cauchy equations in 2D starting from the acoustic 2D script realised in lecture 3.
-
-We can start from the [`acoustic_2D_elast0.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) script located in the (available in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder).
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-After running the script to confirm all works as expected, start by:
-- making a new version of the script: `acoustic_2D_elast1.jl`
-- modifying the array dimensions in order to have velocity arrays with appropriate sizes allowing to update all pressure values `(nx, ny)`,
-- renaming `qx` and `qy` to `dVxdt` and `dVydt`, respectively.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-### Task 2 - adding normal stresses
-The next task is to add the normal stress, the $xx$ and $yy$ components of the stress tensor.
-
-One can make the analogy of stresses being "fluxes of momentum", the velocity equations (4) being the momentum balance. Since we here consider elastic processes (Cauchy-Navier elasticity), these fluxes will be time dependent (see eq. 3).
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Start by making a new version of the script named `acoustic_2D_elast2.jl`. Then, add for the $xx$ normal stress component following (the array needs to be initialised):
-```julia
-τxx  .= τxx .+ dt*(2.0.*μ.* (diff(Vx,dims=1)/dx .- 1/3 .*∇V))
-```
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Note that one has to remove the divergence (volumetric part) of the stress tensor if considering its deviatoric form (removing the trace of the tensor, i.e. the pressure we explicitly define and compute).
-
-Also, adding elastic shear rheology, we need to define the elastic shear modulus $μ = 1$ in the `# Physics` section.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Repeat this for the $yy$ normal stress component:
-```julia
-τyy  .= τyy .+ ??
-```
-
-We now have to fix the divergence which is not yet defined, replacing the appropriate calculation by (that needs to be initialised):
-```julia
-∇V    .= ???
-```
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Having added elasticity to the acoustic process (elastic stresses instead of only pressure), we need to adapt the time step stability condition:
-```julia
-dt     = min(dx,dy)/sqrt((K + 4/3*μ)/ρ)/2.1
-```
-to take shear modulus $μ$ into account.
-
-This new addition should now permit to propagate a first elastic wave. However, taking a closer look at the animation, you may certainly see that the wave propagates as a square. Reason for this is that we are missing the shear stress, the $xy$ components of the tensor (see figure below).
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-
-#md # @@img-med
-# ![elastic missing shear](../assets/literate_figures/l7_elast.gif)
-#md # @@
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-We're soon done.
-
-However, his last part is a [homework task](#exercise_3_-_cauchy-navier_elastic_waves).
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-Now it's **time to wrap up** this part before moving to more Git workflows. So far, we learned about:
-- How Julia solves the two-language problem 
-- XPU programming with ParallelStencil 
-- Cauchy-Navier elastic wave propagation (solid mechanics)
+WIP
 """
 
 

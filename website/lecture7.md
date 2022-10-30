@@ -9,11 +9,11 @@ noeval = true
 # Lecture 7
 
 > **Agenda**\
-> :books: The "two-language problem", `ParallelStencil.jl` XPU implementation\
+> :books: The "two-language problem", `ParallelStencil.jl` xPU implementation\
 > :computer: Reference testing, GitHub CI and workflows\
 > :construction: Exercises:
-> - XPU codes for diffusion / acoustic waves 2D
-> - Cauchy-Navier elasticity (waves)
+> - xPU codes for 2D thermal porous convection
+> - 2D to 3D xPU implementation
 > - CI workflows
 
 ---
@@ -52,11 +52,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture7_ex3_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture7_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
