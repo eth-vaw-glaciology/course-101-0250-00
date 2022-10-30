@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **2D Thermal porous convection xPU implementation**
+## Exercise 1 - **2D thermal porous convection xPU implementation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -8,11 +8,11 @@ md"""
 The goal of this exercise is to:
 - Finalise the xPU implementation of the 2D fluid diffusion solver started in class
 - Familiarise with xPU programming, `@parallel` and `@parallel_indices`
-- Port your 2D Thermal porous convection code to xPU implementation
+- Port your 2D thermal porous convection code to xPU implementation
 """
 
 md"""
-In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your  2D Thermal porous convection code.
+In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your 2D thermal porous convection code.
 """
 
 #src Create a new folder in your GitHub repository for this week's (lecture 7) exercises. In there, create a new subfolder `diffusion2D_xpu` where you will add following script:
