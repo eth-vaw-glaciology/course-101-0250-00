@@ -71,17 +71,23 @@ Starting from lecture 7 (until lecture 9), homework contribute to the course's f
 
 The exercises **in lecture 7** will serve as starting point for the first project:
 1. Create a `project` directory at the root of your shared private `pde-on-gpu-<lastname>` repository.
-2. Make sure to follow the following folder structure:
-    - .github/workflows
-        - Deploy.yml
-    - docs
-    - scripts
-    - src
-    - test
-    - .gitignore
-    - Project.toml
-    - README.md
+2. Make sure to follow the following basic repo structure:
+    ```
+    PorousConvection
+    |-- .github
+    |   `-- workflows
+    |       `-- CI.yml
+    |-- .gitignore
+    |-- Project.toml
+    |-- README.md
+    |-- docs
+    |-- scripts
+    |-- src
+    `-- test
+    ```
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+
+_Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
 
 ### Final project
 Infos to come soon 🚧
