@@ -137,7 +137,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        julia-version: ['1.6']
+        julia-version: ['1.8']
         julia-arch: [x64]
         os: [ubuntu-latest]
     steps:
