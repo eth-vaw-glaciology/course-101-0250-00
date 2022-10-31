@@ -37,7 +37,7 @@ The goal of this course is to offer a practical approach to solve systems of dif
 - **Part 3** _Projects_
   
   Multi-GPU computing and optimisations
-  - xPU comuting
+  - xPU computing
   - Distributed computing
   - Advanced optimisations
 

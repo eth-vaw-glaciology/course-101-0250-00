@@ -66,6 +66,26 @@ Personal feedback and sample solution codes will be provided after submission de
 
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
+### Project 
+Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
+
+The exercises **in lecture 7** will serve as starting point for the first project:
+1. Create a `project` directory at the root of your shared private `pde-on-gpu-<lastname>` repository.
+2. Make sure to follow the following folder structure:
+    - .github/workflows
+        - Deploy.yml
+    - docs
+    - scripts
+    - src
+    - test
+    - .gitignore
+    - Project.toml
+    - README.md
+3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+
+### Final project
+Infos to come soon 🚧
+
 ### Feedback
 After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
 

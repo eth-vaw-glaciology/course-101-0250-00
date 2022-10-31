@@ -11,9 +11,9 @@ noeval = true
 > **Agenda**\
 > :books: The "two-language problem", `ParallelStencil.jl` xPU implementation\
 > :computer: Reference testing, GitHub CI and workflows\
-> :construction: Exercises:
+> :construction: Exercises - (Project 1):
 > - xPU codes for 2D thermal porous convection
-> - 2D to 3D xPU implementation
+> - 2D and 3D xPU implementation
 > - CI workflows
 
 ---
@@ -37,7 +37,12 @@ noeval = true
 
 # Exercises - lecture 7
 
-\warn{Exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+## Infos about projects
+Starting from this lecture (and up to lecture 9), homework will contribute to the course's first project. Make sure to carefully follow the instructions from the Project section in [Logistics](/logistics#project) as well as the specific steps listed hereafter.
+
+\warn{This project being identical to all students. We ask you to strictly follow the demanded structure and steps as this will be part of the evaluation criteria, besides running 3D codes.}
+
+
 
 \literate{/_literate/lecture7_ex1_web.jl}
 
