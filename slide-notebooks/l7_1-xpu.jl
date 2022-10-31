@@ -417,5 +417,40 @@ _This will be material for next lectures._
 md"""
 ## Towards 3D thermal porous convection
 
-WIP
+The goal of the first project of the course is to have a thermal porous convection solver in 3D. Before using multiple GPUs in order to afford high numerical resolution in 3D, we will first have to create a 3D single xPU thermal porous convection solver.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+The first step is to port the `Pf_diffusion_2D_xpu.jl` script to 3D.
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+These are the steps to follow in order to make the transition happen.
+1. Copy and rename the `Pf_diffusion_2D_xpu.jl` script to `Pf_diffusion_3D_xpu.jl`
+2. Adapt the last argument of `@init_parallel_stencil` to `3`
+3. Compute `qDz`, the flux in `z`-direction
+4. Add that flux to the divergence in the `Pf` update
+5. Modify the `CFL` to `cfl = 1.0/sqrt(3.1)` as for 3D
+6. Consistently add the `z`-direction in the code
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+The initialisation can be done as following:
+"""
+
+Pf = Data.Array([exp(-(xc[ix]-lx/2)^2 -(yc[iy]-ly/2)^2 -(zc[iz]-lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz])
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+And don't forget to update `A_eff` in the performance formula!
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+_Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`._
 """
