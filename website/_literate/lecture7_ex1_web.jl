@@ -74,7 +74,7 @@ else
 end
 
 md"""
-The code should produces the same output (as following), 
+The code should produces the same output (as following),
 
 ![2D porous convection](../assets/literate_figures/l7_ex1_porous_convect.png)
 
