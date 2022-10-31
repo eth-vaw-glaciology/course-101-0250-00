@@ -3,14 +3,13 @@
 
 Last lecture we learned how to make and run tests for a Julia project.
 
-This lecture we will learn how to run those tests on Github automatically
-after you push to it. This will make sure that
+This lecture we will learn how to run those tests on GitHub automatically after you push to it. This will make sure that
 - tests are always run
 - you will be alerted by email when a test fails
 
 *You may start to wonder why we're doing all of these tooling shenanigans...*
 
-One requirement for the final project will be that it contains tests, which are run via GitHub Actions CI.  Additionally, you'll have to write your project report as "documentation" for the package which will be deployed to its website, again via GitHub Actions.
+One requirement for the final project will be that it contains tests, which are run via GitHub Actions CI.  Additionally, you'll have to write your project report as "documentation" for the package which could be deployed to its website, via GitHub Actions.
 
 **These days it is expected of good numerical software that it is well tested and documented.**
 
@@ -18,10 +17,10 @@ One requirement for the final project will be that it contains tests, which are 
 
 GitHub Actions are a generic way to run computations when you interact with the repository. There is extensive [documentation](https://docs.github.com/en/actions) for it (no need for you to read it).
 
-For instance the course's [website](https://eth-vaw-glaciology.github.io/course-101-0250-00/) is generated from the markdown input files upon pushing to the repo:
+For instance the course's [website](https://pde-on-gpu.vaw.ethz.ch) is generated from the markdown input files upon pushing to the repo:
 - [https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website) contains the source
 - the [https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml) is the GitHub Actions script which tells it to run Franklin.jl to
-- create the website [https://eth-vaw-glaciology.github.io/course-101-0250-00/](https://eth-vaw-glaciology.github.io/course-101-0250-00/)
+- create the website and deploy it on a specific URL [https://pde-on-gpu.vaw.ethz.ch](https://pde-on-gpu.vaw.ethz.ch)
 
 ### GitHub Actions for CI
 
@@ -35,7 +34,7 @@ How do we use GitHub Actions for CI?
 
 #### Example from last lecture continued
 
-In the last lecture I setup a [project](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl) to illustrate how unit-testing works.
+In the last lecture we've setup a [project](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl) to illustrate how unit-testing works.
 
 Let's now add CI to this:
 
@@ -106,7 +105,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        julia-version: ['1.6']
+        julia-version: ['1.8']
         julia-arch: [x64]
         os: [ubuntu-latest]
     steps:
