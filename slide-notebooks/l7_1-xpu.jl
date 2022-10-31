@@ -199,7 +199,7 @@ md"""
 ParallelStencil's `FiniteDifferences2D` submodule provides macros we need: `@inn_x()`, `@inn_y()`, `@d_xa()`, `@d_ya()`.
 
 The macros used in this example are described in the Module documentation callable from the Julia REPL / IJulia:
-```julia
+```julia-repl
 julia> using ParallelStencil.FiniteDifferences2D
 
 julia>?
