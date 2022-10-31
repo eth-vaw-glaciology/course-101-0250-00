@@ -9,7 +9,7 @@ The goal of this exercise is to:
 - Finalise the xPU implementation of the 2D fluid diffusion solver started in class
 - Familiarise with xPU programming, `@parallel` and `@parallel_indices`
 - Port your 2D thermal porous convection code to xPU implementation
-- Create your repository to host the first course project
+- Start populating the project repository
 """
 
 md"""
