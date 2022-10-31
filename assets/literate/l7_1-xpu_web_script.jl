@@ -79,3 +79,5 @@ while err_Pf >= ϵtol && iter <= maxiter
 end
 # [...]
 
+Pf = Data.Array([exp(-(xc[ix]-lx/2)^2 -(yc[iy]-ly/2)^2 -(zc[iz]-lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz])
+
