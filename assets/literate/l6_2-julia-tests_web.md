@@ -4,8 +4,7 @@
 (Unit) testing is pervasive in the Julia ecosystem thanks to efficient built-in tools and
 a culture encouraging testing.
 
-This [JuliaCon 2021 talk](https://live.juliacon.org/talk/HVSAW9) gives a nice overview: more than 90% of all registered
-packages have at least some tests, with the median package having about 25% of the code being tests.
+This [JuliaCon 2021 talk](https://live.juliacon.org/talk/HVSAW9) gives a nice overview: more than 90% of all registered packages have at least some tests, with the median package having about 25% of the code being tests.
 
 Terms:
 - "unit test": small tests, usually on a per-function basis
@@ -80,13 +79,12 @@ Step up:
 - use "reference-tests" as integration tests
 
 Another day:
-- setup CI on Github
+- setup CI on GitHub
 
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 
 ````julia:ex1
 using Plots
-pyplot()
 
 function car_travel_1D()
     # Physical parameters

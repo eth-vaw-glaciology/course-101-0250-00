@@ -1,7 +1,6 @@
 # This file was generated, do not modify it.
 
 using Plots
-pyplot()
 
 function car_travel_1D()
     # Physical parameters
