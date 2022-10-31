@@ -136,13 +136,13 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >This project being identical to all students. We ask you to strictly follow the demanded structure and steps as this will be part of the evaluation criteria, besides running 3D codes.</div></div>
 <h3 id=preparing_the_project_folder_in_your_github_repo ><a href="#preparing_the_project_folder_in_your_github_repo" class=header-anchor >Preparing the project folder in your GitHub repo</a></h3>
-<p>For the project, you will have to create a <code>PorousConvection</code> folder Within your <code>pde-on-gpu-&lt;lastname&gt;</code> shared private GitHub repo. To do so, you can use <a href="https://github.com/JuliaCI/PkgTemplates.jl"><code>PkgTemplates.jl</code></a>.</p>
+<p>For the project, you will have to create a <code>PorousConvection</code> folder <strong>within</strong> your <code>pde-on-gpu-&lt;lastname&gt;</code> shared private GitHub repo. To do so, you can use <a href="https://github.com/JuliaCI/PkgTemplates.jl"><code>PkgTemplates.jl</code></a>.</p>
 <ol>
 <li><p>Within Julia, run following command while <strong>being in the root</strong> of your <code>pde-on-gpu-&lt;lastname&gt;</code> folder:</p>
 
 </ol>
 <pre><code class="julia hljs"><span class=hljs-keyword >using</span> PkgTemplates
-    Template(; dir=<span class=hljs-string >&quot;.&quot;</span>, plugins=[Git(; ssh=<span class=hljs-literal >true</span>), GitHubActions(; x86=<span class=hljs-literal >true</span>)],)(<span class=hljs-string >&quot;PorousConvection&quot;</span>)</code></pre>
+Template(; dir=<span class=hljs-string >&quot;.&quot;</span>, plugins=[Git(; ssh=<span class=hljs-literal >true</span>), GitHubActions(; x86=<span class=hljs-literal >true</span>)],)(<span class=hljs-string >&quot;PorousConvection&quot;</span>)</code></pre>
 <ol start=2 >
 <li><p>From the automatically generated files and folders, you can remove the <code>.git</code> since we are already in a git folder, as well as the <code>.github/workflows/CompatHelper.yml</code> and <code>.github/workflows/TagBot.yml</code> files as we won&#39;t use them.</p>
 
@@ -154,20 +154,20 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 </ol>
 <pre><code class="julia hljs">PorousConvection
-    |-- .github
-    |   <span class=hljs-string >`-- workflows
-    |       `</span>-- CI.yml
-    |-- .gitignore
-    |-- LICENSE
-    |-- Manifest.toml
-    |-- Project.toml
-    |-- README.md
-    |-- docs
-    |-- scripts
-    |-- src
-    |   <span class=hljs-string >`-- PorousConvection.jl
-    `</span>-- test
-        <span class=hljs-string >`-- runtests.jl</span></code></pre>
+|-- .github
+|   <span class=hljs-string >`-- workflows
+|       `</span>-- CI.yml
+|-- .gitignore
+|-- LICENSE
+|-- Manifest.toml
+|-- Project.toml
+|-- README.md
+|-- docs
+|-- scripts
+|-- src
+|   <span class=hljs-string >`-- PorousConvection.jl
+`</span>-- test
+    <span class=hljs-string >`-- runtests.jl</span></code></pre>
 <p>In the next 3 lectures &#40;7,8,9&#41;, we will populate the <code>scripts</code> folder with 2D and 3D porous convection applications, add tests and use the <code>README.md</code> as main &quot;documentation&quot;.</p>
 <p>You should now be all set and ready to get started 🚀</p>
 <h2 id=exercise_1_-_2d_thermal_porous_convection_xpu_implementation ><a href="#exercise_1_-_2d_thermal_porous_convection_xpu_implementation" class=header-anchor >Exercise 1 - <strong>2D thermal porous convection xPU implementation</strong></a></h2>
