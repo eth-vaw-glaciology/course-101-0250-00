@@ -235,16 +235,98 @@ Template(; dir=<span class=hljs-string >&quot;.&quot;</span>, plugins=[Git(; ssh
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
 <ul>
-<li><p>Finalise the xPU implementation of the 2D fluid diffusion solver started in class</p>
+<li><p>Finalise the xPU implementation of the 2D fluid diffusion solvers started in class</p>
 
 <li><p>Familiarise with xPU programming, <code>@parallel</code> and <code>@parallel_indices</code></p>
 
 <li><p>Port your 2D thermal porous convection code to xPU implementation</p>
 
-<li><p>Start populating the project repository</p>
+<li><p>Start populating the <code>PorousConvection</code> project folder</p>
 
 </ul>
 <p>In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your 2D thermal porous convection code.</p>
+<p>For this first exercise, we will finalise and add to the <code>scripts</code> folder within the <code>PorousConvection</code> folder following scripts:</p>
+<ul>
+<li><p><code>Pf_diffusion_2D_xpu.jl</code></p>
+
+<li><p><code>Pf_diffusion_2D_perf_xpu.jl</code></p>
+
+<li><p><code>PorousConvection_2D_xpu.jl</code></p>
+
+</ul>
+<h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
+<p>Finalise the <code>Pf_diffusion_2D_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel</code> approach together with using <code>ParallelStencil.FiniteDifferences2D</code> submodule.</p>
+
+<li><p>Include the kwarg <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
+<p>Finalise the <code>Pf_diffusion_2D_perf_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel_indices</code> approach.</p>
+
+<li><p>You can use macros for the derivative definition.</p>
+
+<li><p>Include the kwarg <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
+<p>Starting from the <code>porous_convection_implicit_2D.jl</code> from Lecture 4, create a xPU version to run on GPUs. Copy and rename the <code>porous_convection_implicit_2D.jl</code> script to <code>PorousConvection_2D_xpu.jl</code> &#40;if you do not have a working 2D implicit thermal porous convection, fetch a copy in the <code>solutions</code> folder on the shared Polybox&#41;.</p>
+<p>Implement similar changes as you did in the previous 2 tasks, preferring the <code>@parallel</code> &#40;instead of <code>@parallel_indices</code>&#41; whenever possible.</p>
+<p>Make sure to use following physical and numerical parameters and compare the xPU &#40;CPU and GPU using ParallelStencil&#41; implementations versus the reference code from lecture 4 using the following &#40;slightly updated&#41; parameters:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
+lx,ly       = <span class=hljs-number >40.0</span>,<span class=hljs-number >20.0</span>
+k_ηf        = <span class=hljs-number >1.0</span>
+αρgx,αρgy   = <span class=hljs-number >0.0</span>,<span class=hljs-number >1.0</span>
+αρg         = sqrt(αρgx^<span class=hljs-number >2</span>+αρgy^<span class=hljs-number >2</span>)
+ΔT          = <span class=hljs-number >200.0</span>
+ϕ           = <span class=hljs-number >0.1</span>
+Ra          = <span class=hljs-number >1000</span>
+λ_ρCp       = <span class=hljs-number >1</span>/Ra*(αρg*k_ηf*ΔT*ly/ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span>
+<span class=hljs-comment ># numerics</span>
+ny          = <span class=hljs-number >63</span>
+nx          = <span class=hljs-number >2</span>*(ny+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>
+nt          = <span class=hljs-number >500</span>
+re_D        = <span class=hljs-number >4</span><span class=hljs-literal >π</span>
+cfl         = <span class=hljs-number >1.0</span>/sqrt(<span class=hljs-number >2.1</span>)
+maxiter     = <span class=hljs-number >10</span>max(nx,ny)
+ϵtol        = <span class=hljs-number >1e-6</span>
+nvis        = <span class=hljs-number >20</span>
+ncheck      = ceil(max(nx,ny))
+<span class=hljs-comment ># [...]</span>
+<span class=hljs-comment ># time step</span>
+dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
+    <span class=hljs-number >0.1</span>*min(dx,dy)/(αρg*ΔT*k_ηf)
+<span class=hljs-keyword >else</span>
+    min(<span class=hljs-number >5.0</span>*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/<span class=hljs-number >2.1</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<p>The code should produces the same output &#40;as following&#41;,</p>
+<p><img src="../assets/literate_figures/l7_ex1_porous_convect.png" alt="2D porous convection" /></p>
+<h3 id=task_4 ><a href="#task_4" class=header-anchor >Task 4</a></h3>
+<p>Upon having verified the your code, run it with higher resolution on Piz Daint, using one GPU.</p>
+<p>🚧 final details to come</p>
+<h3 id=some_tips ><a href="#some_tips" class=header-anchor >Some tips:</a></h3>
+<ul>
+<li><p>Array&#40;s&#41; can be initialised on the CPU and then made xPU ready upon wrapping them around <code>Data.Array</code> statement.</p>
+
+<li><p>Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following <code>qDx_c .&#61; avx&#40;Array&#40;qDx&#41;&#41;</code>.</p>
+
+<li><p>Boundary condition kernel to replace <code>T&#91;&#91;1,end&#93;,:&#93; .&#61; T&#91;&#91;2,end-1&#93;,:&#93;</code> can be implemented and called as following:</p>
+
+</ul>
+<pre><code class="julia hljs"><span class=hljs-meta >@parallel_indices</span> (iy) <span class=hljs-keyword >function</span> bc_x!(A)
+    A[<span class=hljs-number >1</span>  ,iy] = A[<span class=hljs-number >2</span>    ,iy]
+    A[<span class=hljs-keyword >end</span>,iy] = A[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,iy]
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>)) bc_x!(T)</code></pre>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -259,6 +341,39 @@ Template(; dir=<span class=hljs-string >&quot;.&quot;</span>, plugins=[Git(; ssh
 <li><p>Include 3D visualisation using <a href="https://docs.makie.org/stable/"><code>Makie.jl</code></a></p>
 
 </ul>
+<p>In this exercise, you will finalise the 3D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your 3D thermal porous convection code.</p>
+<p>For this first exercise, we will finalise and add to the <code>scripts</code> folder within the <code>PorousConvection</code> folder following scripts:</p>
+<ul>
+<li><p><code>Pf_diffusion_3D_xpu.jl</code></p>
+
+<li><p><code>PorousConvection_3D_xpu.jl</code></p>
+
+</ul>
+<h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
+<p>Finalise the <code>Pf_diffusion_3D_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel</code> approach together with using <code>ParallelStencil.FiniteDifferences2D</code> submodule.</p>
+
+<li><p>Include the kwarg <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
+<p>Merge the <code>PorousConvection_2D_xpu.jl</code> from Exercise 1 and the <code>Pf_diffusion_3D_xpu.jl</code> script from previous task to create a 3D single xPU <code>PorousConvection_3D_xpu.jl</code> version to run on GPUs.</p>
+<p>Implement similar changes as you did in the previous 2 tasks, preferring the <code>@parallel</code> &#40;instead of <code>@parallel_indices</code>&#41; whenever possible.</p>
+<p>Make sure to use the <code>z</code>-direction as the vertical coordinate changing all relevant expressions in the code, and assume <code>αρg</code> to be the gravity acceleration acting only in the <code>z</code>-direction. Implement following domain extend and numerical resolution &#40;ratio&#41;:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
+lx,ly,lz    = <span class=hljs-number >40.0</span>,<span class=hljs-number >20.0</span>,<span class=hljs-number >20.0</span>
+αρg         = <span class=hljs-number >1.0</span>
+Ra          = <span class=hljs-number >1000</span>
+λ_ρCp       = <span class=hljs-number >1</span>/Ra*(αρg*k_ηf*ΔT*lz/ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span>
+<span class=hljs-comment ># numerics</span>
+nz          = <span class=hljs-number >63</span>
+ny          = nz
+nx          = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>
+nt          = <span class=hljs-number >500</span>
+cfl         = <span class=hljs-number >1.0</span>/sqrt(<span class=hljs-number >3.1</span>)</code></pre>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
