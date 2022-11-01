@@ -17,3 +17,5 @@ md"""
 3. Push to GitHub and make sure the CI runs and passes
 4. Add the CI-badge to the `README.md` file from your `PorousConvection` folder, right below the title (as it is commonly done).
 """
+
+#md # \note{If your CI setup fails, check-out again the procedure at the top of the exercise section [here](#infos_about_projects).}
