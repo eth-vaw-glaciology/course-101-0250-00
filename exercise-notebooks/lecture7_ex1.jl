@@ -80,10 +80,21 @@ The code should produces the same output (as following),
 
 ### Task 4
 
-Upon having verified the your code, run it with higher resolution on Piz Daint, using one GPU.
+Upon having verified the your code, run it with following parameters on Piz Daint, using one GPU:
+"""
 
-🚧 final details to come on what to hand in and display in the PorousConvection project subfolder `README`.
+Ra      = 1000
+## [...]
+nx,ny   = 511,1023
+nt      = 4000
+ϵtol    = 1e-6
+nvis    = 50
+ncheck  = ceil(2max(nx,ny))
 
+md"""
+The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint.
+
+Produce a final animation showing the evolution of temperature with velocity quiver and add it to a section titled `## Porous convection 2D` in the `PorousConvection` project subfolder `README`.
 
 ### Some tips:
 

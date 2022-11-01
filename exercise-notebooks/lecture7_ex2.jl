@@ -61,14 +61,22 @@ end
 md"""
 ### Task 3
 
-Upon having verified the your code, run it with higher resolution on Piz Daint, using one GPU.
-
-🚧 final details to come on what to hand in and display in the PorousConvection project subfolder `README`.
-
+Upon having verified the your code, run it with following parameters on Piz Daint, using one GPU:
 """
 
+Ra       = 1000
+## [...]
+nx,ny,nz = 255,127,127
+nt       = 2000
+ϵtol     = 1e-6
+nvis     = 50
+ncheck   = ceil(2max(nx,ny,nz))
 
+md"""
+The run may take about two hours so make sure to allocate sufficiently resources and time on daint.
 
+Produce a final animation showing the evolution of temperature with velocity quiver and add it to a section titled `## Porous convection 3D` in the `PorousConvection` project subfolder `README`.
 
+🚧 The 3D visualisation helper function will soon be shared.
 
-
+"""
