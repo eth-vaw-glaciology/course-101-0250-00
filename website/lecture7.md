@@ -50,25 +50,28 @@ using PkgTemplates
 Template(; dir=".", plugins=[Git(; ssh=true), GitHubActions(; x86=true)],)("PorousConvection")
 ```
 2. From the automatically generated files and folders, you can remove the `.git` since we are already in a git folder, as well as the `.github/workflows/CompatHelper.yml` and `.github/workflows/TagBot.yml` files as we won't use them.
-3. This should give you the basic structure. Then edit the `.gitignore` file to include `Manifest.toml` and `.DS_Store` for mac users.
-4. Also, add following folders to the repo: `docs`, `scripts`. You will place all assets linked from the `README.md` in `docs`, and add your scripts to `scripts`. We won't touch `src`.
-5. Your final structure should be as following:
+3. Then you need to **move** the entire `.github/` folder one level up such that it is located at the root of your shared private repository.
+4. This should give you the basic structure. Then edit the `.gitignore` file to include `Manifest.toml` and `.DS_Store` for mac users.
+5. Also, add following folders to the repo: `docs`, `scripts`. You will place all assets linked from the `README.md` in `docs`, and add your scripts to `scripts`. We won't touch `src`.
+6. Your final structure should be as following (including also your previous `lectureX` folders - not shown here):
 ```
-PorousConvection
 |-- .github
 |   `-- workflows
 |       `-- CI.yml
-|-- .gitignore
 |-- LICENSE
-|-- Manifest.toml
-|-- Project.toml
-|-- README.md
-|-- docs
-|-- scripts
-|-- src
-|   `-- PorousConvection.jl
-`-- test
-    `-- runtests.jl
+|-- PorousConvection
+|   |-- .gitignore
+|   |-- LICENSE
+|   |-- Manifest.toml
+|   |-- Project.toml
+|   |-- README.md
+|   |-- docs
+|   |-- scripts
+|   |-- src
+|   |   `-- PorousConvection.jl
+|   `-- test
+|       `-- runtests.jl
+`-- README.md
 ```
 In the next 3 lectures (7,8,9), we will populate the `scripts` folder with 2D and 3D porous convection applications, add tests and use the `README.md` as main "documentation".
 
