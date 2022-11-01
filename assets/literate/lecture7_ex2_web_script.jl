@@ -18,3 +18,11 @@ else
     min(5.0*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)), dz/maximum(abs.(qDz)))/3.1)
 end
 
+Ra       = 1000
+# [...]
+nx,ny,nz = 255,127,127
+nt       = 2000
+ϵtol     = 1e-6
+nvis     = 50
+ncheck   = ceil(2max(nx,ny,nz))
+

@@ -27,6 +27,14 @@ else
     min(5.0*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1)
 end
 
+Ra      = 1000
+# [...]
+nx,ny   = 511,1023
+nt      = 4000
+ϵtol    = 1e-6
+nvis    = 50
+ncheck  = ceil(2max(nx,ny))
+
 @parallel_indices (iy) function bc_x!(A)
     A[1  ,iy] = A[2    ,iy]
     A[end,iy] = A[end-1,iy]

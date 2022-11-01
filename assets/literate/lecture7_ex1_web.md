@@ -74,10 +74,21 @@ The code should produces the same output (as following),
 
 ### Task 4
 
-Upon having verified the your code, run it with higher resolution on Piz Daint, using one GPU.
+Upon having verified the your code, run it with following parameters on Piz Daint, using one GPU:
 
-🚧 final details to come on what to hand in and display in the PorousConvection project subfolder `README`.
+````julia:ex2
+Ra      = 1000
+# [...]
+nx,ny   = 511,1023
+nt      = 4000
+ϵtol    = 1e-6
+nvis    = 50
+ncheck  = ceil(2max(nx,ny))
+````
 
+The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint.
+
+Produce a final animation showing the evolution of temperature with velocity quiver and add it to a section titled `## Porous convection 2D` in the `PorousConvection` project subfolder `README`.
 
 ### Some tips:
 
@@ -85,7 +96,7 @@ Upon having verified the your code, run it with higher resolution on Piz Daint, 
 - Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following `Array(T')` or `qDx_c .= avx(Array(qDx))`.
 - Boundary condition kernel to replace `T[[1,end],:] .= T[[2,end-1],:]` can be implemented and called as following:
 
-````julia:ex2
+````julia:ex3
 @parallel_indices (iy) function bc_x!(A)
     A[1  ,iy] = A[2    ,iy]
     A[end,iy] = A[end-1,iy]
