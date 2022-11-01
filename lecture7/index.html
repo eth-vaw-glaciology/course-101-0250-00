@@ -384,8 +384,38 @@ nt       = <span class=hljs-number >2000</span>
 nvis     = <span class=hljs-number >50</span>
 ncheck   = ceil(<span class=hljs-number >2</span>max(nx,ny,nz))</code></pre>
 <p>The run may take about two hours so make sure to allocate sufficiently resources and time on daint.</p>
-<p>Produce a final animation showing the evolution of temperature with velocity quiver and add it to a section titled <code>## Porous convection 3D</code> in the <code>PorousConvection</code> project subfolder <code>README</code>.</p>
-<p>🚧 The 3D visualisation helper function will soon be shared.</p>
+<p>Produce a figure showing the final stage of temperature distribution and add it to a new section titled <code>## Porous convection 3D</code> in the <code>PorousConvection</code> project subfolder <code>README</code>.</p>
+<p>For the figure, you can use <code>GLMakie</code> to produce some iso-contours; for this add the following binary dump function to your code</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> save_array(Aname,A)
+    fname = string(Aname,<span class=hljs-string >&quot;.bin&quot;</span>)
+    out = open(fname,<span class=hljs-string >&quot;w&quot;</span>); write(out,A); close(out)
+<span class=hljs-keyword >end</span></code></pre>
+<p>which you can call as following at the end of your simulation</p>
+<pre><code class="julia hljs">save_array(<span class=hljs-string >&quot;out_T&quot;</span>,convert.(<span class=hljs-built_in >Float32</span>,<span class=hljs-built_in >Array</span>(T)))</code></pre>
+<p>Then, once you&#39;ve created the <code>out_T.bin</code> file, read it in using the following code and produce a figure</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> GLMakie
+
+<span class=hljs-keyword >function</span> load_array(Aname,A)
+    fname = string(Aname,<span class=hljs-string >&quot;.bin&quot;</span>)
+    fid=open(fname,<span class=hljs-string >&quot;r&quot;</span>); read!(fid,A); close(fid)
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-keyword >function</span> visualise()
+    lx,ly,lz = <span class=hljs-number >40.0</span>,<span class=hljs-number >20.0</span>,<span class=hljs-number >20.0</span>
+    nx = <span class=hljs-number >255</span>
+    ny = nz = <span class=hljs-number >127</span>
+    T  = zeros(<span class=hljs-built_in >Float32</span>,nx,ny,nz)
+    load_array(<span class=hljs-string >&quot;out_T&quot;</span>,T)
+    xc,yc,zc = <span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>,lx,nx),<span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>,ly,ny),<span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>,lz,nz)
+    fig      = Figure(resolution=(<span class=hljs-number >1600</span>,<span class=hljs-number >1000</span>),fontsize=<span class=hljs-number >24</span>)
+    ax       = Axis3(fig[<span class=hljs-number >1</span>,<span class=hljs-number >1</span>];aspect=(<span class=hljs-number >1</span>,<span class=hljs-number >1</span>,<span class=hljs-number >0.5</span>),title=<span class=hljs-string >&quot;Temperature&quot;</span>,xlabel=<span class=hljs-string >&quot;lx&quot;</span>,ylabel=<span class=hljs-string >&quot;ly&quot;</span>,zlabel=<span class=hljs-string >&quot;lz&quot;</span>)
+    surf_T   = contour!(ax,xc,yc,zc,T;alpha=<span class=hljs-number >0.05</span>,colormap=:turbo)
+    save(<span class=hljs-string >&quot;T_3D.png&quot;</span>,fig)
+    <span class=hljs-keyword >return</span> fig
+<span class=hljs-keyword >end</span>
+
+visualise()</code></pre>
+<p>This figure you can further add to your <code>README</code>. Note that GLMakie will probably not run on daint as no GL rendering is enabled on the compute nodes.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
