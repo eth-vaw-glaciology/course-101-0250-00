@@ -195,42 +195,26 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >This project being identical to all students. We ask you to strictly follow the demanded structure and steps as this will be part of the evaluation criteria, besides running 3D codes.</div></div>
 <h3 id=preparing_the_project_folder_in_your_github_repo ><a href="#preparing_the_project_folder_in_your_github_repo" class=header-anchor >Preparing the project folder in your GitHub repo</a></h3>
-<p>For the project, you will have to create a <code>PorousConvection</code> folder <strong>within</strong> your <code>pde-on-gpu-&lt;lastname&gt;</code> shared private GitHub repo. To do so, you can use <a href="https://github.com/JuliaCI/PkgTemplates.jl"><code>PkgTemplates.jl</code></a>.</p>
+<p>For the project, you will have to create a <code>PorousConvection</code> folder <strong>within</strong> your <code>pde-on-gpu-&lt;lastname&gt;</code> shared private GitHub repo. To do so, you can follow these steps:</p>
 <ol>
-<li><p>Within Julia, run following command while <strong>being in the root</strong> of your <code>pde-on-gpu-&lt;lastname&gt;</code> folder:</p>
+<li><p>Within your <code>pde-on-gpu-&lt;lastname&gt;</code> folder, copy over the <code>PorousConvection</code> you can find in the <code>l7_project_template</code> folder within the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts">scripts</a> folder. Make sure to copy the entire folder as not to loose the hidden files.</p>
+
+<li><p>Also, make sure the hidden file <code>.gitignore</code> includes <code>Manifest.toml</code> and <code>.DS_Store</code> for mac users.</p>
+
+<li><p>At the root of your <code>pde-on-gpu-&lt;lastname&gt;</code> folder, create a &#40;hidden&#41; <code>.github/workflows/</code> folder and add in there the remaining <code>CI.yml</code> file from the <code>l7_project_template</code>.</p>
+
+<li><p>Now, you&#39;ll need to edit the <code>Project.toml</code> file to add your name and email address, as well as add an UUID.</p>
+
+<li><p>To add an UUID, execute in Julia <code>using UUIDs</code> and then <code>uuid1&#40;&#41;</code>. Copy what the returned UUID &#40;including the <code>&quot;</code> to the <code>Project.toml</code> file&#41;.</p>
+
+<li><p>The last part is to update the badge URL in the <code>README</code> within the <code>PorousConvection</code> folder. Replace the <code>&lt;USER&gt;/&lt;REPO&gt;</code> with your username and the name of your repo:</p>
 
 </ol>
-<pre><code class="julia hljs"><span class=hljs-keyword >using</span> PkgTemplates
-Template(; dir=<span class=hljs-string >&quot;.&quot;</span>, plugins=[Git(; ssh=<span class=hljs-literal >true</span>), GitHubActions(; x86=<span class=hljs-literal >true</span>)],)(<span class=hljs-string >&quot;PorousConvection&quot;</span>)</code></pre>
-<ol start=2 >
-<li><p>From the automatically generated files and folders, you can remove the <code>.git</code> since we are already in a git folder, as well as the <code>.github/workflows/CompatHelper.yml</code> and <code>.github/workflows/TagBot.yml</code> files as we won&#39;t use them.</p>
-
-<li><p>Then you need to <strong>move</strong> the entire <code>.github/</code> folder one level up such that it is located at the root of your shared private repository.</p>
-
-<li><p>This should give you the basic structure. Then edit the <code>.gitignore</code> file to include <code>Manifest.toml</code> and <code>.DS_Store</code> for mac users.</p>
-
-<li><p>Also, add following folders to the repo: <code>docs</code>, <code>scripts</code>. You will place all assets linked from the <code>README.md</code> in <code>docs</code>, and add your scripts to <code>scripts</code>. We won&#39;t touch <code>src</code>.</p>
-
-<li><p>Your final structure should be as following &#40;including also your previous <code>lectureX</code> folders - not shown here&#41;:</p>
+<pre><code class="julia hljs">[![Build Status](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml?query=branch%<span class=hljs-number >3</span>Amain)</code></pre>
+<ol start=7 >
+<li><p>Pushing any changes to your <code>PorousConvection</code> folder should now trigger CI and as for now no tests are executed the status should be green, passing.</p>
 
 </ol>
-<pre><code class="julia hljs">|-- .github
-|   <span class=hljs-string >`-- workflows
-|       `</span>-- CI.yml
-|-- LICENSE
-|-- PorousConvection
-|   |-- .gitignore
-|   |-- LICENSE
-|   |-- Manifest.toml
-|   |-- Project.toml
-|   |-- README.md
-|   |-- docs
-|   |-- scripts
-|   |-- src
-|   |   <span class=hljs-string >`-- PorousConvection.jl
-|   `</span>-- test
-|       <span class=hljs-string >`-- runtests.jl
-`</span>-- README.md</code></pre>
 <p>In the next 3 lectures &#40;7,8,9&#41;, we will populate the <code>scripts</code> folder with 2D and 3D porous convection applications, add tests and use the <code>README.md</code> as main &quot;documentation&quot;.</p>
 <p>You should now be all set and ready to get started 🚀</p>
 <h2 id=exercise_1_-_2d_thermal_porous_convection_xpu_implementation ><a href="#exercise_1_-_2d_thermal_porous_convection_xpu_implementation" class=header-anchor >Exercise 1 - <strong>2D thermal porous convection xPU implementation</strong></a></h2>
