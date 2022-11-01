@@ -60,8 +60,8 @@ In the last lecture we've setup a [project](https://github.com/eth-vaw-glaciolog
 
 Let's now add CI to this:
 
-1. create a Julia project and add some tests **[done]**
-2. make a suitable GitHub Actions scrip (that `.yml` file)
+1. create a Julia project and add some tests **[done in last lecture]**
+2. make a suitable GitHub Actions scrip (that `.yml` file, typically `.github/workflows/ci.yml`)
 3. pushing to GitHub will now run the tests (maybe you need to activate Actions in `Setting` -> `Actions` -> `Allow all actions`)
 
 For step 2 we follow the documentation on [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest).
@@ -74,7 +74,7 @@ For step 2 we follow the documentation on [https://github.com/julia-actions/juli
 md"""
 #### Example from last lecture continued: YML magic
 
-The `.yml` file, adapted from the `README` of [julia-runtest](https://github.com/julia-actions/julia-runtest):
+The `.github/workflows/ci.yml` file, adapted from the `README` of [julia-runtest](https://github.com/julia-actions/julia-runtest):
 ```yml
 name: Run tests
 
@@ -102,6 +102,14 @@ jobs:
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+#### See it running
+
+- add, commit and push to GitHub
+- click on the "Actions" tab on the project's website
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 #### Where is my BADGE!!!
 
 The CI will create a badge (a small picture) which reflects the status of the Action. Typically added to the `README.md`:
@@ -118,7 +126,7 @@ and should be added to the near the top of `README` like so:
 ```
 (this also sets the link to the Actions which gets open upon clicking on it)
 
-👉 _**All together**_ on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
+👉 _**See code**_ on [https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -132,7 +140,6 @@ on:
   [push, pull_request]
 jobs:
   test:
-    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -140,28 +147,21 @@ jobs:
         julia-version: ['1.8']
         julia-arch: [x64]
         os: [ubuntu-latest]
+
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
-      - uses: actions/cache@v1
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
       - run: julia --check-bounds=yes --color=yes -e 'cd("<subfolder-of-julia-project>"); import Pkg; Pkg.activate("."); Pkg.test()'
 ```
 Note that you have to _**adjust**_ the bit: `cd("<subfolder-of-julia-project>")`.
 
 👉 The _**example**_ is in [course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl).
+
+👉 As you go along in the course you'll want to test different subfolders, thus just change the line in the `ci.yml` file.
 """
 
 
