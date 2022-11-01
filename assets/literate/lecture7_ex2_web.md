@@ -57,5 +57,5 @@ end
 
 Upon having verified the your code, run it with higher resolution on Piz Daint, using one GPU.
 
-🚧 final details to come
+🚧 final details to come on what to hand in and display in the PorousConvection project subfolder `README`.
 
