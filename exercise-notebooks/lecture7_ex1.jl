@@ -88,7 +88,7 @@ Upon having verified the your code, run it with higher resolution on Piz Daint, 
 ### Some tips:
 
 - Array(s) can be initialised on the CPU and then made xPU ready upon wrapping them around `Data.Array` statement.
-- Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following `qDx_c .= avx(Array(qDx))`.
+- Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following `Array(T')` or `qDx_c .= avx(Array(qDx))`.
 - Boundary condition kernel to replace `T[[1,end],:] .= T[[2,end-1],:]` can be implemented and called as following:
 """
 
