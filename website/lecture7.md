@@ -43,36 +43,19 @@ Starting from this lecture (and until to lecture 9), homework will contribute to
 \warn{This project being identical to all students. We ask you to strictly follow the demanded structure and steps as this will be part of the evaluation criteria, besides running 3D codes.}
 
 ### Preparing the project folder in your GitHub repo
-For the project, you will have to create a `PorousConvection` folder **within** your `pde-on-gpu-<lastname>` shared private GitHub repo. To do so, you can use [`PkgTemplates.jl`](https://github.com/JuliaCI/PkgTemplates.jl).
-1. Within Julia, run following command while **being in the root** of your `pde-on-gpu-<lastname>` folder:
+For the project, you will have to create a `PorousConvection` folder **within** your `pde-on-gpu-<lastname>` shared private GitHub repo. To do so, you can follow these steps:
+
+1. Within your `pde-on-gpu-<lastname>` folder, copy over the `PorousConvection` you can find in the `l7_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
+2. Also, make sure the hidden file `.gitignore` includes `Manifest.toml` and `.DS_Store` for mac users.
+3. At the root of your `pde-on-gpu-<lastname>` folder, create a (hidden) `.github/workflows/` folder and add in there the remaining `CI.yml` file from the `l7_project_template`.
+4. Now, you'll need to edit the `Project.toml` file to add your name and email address, as well as add an UUID.
+5. To add an UUID, execute in Julia `using UUIDs` and then `uuid1()`. Copy what the returned UUID (including the `"` to the `Project.toml` file).
+6. The last part is to update the badge URL in the `README` within the `PorousConvection` folder. Replace the `<USER>/<REPO>` with your username and the name of your repo:
 ```
-using PkgTemplates
-Template(; dir=".", plugins=[Git(; ssh=true), GitHubActions(; x86=true)],)("PorousConvection")
+[![Build Status](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml?query=branch%3Amain)
 ```
-2. From the automatically generated files and folders, you can remove the `.git` since we are already in a git folder, as well as the `.github/workflows/CompatHelper.yml` and `.github/workflows/TagBot.yml` files as we won't use them.
-3. Then you need to **move** the entire `.github/` folder one level up such that it is located at the root of your shared private repository.
-4. This should give you the basic structure. Then edit the `.gitignore` file to include `Manifest.toml` and `.DS_Store` for mac users.
-5. Also, add following folders to the repo: `docs`, `scripts`. You will place all assets linked from the `README.md` in `docs`, and add your scripts to `scripts`. We won't touch `src`.
-6. Your final structure should be as following (including also your previous `lectureX` folders - not shown here):
-```
-|-- .github
-|   `-- workflows
-|       `-- CI.yml
-|-- LICENSE
-|-- PorousConvection
-|   |-- .gitignore
-|   |-- LICENSE
-|   |-- Manifest.toml
-|   |-- Project.toml
-|   |-- README.md
-|   |-- docs
-|   |-- scripts
-|   |-- src
-|   |   `-- PorousConvection.jl
-|   `-- test
-|       `-- runtests.jl
-`-- README.md
-```
+7. Pushing any changes to your `PorousConvection` folder should now trigger CI and as for now no tests are executed the status should be green, passing.
+
 In the next 3 lectures (7,8,9), we will populate the `scripts` folder with 2D and 3D porous convection applications, add tests and use the `README.md` as main "documentation".
 
 You should now be all set and ready to get started 🚀
