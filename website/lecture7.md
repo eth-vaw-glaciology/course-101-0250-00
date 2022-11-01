@@ -49,7 +49,7 @@ For the project, you will have to create a `PorousConvection` folder **within** 
 2. Also, make sure the hidden file `.gitignore` includes `Manifest.toml` and `.DS_Store` for mac users.
 3. At the root of your `pde-on-gpu-<lastname>` folder, create a (hidden) `.github/workflows/` folder and add in there the remaining `CI.yml` file from the `l7_project_template`.
 4. Now, you'll need to edit the `Project.toml` file to add your name and email address, as well as add an UUID.
-5. To add an UUID, execute in Julia `using UUIDs` and then `uuid1()`. Copy what the returned UUID (including the `"` to the `Project.toml` file).
+5. To add an UUID, execute in Julia `using UUIDs` and then `uuid1()`. Copy the returned UUID (including the `"`) to the `Project.toml` file.
 6. The last part is to update the badge URL in the `README` within the `PorousConvection` folder. Replace the `<USER>/<REPO>` with your username and the name of your repo:
 ```
 [![Build Status](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml?query=branch%3Amain)
