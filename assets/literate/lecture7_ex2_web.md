@@ -113,5 +113,5 @@ end
 visualise()
 ````
 
-This figure you can further add to your `README`. Note that GLMakie will probably not run on daint as no GL rendering is enabled on the compute nodes.
+This figure you can further add to your `README`. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.
 

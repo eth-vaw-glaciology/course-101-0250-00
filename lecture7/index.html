@@ -205,7 +205,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 <li><p>Now, you&#39;ll need to edit the <code>Project.toml</code> file to add your full name and email address &#40;the ones you are using for GitHub&#41;, and add a UUID as well.</p>
 
-<li><p>To add an UUID, execute in Julia <code>using UUIDs</code> and then <code>uuid1&#40;&#41;</code>. Copy the returned UUID &#40;including the <code>&quot;</code>&#41; to the <code>Project.toml</code> file.</p>
+<li><p>To add a UUID, execute in Julia <code>using UUIDs</code> and then <code>uuid1&#40;&#41;</code>. Copy the returned UUID &#40;including the <code>&quot;</code>&#41; to the <code>Project.toml</code> file.</p>
 
 <li><p>The last part is to update the badge URL in the <code>README</code> within the <code>PorousConvection</code> folder. Replace the <code>&lt;USER&gt;/&lt;REPO&gt;</code> with your username and the name of your repo:</p>
 
@@ -415,7 +415,7 @@ ncheck   = ceil(<span class=hljs-number >2</span>max(nx,ny,nz))</code></pre>
 <span class=hljs-keyword >end</span>
 
 visualise()</code></pre>
-<p>This figure you can further add to your <code>README</code>. Note that GLMakie will probably not run on daint as no GL rendering is enabled on the compute nodes.</p>
+<p>This figure you can further add to your <code>README</code>. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
