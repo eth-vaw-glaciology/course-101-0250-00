@@ -201,9 +201,9 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 <li><p>Also, make sure the hidden file <code>.gitignore</code> includes <code>Manifest.toml</code> and <code>.DS_Store</code> for mac users.</p>
 
-<li><p>At the root of your <code>pde-on-gpu-&lt;lastname&gt;</code> folder, create a &#40;hidden&#41; <code>.github/workflows/</code> folder and add in there the remaining <code>CI.yml</code> file from the <code>l7_project_template</code>.</p>
+<li><p>At the root of your <code>pde-on-gpu-&lt;lastname&gt;</code> folder, create a &#40;hidden&#41; <code>.github/workflows/</code> folder and add in there the remaining <code>CI.yml</code> file from the <code>l7_project_template</code> &#40;which is the same as from the lecture - see <a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo">here</a>&#41;.</p>
 
-<li><p>Now, you&#39;ll need to edit the <code>Project.toml</code> file to add your name and email address, as well as add an UUID.</p>
+<li><p>Now, you&#39;ll need to edit the <code>Project.toml</code> file to add your full name and email address &#40;the ones you are using for GitHub&#41;, and add a UUID as well.</p>
 
 <li><p>To add an UUID, execute in Julia <code>using UUIDs</code> and then <code>uuid1&#40;&#41;</code>. Copy the returned UUID &#40;including the <code>&quot;</code>&#41; to the <code>Project.toml</code> file.</p>
 
@@ -212,7 +212,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 </ol>
 <pre><code class="julia hljs">[![Build Status](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml?query=branch%<span class=hljs-number >3</span>Amain)</code></pre>
 <ol start=7 >
-<li><p>Pushing any changes to your <code>PorousConvection</code> folder should now trigger CI and as for now no tests are executed the status should be green, passing.</p>
+<li><p>Pushing any changes to your <code>PorousConvection</code> folder should now trigger CI and as for now no tests are executed the status should be green, i.e., passing.</p>
 
 </ol>
 <p>In the next 3 lectures &#40;7,8,9&#41;, we will populate the <code>scripts</code> folder with 2D and 3D porous convection applications, add tests and use the <code>README.md</code> as main &quot;documentation&quot;.</p>
@@ -448,7 +448,7 @@ visualise()</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 01, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 02, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
