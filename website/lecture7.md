@@ -44,17 +44,16 @@ Starting from this lecture (and until to lecture 9), homework will contribute to
 
 ### Preparing the project folder in your GitHub repo
 For the project, you will have to create a `PorousConvection` folder **within** your `pde-on-gpu-<lastname>` shared private GitHub repo. To do so, you can follow these steps:
-
 1. Within your `pde-on-gpu-<lastname>` folder, copy over the `PorousConvection` you can find in the `l7_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
 2. Also, make sure the hidden file `.gitignore` includes `Manifest.toml` and `.DS_Store` for mac users.
-3. At the root of your `pde-on-gpu-<lastname>` folder, create a (hidden) `.github/workflows/` folder and add in there the remaining `CI.yml` file from the `l7_project_template`.
-4. Now, you'll need to edit the `Project.toml` file to add your name and email address, as well as add an UUID.
+3. At the root of your `pde-on-gpu-<lastname>` folder, create a (hidden) `.github/workflows/` folder and add in there the remaining `CI.yml` file from the `l7_project_template` (which is the same as from the lecture - see [here](#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo)).
+4. Now, you'll need to edit the `Project.toml` file to add your full name and email address (the ones you are using for GitHub), and add a UUID as well.
 5. To add an UUID, execute in Julia `using UUIDs` and then `uuid1()`. Copy the returned UUID (including the `"`) to the `Project.toml` file.
 6. The last part is to update the badge URL in the `README` within the `PorousConvection` folder. Replace the `<USER>/<REPO>` with your username and the name of your repo:
 ```
 [![Build Status](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/<USER>/<REPO>/actions/workflows/CI.yml?query=branch%3Amain)
 ```
-7. Pushing any changes to your `PorousConvection` folder should now trigger CI and as for now no tests are executed the status should be green, passing.
+7. Pushing any changes to your `PorousConvection` folder should now trigger CI and as for now no tests are executed the status should be green, i.e., passing.
 
 In the next 3 lectures (7,8,9), we will populate the `scripts` folder with 2D and 3D porous convection applications, add tests and use the `README.md` as main "documentation".
 
