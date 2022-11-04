@@ -120,6 +120,14 @@ visualise()
 
 md"""
 This figure you can further add to your `README`. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.
+
+For reference, the 3D figure produced could look as following
+
+![3D porous convection](../assets/literate_figures/l7_ex2_porous_convect.png)
+
+And the 2D slice at `y/2` rendered using `Plots.jl` displays as
+
+![3D porous convection](../assets/literate_figures/l7_ex2_porous_convect_sl.png)
 """
 
 
