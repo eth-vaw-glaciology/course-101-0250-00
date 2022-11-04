@@ -41,7 +41,7 @@ using Plots
 md"""
 Before we go further, make sure we select the GPU we want to run on (if running on a multi-GPU node). In the terminal or Julia REPL in shell mode (typing `;`), type `nvidia-smi` command to list visible GPUs. Remember the GPU_ID you want to use.
 
-Then, in Julia, add following if you decide to, e.g., use GPU 7:
+Then, in Julia, add following if you decide to, e.g., use GPU 0:
 """
 GPU_ID = 0
 device!(GPU_ID)
