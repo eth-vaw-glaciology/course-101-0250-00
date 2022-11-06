@@ -453,7 +453,7 @@ visualise()</code></pre>
 <ol>
 <li><p>Add CI setup to your <code>PorousConvection</code> project to run <strong>one unit and one reference test</strong> for both the 2D and 3D thermal porous convection scripts.</p>
 <ul>
-<li><p>👉 make sure that the reference test runs on a very small grid.  It should complete in less than, say, 5 seconds.</p>
+<li><p>👉 make sure that the reference test runs on a very small grid &#40;without producing NaNs&#41;.  It should complete in less than, say, 10-20 seconds.</p>
 
 </ul>
 
@@ -464,8 +464,27 @@ visualise()</code></pre>
 <li><p>Add the CI-badge to the <code>README.md</code> file from your <code>PorousConvection</code> folder, right below the title &#40;as it is commonly done&#41;.</p>
 
 </ol>
+<p>You may realise that you can&#39;t initialise ParallelStencil for 2D and 3D configurations within the same test script. A good practice is to place one test2D.jl and another test3D.jl scripts within the <code>test</code> folder and call these scripts from the <code>runtests.jl</code> mains script, which could contain following:</p>
+<pre><code class="julia hljs">push!(<span class=hljs-literal >LOAD_PATH</span>, <span class=hljs-string >&quot;../src&quot;</span>)
+
+<span class=hljs-keyword >using</span> PorousConvection
+
+<span class=hljs-keyword >function</span> runtests()
+    exename = joinpath(Sys.BINDIR, Base.julia_exename())
+    testdir = pwd()
+
+    printstyled(<span class=hljs-string >&quot;Testing PorousConvection.jl\n&quot;</span>; bold=<span class=hljs-literal >true</span>, color=:white)
+
+    run(<span class=hljs-string >`<span class=hljs-variable >$exename</span> -O3 --startup-file=no --check-bounds=no <span class=hljs-subst >$(joinpath(testdir, <span class=hljs-string >&quot;test2D.jl&quot;</span>)</span>)`</span>)
+    run(<span class=hljs-string >`<span class=hljs-variable >$exename</span> -O3 --startup-file=no --check-bounds=no <span class=hljs-subst >$(joinpath(testdir, <span class=hljs-string >&quot;test3D.jl&quot;</span>)</span>)`</span>)
+
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+exit(runtests())</code></pre>
+<p>Each sub-test file would then contain all what&#39;s needed to run the 2D or 3D tests. You can find an example of this approach in <code>ParallelStencil</code>&#39;s own test suite <a href="https://github.com/omlins/ParallelStencil.jl/tree/main/test">here</a>, or in the <a href="https://github.com/PTsolvers/PseudoTransientDiffusion.jl/tree/main/test">GitHub repository</a> related to the Pseudo-transient solver publication discussed in Lecture 4.</p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >If your CI setup fails, check-out again the procedure at the top of the exercise section <a href="#infos_about_projects">here</a>.</div></div>
+<div class=messg >If your CI setup fails, check-out again the procedure at the top of the exercise section <a href="#infos_about_projects">here</a>. Secondly, make sure to run the CPU version of the scripts as there is <strong>no GPU support</strong> in GitHub Actions&#33;</div></div>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
