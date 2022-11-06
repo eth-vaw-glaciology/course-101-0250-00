@@ -24,7 +24,7 @@ For this first exercise, we will finalise and add to the `scripts` folder within
 
 Finalise the `Pf_diffusion_3D_xpu.jl` script from class.
 - This version should contain compute functions (kernels) definitions using `@parallel` approach together with using `ParallelStencil.FiniteDifferences3D` submodule.
-- Include the kwarg `do_visu` (or `do_check`) to allow disabling plotting/error-checking when assessing performance.
+- Include the `kwargs` `do_visu` (or `do_check`) to allow disabling plotting/error-checking when assessing performance.
 - Also, make sure to include and update the performance evaluation section at the end of the script.
 
 ### Task 2
@@ -59,9 +59,41 @@ else
 end
 
 md"""
+Initial conditions for temperature can be done by analogy to the 2D case, but using the iterative approach presented in class (see [here](#towards_3d_thermal_porous_convection)).
+"""
+
+T = [ΔT*exp(-xc[ix]^2 -yc[iy]^2 -(zc[iz]+lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz]
+
+md"""
+Make sure to have `yc` defined using extends similar to `xc`, and `zc` being the vertical dimension.
+
+For boundary conditions, apply heating from the bottom (zc=-lz) and cooling from top `zc=0` in the vertical `z`-direction. Extend the adiabatic condition for the walls to the `xz` and `yz` planes. The `yz` BC kernel could be defined and called as following:
+"""
+
+@parallel_indices (iy,iz) function bc_x!(A)
+    A[1  ,iy,iz] = A[2    ,iy,iz]
+    A[end,iy,iz] = A[end-1,iy,iz]
+    return
+end
+
+@parallel (1:size(T,2),1:size(T,3)) bc_x!(T)
+
+md"""
+
+Verify that the code runs using the above low-resolution configuration and produces sensible output. To this end, you can recycle the 2D visualisation (removing the quiver plotting) in order to visualise a 2D slice of your 3D data, e.g., at `ly/2`:
+"""
+
+iframe = 0
+if do_viz && (it % nvis == 0)
+    p1=heatmap(xc,zc,Array(T)[:,ceil(Int,ny/2),:]';xlims=(xc[1],xc[end]),ylims=(zc[1],zc[end]),aspect_ratio=1,c=:turbo)
+    png(p1,@sprintf("viz3D_out/%04d.png",iframe+=1))            
+end
+
+md"""
+
 ### Task 3
 
-Upon having verified the your code, run it with following parameters on Piz Daint, using one GPU:
+Upon having verified your code, run it with following parameters on Piz Daint, using one GPU:
 """
 
 Ra       = 1000
@@ -73,11 +105,11 @@ nvis     = 50
 ncheck   = ceil(2max(nx,ny,nz))
 
 md"""
-The run may take about two hours so make sure to allocate sufficiently resources and time on daint.
+The run may take about three hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme3D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
 
-Produce a figure showing the final stage of temperature distribution and add it to a new section titled `## Porous convection 3D` in the `PorousConvection` project subfolder `README`.
+Produce a figure showing the final stage of temperature distribution and add it to a new section titled `## Porous convection 3D` in the `PorousConvection` project subfolder's `README`.
 
-For the figure, you can use `GLMakie` to produce some iso-contours; for this add the following binary dump function to your code
+For the figure, you can use `GLMakie` to produce some isocontours visualisation; add the following binary dump function to your code
 """
 
 function save_array(Aname,A)
