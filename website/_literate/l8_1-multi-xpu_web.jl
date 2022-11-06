@@ -587,8 +587,6 @@ To finally generate the `gif`, one needs to place the following after the time l
 ```julia
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
-
-You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl) script in the [script/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder.
 """
 
 #src ######################################################################### 
