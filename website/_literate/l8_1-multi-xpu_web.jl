@@ -218,9 +218,11 @@ CR[1]   = ...
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
-#md # @@img-med
-#md # ![diffusion 1D 2 procs](../assets/literate_figures/l8_diff_1D_2procs_1.gif)
-#md # @@
+#md # ~~~
+# <center>
+#   <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
+# </center>
+#md # ~~~
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -280,9 +282,12 @@ Modify the initial condition in the 1-D diffusion code [`l8_diffusion_1D_nprocs.
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
-#md # @@img-med
-#md # ![diffusion 1D n procs](../assets/literate_figures/l8_diff_1D_nprocs_1.gif)
-#md # @@
+#md # ~~~
+# <center>
+#   <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
+# </center>
+#md # ~~~
+
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
