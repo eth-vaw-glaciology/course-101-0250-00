@@ -61,7 +61,7 @@ C     = exp.(.-xc.^<span class=hljs-number >2</span>)</code></pre> <p>where <cod
 <h3 id=task_4_2-d_parallelisation_with_mpi ><a href="#task_4_2-d_parallelisation_with_mpi" class=header-anchor >Task 4 &#40;2-D parallelisation with MPI&#41;</a></h3>
 <p>Run the code <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_diffusion_2D_mpi.jl</code></a> which is still missing the boundary updates three times: with 1, 2 and 4 processes.</p>
 <p>Visualise the results after each run with the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_vizme2D_mpi.jl</code></a> code &#40;adapt the variable <code>nprocs</code>&#33;&#41;. Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.</p>
-<div class=img-med ><img src="../assets/literate_figures/l8_diffusion_2D_mpi.gif" alt="diffusion 2D MPI" /></div>
+<div class=img-med ><img src="../assets/literate_figures/l8_diff_2D_mpi.png" alt="diffusion 2D MPI" /></div>
 <p>The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.</p>
 <p>Besides facilitating the programming, it can leverage Remote Direct Memory Access &#40;RDMA&#41; which can be of great benefit in many HPC scenarios.</p>
 <h3 id=task_5_multi-gpu_homework ><a href="#task_5_multi-gpu_homework" class=header-anchor >Task 5 &#40;multi-GPU&#41; <em><strong>HOMEWORK</strong></em></a></h3>

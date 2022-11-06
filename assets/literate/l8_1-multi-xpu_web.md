@@ -244,7 +244,7 @@ Run the code [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/co
 Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_mpi.gif)
+![diffusion 2D MPI](../assets/literate_figures/l8_diff_2D_mpi.png)
 @@
 
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.
