@@ -220,7 +220,7 @@ in order make the code work properly and run it again. Note what has changed in 
 
 #md # ~~~
 # <center>
-#   <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
+#   <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
 # </center>
 #md # ~~~
 
@@ -284,7 +284,7 @@ Then run this code which is missing the boundary updates of the `n` fake process
 
 #md # ~~~
 # <center>
-#   <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
+#   <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
 # </center>
 #md # ~~~
 
@@ -416,7 +416,7 @@ Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://gith
 """
 
 #md # @@img-med
-#md # ![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_xpu_1.gif)
+#md # ![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_mpi.gif)
 #md # @@
 
 #src ######################################################################### 
