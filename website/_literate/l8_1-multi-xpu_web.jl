@@ -16,7 +16,7 @@ md"""
   - Fake parallelisation
   - Julia MPI (CPU + GPU)
   - Using `ParallelStencil.jl` together with `ImplicitGlobalGrid.jl`
-  - Towards Stokes II: elastic to viscous (Cauchy-Navier to (Navier-)Stokes)
+  - Thermal porous convection 3D using GPU MPI
 - Automatic documentation and CI
 """
 
@@ -122,7 +122,7 @@ Many things could potentially go wrong in distributed computing. However, the ul
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-The parallel efficiency defines as the speedup divided by the numebr of processors. The speed-up defines as the execution time using an increasing number of processors normalised by the single processor execution time. We will use the parallel efficiency in a weak scaling configuration.
+The parallel efficiency defines as the speed-up divided by the number of processors. The speed-up defines as the execution time using an increasing number of processors normalised by the single processor execution time. We will use the parallel efficiency in a weak scaling configuration.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -143,7 +143,7 @@ md"""
 md"""
 ### Let's get started
 
-we will explore distributed computing with Julia's MPI wrapper MPI.jl. This will enable our codes to run on multiple CPUs and GPUs in order to scale on modern multi-CPU/GPU nodes, clusters and supercomputers. In the proposed approach, each MPI process handles one CPU or GPU.
+we will explore distributed computing with Julia's MPI wrapper [MPI.jl](https://github.com/JuliaParallel/MPI.jl). This will enable our codes to run on multiple CPUs and GPUs in order to scale on modern multi-CPU/GPU nodes, clusters and supercomputers. In the proposed approach, each MPI process handles one CPU or GPU.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -202,7 +202,7 @@ We see that a correct boundary update will be the critical part for a successful
 md"""
 ### Task 1 (fake parallelisation with 2 fake processes)
 
-Run the "fake parallelisation" 1-D diffusion code [`diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_2procs.jl) (also available in your `/scratch/<username>/lecture08` directory on `octopus`), which is missing the boundary updates of the 2 fake processes and describe what you see in the visualisation.
+Run the "fake parallelisation" 1-D diffusion code [`l8_diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/), which is missing the boundary updates of the 2 fake processes and describe what you see in the visualisation.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -275,7 +275,7 @@ end
 md"""
 ### Task 2 (fake parallelisation with `n` fake processes)
 
-Modify the initial condition in the 1-D diffusion code [`diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_nprocs.jl) (also available in your `/scratch/<username>/lecture08` directory on `octopus`) to a centred $(L_x/2)$ Gaussian anomaly.
+Modify the initial condition in the 1-D diffusion code [`l8_diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) to a centred $(L_x/2)$ Gaussian anomaly.
 
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
@@ -292,8 +292,8 @@ md"""
 We are now ready to write a code that will truly distribute calculations on different processors using [MPI.jl](https://github.com/JuliaParallel/MPI.jl) for inter-process communication.
 """
 
-#nb # > 💡 note: At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on your `octopus` node](/software_install/#julia_mpi_gpu_on_your_octopus_node) for detailed information on how to run MPI GPU (multi-GPU) applications on your assigned `octopus` node.
-#md # \note{At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on your `octopus` node](/software_install/#julia_mpi_gpu_on_your_octopus_node) for detailed information on how to run MPI GPU (multi-GPU) applications on your assigned `octopus` node.}
+#nb # > 💡 note: At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.
+#md # \note{At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -336,11 +336,11 @@ md"""
 Then, we need to (2.) implement a boundary update routine, which can have the following structure:
 ```julia
 @views function update_halo(A, neighbors_x, comm)
-    # Send to / receive from neighbor 1 ("left neighbor")
+    # Send to / receive from neighbour 1 ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
         # ...
     end
-    # Send to / receive from neighbor 2 ("right neighbor")
+    # Send to / receive from neighbour 2 ("right neighbor")
     if neighbors_x[2] != MPI.MPI_PROC_NULL
         # ...
     end
@@ -368,7 +368,7 @@ Last, we need to (4.) finalise MPI prior to returning from the main function:
 ```julia
 MPI.Finalize()
 ```
-All the above described is found in the code [`diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_mpi.jl) (also available in your `/scratch/<username>/lecture08` directory on `octopus`), except for the boundary updates (see 2.).
+All the above described is found in the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/), except for the boundary updates (see 2.).
 """
 
 #src ######################################################################### 
@@ -376,21 +376,21 @@ All the above described is found in the code [`diffusion_1D_mpi.jl`](https://git
 md"""
 ### Task 3 (1-D parallelisation with MPI)
 
-Run the code [`diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_mpi.jl) which is still missing the boundary updates three times: with 1, 2 and 4 processes (replacing `np` by the number of processes and `<username>` with your username on `octopus`):
+Run the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) which is still missing the boundary updates three times: with 1, 2 and 4 processes (replacing `np` by the number of processes):
 ```sh
-/home/<username>/.julia/bin/mpiexecjl -n np julia --project <my_script.jl>
+mpiexecjl -n <np> julia --project <my_script.jl>
 ```
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Visualise the results after each run with the [`vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/vizme1D_mpi.jl) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
+Visualise the results after each run with the [`l8_vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 hint: For the boundary updates, you can use the following approach for the communication with each neighbor: 1) create a sendbuffer and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the Array.
-#md # \note{For the boundary updates, you can use the following approach for the communication with each neighbor: 1) create a sendbuffer and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the Array.}
+#nb # > 💡 hint: For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the Array.
+#md # \note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the Array.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -405,9 +405,9 @@ Let us now do the same in 2D: there is not much new there, but it may be interes
 md"""
 ### Task 4 (2-D parallelisation with MPI)
 
-Run the code [`diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_mpi.jl) which is still missing the boundary updates three times: with 1, 2 and 4 processes.
+Run the code [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) which is still missing the boundary updates three times: with 1, 2 and 4 processes.
 
-Visualise the results after each run with the [`vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/vizme2D_mpi.jl) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
+Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
 #md # @@img-med
@@ -439,8 +439,8 @@ md"""
 Head to the [exercise section](#exercises_-_lecture_8) for further directions on this task which is part of this week's homework assignments.
 """
 
-#nb # > 💡 hint: As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built to that purpose.
-#md # \note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built to that purpose.}
+#nb # > 💡 hint: As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built for that purpose.
+#md # \note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built for that purpose.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -462,13 +462,13 @@ ImplicitGlobalGrid.jl can render distributed parallelisation with GPU and CPU fo
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-Finally, the cool bit: using both packages together enables to [hide communication behind computation](https://github.com/omlins/ParallelStencil.jl#seamless-interoperability-with-communication-packages-and-hiding-communication). This feature enables a parallel efficiency close to 1.
+Finally, the cool part: using both packages together enables to [hide communication behind computation](https://github.com/omlins/ParallelStencil.jl#seamless-interoperability-with-communication-packages-and-hiding-communication). This feature enables a parallel efficiency close to 1.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-For this demo, we'll start from the [`diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_perf_xpu.jl) code (also available in your `/scratch/<username>/lecture08` directory on `octopus`).
+For this demo, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
 
 Only a few changes are required to enable multi-XPU execution, namely:
 1. initialise the implicit global grid
@@ -488,16 +488,14 @@ using ImplicitGlobalGrid
 Then, one can add the global grid initialisation in the `# Derived numerics` section
 ```julia
 me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
-@static if USE_GPU select_device() end  # select one GPU per MPI local rank (if >1 GPU per node)
 dx, dy  = Lx/nx_g(), Ly/ny_g()
 ```
-Note that we include the `select_device()` function to map each MPI process to a unique GPU on the node.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Have a look at the [`hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl) code to get an idea on how to select unique GPU using node-local MPI infos.
-#md # \note{Have a look at the [`hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi_gpu.jl) code to get an idea on how to select unique GPU using node-local MPI infos.}
+#nb # > 💡 note: Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select unique GPU using node-local MPI infos.
+#md # \note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select unique GPU using node-local MPI infos.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -542,7 +540,7 @@ needs to be added before the `return` of the "main".
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
-- One approach would for each local process to dump the local domain results to a file (with process ID in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
+- One approach would for each local process to dump the local domain results to a file (with process ID `me` in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -553,7 +551,7 @@ md"""
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To implement the latter and generate a .gif, one needs to define a global array for visualisation:
+To implement the latter and generate a `gif`, one needs to define a global array for visualisation:
 ```julia
 if do_visu
     if (me==0) ENV["GKSwstype"]="nul"; if isdir("viz2D_mxpu_out")==false mkdir("viz2D_mxpu_out") end; loadpath = "./viz2D_mxpu_out/"; anim = Animation(loadpath,String[]); println("Animation directory: $(anim.dir)") end
@@ -575,12 +573,12 @@ Then, the plotting routine can be adapted to first gather the inner points of th
 if do_visu && (it % nout == 0)
     C_inn .= C[2:end-1,2:end-1]; gather!(C_inn, C_v)
     if (me==0)
-        opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:davos, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
+        opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
         heatmap(Xi_g, Yi_g, Array(C_v)'; opts...); frame(anim)
     end
 end
 ```
-To finally generate the .gif, one needs to place the following after the time loop:
+To finally generate the `gif`, one needs to place the following after the time loop:
 ```julia
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
@@ -593,68 +591,6 @@ You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-gl
 #nb # > 💡 note: We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.
 #md # \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).
-#md # \warn{Because of an issue most probably with CUDA.jl, you'll need to rely on CUDA.jl v3.3.6 when using ImplicitGlobalGrid.jl without CUDA-aware MPI (as we are doing here). To enforce this compatibility, type `add CUDA@v3.3.6` whithin the REPL in package mode in your project (having ensured to launch Julia with the `--project` flag).}
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## Towards Stokes II: Navier-Stokes flow
-
-Previously, in lecture 7, we programmed an elastic wave solver building upon the acoustic wave from lecture 3 and adding information about elastic shear rheology.
-
-In this final section, we will see how to turn the elastic wave solver into a weakly compressible viscous flow solver with inertia - a problem part of the [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations). From this point, we could turn transient physics into numerics and use the solver to converge an incompressible viscous Stokes flow to the steady state.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-The weakly compressible [Navier-Stokes equations](https://en.wikipedia.org/wiki/Navier–Stokes_equations) expressed in terms of velocities and pressure reads as following:
-
-$$ \frac{∂P}{∂t} = -K ∇_k v_k ~,$$
-
-$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
-
-$$ ρ \frac{∂v_i}{∂t} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
-
-where $P$ is the pressure, $v$ the velocity, $K$ the bulk modulus, $μ$ the viscosity, $τ$ the viscous deviatoric stress tensor, $ρ$ the density, and $\delta_{ij}$ the Kronecker delta. 
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-The incompressible Stokes flow represent the incompressible limit of the Navier-Stokes equation and can be formulated as following:
-
-$$ 0 = -K ∇_k v_k ~,$$
-
-$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
-
-$$ 0 = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
-
-These equations represent a steady state for which a viscous flow stress can be computed. Since all physical transient terms vanish, incompressible viscous Stokes problems are considered stiff requiring implicit type of methods to achieve a solution.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-However, an iterative solutions to incompressible Stokes equations can be achieved using the second-order pseudo-transient method, as seen in [Lecture 4](/lecture4/#implicit_solutions).
-
-$$ \frac{1}{K_τ} \frac{∂P}{∂τ} = - ∇_k v_k ~,$$
-
-$$ τ = μ\left(∇_i v_j + ∇_j v_i -\frac{1}{3} δ_{ij} ∇_k v_k \right) ~,$$
-
-$$ \frac{∂v^2_i}{∂τ^2} + ρ_τ \frac{∂v_i}{∂τ} = ∇_j \left( τ_{ij} - P δ_{ij} \right) ~,$$
-
-where $∂τ$, $K_τ$ and $ρ_τ$ represent now numerical iterative parameters one can tune in order to reach the steady state as fast as possible.
-"""
-
-#src ######################################################################### 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-One of your homework task for this lecture is to transform the Navier-Cauchy elastic wave solver into a weakly compressible (viscous) Navier-Stokes solver. See [Exercise 3](#exercise_3_-_navier-stokes_flow) for a detailed task description.
-"""
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -663,7 +599,7 @@ md"""
 
 Let's recall what we learned today about distributed computing in Julia using GPUs:
 - We used fake parallelisation to understand the correct boundary exchange procedure.
-- We implemented 1D and 2D diffusion solvers in Julia using MPI for distributed memory parallelisation on both CPUs and GPUs (using blocking messages).
+- We implemented 1D and 2D diffusion solvers in Julia using MPI for distributed memory parallelisation on both CPUs and GPUs (using blocking communication).
 - We saw how combining `ParallelStencil.jl` with `ImplicitGlobalGrid.jl` permits to implement distributed memory parallelisation on multiple CPU and GPUs.
 """
 

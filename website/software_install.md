@@ -220,15 +220,15 @@ julia> MPI.install_mpiexecjl()
 $ mpiexecjl -n np julia --project <my_script.jl>
 ```
 
-5. To test the Julia MPI installation, launch the [`hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi.jl) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
+5. To test the Julia MPI installation, launch the [`l8_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
 ```sh
-$ mpiexecjl -n 4 julia --project ./hello_mpi.jl
+$ mpiexecjl -n 4 julia --project ./l8_hello_mpi.jl
 $ Hello world, I am 0 of 3
 $ Hello world, I am 1 of 3
 $ Hello world, I am 2 of 3
 $ Hello world, I am 3 of 3
 ```
-\note{On MacOS, you may encounter [this issue](https://github.com/JuliaParallel/MPI.jl/issues/407). To fix it, define following `ENV` variable:
+\note{On macOS, you may encounter [this issue](https://github.com/JuliaParallel/MPI.jl/issues/407). To fix it, define following `ENV` variable:
 ```sh
 $ export MPICH_INTERFACE_HOSTNAME=localhost
 ```

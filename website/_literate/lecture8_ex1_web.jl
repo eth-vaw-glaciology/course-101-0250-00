@@ -20,13 +20,13 @@ Create a new folder in your GitHub repository for this week's (lecture 8) exerci
 
 ### Task 1
 
-Finalise the [`diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_2procs.jl) and [`diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_1D_nprocs.jl) script discussed during lecture 8. Make sure to correctly implement the halo update in order to exchange the internal boundaries among the fake parallel processes (left and right and `ip` in the "2procs" and "nprocs" codes, respectively). See [here](#fake_parallelisation) for details.
+Finalise the [`l8_diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) and [`l8_diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) scripts discussed during lecture 8. Make sure to correctly implement the halo update in order to exchange the internal boundaries among the fake parallel processes (left and right and `ip` in the "2procs" and "nprocs" codes, respectively). See [here](#fake_parallelisation) for details.
 
 Report in two separate figures the final distribution of concentration `C` for both fake parallel codes. Include these figure in a first section of your lecture's 8 `README.md` adding a description sentence to each. 
 
 ### Task 2
 
-Finalise the [`diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_mpi.jl) script discussed during lecture 8. In particular, finalise the `update_halo` functions to allow for correct internal boundary exchange among the distributed parallel MPI processes. Add the final code to your GitHub lecture 8 folder.
+Finalise the [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) script discussed during lecture 8. In particular, finalise the `update_halo` functions to allow for correct internal boundary exchange among the distributed parallel MPI processes. Add the final code to your GitHub lecture 8 folder.
 
 For each of the (4) neighbour exchanges:
 1. start by defining a sendbuffer `sendbuf` to hold the vector you need to send
@@ -36,13 +36,13 @@ For each of the (4) neighbour exchanges:
 
 \note{Apply similar overlap and halo update as in the fake parallelisation examples. Look-up [MPI.Send](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Send) and [MPI.recv!](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Recv!) for further details.}
 
-In a new section of your lecture's 8 `README.md`, add a .gif animation showing the diffusion of the quantity `C`, **running on 4 MPI processes**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well.
+In a new section of your lecture's 8 `README.md`, add a .gif animation showing the diffusion of the quantity `C`, **running on 4 MPI processes**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well.
 
 ### Task 3
 
-Create a multi-GPU implementation of the [`diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_mpi.jl) script as suggested [here](#task_5_multi-gpu_homework). To this end, create a new script `diffusion_2D_mpi_gpu.jl` that you will upload to your lecture 8 GitHub repository upon completion.
+Create a multi-GPU implementation of the [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) script as suggested [here](#task_5_multi-gpu_homework). To this end, create a new script `l8_diffusion_2D_mpi_gpu.jl` that you will upload to your lecture 8 GitHub repository upon completion.
 
-Translate the `diffusion_2D_mpi.jl` code from exercise 1 (task 3) to GPU using GPU array programming. You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.
+Translate the `l8_diffusion_2D_mpi.jl` code from exercise 1 (task 3) to GPU using GPU array programming. You can use a similar approach as in the CPU code to perform the boundary updates. You should use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.
 
 The steps to realise this task summarise as following:
 1. use GPU array initialisation (`CUDA.zeros`, `CuArray()`, ...)
@@ -50,7 +50,7 @@ The steps to realise this task summarise as following:
 3. modify the `update_halo` function; use `copyto!` to copy device data to the host into the send buffer or to copy host data to the device from the receive buffer
 
 
-In a new (3rd) section of your lecture's 8 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
+In a new (3rd) section of your lecture's 8 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
 """
 
 

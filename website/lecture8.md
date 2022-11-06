@@ -9,11 +9,11 @@ noeval = true
 # Lecture 8
 
 > **Agenda**\
-> :books: Distributed multi-XPU computing, MPI, Stokes flow\
+> :books: Distributed multi-XPU computing, MPI, mulit-GPU thermal porous convection 3D\
 > :computer: Automatic documentation\
 > :construction: Exercises:
 > - Fake-parallelisation, Julia MPI, `ImplicitGlobalGrid.jl`
-> - Fluid dynamics: Navier-Stokes equations, incompressible Stokes flow 
+> - Mulit-GPU thermal porous convection 3D
 > - Automatic documentation and CI
 
 ---
@@ -52,11 +52,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture8_ex3_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture8_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
