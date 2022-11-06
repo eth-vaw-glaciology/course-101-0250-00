@@ -35,7 +35,7 @@ end
 exit(runtests())
 ````
 
-Each sub-test file would then contain all what's needed to run the 2D or 3D tests. You can find an example of this approach in `ParallelStencil`'s own test suite [here](https://github.com/omlins/ParallelStencil.jl/tree/main/test), or in the [GitHub repository](https://github.com/PTsolvers/PseudoTransientDiffusion.jl/tree/main/test) related to the Pseudo-transient solver publication discussed in Lecture 4.
+Each sub-test file would then contain all what's needed to run the 2D or 3D tests. You can find an example of this approach in `ParallelStencil`'s own test suite [here](https://github.com/omlins/ParallelStencil.jl/tree/main/test), or in the [GitHub repository](https://github.com/PTsolvers/PseudoTransientDiffusion.jl/tree/main/test) related to the pseudo-transient solver publication discussed in [Lecture 3](/lecture3/#pseudo-transient_method).
 
 \note{If your CI setup fails, check-out again the procedure at the top of the exercise section [here](#infos_about_projects). Secondly, make sure to run the CPU version of the scripts as there is **no GPU support** in GitHub Actions!}
 
