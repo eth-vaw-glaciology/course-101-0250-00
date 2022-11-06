@@ -9,11 +9,11 @@ noeval = true
 # Lecture 8
 
 > **Agenda**\
-> :books: Distributed multi-XPU computing, MPI, mulit-GPU thermal porous convection 3D\
+> :books: Distributed multi-xPU computing, MPI, multi-xPU thermal porous convection 3D\
 > :computer: Automatic documentation\
 > :construction: Exercises:
 > - Fake-parallelisation, Julia MPI, `ImplicitGlobalGrid.jl`
-> - Mulit-GPU thermal porous convection 3D
+> - Multi-xPU thermal porous convection 3D
 > - Automatic documentation and CI
 
 ---
