@@ -112,7 +112,7 @@ in order make the code work properly and run it again. Note what has changed in 
 
 ~~~
 <center>
-  <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
+  <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
 </center>
 ~~~
 
@@ -156,7 +156,7 @@ Then run this code which is missing the boundary updates of the `n` fake process
 
 ~~~
 <center>
-  <video width="50%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
+  <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
 </center>
 ~~~
 
@@ -244,7 +244,7 @@ Run the code [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/co
 Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_xpu_1.gif)
+![diffusion 2D MPI](../assets/literate_figures/l8_diffusion_2D_mpi.gif)
 @@
 
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.
@@ -353,8 +353,6 @@ To finally generate the `gif`, one needs to place the following after the time l
 ```julia
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
-
-You can find the [`diffusion_2D_perf_multixpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/diffusion_2D_perf_multixpu.jl) script in the [script/](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder.
 
 \note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
