@@ -68,7 +68,7 @@ else
 end
 ````
 
-The code should produces the same output (as following),
+The code running with parameters set to 👆 should produces following output for the final stage:
 
 ![2D porous convection](../assets/literate_figures/l7_ex1_porous_convect.png)
 
@@ -86,9 +86,11 @@ nvis    = 50
 ncheck  = ceil(2max(nx,ny))
 ````
 
-The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint.
+The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme2D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
 
 Produce a final animation showing the evolution of temperature with velocity quiver and add it to a section titled `## Porous convection 2D` in the `PorousConvection` project subfolder `README`.
+
+\note{You should use the existing 2D visualisation routine to produce the final animation. On Piz Daint the easiest may be to save `png` every `nvis` and further assemble them into a `gif` or `mp4`. Ideally, the final animation size does not exceeds 2-3 MB.}
 
 ### Some tips:
 

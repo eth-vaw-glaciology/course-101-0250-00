@@ -18,6 +18,22 @@ else
     min(5.0*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)), dz/maximum(abs.(qDz)))/3.1)
 end
 
+T = [ΔT*exp(-xc[ix]^2 -yc[iy]^2 -(zc[iz]+lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz]
+
+@parallel_indices (iy,iz) function bc_x!(A)
+    A[1  ,iy,iz] = A[2    ,iy,iz]
+    A[end,iy,iz] = A[end-1,iy,iz]
+    return
+end
+
+@parallel (1:size(T,2),1:size(T,3)) bc_x!(T)
+
+iframe = 0
+if do_viz && (it % nvis == 0)
+    p1=heatmap(xc,zc,Array(T)[:,ceil(Int,ny/2),:]';xlims=(xc[1],xc[end]),ylims=(zc[1],zc[end]),aspect_ratio=1,c=:turbo)
+    png(p1,@sprintf("viz3D_out/%04d.png",iframe+=1))
+end
+
 Ra       = 1000
 # [...]
 nx,ny,nz = 255,127,127
