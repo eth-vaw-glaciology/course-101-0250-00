@@ -125,16 +125,16 @@ julia</code></pre>
 </ol>
 <pre><code class="sh hljs">$ mpiexecjl -n np julia --project &lt;my_script.jl&gt;</code></pre>
 <ol start=5 >
-<li><p>To test the Julia MPI installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/hello_mpi.jl"><code>hello_mpi.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>~/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
+<li><p>To test the Julia MPI installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>l8_hello_mpi.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>~/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
 
 </ol>
-<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./hello_mpi.jl
+<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./l8_hello_mpi.jl
 $ Hello world, I am 0 of 3
 $ Hello world, I am 1 of 3
 $ Hello world, I am 2 of 3
 $ Hello world, I am 3 of 3</code></pre>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg ><p>On MacOS, you may encounter <a href="https://github.com/JuliaParallel/MPI.jl/issues/407">this issue</a>. To fix it, define following <code>ENV</code> variable:</p>
+<div class=messg ><p>On macOS, you may encounter <a href="https://github.com/JuliaParallel/MPI.jl/issues/407">this issue</a>. To fix it, define following <code>ENV</code> variable:</p>
 <pre><code class="sh hljs">$ <span class=hljs-built_in >export</span> MPICH_INTERFACE_HOSTNAME=localhost</code></pre>
 <p>and add <code>-host localhost</code> to the execution script:</p>
 <pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
