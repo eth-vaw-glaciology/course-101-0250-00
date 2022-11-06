@@ -423,7 +423,7 @@ Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://gith
 """
 
 #md # @@img-med
-#md # ![diffusion 2D MPI](./figures/l8_diffusion_2D_mpi.gif)
+#md # ![diffusion 2D MPI](./figures/l8_diff_2D_mpi.png)
 #md # @@
 
 #src ######################################################################### 
