@@ -128,7 +128,7 @@ Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the `runme
 
 The final 2D slice produced should look as following and take about 25min to run
 
-
+![3D porous convection MPI](../assets/literate_figures/l8_ex2_porous_convect_mpi_sl.png)
 
 ### Task
 
