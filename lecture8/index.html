@@ -53,10 +53,10 @@ C     = exp.(.-xc.^<span class=hljs-number >2</span>)</code></pre> <p>where <cod
 <h3 id=task_3_1-d_parallelisation_with_mpi ><a href="#task_3_1-d_parallelisation_with_mpi" class=header-anchor >Task 3 &#40;1-D parallelisation with MPI&#41;</a></h3>
 <p>Run the code <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_diffusion_1D_mpi.jl</code></a> which is still missing the boundary updates three times: with 1, 2 and 4 processes &#40;replacing <code>np</code> by the number of processes&#41;:</p>
 <pre><code class="sh hljs">mpiexecjl -n &lt;np&gt; julia --project &lt;my_script.jl&gt;</code></pre>
-<p>Visualise the results after each run with the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_vizme1D_mpi.jl</code></a> code &#40;adapt the variable <code>nprocs</code>&#33;&#41;. Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.</p>
+<p>Visualise the results after each run with the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_vizme1D_mpi.jl</code></a> code &#40;<em><strong>adapt the variable <code>nprocs</code>&#33;</strong></em>&#41;. Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.</p>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >For the boundary updates, you can use the following approach for the communication with each neighbour: 1&#41; create a <code>sendbuffer</code> and receive buffer, storing the right value in the send buffer; 2&#41; use <code>MPI.Send</code> and <code>MPI.Recv&#33;</code> to send/receive the data; 3&#41; store the received data in the right position in the Array.</div></div>
-<p>Congratulations&#33; You just did a distributed diffusion solver in only 70 lines of code.</p>
+<div class=messg >For the boundary updates, you can use the following approach for the communication with each neighbour: 1&#41; create a <code>sendbuffer</code> and receive buffer, storing the right value in the send buffer; 2&#41; use <code>MPI.Send</code> and <code>MPI.Recv&#33;</code> to send/receive the data; 3&#41; store the received data in the right position in the array.</div></div>
+<p>Congratulations&#33; You just did a distributed memory diffusion solver in only 70 lines of code.</p>
 <p>Let us now do the same in 2D: there is not much new there, but it may be interesting to work out how boundary update routines can be defined in 2D as one now needs to exchange vectors instead of single values.</p>
 <h3 id=task_4_2-d_parallelisation_with_mpi ><a href="#task_4_2-d_parallelisation_with_mpi" class=header-anchor >Task 4 &#40;2-D parallelisation with MPI&#41;</a></h3>
 <p>Run the code <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/"><code>l8_diffusion_2D_mpi.jl</code></a> which is still missing the boundary updates three times: with 1, 2 and 4 processes.</p>
@@ -132,7 +132,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <p>Then, the plotting routine can be adapted to first gather the inner points of the local domains into the global array &#40;using <code>gather&#33;</code> function&#41; and then plot and/or save the global array &#40;here <code>C_v</code>&#41; from the master process <code>me&#61;&#61;0</code>:</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># Visualize</span>
 <span class=hljs-keyword >if</span> do_visu &amp;&amp; (it % nout == <span class=hljs-number >0</span>)
-    C_inn .= C[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]; gather!(C_inn, C_v)
+    C_inn .= <span class=hljs-built_in >Array</span>(C)[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]; gather!(C_inn, C_v)
     <span class=hljs-keyword >if</span> (me==<span class=hljs-number >0</span>)
         opts = (aspect_ratio=<span class=hljs-number >1</span>, xlims=(Xi_g[<span class=hljs-number >1</span>], Xi_g[<span class=hljs-keyword >end</span>]), ylims=(Yi_g[<span class=hljs-number >1</span>], Yi_g[<span class=hljs-keyword >end</span>]), clims=(<span class=hljs-number >0.0</span>, <span class=hljs-number >1.0</span>), c=:turbo, xlabel=<span class=hljs-string >&quot;Lx&quot;</span>, ylabel=<span class=hljs-string >&quot;Ly&quot;</span>, title=<span class=hljs-string >&quot;time = <span class=hljs-subst >$(round(it*dt, sigdigits=<span class=hljs-number >3</span>)</span>)&quot;</span>)
         heatmap(Xi_g, Yi_g, <span class=hljs-built_in >Array</span>(C_v)&#x27;; opts...); frame(anim)
@@ -141,7 +141,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 <p>To finally generate the <code>gif</code>, one needs to place the following after the time loop:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >if</span> (do_visu &amp;&amp; me==<span class=hljs-number >0</span>) gif(anim, <span class=hljs-string >&quot;diffusion_2D_mxpu.gif&quot;</span>, fps = <span class=hljs-number >5</span>)  <span class=hljs-keyword >end</span></code></pre>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if <code>USE_GPU &#61; false</code>; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.</div></div>
+<div class=messg >We here did not rely on CUDA-aware MPI. However, we can use this feature upon setting <code>IGG_CUDAAWARE_MPI&#61;1</code>. Note that the examples using ImplicitGlobalGrid.jl would also work if <code>USE_GPU &#61; false</code>; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.</div></div>
 <h3 id=wrapping_up ><a href="#wrapping_up" class=header-anchor >Wrapping up</a></h3>
 <p>Let&#39;s recall what we learned today about distributed computing in Julia using GPUs:</p>
 <ul>
@@ -461,7 +461,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 06, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 07, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

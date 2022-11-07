@@ -229,11 +229,11 @@ Run the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/co
 mpiexecjl -n <np> julia --project <my_script.jl>
 ```
 
-Visualise the results after each run with the [`l8_vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
+Visualise the results after each run with the [`l8_vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (_**adapt the variable `nprocs`!**_). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
-\note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the Array.}
+\note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the array.}
 
-Congratulations! You just did a distributed diffusion solver in only 70 lines of code.
+Congratulations! You just did a distributed memory diffusion solver in only 70 lines of code.
 
 Let us now do the same in 2D: there is not much new there, but it may be interesting to work out how boundary update routines can be defined in 2D as one now needs to exchange vectors instead of single values.
 
@@ -342,7 +342,7 @@ Then, the plotting routine can be adapted to first gather the inner points of th
 ```julia
 # Visualize
 if do_visu && (it % nout == 0)
-    C_inn .= C[2:end-1,2:end-1]; gather!(C_inn, C_v)
+    C_inn .= Array(C)[2:end-1,2:end-1]; gather!(C_inn, C_v)
     if (me==0)
         opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
         heatmap(Xi_g, Yi_g, Array(C_v)'; opts...); frame(anim)
@@ -354,7 +354,7 @@ To finally generate the `gif`, one needs to place the following after the time l
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
 
-\note{We here did not rely on CUDA-aware MPI. However, we can use this feature in the final projects. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
+\note{We here did not rely on CUDA-aware MPI. However, we can use this feature upon setting `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
 ### Wrapping up
 
