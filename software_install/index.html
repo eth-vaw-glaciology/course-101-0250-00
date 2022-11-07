@@ -394,7 +394,7 @@ module load Julia/1.7.2-CrayGNU-21.09-cuda
 LD_PRELOAD=<span class=hljs-string >&quot;/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so&quot;</span> julia -O3 --check-bounds=no &lt;my_script.jl&gt;</code></pre>
 <p>Which you then launch using <code>srun</code> upon having made it executable &#40;<code>chmod &#43;x runme_mpi_daint.sh</code>&#41;</p>
 <pre><code class="sh hljs">srun -n4 ./runme_mpi_daint.sh</code></pre>
-<p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>sbatch_mpi_daint.sh</code> you can launch &#40;without need of an allocation&#41; as <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint"><code>sbatch sbatch_mpi_daint.sh</code></a>:</p>
+<p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>sbatch_mpi_daint.sh</code> you can launch &#40;without need of an allocation&#41; as <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh"><code>sbatch sbatch_mpi_daint.sh</code></a>:</p>
 <pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
 <span class=hljs-comment >#SBATCH --job-name=&quot;diff2D&quot;</span>
 <span class=hljs-comment >#SBATCH --output=diff2D.%j.o</span>
@@ -413,7 +413,8 @@ module load Julia/1.7.2-CrayGNU-21.09-cuda
 <span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1
 
 LD_PRELOAD=<span class=hljs-string >&quot;/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so&quot;</span> julia -O3 --check-bounds=no &lt;my_julia_mpi_gpu_script.jl&gt;</code></pre>
-<p><em>The 2 scripts above can be found in the &#91;scripts&#93;&#40;https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8</em>scripts/&#41; folder._</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >The 2 scripts above can be found in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/">scripts</a> folder.</div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
