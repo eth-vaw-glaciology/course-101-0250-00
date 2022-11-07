@@ -517,7 +517,7 @@ Which you then launch using `srun` upon having made it executable (`chmod +x run
 srun -n4 ./runme_mpi_daint.sh
 ```
 
-If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint):
+If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
 ```sh
 #!/bin/bash -l
 #SBATCH --job-name="diff2D"
@@ -538,4 +538,5 @@ export IGG_CUDAAWARE_MPI=1
 
 LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>
 ```
-_The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder._
+
+\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
