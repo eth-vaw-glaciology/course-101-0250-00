@@ -238,6 +238,8 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
 
+_For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section._
+
 ## GPU computing on Piz Daint
 
 GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system. 
@@ -468,3 +470,6 @@ To use VS code as development tool, make sure to have installed the `Remote-SSH`
 The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
 
 \note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda`.}
+
+### Julia MPI GPU on Piz Daint
+

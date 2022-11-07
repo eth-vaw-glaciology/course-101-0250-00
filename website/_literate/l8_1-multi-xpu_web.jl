@@ -475,13 +475,25 @@ Finally, the cool part: using both packages together enables to [hide communicat
 md"""
 For this demo, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
 
-Only a few changes are required to enable multi-XPU execution, namely:
+Only a few changes are required to enable multi-xPU execution, namely:
 1. initialise the implicit global grid
 2. use global coordinates to compute the initial condition
 3. update halo (and overlap communication with computation)
 4. finalise the global grid
 5. tune visualisation
 """
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+But before we start programming the multi-xPU implementation, let's get setup with GPU MPI on Piz Daint. Follow steps are needed:
+- Launch a `salloc` on 4 nodes
+- Install the required MPI-related packages
+- Test your setup running [`l8_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) and [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) scripts on 1-4 nodes
+"""
+
+#nb # > 💡 note: See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.
+#md # \note{See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -499,8 +511,8 @@ dx, dy  = Lx/nx_g(), Ly/ny_g()
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select unique GPU using node-local MPI infos.
-#md # \note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select unique GPU using node-local MPI infos.}
+#nb # > 💡 note: Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.
+#md # \note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.}
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -591,8 +603,8 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: We here did not rely on CUDA-aware MPI. However, we can use this feature upon setting `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.
-#md # \note{We here did not rely on CUDA-aware MPI. However, we can use this feature upon setting `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
+#nb # > 💡 note: We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.
+#md # \note{We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
 
 #src ######################################################################### 
