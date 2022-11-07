@@ -16,7 +16,7 @@ In this exercise, you will:
 - finalise the 2D Julia MPI script
 - Create a Julia MPI GPU version of the 2D Julia MPI script discussed [here](#task_5_multi-gpu_homework)
 
-Create a new folder in your GitHub repository for this week's (lecture 8) exercises.
+Create a new `lectrue_8` folder for this first exercise in your shared private GitHub repository for this week's exercises.
 
 ### Task 1
 
@@ -48,7 +48,6 @@ The steps to realise this task summarise as following:
 1. use GPU array initialisation (`CUDA.zeros`, `CuArray()`, ...)
 2. gather the GPU arrays back on the host memory for visualisation or saving (using `Array()`)
 3. modify the `update_halo` function; use `copyto!` to copy device data to the host into the send buffer or to copy host data to the device from the receive buffer
-
 
 In a new (3rd) section of your lecture's 8 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
 """

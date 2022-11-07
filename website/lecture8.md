@@ -37,7 +37,8 @@ noeval = true
 
 # Exercises - lecture 8
 
-\warn{Exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{**Exercise 1** has to be handed in and uploaded to your private (shared) GitHub repository, in a _**newly created `lecture_8`**_ folder. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).\
+**Exercise 2** contributes to your project and has to be handed in and uploaded to your private (shared) GitHub repository, in the **PorousConvection** project folder. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture8_ex1_web.jl}
 

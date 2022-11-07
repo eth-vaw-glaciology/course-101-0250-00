@@ -536,7 +536,7 @@ module load Julia/1.7.2-CrayGNU-21.09-cuda
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 
-LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>
+srun -n4 bash -c 'LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>'
 ```
 
 \note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
