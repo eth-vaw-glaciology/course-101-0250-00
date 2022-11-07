@@ -124,13 +124,14 @@ Ra          = 1000
 nz          = 63
 nx,ny       = 2*(nz+1)-1,nz
 b_width     = (8,8,4) # for comm / comp overlap
-nt          = 200
-nvis        = 20
+nt          = 500
+nvis        = 50
 ```
 
 Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the `runme_mpi_daint.sh` or `sbatch sbatch_mpi_daint.sh` scripts (see [here](/software_install/#cuda-aware_mpi_on_piz_daint)) using CUDA-aware MPI 🚀
 
-The final 2D slice produced should look as following
+The final 2D slice produced should look as following and take about 25min to run
+
 
 
 ### Task
