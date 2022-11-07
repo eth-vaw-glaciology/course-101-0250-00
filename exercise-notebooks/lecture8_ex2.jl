@@ -136,7 +136,7 @@ The final 2D slice (at `ny_g()/2`) produced should look as following and take ab
 
 ### Task
 
-Now that you made sure the code runs as expected, launch `PorousConvection_3D_multixpu.jl` for 4000 steps on 8 GPUs at higher resolution (global grid of ) setting:
+Now that you made sure the code runs as expected, launch `PorousConvection_3D_multixpu.jl` for 2000 steps on 8 GPUs at higher resolution (global grid of `508x252x252`) setting:
 """
 nz          = 127
 nx,ny       = 2*(nz+1)-1,nz
@@ -146,7 +146,7 @@ nvis        = 100
 md"""
 and keeping other parameters unchanged.
 
-Use `sbtach` command to launch a non-interactive job which may take about 5 hours to execute.
+Use `sbtach` command to launch a non-interactive job which may take about 5h30 hours to execute.
 
 Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled `## Porous convection 3D MPI` in the `PorousConvection` project subfolder's `README.md`. You can use the Makie visualisation helper script from Lecture 7 for this purpose.
 """
