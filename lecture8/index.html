@@ -546,10 +546,10 @@ Ra          = <span class=hljs-number >1000</span>
 nz          = <span class=hljs-number >63</span>
 nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>,nz
 b_width     = (<span class=hljs-number >8</span>,<span class=hljs-number >8</span>,<span class=hljs-number >4</span>) <span class=hljs-comment ># for comm / comp overlap</span>
-nt          = <span class=hljs-number >200</span>
-nvis        = <span class=hljs-number >20</span></code></pre>
+nt          = <span class=hljs-number >500</span>
+nvis        = <span class=hljs-number >50</span></code></pre>
 <p>Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; using CUDA-aware MPI 🚀</p>
-<p>The final 2D slice produced should look as following</p>
+<p>The final 2D slice produced should look as following and take about 25min to run</p>
 <h3 id=task ><a href="#task" class=header-anchor >Task</a></h3>
 <p>Now that you made sure the code runs as expected, launch <code>PorousConvection_3D_multixpu.jl</code> for 4000 steps on 8 GPUs at higher resolution &#40;global grid of &#41; setting &#40;keeping other parameters unchanged&#41;:</p>
 <pre><code class="julia hljs">nz          = <span class=hljs-number >127</span>
