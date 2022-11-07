@@ -443,7 +443,7 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 module load daint-gpu
 module load Julia/1.7.2-CrayGNU-21.09-cuda
 
-srun julia -O3 --check-bounds=no my_julia_gpu_script.jl
+srun julia -O3 --check-bounds=no <my_julia_gpu_script.jl>
 ```
 
 ### JupyterLab access on Piz Daint
@@ -472,4 +472,70 @@ The next step should work out of the box. You should be able to select `daint` f
 \note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda`.}
 
 ### Julia MPI GPU on Piz Daint
+The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
+1. Make sure to have the Julia GPU environment loaded
+```sh
+module load daint-gpu
+module load Julia/1.7.2-CrayGNU-21.09-cuda
+```
+2. Then, you would need to allocate more than one node, let's say 4 nodes for 2 hours, using `salloc`
+```
+salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
+```
+3. To launch a Julia (GPU) MPI script on 4 nodes (GPUs) using MPI, you can simply use `srun`
+```sh
+srun -n4 julia -O3 --check-bounds=no <my_script.jl>
+```
 
+#### CUDA-aware MPI on Piz Daint
+You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to 
+1. Export the appropriate `ENV` vars 
+```sh
+export MPICH_RDMA_ENABLED_CUDA=1
+export IGG_CUDAAWARE_MPI=1
+```
+2. Because of a current issue with Cray-MPICH (the Cray MPI distribution used on Piz Daint), you need also to dynamically preload `libcudart.so` library. This can be achieved upon launching your Julia executable script
+```sh
+LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_script.jl>
+```
+
+In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via `srun`. You can create, e.g., a [`runme_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh) script containing:
+```sh
+#!/bin/bash -l
+
+module load daint-gpu
+module load Julia/1.7.2-CrayGNU-21.09-cuda
+
+export MPICH_RDMA_ENABLED_CUDA=1
+export IGG_CUDAAWARE_MPI=1
+
+LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_script.jl>
+```
+
+Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
+```sh
+srun -n4 ./runme_mpi_daint.sh
+```
+
+If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint):
+```sh
+#!/bin/bash -l
+#SBATCH --job-name="diff2D"
+#SBATCH --output=diff2D.%j.o
+#SBATCH --error=diff2D.%j.e
+#SBATCH --time=00:05:00
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=1
+#SBATCH --partition=normal
+#SBATCH --constraint=gpu
+#SBATCH --account class04
+
+module load daint-gpu
+module load Julia/1.7.2-CrayGNU-21.09-cuda
+
+export MPICH_RDMA_ENABLED_CUDA=1
+export IGG_CUDAAWARE_MPI=1
+
+LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>
+```
+_The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder._
