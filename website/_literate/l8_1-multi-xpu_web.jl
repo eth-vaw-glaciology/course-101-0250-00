@@ -218,6 +218,8 @@ CR[1]   = ...
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
 #   <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_2procs.mp4"/>
@@ -246,13 +248,17 @@ end
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The array `C` contains now `n` local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of `C` (ip). The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays. We only need "global" knowledge in the definition of the initial condition.
+The array `C` contains now `n` local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of `C` (ip). The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays.
+
+We only need "global" knowledge in the definition of the initial condition.
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates. In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID (`ip`), the cell ID (`ix`), the array size (`nx`), the overlap of the local domains (`2`) and the grid spacing of the global grid (`dxg`); moreover, the origin of the coordinate system can be moved to any position using the global domain length (`lx`):
+The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates.
+
+In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID (`ip`), the cell ID (`ix`), the array size (`nx`), the overlap of the local domains (`2`) and the grid spacing of the global grid (`dxg`); moreover, the origin of the coordinate system can be moved to any position using the global domain length (`lx`):
 """
 
 #src ######################################################################### 
@@ -282,6 +288,8 @@ Modify the initial condition in the 1-D diffusion code [`l8_diffusion_1D_nprocs.
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
 #   <video width="60%" autoplay loop controls src="../assets/literate_figures/l8_diff_1D_nprocs.mp4"/>
@@ -303,7 +311,7 @@ We are now ready to write a code that will truly distribute calculations on diff
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Let us see what are the somewhat minimal requirements that will allow us to write a distributed code in Julia using MPI.jl. We will solve the following linear diffusion physics:
+Let us see what are the somewhat minimal requirements that will allow us to write a distributed code in Julia using MPI.jl. We will solve the following linear diffusion physics (see [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/)):
 ```julia
 for it = 1:nt
     qx         .= .-D*diff(C)/dx
@@ -476,11 +484,11 @@ md"""
 For this demo, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
 
 Only a few changes are required to enable multi-xPU execution, namely:
-1. initialise the implicit global grid
-2. use global coordinates to compute the initial condition
-3. update halo (and overlap communication with computation)
-4. finalise the global grid
-5. tune visualisation
+1. Initialise the implicit global grid
+2. Use global coordinates to compute the initial condition
+3. Update halo (and overlap communication with computation)
+4. Finalise the global grid
+5. Tune visualisation
 """
 
 #src ######################################################################### 
@@ -532,7 +540,13 @@ The halo update (3.) can be simply performed adding following line after the `co
 update_halo!(C)
 ```
 
-Now, when running on GPUs, it is possible to hide MPi communication behind computations! This option implements as:
+Now, when running on GPUs, it is possible to hide MPi communication behind computations!
+"""
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+This option implements as:
 ```julia
 @hide_communication (8, 2) begin
     @parallel compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
@@ -556,7 +570,7 @@ needs to be added before the `return` of the "main".
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
+The last changes to take care of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
 - One approach would for each local process to dump the local domain results to a file (with process ID `me` in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 """
 
