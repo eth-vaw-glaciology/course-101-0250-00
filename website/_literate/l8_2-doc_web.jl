@@ -9,10 +9,13 @@ md"""
 This lecture we will learn:
 - documentation vs code-comments
 - why to write documentation
+- GitHub tools:
+  - rendering of markdown files
+  - gh-pages
 - some Julia tools:
   - docstrings
-  - [https://github.com/JuliaDocs/Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)
   - [https://github.com/fredrikekre/Literate.jl](https://github.com/fredrikekre/Literate.jl)
+  - [https://github.com/JuliaDocs/Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)
 
 ![comic](https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg)
 """
@@ -35,7 +38,7 @@ Why should I write documentation?
 - documentation should give a bigger overview of what your code does
   - at the function-level (doc-strings)
   - at the package-level (README, full-fledged documentation)
-- to let other people and your future self (probably most important) understand what
+- to let other people and your future self (probably most importantly) understand what
   your code is about
 """
 
@@ -107,7 +110,7 @@ md"""
 
 The easiest way to write long-form documentation is to just use GitHub's markdown rendering.
 
-A nice example is [this short course](https://github.com/luraess/parallel-gpu-workshop-JuliaCon21#parallel-cpu-implementation)
+A nice example is [this short course](https://github.com/luraess/parallel-gpu-workshop-JuliaCon21)
 by Ludovic (incidentally about solving PDEs on GPUs 🙂).
 
 - images are rendered
@@ -131,8 +134,8 @@ markdown files.  These files can then be added to Github and will be rendered th
 
 
 Example
-- output markdown in: [course-101-0250-00-L8Documentation.jl: scripts/car_travels.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.jl)
-- output markdown in: [course-101-0250-00-L8Documentation.jl: scripts/car_travels.md](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.md)
+- input julia-code in: [course-101-0250-00-L8Documentation.jl: scripts/car_travels.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.jl)
+- output markdown in: [course-101-0250-00-L8Documentation.jl: scripts/car_travels.md](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.md) created with:
 ```
 Literate.markdown("car_travels.jl", directory_of_this_file, execute=true, documenter=false, credit=false)
 ```
@@ -147,7 +150,7 @@ But this is not automatic!  Manual steps: run Literate, add files, commit and pu
 md"""
 ### Documentation tools: Automating Literate.jl
 
-As is done on [course-101-0250-00-L8Documentation.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl)
+Demonstrated in the repo [course-101-0250-00-L8Documentation.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl)
 ```yml
 name: Run Literate.jl
 # adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
@@ -214,6 +217,7 @@ _**Notes:**_
 - for more free-form websites, use [https://github.com/tlienart/Franklin.jl](https://github.com/tlienart/Franklin.jl) (as the course website does)
 - if you want to use it, it's easiest to generate your package with [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl)
   which will generate the Documenter-setup for you.
+- we don't use it in this course
 """
 
 
