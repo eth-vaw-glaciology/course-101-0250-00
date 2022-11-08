@@ -173,13 +173,21 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 
 <li><p>why to write documentation</p>
 
+<li><p>GitHub tools:</p>
+<ul>
+<li><p>rendering of markdown files</p>
+
+<li><p>gh-pages</p>
+
+</ul>
+
 <li><p>some Julia tools:</p>
 <ul>
 <li><p>docstrings</p>
 
-<li><p><a href="https://github.com/JuliaDocs/Documenter.jl">https://github.com/JuliaDocs/Documenter.jl</a></p>
-
 <li><p><a href="https://github.com/fredrikekre/Literate.jl">https://github.com/fredrikekre/Literate.jl</a></p>
+
+<li><p><a href="https://github.com/JuliaDocs/Documenter.jl">https://github.com/JuliaDocs/Documenter.jl</a></p>
 
 </ul>
 
@@ -211,7 +219,7 @@ C      .= Data.<span class=hljs-built_in >Array</span>([exp(-(x_g(ix,dx,C)+dx/<s
 
 </ul>
 
-<li><p>to let other people and your future self &#40;probably most important&#41; understand what your code is about</p>
+<li><p>to let other people and your future self &#40;probably most importantly&#41; understand what your code is about</p>
 
 </ul>
 <h3 id=documentation_easily_rots ><a href="#documentation_easily_rots" class=header-anchor >Documentation easily rots...</a></h3>
@@ -266,7 +274,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <pre><code class="julia hljs">?transform</code></pre>
 <h3 id=documentation_tools_github_markdown_rendering ><a href="#documentation_tools_github_markdown_rendering" class=header-anchor >Documentation tools: Github markdown rendering</a></h3>
 <p>The easiest way to write long-form documentation is to just use GitHub&#39;s markdown rendering.</p>
-<p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21#parallel-cpu-implementation">this short course</a> by Ludovic &#40;incidentally about solving PDEs on GPUs 🙂&#41;.</p>
+<p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21">this short course</a> by Ludovic &#40;incidentally about solving PDEs on GPUs 🙂&#41;.</p>
 <ul>
 <li><p>images are rendered</p>
 
@@ -290,15 +298,15 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <p>Example</p>
 <ul>
-<li><p>output markdown in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.jl">course-101-0250-00-L8Documentation.jl: scripts/car_travels.jl</a></p>
+<li><p>input julia-code in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.jl">course-101-0250-00-L8Documentation.jl: scripts/car_travels.jl</a></p>
 
-<li><p>output markdown in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.md">course-101-0250-00-L8Documentation.jl: scripts/car_travels.md</a></p>
+<li><p>output markdown in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.md">course-101-0250-00-L8Documentation.jl: scripts/car_travels.md</a> created with:</p>
 
 </ul>
 <pre><code class="julia hljs">Literate.markdown(<span class=hljs-string >&quot;car_travels.jl&quot;</span>, directory_of_this_file, execute=<span class=hljs-literal >true</span>, documenter=<span class=hljs-literal >false</span>, credit=<span class=hljs-literal >false</span>)</code></pre>
 <p>But this is not automatic&#33;  Manual steps: run Literate, add files, commit and push...</p>
 <h3 id=documentation_tools_automating_literatejl ><a href="#documentation_tools_automating_literatejl" class=header-anchor >Documentation tools: Automating Literate.jl</a></h3>
-<p>As is done on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
+<p>Demonstrated in the repo <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
 <pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
 <span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
 
@@ -362,6 +370,8 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <li><p>for more free-form websites, use <a href="https://github.com/tlienart/Franklin.jl">https://github.com/tlienart/Franklin.jl</a> &#40;as the course website does&#41;</p>
 
 <li><p>if you want to use it, it&#39;s easiest to generate your package with <a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> which will generate the Documenter-setup for you.</p>
+
+<li><p>we don&#39;t use it in this course</p>
 
 </ul>
 
@@ -582,7 +592,7 @@ nvis        = <span class=hljs-number >100</span></code></pre>
 <ul>
 <li><p>add doc-string to the functions you created for this exercise</p>
 
-<li><p>turn the script of Exercise 3 into a <code>Literate.jl</code> script. Compile it to markdown, git-add the output &#40;both <code>.md</code>-file and any figures&#41; and push it.</p>
+<li><p>turn the script of Exercise 2 into a <code>Literate.jl</code> script. Compile it to markdown &#40;on the CPU at low resolution&#41;, git-add the output &#40;both <code>.md</code>-file and any figures&#41; and push it.</p>
 
 </ul>
 

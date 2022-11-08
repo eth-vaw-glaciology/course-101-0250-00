@@ -12,5 +12,5 @@ One task you've already done, namely to update the `README.md` of this set of ex
 
 Tasks:
 - add doc-string to the functions you created for this exercise
-- turn the script of Exercise 3 into a `Literate.jl` script. Compile it to markdown, git-add the output (both `.md`-file and any figures) and push it.
+- turn the script of Exercise 2 into a `Literate.jl` script. Compile it to markdown (on the CPU at low resolution), git-add the output (both `.md`-file and any figures) and push it.
 
