@@ -131,9 +131,13 @@ for ip = 1:np # global picture
 end
 ```
 
-The array `C` contains now `n` local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of `C` (ip). The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays. We only need "global" knowledge in the definition of the initial condition.
+The array `C` contains now `n` local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of `C` (ip). The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays.
 
-The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates. In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID (`ip`), the cell ID (`ix`), the array size (`nx`), the overlap of the local domains (`2`) and the grid spacing of the global grid (`dxg`); moreover, the origin of the coordinate system can be moved to any position using the global domain length (`lx`):
+We only need "global" knowledge in the definition of the initial condition.
+
+The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates.
+
+In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID (`ip`), the cell ID (`ix`), the array size (`nx`), the overlap of the local domains (`2`) and the grid spacing of the global grid (`dxg`); moreover, the origin of the coordinate system can be moved to any position using the global domain length (`lx`):
 
 ```julia
 # Initial condition
@@ -166,7 +170,7 @@ We are now ready to write a code that will truly distribute calculations on diff
 
 \note{At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
-Let us see what are the somewhat minimal requirements that will allow us to write a distributed code in Julia using MPI.jl. We will solve the following linear diffusion physics:
+Let us see what are the somewhat minimal requirements that will allow us to write a distributed code in Julia using MPI.jl. We will solve the following linear diffusion physics (see [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/)):
 ```julia
 for it = 1:nt
     qx         .= .-D*diff(C)/dx
@@ -276,11 +280,11 @@ Finally, the cool part: using both packages together enables to [hide communicat
 For this demo, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
 
 Only a few changes are required to enable multi-xPU execution, namely:
-1. initialise the implicit global grid
-2. use global coordinates to compute the initial condition
-3. update halo (and overlap communication with computation)
-4. finalise the global grid
-5. tune visualisation
+1. Initialise the implicit global grid
+2. Use global coordinates to compute the initial condition
+3. Update halo (and overlap communication with computation)
+4. Finalise the global grid
+5. Tune visualisation
 
 But before we start programming the multi-xPU implementation, let's get setup with GPU MPI on Piz Daint. Follow steps are needed:
 - Launch a `salloc` on 4 nodes
@@ -312,7 +316,9 @@ The halo update (3.) can be simply performed adding following line after the `co
 update_halo!(C)
 ```
 
-Now, when running on GPUs, it is possible to hide MPi communication behind computations! This option implements as:
+Now, when running on GPUs, it is possible to hide MPi communication behind computations!
+
+This option implements as:
 ```julia
 @hide_communication (8, 2) begin
     @parallel compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
@@ -328,7 +334,7 @@ finalize_global_grid()
 ```
 needs to be added before the `return` of the "main".
 
-The last changes to take car of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
+The last changes to take care of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
 - One approach would for each local process to dump the local domain results to a file (with process ID `me` in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 
 - Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.
