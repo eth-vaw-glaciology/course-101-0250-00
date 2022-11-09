@@ -70,7 +70,7 @@ Ideally, the parallel efficiency should stay close to 1 while increasing the num
 
 we will explore distributed computing with Julia's MPI wrapper [MPI.jl](https://github.com/JuliaParallel/MPI.jl). This will enable our codes to run on multiple CPUs and GPUs in order to scale on modern multi-CPU/GPU nodes, clusters and supercomputers. In the proposed approach, each MPI process handles one CPU or GPU.
 
-We're going to work out the following steps to tackle distributed parallelisation in this lecture (in 5 tasks):
+We're going to work out the following steps to tackle distributed parallelisation in this lecture (in 5 steps):
 - [**Fake parallelisation** as proof-of-concept](#fake_parallelisation)
 - [**Julia and MPI**](#julia_and_mpi)
 
@@ -96,7 +96,7 @@ C .= [CL[1:end-1]; CR[2:end]]
 
 We see that a correct boundary update will be the critical part for a successful implementation. In our approach, we need an overlap of 2 cells between `CL` and `CR` in order to avoid any wrong computations at the transition between the left and right domains.
 
-### Task 1 (fake parallelisation with 2 fake processes)
+### Step 1 (fake parallelisation with 2 fake processes)
 
 Run the "fake parallelisation" 1-D diffusion code [`l8_diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/), which is missing the boundary updates of the 2 fake processes and describe what you see in the visualisation.
 
@@ -152,7 +152,7 @@ for ip = 1:np
 end
 ```
 
-### Task 2 (fake parallelisation with `n` fake processes)
+### Step 2 (fake parallelisation with `n` fake processes)
 
 Modify the initial condition in the 1-D diffusion code [`l8_diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) to a centred $(L_x/2)$ Gaussian anomaly.
 
@@ -183,8 +183,10 @@ To enable distributed parallelisation, we will do the following steps:
 3. Create a "global" initial condition
 4. Finalise MPI
 
-To (1.) initialise MPI and prepare the Cartesian communicator, we do:
+To (1.) initialise MPI and prepare the Cartesian communicator, we do (upon `import MPI`):
 ```julia
+import MPI
+
 MPI.Init()
 dims        = [0]
 comm        = MPI.COMM_WORLD
@@ -199,7 +201,7 @@ where `me` represents the process ID unique to each MPI process (the analogue to
 
 Then, we need to (2.) implement a boundary update routine, which can have the following structure:
 ```julia
-@views function update_halo(A, neighbors_x, comm)
+@views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbour 1 ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
         # ...
@@ -226,7 +228,7 @@ MPI.Finalize()
 ```
 All the above described is found in the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/), except for the boundary updates (see 2.).
 
-### Task 3 (1-D parallelisation with MPI)
+### Step 3 (1-D parallelisation with MPI)
 
 Run the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) which is still missing the boundary updates three times: with 1, 2 and 4 processes (replacing `np` by the number of processes):
 ```sh
@@ -235,13 +237,15 @@ mpiexecjl -n <np> julia --project <my_script.jl>
 
 Visualise the results after each run with the [`l8_vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (_**adapt the variable `nprocs`!**_). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
-\note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and receive buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the array.}
+\note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and `receive` buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the array.}
 
 Congratulations! You just did a distributed memory diffusion solver in only 70 lines of code.
 
 Let us now do the same in 2D: there is not much new there, but it may be interesting to work out how boundary update routines can be defined in 2D as one now needs to exchange vectors instead of single values.
 
-### Task 4 (2-D parallelisation with MPI)
+👉 You'll find a working 1D script in the [scripts/l8_scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder after the lecture.
+
+### Step 4 (2-D parallelisation with MPI)
 
 Run the code [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) which is still missing the boundary updates three times: with 1, 2 and 4 processes.
 
@@ -255,13 +259,15 @@ The last step is to create a multi-GPU solver out of the above multi-CPU solver.
 
 Besides facilitating the programming, it can leverage Remote Direct Memory Access (RDMA) which can be of great benefit in many HPC scenarios.
 
-### Task 5 (multi-GPU) _**HOMEWORK**_
+### Step 5 (multi-GPU)
 
-Translate the code `diffusion_2D_mpi.jl` from Task 4 to GPU using GPU array programming. Note what changes were needed to go from CPU to GPU in this distributed solver.
+Translate the code `diffusion_2D_mpi.jl` from Step 4 to GPU using GPU array programming. Note what changes were needed to go from CPU to GPU in this distributed solver.
 
-\note{You can use a similar approach as in the CPU code to perform the boundary updates. You can use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.}
+Use a similar approach as implemented in the CPU code to perform the boundary updates. You can use the `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data (CPU memory) baclk to the GPU array.
 
-Head to the [exercise section](#exercises_-_lecture_8) for further directions on this task which is part of this week's homework assignments.
+\note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.}
+
+Head to the [exercise section](#exercises_-_lecture_8) for further directions on this step which is part of this week's homework assignments.
 
 \note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built for that purpose.}
 
@@ -277,7 +283,7 @@ ImplicitGlobalGrid.jl can render distributed parallelisation with GPU and CPU fo
 
 Finally, the cool part: using both packages together enables to [hide communication behind computation](https://github.com/omlins/ParallelStencil.jl#seamless-interoperability-with-communication-packages-and-hiding-communication). This feature enables a parallel efficiency close to 1.
 
-For this demo, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
+For this development, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
 
 Only a few changes are required to enable multi-xPU execution, namely:
 1. Initialise the implicit global grid
@@ -293,7 +299,7 @@ But before we start programming the multi-xPU implementation, let's get setup wi
 
 \note{See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
-To (1.) initialise the global grid, one first needs to use the package
+To (**1.**) initialise the global grid, one first needs to use the package
 ```julia
 using ImplicitGlobalGrid
 ```
@@ -303,15 +309,15 @@ me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
 dx, dy  = Lx/nx_g(), Ly/ny_g()
 ```
 
-\note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.}
+\note{The function `init_global_grid` takes care of MPI GPU mapping based on node-local MPI infos. Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea about the process.}
 
-Then, for (2.), one can use `x_g()` and `y_g()` to compute the global coordinates in the initialisation (to correctly spread the Gaussian distribution over all local processes)
+Then, for (**2.**), one can use `x_g()` and `y_g()` to compute the global coordinates in the initialisation (to correctly spread the Gaussian distribution over all local processes)
 ```julia
 C       = @zeros(nx,ny)
 C      .= Data.Array([exp(-(x_g(ix,dx,C)+dx/2 -Lx/2)^2 -(y_g(iy,dy,C)+dy/2 -Ly/2)^2) for ix=1:size(C,1), iy=1:size(C,2)])
 ```
 
-The halo update (3.) can be simply performed adding following line after the `compute!` kernel
+The halo update (**3.**) can be simply performed adding following line after the `compute!` kernel
 ```julia
 update_halo!(C)
 ```
@@ -328,13 +334,13 @@ end
 ```
 The `@hide_communication (8, 2)` will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform (overlapping the MPI communication).
 
-To (4.) finalise the global grid,
+To (**4.**) finalise the global grid,
 ```julia
 finalize_global_grid()
 ```
 needs to be added before the `return` of the "main".
 
-The last changes to take care of is to (5.) handle visualisation in an appropriate fashion. Here, several options exists.
+The last changes to take care of is to (**5.**) handle visualisation in an appropriate fashion. Here, several options exists.
 - One approach would for each local process to dump the local domain results to a file (with process ID `me` in the filename) in order to reconstruct to global grid with a post-processing visualisation script (as done in the previous examples). Libraries like, e.g., [ADIOS2](https://adios2.readthedocs.io/en/latest) may help out there.
 
 - Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.
@@ -347,7 +353,7 @@ if do_visu
     if (nx_v*ny_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
     C_v   = zeros(nx_v, ny_v) # global array for visu
     C_inn = zeros(nx-2, ny-2) # no halo local array for visu
-    Xi_g, Yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, ny_v) # inner points only
+    xi_g, yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, ny_v) # inner points only
 end
 ```
 
@@ -357,8 +363,8 @@ Then, the plotting routine can be adapted to first gather the inner points of th
 if do_visu && (it % nout == 0)
     C_inn .= Array(C)[2:end-1,2:end-1]; gather!(C_inn, C_v)
     if (me==0)
-        opts = (aspect_ratio=1, xlims=(Xi_g[1], Xi_g[end]), ylims=(Yi_g[1], Yi_g[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
-        heatmap(Xi_g, Yi_g, Array(C_v)'; opts...); frame(anim)
+        opts = (aspect_ratio=1, xlims=(xi_g[1], xi_g[end]), ylims=(yi_g[1], yi_g[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
+        heatmap(xi_g, yi_g, Array(C_v)'; opts...); frame(anim)
     end
 end
 ```
@@ -374,5 +380,5 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 Let's recall what we learned today about distributed computing in Julia using GPUs:
 - We used fake parallelisation to understand the correct boundary exchange procedure.
 - We implemented 1D and 2D diffusion solvers in Julia using MPI for distributed memory parallelisation on both CPUs and GPUs (using blocking communication).
-- We saw how combining `ParallelStencil.jl` with `ImplicitGlobalGrid.jl` permits to implement distributed memory parallelisation on multiple CPU and GPUs.
+- We combined `ParallelStencil.jl` with `ImplicitGlobalGrid.jl` to implement distributed memory parallelisation on multiple CPU and GPUs.
 
