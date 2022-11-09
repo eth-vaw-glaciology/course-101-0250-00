@@ -16,7 +16,7 @@ The reason is that current GPUs (and CPUs) can do many more computations in a gi
 
 This situation is the result of a much faster increase of computation speed with respect to memory access speed over the last decades, until we hit the "memory wall" at the beginning of the century:
 
-![flop_to_memaccess_ratio](../assets/literate_figures/l9_flop_to_memaccess_ratio.png)
+![flop_to_memaccess_ratio](../assets/literate_figures/l10_flop_to_memaccess_ratio.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 \note{The position of the memory wall is to be considered very approximative.}
 
@@ -65,7 +65,7 @@ It is because the Titan Xm's ratio between compute access speed and memory acces
 
 The ratio for double precision corresponds to what was common in the early 2000s. So we "time-travel" 15 to 20 years back!
 
-![flop_to_memaccess_ratio](../assets/literate_figures/l9_flop_to_memaccess_ratio2.png)
+![flop_to_memaccess_ratio](../assets/literate_figures/l10_flop_to_memaccess_ratio2.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 \note{The position of the memory wall is to be considered very approximative.}
 
