@@ -2,7 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 9_
+#nb # _Lecture 10_
 md"""
 # GPU computing and performance assessment
 """

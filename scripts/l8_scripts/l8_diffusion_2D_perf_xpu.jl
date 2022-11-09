@@ -26,7 +26,7 @@ end
     D       = 1.0
     ttot    = 1e0
     # Numerics
-    nx, ny  = 32*2, 32*2 # number of grid points
+    nx, ny  = 126, 126 # number of grid points
     nout    = 20
     # Derived numerics
     dx, dy  = Lx/nx, Ly/ny

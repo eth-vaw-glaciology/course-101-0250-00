@@ -7,7 +7,7 @@ import MPI
 if !@isdefined do_save; do_save = true end
 
 # MPI functions
-@views function update_halo(A, neighbors_x, comm)
+@views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbor 1 ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
         # ...

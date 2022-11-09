@@ -9,144 +9,99 @@ The goal of this exercise is to:
 - Familiarise with distributed computing
 - Combine [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) and [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 - Learn about GPU MPI on the way
-
-\warn{Code from this exercise 2 has to be uploaded to the `scripts` folder within your `PorousConvection` project.}
 """
 
 md"""
 In this exercise, you will:
-- Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 7
+- Create a multi-xPU version of your the 2D xPU diffusion solver
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code in the solutions folder on Polybox after exercises deadline if needed to get you started.
+Start by fetching the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code from the `scripts/l8_scripts` folder and copy it to your `lectrue_8` folder.
 
-1. Copy your working `PorousConvection_3D_xpu.jl` code developed for the exercises in Lecture 7 and rename it `PorousConvection_3D_multixpu.jl`.
+Make a copy and rename it `diffusion_2D_perf_multixpu.jl`.
 
-2. Add at the beginning of the code
+### Task 1
+
+Follow the steps listed in the section from lecture 8 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code. 
+
+The 5 steps you'll need to implement are summarised hereafter:
+1. Initialise the implicit global grid
+2. Use global coordinates to compute the initial condition
+3. Update halo (and overlap communication with computation)
+4. Finalise the global grid
+5. Tune visualisation
+
+Once the above steps are implemented, head to Piz Daint and configure either an `salloc` or prepare a `sbatch` script to access 4 nodes.
+
+### Task 2
+
+Run the single xPU `l8_diffusion_2D_perf_xpu.jl` code on a single CPU and single GPU (changing the `USE_GPU` flag accordingly) for following parameters
 """
-using ImplicitGlobalGrid,MPI
+
+## Physics
+Lx, Ly  = 10.0, 10.0
+D       = 1.0
+ttot    = 1.0
+## Numerics
+nx, ny  = 126, 126
+nout    = 20
 
 md"""
-3. Also add global maximum computation using MPI
+and save output `C` data. Confirm that the difference between CPU and GPU implementation is negligible, reporting it in a new section of the `README.md` for this exercise 2 within the `lecture_8` folder in your shared private GitHub repo.
+
+### Task 3
+
+Then run the newly created `diffusion_2D_perf_multixpu.jl` script with following parameters on **4 MPI processes** having set `USE_GPU = true`: 
 """
-max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))
+
+## Physics
+Lx, Ly  = 10.0, 10.0
+D       = 1.0
+ttot    = 1e0
+## Numerics
+nx, ny  = 64, 64 # number of grid points
+nout    = 20
+## Derived numerics
+me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
 
 md"""
-4. In the `# numerics` section, initialise the global grid right after defining `nx,ny,nz` and use now global grid `nx_g()`,`ny_g()` and `nz_g()` for defining `maxiter` and `ncheck`, as well as in any other places when needed.
+Save the global `C_v` output array. Ensure its size matches the single xPU produced output and then compare the results to the existing 2 outputs produced in Task 2
+
+### Task 4
+
+Now that we are confident the xPU and multi-xPU codes produce correct physical output, we will asses performance.
+
+Use the code `diffusion_2D_perf_multixpu.jl` and make sure to deactivate visualisation, saving or any other operation that would save to disk or slow the code down.
+
+**Strong scaling:** Using a single GPU, gather the effective memory throughput `T_eff` varying `nx, ny` as following
 """
-nx,ny       = 2*(nz+1)-1,nz
-me, dims    = init_global_grid(nx, ny, nz)  # init global grid and more
-b_width     = (8,8,4)                       # for comm / comp overlap
+ nx = ny = 16 * 2 .^ (1:10)
 
 md"""
-5. Modify the temperature initialisation using ImplicitGlobalGrid's global coordinate helpers (`x_g`, etc...), including one internal boundary condition update (update halo):
+\warn{Make sur the code only spends about 1-2 seconds in the time loop, adapting `ttot` or `nt` accordingly.}
+
+In a new figure you'll add to the `README.md`, report `T_eff` as function of `nx`, and include a short comment on what you see.
+
+### Task 5
+
+**Weak scaling:** Select the smallest `nx,ny` values from previous step (2.) for which you've gotten the best `T_eff`. Run now the same code using this optimal local resolution varying the number of MPI process as following `np = 1,4,16,25,64`.
+
+\warn{Make sure the code only executes a couple of seconds each time otherwise we will run out of node hours for the rest of the course.}
+
+In a new figure, report the execution time for the various runs **normalising them with the execution time of the single process run**. Comment in one sentence on what you see.
+
+### Task 6
+
+Finally, let's assess the impact of hiding communication behind computation achieved using the `@hide_communication` macro in the multi-xPU code.
+
+Using the 64 MPI processes configuration, run the multi-xPU code changing the values of the tuple after `@hide_communication` such that
 """
-T           = @zeros(nx  ,ny  ,nz  )
-T          .= Data.Array([ΔT*exp(-(x_g(ix,dx,T)+dx/2-lx/2)^2 -(y_g(iy,dy,T)+dy/2-ly/2)^2 -(z_g(iz,dz,T)+dz/2-lz/2)^2) for ix=1:size(T,1),iy=1:size(T,2),iz=1:size(T,3)])
-T[:,:,1].=ΔT/2; T[:,:,end].=-ΔT/2
-update_halo!(T)
-T_old       = copy(T)
+
+@hide_communication (2,2)
+@hide_communication (16,4)
+@hide_communication (16,16)
 
 md"""
-6. Prepare for visualisation, making sure only `me==0` creates the output directory. Also, prepare an array for storing inner points only (no halo) `T_inn` as well as global array to gather subdomains `T_v`
-"""
-if do_viz
-    ENV["GKSwstype"]="nul"
-    if (me==0) if isdir("viz3Dmpi_out")==false mkdir("viz3Dmpi_out") end; loadpath="viz3Dmpi_out/"; anim=Animation(loadpath,String[]); println("Animation directory: $(anim.dir)") end
-    nx_v,ny_v,nz_v = (nx-2)*dims[1],(ny-2)*dims[2],(nz-2)*dims[3]
-    if (nx_v*ny_v*nz_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
-    T_v   = zeros(nx_v, ny_v, nz_v) # global array for visu
-    T_inn = zeros(nx-2, ny-2, nz-2) # no halo local array for visu
-    xi_g,zi_g = LinRange(-lx/2+dx+dx/2, lx/2-dx-dx/2, nx_v), LinRange(-lz+dz+dz/2, -dz-dz/2, nz_v) # inner points only
-    iframe = 0
-end
-
-md"""
-7. Use the `max_g` function in the timestep `dt` definition (instead of `maximum`) as one now needs to gather the global maximum among all MPI processes.
-
-8. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
-"""
-@hide_communication b_width begin
-    @parallel compute_Dflux!(qDx,qDy,qDz,Pf,T,k_ηf,_dx,_dy,_dz,αρg,_1_θ_dτ_D)
-    update_halo!(qDx,qDy,qDz)
-end
-
-md"""
-9. Apply a similar step to the temperature update, where you can also include boundary condition computation as following (⚠️ no other construct is currently allowed)
-"""
-@hide_communication b_width begin
-    @parallel update_T!(T,qTx,qTy,qTz,dTdt,_dx,_dy,_dz,_1_dt_β_dτ_T)
-    @parallel (1:size(T,2),1:size(T,3)) bc_x!(T)
-    @parallel (1:size(T,1),1:size(T,3)) bc_y!(T)
-    update_halo!(T)
-end
-
-md"""
-10. Use now the `max_g` function instead of `maximum` to collect the global maximum among all local arrays spanning all MPI processes.
-"""
-## time step
-dt = if it == 1 
-    0.1*min(dx,dy,dz)/(αρg*ΔT*k_ηf)
-else
-    min(5.0*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/max_g(abs.(qDx)), dy/max_g(abs.(qDy)), dz/max_g(abs.(qDz)))/3.1)
-end
-
-md"""
-11. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
-
-12. Update the visualisation and output saving part
-"""
-## visualisation
-if do_viz && (it % nvis == 0)
-    T_inn .= Array(T)[2:end-1,2:end-1,2:end-1]; gather!(T_inn, T_v)
-    if me==0
-        p1=heatmap(xi_g,zi_g,T_v[:,ceil(Int,ny_g()/2),:]';xlims=(xi_g[1],xi_g[end]),ylims=(zi_g[1],zi_g[end]),aspect_ratio=1,c=:turbo)
-        ## display(p1)
-        png(p1,@sprintf("viz3Dmpi_out/%04d.png",iframe+=1))
-        save_array(@sprintf("viz3Dmpi_out/out_T_%04d",iframe),convert.(Float32,T_v))
-    end
-end
-
-md"""
-13. Finalise the global grid before returning from the main function
-"""
-finalize_global_grid()
-return
-
-md"""
-If you made it up to here, you should now be able to launch your `PorousConvection_3D_multixpu.jl` code on multiple GPUs. Let's give it a try 🔥
-
-Make sure to have set following parameters
-"""
-lx,ly,lz    = 40.0,20.0,20.0
-Ra          = 1000
-nz          = 63
-nx,ny       = 2*(nz+1)-1,nz
-b_width     = (8,8,4) # for comm / comp overlap
-nt          = 500
-nvis        = 50
-
-md"""
-Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the `runme_mpi_daint.sh` or `sbatch sbatch_mpi_daint.sh` scripts (see [here](/software_install/#cuda-aware_mpi_on_piz_daint)) using CUDA-aware MPI 🚀
-
-The final 2D slice (at `ny_g()/2`) produced should look as following and take about 25min to run:
-
-![3D porous convection MPI](./figures/l8_ex2_porous_convect_mpi_sl.png)
-
-### Task
-
-Now that you made sure the code runs as expected, launch `PorousConvection_3D_multixpu.jl` for 2000 steps on 8 GPUs at higher resolution (global grid of `508x252x252`) setting:
-"""
-nz          = 127
-nx,ny       = 2*(nz+1)-1,nz
-nt          = 4000
-nvis        = 100
-
-md"""
-and keeping other parameters unchanged.
-
-Use `sbtach` command to launch a non-interactive job which may take about 5h30 hours to execute.
-
-Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled `## Porous convection 3D MPI` in the `PorousConvection` project subfolder's `README.md`. You can use the Makie visualisation helper script from Lecture 7 for this purpose.
+Then, you should also run once the code commenting both `@hide_communication` and corresponding `end` statements. On a figure report the execution time as function of `[no-hidecomm, (2,2), (8,2), (16,4), (16,16)]` (note that the `(8,2)` case you should have from Task 4 and/or 5) making sure to **normalise it by the single process execution time** (from Task 5). Add a short comment related to your results.
 """

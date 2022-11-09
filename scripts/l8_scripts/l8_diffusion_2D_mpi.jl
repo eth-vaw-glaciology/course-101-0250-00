@@ -7,7 +7,7 @@ import MPI
 if !@isdefined do_save; do_save = true end
 
 # MPI functions
-@views function update_halo(A, neighbors_x, neighbors_y, comm)
+@views function update_halo!(A, neighbors_x, neighbors_y, comm)
     # Send to / receive from neighbor 1 in dimension x ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
         # ...
@@ -65,7 +65,7 @@ end
         qx  .= .-D*diff(C[:,2:end-1], dims=1)/dx
         qy  .= .-D*diff(C[2:end-1,:], dims=2)/dy
         C[2:end-1,2:end-1] .= C[2:end-1,2:end-1] .- dt*(diff(qx, dims=1)/dx .+ diff(qy, dims=2)/dy)
-        update_halo(C, neighbors_x, neighbors_y, comm_cart)
+        update_halo!(C, neighbors_x, neighbors_y, comm_cart)
     end
     t_toc = (Base.time()-t_tic)
     if (me==0) @printf("Time = %1.4e s, T_eff = %1.2f GB/s \n", t_toc, round((2/1e9*nx*ny*sizeof(lx))/(t_toc/(nt-10)), sigdigits=2)) end

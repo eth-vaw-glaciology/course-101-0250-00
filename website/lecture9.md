@@ -9,10 +9,11 @@ noeval = true
 # Lecture 9
 
 > **Agenda**\
-> :books: Controlling shared memory and registers (on-chip)\
-> :computer: Advanced optimisations\
-> :construction: Exercises:
-> - Data transfer optimisations
+> :books: Multi-xPU thermal porous convection 3D\
+> :computer: Automatic documentation an CI\
+> :construction: Project:
+> - Multi-xPU thermal porous convection 3D
+> - Automatic documentation and CI
 
 ---
 
@@ -25,17 +26,17 @@ noeval = true
 
 ---
 
-\literate{/_literate/l9_1-perf-recap_web.jl}
+\literate{/_literate/l9_1-projects_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
-\literate{/_literate/l9_2-onchip-memory_web.jl}
+\literate{/_literate/l9_2-doc_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 # Exercises - lecture 9
 
-\warn{**Exercises 2 and 3 have to be handed in as Jupyter notebook**, uploaded to your private (shared) GitHub repository, in **this week's lecture specific folder**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{**Exercise 1** is the final step of your project - sripts and results should be added to the `PorousConvection` subfolder in your private GitHub repo. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture9_ex1_web.jl}
 
@@ -44,11 +45,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture9_ex2_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture9_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)
