@@ -4,9 +4,9 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 9_
 md"""
-# Projects
+# Projects - 3D thermal porous convection on multi-xPU
 
-🚧 More infos about final details for the first project will be added soon.
+🚧 More infos about will be added soon.
 
 """
 
