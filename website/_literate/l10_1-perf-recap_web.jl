@@ -46,7 +46,7 @@ This situation is the result of a much faster increase of computation speed with
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![flop_to_memaccess_ratio](../assets/literate_figures/l9_flop_to_memaccess_ratio.png)
+![flop_to_memaccess_ratio](../assets/literate_figures/l10_flop_to_memaccess_ratio.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
 #nb # > 💡 note: The position of the memory wall is to be considered very approximative.
@@ -140,7 +140,7 @@ The ratio for double precision corresponds to what was common in the early 2000s
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![flop_to_memaccess_ratio](../assets/literate_figures/l9_flop_to_memaccess_ratio2.png)
+![flop_to_memaccess_ratio](../assets/literate_figures/l10_flop_to_memaccess_ratio2.png)
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 """
 #nb # > 💡 note: The position of the memory wall is to be considered very approximative.

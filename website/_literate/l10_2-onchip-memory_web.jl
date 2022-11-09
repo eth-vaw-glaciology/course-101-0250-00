@@ -28,7 +28,7 @@ There is memory private to each thread ("local memory"), shared between thread b
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![cuda_mem](../assets/literate_figures/l9_cuda_mem.png)
+![cuda_mem](../assets/literate_figures/l10_cuda_mem.png)
 """
 
 #src #########################################################################
@@ -40,7 +40,7 @@ To use shared memory for our PDE solvers, we can use the strategy depicted in th
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![cuda_domain](../assets/literate_figures/l9_cuda_domain.png)
+![cuda_domain](../assets/literate_figures/l10_cuda_domain.png)
 """
 
 #src #########################################################################
@@ -77,7 +77,7 @@ The following image shows the scenario where each thread computes the results fo
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![cuda_column](../assets/literate_figures/l9_cuda_column.png)
+![cuda_column](../assets/literate_figures/l10_cuda_column.png)
 """
 
 
