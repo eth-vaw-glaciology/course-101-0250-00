@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# Projects
+# Projects - 3D thermal porous convection on multi-xPU
 
-🚧 More infos about final details for the first project will be added soon.
+🚧 More infos about will be added soon.
 
