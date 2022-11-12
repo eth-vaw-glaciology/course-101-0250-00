@@ -10,7 +10,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The goal of this lecture 9 is to:
+### The goal of this lecture 10 is to:
 
 - learn how to use shared memory (on-chip) to avoid main memory accesses and communicate between threads; and
 - learn how to control registers for storing intermediate results on-chip.
