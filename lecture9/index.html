@@ -160,7 +160,8 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <li><p>Add at the beginning of the code</p>
 
 </ol>
-<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid,MPI</code></pre>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid
+<span class=hljs-keyword >import</span> MPI</code></pre>
 <ol start=3 >
 <li><p>Also add global maximum computation using MPI</p>
 
@@ -264,7 +265,7 @@ nvis        = <span class=hljs-number >50</span></code></pre>
 <p>Now that you made sure the code runs as expected, launch <code>PorousConvection_3D_multixpu.jl</code> for 2000 steps on 8 GPUs at higher resolution &#40;global grid of <code>508x252x252</code>&#41; setting:</p>
 <pre><code class="julia hljs">nz          = <span class=hljs-number >127</span>
 nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>,nz
-nt          = <span class=hljs-number >4000</span>
+nt          = <span class=hljs-number >2000</span>
 nvis        = <span class=hljs-number >100</span></code></pre>
 <p>and keeping other parameters unchanged.</p>
 <p>Use <code>sbtach</code> command to launch a non-interactive job which may take about 5h30 hours to execute.</p>

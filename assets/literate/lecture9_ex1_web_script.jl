@@ -1,6 +1,7 @@
 # This file was generated, do not modify it.
 
-using ImplicitGlobalGrid,MPI
+using ImplicitGlobalGrid
+import MPI
 
 max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))
 
@@ -68,6 +69,6 @@ nvis        = 50
 
 nz          = 127
 nx,ny       = 2*(nz+1)-1,nz
-nt          = 4000
+nt          = 2000
 nvis        = 100
 
