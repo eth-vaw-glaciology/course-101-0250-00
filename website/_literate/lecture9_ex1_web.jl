@@ -25,7 +25,8 @@ In this exercise, you will:
 
 2. Add at the beginning of the code
 """
-using ImplicitGlobalGrid,MPI
+using ImplicitGlobalGrid
+import MPI
 
 md"""
 3. Also add global maximum computation using MPI
@@ -140,7 +141,7 @@ Now that you made sure the code runs as expected, launch `PorousConvection_3D_mu
 """
 nz          = 127
 nx,ny       = 2*(nz+1)-1,nz
-nt          = 4000
+nt          = 2000
 nvis        = 100
 
 md"""
