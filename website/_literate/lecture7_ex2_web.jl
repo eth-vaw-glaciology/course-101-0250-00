@@ -151,7 +151,7 @@ end
 visualise()
 
 md"""
-This figure you can further add to your `README`. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.
+This figure you can further add to your `README.md`. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.
 
 For reference, the 3D figure produced could look as following
 
