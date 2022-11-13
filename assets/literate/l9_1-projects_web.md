@@ -155,10 +155,11 @@ Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the `runme
 
 The final 2D slice (at `ny_g()/2`) produced should look as following and take about 25min to run:
 
-![3D porous convection MPI](../assets/literate_figures/l9_ex2_porous_convect_mpi_sl.png)
+![3D porous convection MPI](../assets/literate_figures/l9_porous_convect_mpi_sl.png)
 
 ### 3D calculation
-Running the code at higher resolution (`508x252x252` grid points) and for 6000 timesteps produces the following result:
+Running the code at higher resolution (`508x252x252` grid points) and for 6000 timesteps produces the following result
+
 ~~~
 <center>
   <video width="90%" autoplay loop controls src="../assets/literate_figures/l9_porous_convection_mxpu.mp4"/>
