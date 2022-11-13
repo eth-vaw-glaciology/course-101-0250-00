@@ -112,7 +112,10 @@ end
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 7. Use the `max_g` function in the timestep `dt` definition (instead of `maximum`) as one now needs to gather the global maximum among all MPI processes.
+"""
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 8. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
 """
 @hide_communication b_width begin
@@ -148,7 +151,10 @@ end
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 11. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
+"""
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
 12. Update the visualisation and output saving part
 """
 ## visualisation
@@ -200,15 +206,18 @@ Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the `runme
 md"""
 The final 2D slice (at `ny_g()/2`) produced should look as following and take about 25min to run:
 
-![3D porous convection MPI](./figures/l9_ex2_porous_convect_mpi_sl.png)
+![3D porous convection MPI](./figures/l9_porous_convect_mpi_sl.png)
 """
 
 #src ######################################################################### 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### 3D calculation
-Running the code at higher resolution (`508x252x252` grid points) and for 6000 timesteps produces the following result:
+Running the code at higher resolution (`508x252x252` grid points) and for 6000 timesteps produces the following result
 """
+
+#src ######################################################################### 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
 #   <video width="90%" autoplay loop controls src="./figures/l9_porous_convection_mxpu.mp4"/>
