@@ -36,7 +36,7 @@ noeval = true
 
 # Exercises - lecture 9
 
-\warn{**Exercise 1** is the final step of your project - sripts and results should be added to the `PorousConvection` subfolder in your private GitHub repo. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{**Exercise 1** is the final step of your project - scripts and results should be added to the `PorousConvection` subfolder in your private GitHub repo. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture9_ex1_web.jl}
 
