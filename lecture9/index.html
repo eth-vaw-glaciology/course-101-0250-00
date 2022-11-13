@@ -1,4 +1,180 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 9</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 - Solving elliptic PDEs</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - xPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-xPU</a> <a class="sidebar-nav-item active" href="/lecture9/">Lecture 9 - Multi-xPU & Projects</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/final_proj/">Infos about final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_9 ><a href="#lecture_9" class=header-anchor >Lecture 9</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Multi-xPU thermal porous convection 3D<br />💻 Automatic documentation an CI<br />🚧 Project:</p> <ul> <li><p>Multi-xPU thermal porous convection 3D</p> <li><p>Automatic documentation and CI</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_9">Lecture 9</a><li><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu">Projects - 3D thermal porous convection on multi-xPU</a><li><a href="#documenting_your_code">Documenting your code</a><li><a href="#exercises_-_lecture_9">Exercises - lecture 9</a><ol><li><a href="#exercise_1_-_multi-xpu_computing_projects">Exercise 1 - <strong>Multi-xPU computing projects</strong></a><li><a href="#exercise_2_-_automatic_documentation_in_julia">Exercise 2 - <strong>Automatic documentation in Julia</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_9"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=projects_-_3d_thermal_porous_convection_on_multi-xpu ><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu" class=header-anchor >Projects - 3D thermal porous convection on multi-xPU</a></h1> <p>🚧 More infos about will be added soon.</p> <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p> <h1 id=documenting_your_code ><a href="#documenting_your_code" class=header-anchor >Documenting your code</a></h1> <p>This lecture we will learn:</p> <ul> <li><p>documentation vs code-comments</p> <li><p>why to write documentation</p> <li><p>some Julia tools:</p> <ul> <li><p>docstrings</p> <li><p><a href="https://github.com/JuliaDocs/Documenter.jl">https://github.com/JuliaDocs/Documenter.jl</a></p> <li><p><a href="https://github.com/fredrikekre/Literate.jl">https://github.com/fredrikekre/Literate.jl</a></p> </ul> </ul> <p><img src="https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg" alt=comic  /></p> <h3 id=why_should_i_document_my_code ><a href="#why_should_i_document_my_code" class=header-anchor >Why should I document my code?</a></h3> <p>Why should I write code comments?</p> <ul> <li><p><a href="https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/">&quot;Code Tells You How, Comments Tell You Why&quot;</a></p> <ul> <li><p>code should be made understandable by itself, as much as possible</p> <li><p>comments then should be to tell the &quot;why&quot; you&#39;re doing something</p> </ul> <li><p><em>but</em> I do a lot of structuring comments as well</p> <li><p>math-y variables tend to be short and need a comment as well</p> </ul> <p>Why should I write documentation?</p> <ul> <li><p>documentation should give a bigger overview of what your code does</p> <ul> <li><p>at the function-level &#40;doc-strings&#41;</p> <li><p>at the package-level &#40;README, full-fledged documentation&#41;</p> </ul> <li><p>to let other people and your future self &#40;probably most important&#41; understand what your code is about</p> </ul> <h3 id=documentation_easily_rots ><a href="#documentation_easily_rots" class=header-anchor >Documentation easily rots...</a></h3> <p>Worse than no documentation/code comments is documentation which is outdated.</p> <p>I find the best way to keep documentation up to date is:</p> <ul> <li><p>have documentation visible to you, e.g. GitHub README</p> <li><p>document what you need yourself</p> <li><p>use examples and run them as part of CI &#40;doc-tests, example-scripts&#41;</p> </ul> <h3 id=documentation_tools_doc-strings ><a href="#documentation_tools_doc-strings" class=header-anchor >Documentation tools: doc-strings</a></h3> <p>A Julia doc-string &#40;<a href="https://docs.julialang.org/en/v1/manual/documentation/">Julia manual</a>&#41;:</p> <ul> <li><p>is just a string before the object &#40;no new-line&#41;; interpreted as markdown-string</p> <li><p>can be attached to most things &#40;functions, variables, modules, macros, types&#41;</p> <li><p>can be queried with <code>?</code></p> </ul> <pre><code class="julia hljs"><span class=hljs-string >&quot;&quot;&quot;
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 9</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2022</a> <span style="opacity: 0.7;">| <a href="http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homework</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 - Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 - Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 - PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 - Solving elliptic PDEs</a> <div class=course-section >Part 2 - Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 - Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 - Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 - GPU computing</a> <div class=course-section >Part 3 - Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 - xPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 - Julia MPI & multi-xPU</a> <a class="sidebar-nav-item active" href="/lecture9/">Lecture 9 - Multi-xPU & Projects</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 - Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/final_proj/">Infos about final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_9 ><a href="#lecture_9" class=header-anchor >Lecture 9</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Multi-xPU thermal porous convection 3D<br />💻 Automatic documentation an CI<br />🚧 Project:</p> <ul> <li><p>Multi-xPU thermal porous convection 3D</p> <li><p>Automatic documentation and CI</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_9">Lecture 9</a><li><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu">Projects - 3D thermal porous convection on multi-xPU</a><ol><li><a href="#using_implicitglobalgridjl_continued">Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a><li><a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a></ol><li><a href="#documenting_your_code">Documenting your code</a><li><a href="#exercises_-_lecture_9">Exercises - lecture 9</a><ol><li><a href="#exercise_1_-_multi-xpu_computing_projects">Exercise 1 - <strong>Multi-xPU computing projects</strong></a><li><a href="#exercise_2_-_automatic_documentation_in_julia">Exercise 2 - <strong>Automatic documentation in Julia</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_9"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=projects_-_3d_thermal_porous_convection_on_multi-xpu ><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu" class=header-anchor >Projects - 3D thermal porous convection on multi-xPU</a></h1> <h3 id=the_goal_of_this_lecture_9 ><a href="#the_goal_of_this_lecture_9" class=header-anchor >The goal of this lecture 9:</a></h3> <ul> <li><p>Projects</p> <ul> <li><p>Create a multi-xPU version of the 3D thermal porous convection xPU code</p> <li><p>Combine <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a> and <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a></p> <li><p>Finalise the documentation of your project</p> </ul> <li><p>Automatic documentation and CI</p> </ul> <h2 id=using_implicitglobalgridjl_continued ><a href="#using_implicitglobalgridjl_continued" class=header-anchor >Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a></h2> <p>In previous Lecture 8, we introduced <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>, which renders distributed parallelisation with GPU and CPU for HPC a very simple task.</p> <p>Also, ImplicitGlobalGrid.jl elegantly combines with <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a> to, e.g., hide communication behind computation.</p> <p>Let&#39;s have a rapid tour of <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>&#39;s&#39; documentation before using it to turn the 3D thermal porous diffusion solver into a multi-xPU solver.</p> <h2 id=multi-xpu_3d_thermal_porous_convection ><a href="#multi-xpu_3d_thermal_porous_convection" class=header-anchor >Multi-xPU 3D thermal porous convection</a></h2> <p>Let&#39;s step through the following content:</p> <ul> <li><p>Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 7</p> <li><p>Keep it xPU compatible using <code>ParallelStencil.jl</code></p> <li><p>Deploy it on multiple xPUs using <code>ImplicitGlobalGrid.jl</code></p> </ul> <p>👉 You&#39;ll find a version of the <code>PorousConvection_3D_xpu.jl</code> code in the solutions folder on Polybox after exercises deadline if needed to get you started.</p> <h3 id=enable_multi-xpu_support ><a href="#enable_multi-xpu_support" class=header-anchor >Enable multi-xPU support</a></h3> <p>Only a few changes are required to enable multi-xPU support, namely:</p> <ol> <li><p>Copy your working <code>PorousConvection_3D_xpu.jl</code> code developed for the exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p> <li><p>Add at the beginning of the code</p> </ol> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid
+<span class=hljs-keyword >import</span> MPI</code></pre> <ol start=3 > <li><p>Also add global maximum computation using MPI reduction function</p> </ol> <pre><code class="julia hljs">max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))</code></pre>
+<ol start=4 >
+<li><p>In the <code># numerics</code> section, initialise the global grid right after defining <code>nx,ny,nz</code> and use now global grid <code>nx_g&#40;&#41;</code>,<code>ny_g&#40;&#41;</code> and <code>nz_g&#40;&#41;</code> for defining <code>maxiter</code> and <code>ncheck</code>, as well as in any other places when needed.</p>
+
+</ol>
+<pre><code class="julia hljs">nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>,nz
+me, dims    = init_global_grid(nx, ny, nz)  <span class=hljs-comment ># init global grid and more</span>
+b_width     = (<span class=hljs-number >8</span>,<span class=hljs-number >8</span>,<span class=hljs-number >4</span>)                       <span class=hljs-comment ># for comm / comp overlap</span></code></pre>
+<ol start=5 >
+<li><p>Modify the temperature initialisation using ImplicitGlobalGrid&#39;s global coordinate helpers &#40;<code>x_g</code>, etc...&#41;, including one internal boundary condition update &#40;update halo&#41;:</p>
+
+</ol>
+<pre><code class="julia hljs">T           = <span class=hljs-meta >@zeros</span>(nx  ,ny  ,nz  )
+T          .= Data.<span class=hljs-built_in >Array</span>([ΔT*exp(-(x_g(ix,dx,T)+dx/<span class=hljs-number >2</span>-lx/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>
+                                 -(y_g(iy,dy,T)+dy/<span class=hljs-number >2</span>-ly/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>
+                                 -(z_g(iz,dz,T)+dz/<span class=hljs-number >2</span>-lz/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>) <span class=hljs-keyword >for</span> ix=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >1</span>),iy=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>),iz=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)])
+T[:,:,<span class=hljs-number >1</span>].=ΔT/<span class=hljs-number >2</span>; T[:,:,<span class=hljs-keyword >end</span>].=-ΔT/<span class=hljs-number >2</span>
+update_halo!(T)
+T_old       = copy(T)</code></pre>
+<ol start=6 >
+<li><p>Prepare for visualisation, making sure only <code>me&#61;&#61;0</code> creates the output directory. Also, prepare an array for storing inner points only &#40;no halo&#41; <code>T_inn</code> as well as global array to gather subdomains <code>T_v</code></p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-keyword >if</span> do_viz
+    <span class=hljs-literal >ENV</span>[<span class=hljs-string >&quot;GKSwstype&quot;</span>]=<span class=hljs-string >&quot;nul&quot;</span>
+    <span class=hljs-keyword >if</span> (me==<span class=hljs-number >0</span>) <span class=hljs-keyword >if</span> isdir(<span class=hljs-string >&quot;viz3Dmpi_out&quot;</span>)==<span class=hljs-literal >false</span> mkdir(<span class=hljs-string >&quot;viz3Dmpi_out&quot;</span>) <span class=hljs-keyword >end</span>; loadpath=<span class=hljs-string >&quot;viz3Dmpi_out/&quot;</span>; anim=Animation(loadpath,<span class=hljs-built_in >String</span>[]); println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-subst >$(anim.dir)</span>&quot;</span>) <span class=hljs-keyword >end</span>
+    nx_v,ny_v,nz_v = (nx-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >1</span>],(ny-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >2</span>],(nz-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >3</span>]
+    <span class=hljs-keyword >if</span> (nx_v*ny_v*nz_v*sizeof(Data.<span class=hljs-built_in >Number</span>) &gt; <span class=hljs-number >0.8</span>*Sys.free_memory()) error(<span class=hljs-string >&quot;Not enough memory for visualization.&quot;</span>) <span class=hljs-keyword >end</span>
+    T_v   = zeros(nx_v, ny_v, nz_v) <span class=hljs-comment ># global array for visu</span>
+    T_inn = zeros(nx-<span class=hljs-number >2</span>, ny-<span class=hljs-number >2</span>, nz-<span class=hljs-number >2</span>) <span class=hljs-comment ># no halo local array for visu</span>
+    xi_g,zi_g = <span class=hljs-built_in >LinRange</span>(-lx/<span class=hljs-number >2</span>+dx+dx/<span class=hljs-number >2</span>, lx/<span class=hljs-number >2</span>-dx-dx/<span class=hljs-number >2</span>, nx_v), <span class=hljs-built_in >LinRange</span>(-lz+dz+dz/<span class=hljs-number >2</span>, -dz-dz/<span class=hljs-number >2</span>, nz_v) <span class=hljs-comment ># inner points only</span>
+    iframe = <span class=hljs-number >0</span>
+<span class=hljs-keyword >end</span></code></pre>
+<ol start=7 >
+<li><p>Use the <code>max_g</code> function in the timestep <code>dt</code> definition &#40;instead of <code>maximum</code>&#41; as one now needs to gather the global maximum among all MPI processes.</p>
+
+<li><p>Moving to the time loop, add halo update function <code>update_halo&#33;</code> after the kernel that computes the fluid fluxes. You can additionally wrap it in the <code>@hide_communication</code> block to enable communication/computation overlap &#40;using <code>b_width</code> defined above&#41;</p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-meta >@hide_communication</span> b_width <span class=hljs-keyword >begin</span>
+    <span class=hljs-meta >@parallel</span> compute_Dflux!(qDx,qDy,qDz,Pf,T,k_ηf,_dx,_dy,_dz,αρg,_1_θ_dτ_D)
+    update_halo!(qDx,qDy,qDz)
+<span class=hljs-keyword >end</span></code></pre>
+<ol start=9 >
+<li><p>Apply a similar step to the temperature update, where you can also include boundary condition computation as following &#40;⚠️ no other construct is currently allowed&#41;</p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-meta >@hide_communication</span> b_width <span class=hljs-keyword >begin</span>
+    <span class=hljs-meta >@parallel</span> update_T!(T,qTx,qTy,qTz,dTdt,_dx,_dy,_dz,_1_dt_β_dτ_T)
+    <span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>),<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)) bc_x!(T)
+    <span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >1</span>),<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)) bc_y!(T)
+    update_halo!(T)
+<span class=hljs-keyword >end</span></code></pre>
+<ol start=10 >
+<li><p>Use now the <code>max_g</code> function instead of <code>maximum</code> to collect the global maximum among all local arrays spanning all MPI processes.</p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-comment ># time step</span>
+dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
+    <span class=hljs-number >0.1</span>*min(dx,dy,dz)/(αρg*ΔT*k_ηf)
+<span class=hljs-keyword >else</span>
+    min(<span class=hljs-number >5.0</span>*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/max_g(abs.(qDx)), dy/max_g(abs.(qDy)), dz/max_g(abs.(qDz)))/<span class=hljs-number >3.1</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<ol start=11 >
+<li><p>Make sure all printing statements are only executed by <code>me&#61;&#61;0</code> in order to avoid each MPI process to print to screen, and use <code>nx_g&#40;&#41;</code> instead of local <code>nx</code> in the printed statements when assessing the iteration per number of grid points.</p>
+
+<li><p>Update the visualisation and output saving part</p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-comment ># visualisation</span>
+<span class=hljs-keyword >if</span> do_viz &amp;&amp; (it % nvis == <span class=hljs-number >0</span>)
+    T_inn .= <span class=hljs-built_in >Array</span>(T)[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]; gather!(T_inn, T_v)
+    <span class=hljs-keyword >if</span> me==<span class=hljs-number >0</span>
+        p1=heatmap(xi_g,zi_g,T_v[:,ceil(<span class=hljs-built_in >Int</span>,ny_g()/<span class=hljs-number >2</span>),:]&#x27;;xlims=(xi_g[<span class=hljs-number >1</span>],xi_g[<span class=hljs-keyword >end</span>]),ylims=(zi_g[<span class=hljs-number >1</span>],zi_g[<span class=hljs-keyword >end</span>]),aspect_ratio=<span class=hljs-number >1</span>,c=:turbo)
+        <span class=hljs-comment ># display(p1)</span>
+        png(p1,<span class=hljs-meta >@sprintf</span>(<span class=hljs-string >&quot;viz3Dmpi_out/%04d.png&quot;</span>,iframe+=<span class=hljs-number >1</span>))
+        save_array(<span class=hljs-meta >@sprintf</span>(<span class=hljs-string >&quot;viz3Dmpi_out/out_T_%04d&quot;</span>,iframe),convert.(<span class=hljs-built_in >Float32</span>,T_v))
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<ol start=13 >
+<li><p>Finalise the global grid before returning from the main function</p>
+
+</ol>
+<pre><code class="julia hljs">finalize_global_grid()
+<span class=hljs-keyword >return</span></code></pre>
+<p>If you made it up to here, you should now be able to launch your <code>PorousConvection_3D_multixpu.jl</code> code on multiple GPUs. Let&#39;s give it a try 🔥</p>
+<p>Make sure to have set following parameters:</p>
+<pre><code class="julia hljs">lx,ly,lz    = <span class=hljs-number >40.0</span>,<span class=hljs-number >20.0</span>,<span class=hljs-number >20.0</span>
+Ra          = <span class=hljs-number >1000</span>
+nz          = <span class=hljs-number >63</span>
+nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>,nz
+b_width     = (<span class=hljs-number >8</span>,<span class=hljs-number >8</span>,<span class=hljs-number >4</span>) <span class=hljs-comment ># for comm / comp overlap</span>
+nt          = <span class=hljs-number >500</span>
+nvis        = <span class=hljs-number >50</span></code></pre>
+<h3 id=benchmark_run ><a href="#benchmark_run" class=header-anchor >Benchmark run</a></h3>
+<p>Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; using CUDA-aware MPI 🚀</p>
+<p>The final 2D slice &#40;at <code>ny_g&#40;&#41;/2</code>&#41; produced should look as following and take about 25min to run:</p>
+<p><img src="../assets/literate_figures/l9_ex2_porous_convect_mpi_sl.png" alt="3D porous convection MPI" /></p>
+<h3 id=3d_calculation ><a href="#3d_calculation" class=header-anchor >3D calculation</a></h3>
+<p>Running the code at higher resolution &#40;<code>508x252x252</code> grid points&#41; and for 6000 timesteps produces the following result: 
+<center>
+  <video width="90%" autoplay loop controls src="../assets/literate_figures/l9_porous_convection_mxpu.mp4"/>
+</center>
+</p>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<h1 id=documenting_your_code ><a href="#documenting_your_code" class=header-anchor >Documenting your code</a></h1>
+<p>This lecture we will learn:</p>
+<ul>
+<li><p>documentation vs code-comments</p>
+
+<li><p>why to write documentation</p>
+
+<li><p>some Julia tools:</p>
+<ul>
+<li><p>docstrings</p>
+
+<li><p><a href="https://github.com/JuliaDocs/Documenter.jl">https://github.com/JuliaDocs/Documenter.jl</a></p>
+
+<li><p><a href="https://github.com/fredrikekre/Literate.jl">https://github.com/fredrikekre/Literate.jl</a></p>
+
+</ul>
+
+</ul>
+<p><img src="https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg" alt=comic  /></p>
+<h3 id=why_should_i_document_my_code ><a href="#why_should_i_document_my_code" class=header-anchor >Why should I document my code?</a></h3>
+<p>Why should I write code comments?</p>
+<ul>
+<li><p><a href="https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/">&quot;Code Tells You How, Comments Tell You Why&quot;</a></p>
+<ul>
+<li><p>code should be made understandable by itself, as much as possible</p>
+
+<li><p>comments then should be to tell the &quot;why&quot; you&#39;re doing something</p>
+
+</ul>
+
+<li><p><em>but</em> I do a lot of structuring comments as well</p>
+
+<li><p>math-y variables tend to be short and need a comment as well</p>
+
+</ul>
+<p>Why should I write documentation?</p>
+<ul>
+<li><p>documentation should give a bigger overview of what your code does</p>
+<ul>
+<li><p>at the function-level &#40;doc-strings&#41;</p>
+
+<li><p>at the package-level &#40;README, full-fledged documentation&#41;</p>
+
+</ul>
+
+<li><p>to let other people and your future self &#40;probably most important&#41; understand what your code is about</p>
+
+</ul>
+<h3 id=documentation_easily_rots ><a href="#documentation_easily_rots" class=header-anchor >Documentation easily rots...</a></h3>
+<p>Worse than no documentation/code comments is documentation which is outdated.</p>
+<p>I find the best way to keep documentation up to date is:</p>
+<ul>
+<li><p>have documentation visible to you, e.g. GitHub README</p>
+
+<li><p>document what you need yourself</p>
+
+<li><p>use examples and run them as part of CI &#40;doc-tests, example-scripts&#41;</p>
+
+</ul>
+<h3 id=documentation_tools_doc-strings ><a href="#documentation_tools_doc-strings" class=header-anchor >Documentation tools: doc-strings</a></h3>
+<p>A Julia doc-string &#40;<a href="https://docs.julialang.org/en/v1/manual/documentation/">Julia manual</a>&#41;:</p>
+<ul>
+<li><p>is just a string before the object &#40;no new-line&#41;; interpreted as markdown-string</p>
+
+<li><p>can be attached to most things &#40;functions, variables, modules, macros, types&#41;</p>
+
+<li><p>can be queried with <code>?</code></p>
+
+</ul>
+<pre><code class="julia hljs"><span class=hljs-string >&quot;&quot;&quot;
     transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 Transform polar to cartesian coordinates.
@@ -6,7 +182,8 @@ Transform polar to cartesian coordinates.
 transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 <span class=hljs-string >&quot;Typical size of beer crate&quot;</span>
-<span class=hljs-keyword >const</span> BEERBOX = <span class=hljs-number >12</span></code></pre> <pre><code class="julia hljs">?BEERBOX</code></pre>
+<span class=hljs-keyword >const</span> BEERBOX = <span class=hljs-number >12</span></code></pre>
+<pre><code class="julia hljs">?BEERBOX</code></pre>
 <h3 id=documentation_tools_doc-strings_with_examples ><a href="#documentation_tools_doc-strings_with_examples" class=header-anchor >Documentation tools: doc-strings with examples</a></h3>
 <p>One can add examples to doc-strings &#40;they can even be part of testing: <a href="https://juliadocs.github.io/Documenter.jl/stable/man/doctests/">doc-tests</a>&#41;.</p>
 <ul>
@@ -130,7 +307,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=exercises_-_lecture_9 ><a href="#exercises_-_lecture_9" class=header-anchor >Exercises - lecture 9</a></h1>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg ><strong>Exercise 1</strong> is the final step of your project - sripts and results should be added to the <code>PorousConvection</code> subfolder in your private GitHub repo. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/homework">more</a>&#41;.</div></div>
+<div class=messg ><strong>Exercise 1</strong> is the final step of your project - scripts and results should be added to the <code>PorousConvection</code> subfolder in your private GitHub repo. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/homework">more</a>&#41;.</div></div>
 <h2 id=exercise_1_-_multi-xpu_computing_projects ><a href="#exercise_1_-_multi-xpu_computing_projects" class=header-anchor >Exercise 1 - <strong>Multi-xPU computing projects</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
@@ -146,7 +323,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <div class=messg >Code from this exercise 2 has to be uploaded to the <code>scripts</code> folder within your <code>PorousConvection</code> project.</div></div>
 <p>In this exercise, you will:</p>
 <ul>
-<li><p>Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 7</p>
+<li><p>Create a multi-xPU version of the 3D thermal porous convection code from lecture 7</p>
 
 <li><p>Keep it xPU compatible using <code>ParallelStencil.jl</code></p>
 
@@ -155,102 +332,13 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <p>👉 You&#39;ll find a version of the <code>PorousConvection_3D_xpu.jl</code> code in the solutions folder on Polybox after exercises deadline if needed to get you started.</p>
 <ol>
-<li><p>Copy your working <code>PorousConvection_3D_xpu.jl</code> code developed for the exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p>
+<li><p>Copy the <code>PorousConvection_3D_xpu.jl</code> code from exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p>
 
-<li><p>Add at the beginning of the code</p>
+<li><p>Refer to the steps outlined in the <a href="#multi_-_xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a> section from Lecture 9 to implement the changes needed to port the 3D single xPU code &#40;from Lecture 7&#41; to multi-xPU.</p>
 
-</ol>
-<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid
-<span class=hljs-keyword >import</span> MPI</code></pre>
-<ol start=3 >
-<li><p>Also add global maximum computation using MPI</p>
+<li><p>Upon completion, verify the script converges and produces expected output for following parameters:</p>
 
 </ol>
-<pre><code class="julia hljs">max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))</code></pre>
-<ol start=4 >
-<li><p>In the <code># numerics</code> section, initialise the global grid right after defining <code>nx,ny,nz</code> and use now global grid <code>nx_g&#40;&#41;</code>,<code>ny_g&#40;&#41;</code> and <code>nz_g&#40;&#41;</code> for defining <code>maxiter</code> and <code>ncheck</code>, as well as in any other places when needed.</p>
-
-</ol>
-<pre><code class="julia hljs">nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>,nz
-me, dims    = init_global_grid(nx, ny, nz)  <span class=hljs-comment ># init global grid and more</span>
-b_width     = (<span class=hljs-number >8</span>,<span class=hljs-number >8</span>,<span class=hljs-number >4</span>)                       <span class=hljs-comment ># for comm / comp overlap</span></code></pre>
-<ol start=5 >
-<li><p>Modify the temperature initialisation using ImplicitGlobalGrid&#39;s global coordinate helpers &#40;<code>x_g</code>, etc...&#41;, including one internal boundary condition update &#40;update halo&#41;:</p>
-
-</ol>
-<pre><code class="julia hljs">T           = <span class=hljs-meta >@zeros</span>(nx  ,ny  ,nz  )
-T          .= Data.<span class=hljs-built_in >Array</span>([ΔT*exp(-(x_g(ix,dx,T)+dx/<span class=hljs-number >2</span>-lx/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span> -(y_g(iy,dy,T)+dy/<span class=hljs-number >2</span>-ly/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span> -(z_g(iz,dz,T)+dz/<span class=hljs-number >2</span>-lz/<span class=hljs-number >2</span>)^<span class=hljs-number >2</span>) <span class=hljs-keyword >for</span> ix=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >1</span>),iy=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>),iz=<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)])
-T[:,:,<span class=hljs-number >1</span>].=ΔT/<span class=hljs-number >2</span>; T[:,:,<span class=hljs-keyword >end</span>].=-ΔT/<span class=hljs-number >2</span>
-update_halo!(T)
-T_old       = copy(T)</code></pre>
-<ol start=6 >
-<li><p>Prepare for visualisation, making sure only <code>me&#61;&#61;0</code> creates the output directory. Also, prepare an array for storing inner points only &#40;no halo&#41; <code>T_inn</code> as well as global array to gather subdomains <code>T_v</code></p>
-
-</ol>
-<pre><code class="julia hljs"><span class=hljs-keyword >if</span> do_viz
-    <span class=hljs-literal >ENV</span>[<span class=hljs-string >&quot;GKSwstype&quot;</span>]=<span class=hljs-string >&quot;nul&quot;</span>
-    <span class=hljs-keyword >if</span> (me==<span class=hljs-number >0</span>) <span class=hljs-keyword >if</span> isdir(<span class=hljs-string >&quot;viz3Dmpi_out&quot;</span>)==<span class=hljs-literal >false</span> mkdir(<span class=hljs-string >&quot;viz3Dmpi_out&quot;</span>) <span class=hljs-keyword >end</span>; loadpath=<span class=hljs-string >&quot;viz3Dmpi_out/&quot;</span>; anim=Animation(loadpath,<span class=hljs-built_in >String</span>[]); println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-subst >$(anim.dir)</span>&quot;</span>) <span class=hljs-keyword >end</span>
-    nx_v,ny_v,nz_v = (nx-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >1</span>],(ny-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >2</span>],(nz-<span class=hljs-number >2</span>)*dims[<span class=hljs-number >3</span>]
-    <span class=hljs-keyword >if</span> (nx_v*ny_v*nz_v*sizeof(Data.<span class=hljs-built_in >Number</span>) &gt; <span class=hljs-number >0.8</span>*Sys.free_memory()) error(<span class=hljs-string >&quot;Not enough memory for visualization.&quot;</span>) <span class=hljs-keyword >end</span>
-    T_v   = zeros(nx_v, ny_v, nz_v) <span class=hljs-comment ># global array for visu</span>
-    T_inn = zeros(nx-<span class=hljs-number >2</span>, ny-<span class=hljs-number >2</span>, nz-<span class=hljs-number >2</span>) <span class=hljs-comment ># no halo local array for visu</span>
-    xi_g,zi_g = <span class=hljs-built_in >LinRange</span>(-lx/<span class=hljs-number >2</span>+dx+dx/<span class=hljs-number >2</span>, lx/<span class=hljs-number >2</span>-dx-dx/<span class=hljs-number >2</span>, nx_v), <span class=hljs-built_in >LinRange</span>(-lz+dz+dz/<span class=hljs-number >2</span>, -dz-dz/<span class=hljs-number >2</span>, nz_v) <span class=hljs-comment ># inner points only</span>
-    iframe = <span class=hljs-number >0</span>
-<span class=hljs-keyword >end</span></code></pre>
-<ol start=7 >
-<li><p>Use the <code>max_g</code> function in the timestep <code>dt</code> definition &#40;instead of <code>maximum</code>&#41; as one now needs to gather the global maximum among all MPI processes.</p>
-
-<li><p>Moving to the time loop, add halo update function <code>update_halo&#33;</code> after the kernel that computes the fluid fluxes. You can additionally wrap it in the <code>@hide_communication</code> block to enable communication/computation overlap &#40;using <code>b_width</code> defined above&#41;</p>
-
-</ol>
-<pre><code class="julia hljs"><span class=hljs-meta >@hide_communication</span> b_width <span class=hljs-keyword >begin</span>
-    <span class=hljs-meta >@parallel</span> compute_Dflux!(qDx,qDy,qDz,Pf,T,k_ηf,_dx,_dy,_dz,αρg,_1_θ_dτ_D)
-    update_halo!(qDx,qDy,qDz)
-<span class=hljs-keyword >end</span></code></pre>
-<ol start=9 >
-<li><p>Apply a similar step to the temperature update, where you can also include boundary condition computation as following &#40;⚠️ no other construct is currently allowed&#41;</p>
-
-</ol>
-<pre><code class="julia hljs"><span class=hljs-meta >@hide_communication</span> b_width <span class=hljs-keyword >begin</span>
-    <span class=hljs-meta >@parallel</span> update_T!(T,qTx,qTy,qTz,dTdt,_dx,_dy,_dz,_1_dt_β_dτ_T)
-    <span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>),<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)) bc_x!(T)
-    <span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >1</span>),<span class=hljs-number >1</span>:size(T,<span class=hljs-number >3</span>)) bc_y!(T)
-    update_halo!(T)
-<span class=hljs-keyword >end</span></code></pre>
-<ol start=10 >
-<li><p>Use now the <code>max_g</code> function instead of <code>maximum</code> to collect the global maximum among all local arrays spanning all MPI processes.</p>
-
-</ol>
-<pre><code class="julia hljs"><span class=hljs-comment ># time step</span>
-dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
-    <span class=hljs-number >0.1</span>*min(dx,dy,dz)/(αρg*ΔT*k_ηf)
-<span class=hljs-keyword >else</span>
-    min(<span class=hljs-number >5.0</span>*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/max_g(abs.(qDx)), dy/max_g(abs.(qDy)), dz/max_g(abs.(qDz)))/<span class=hljs-number >3.1</span>)
-<span class=hljs-keyword >end</span></code></pre>
-<ol start=11 >
-<li><p>Make sure all printing statements are only executed by <code>me&#61;&#61;0</code> in order to avoid each MPI process to print to screen, and use <code>nx_g&#40;&#41;</code> instead of local <code>nx</code> in the printed statements when assessing the iteration per number of grid points.</p>
-
-<li><p>Update the visualisation and output saving part</p>
-
-</ol>
-<pre><code class="julia hljs"><span class=hljs-comment ># visualisation</span>
-<span class=hljs-keyword >if</span> do_viz &amp;&amp; (it % nvis == <span class=hljs-number >0</span>)
-    T_inn .= <span class=hljs-built_in >Array</span>(T)[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>]; gather!(T_inn, T_v)
-    <span class=hljs-keyword >if</span> me==<span class=hljs-number >0</span>
-        p1=heatmap(xi_g,zi_g,T_v[:,ceil(<span class=hljs-built_in >Int</span>,ny_g()/<span class=hljs-number >2</span>),:]&#x27;;xlims=(xi_g[<span class=hljs-number >1</span>],xi_g[<span class=hljs-keyword >end</span>]),ylims=(zi_g[<span class=hljs-number >1</span>],zi_g[<span class=hljs-keyword >end</span>]),aspect_ratio=<span class=hljs-number >1</span>,c=:turbo)
-        <span class=hljs-comment ># display(p1)</span>
-        png(p1,<span class=hljs-meta >@sprintf</span>(<span class=hljs-string >&quot;viz3Dmpi_out/%04d.png&quot;</span>,iframe+=<span class=hljs-number >1</span>))
-        save_array(<span class=hljs-meta >@sprintf</span>(<span class=hljs-string >&quot;viz3Dmpi_out/out_T_%04d&quot;</span>,iframe),convert.(<span class=hljs-built_in >Float32</span>,T_v))
-    <span class=hljs-keyword >end</span>
-<span class=hljs-keyword >end</span></code></pre>
-<ol start=13 >
-<li><p>Finalise the global grid before returning from the main function</p>
-
-</ol>
-<pre><code class="julia hljs">finalize_global_grid()
-<span class=hljs-keyword >return</span></code></pre>
-<p>If you made it up to here, you should now be able to launch your <code>PorousConvection_3D_multixpu.jl</code> code on multiple GPUs. Let&#39;s give it a try 🔥</p>
-<p>Make sure to have set following parameters</p>
 <pre><code class="julia hljs">lx,ly,lz    = <span class=hljs-number >40.0</span>,<span class=hljs-number >20.0</span>,<span class=hljs-number >20.0</span>
 Ra          = <span class=hljs-number >1000</span>
 nz          = <span class=hljs-number >63</span>
@@ -258,9 +346,8 @@ nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</
 b_width     = (<span class=hljs-number >8</span>,<span class=hljs-number >8</span>,<span class=hljs-number >4</span>) <span class=hljs-comment ># for comm / comp overlap</span>
 nt          = <span class=hljs-number >500</span>
 nvis        = <span class=hljs-number >50</span></code></pre>
-<p>Then, launch the script on Piz Daint on 8 GPU nodes upon adapting the the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; using CUDA-aware MPI 🚀</p>
-<p>The final 2D slice &#40;at <code>ny_g&#40;&#41;/2</code>&#41; produced should look as following and take about 25min to run:</p>
-<p><img src="../assets/literate_figures/l9_ex2_porous_convect_mpi_sl.png" alt="3D porous convection MPI" /></p>
+<p>Use 8 GPUs on Piz Daint adapting the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; to use CUDA-aware MPI 🚀</p>
+<p>The final 2D slice &#40;at <code>ny_g&#40;&#41;/2</code>&#41; produced should look similar as the figure depicted in <a href="#benchmark_run">Lecture 9</a>.</p>
 <h3 id=task ><a href="#task" class=header-anchor >Task</a></h3>
 <p>Now that you made sure the code runs as expected, launch <code>PorousConvection_3D_multixpu.jl</code> for 2000 steps on 8 GPUs at higher resolution &#40;global grid of <code>508x252x252</code>&#41; setting:</p>
 <pre><code class="julia hljs">nz          = <span class=hljs-number >127</span>
@@ -268,8 +355,8 @@ nx,ny       = <span class=hljs-number >2</span>*(nz+<span class=hljs-number >1</
 nt          = <span class=hljs-number >2000</span>
 nvis        = <span class=hljs-number >100</span></code></pre>
 <p>and keeping other parameters unchanged.</p>
-<p>Use <code>sbtach</code> command to launch a non-interactive job which may take about 5h30 hours to execute.</p>
-<p>Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled <code>## Porous convection 3D MPI</code> in the <code>PorousConvection</code> project subfolder&#39;s <code>README.md</code>. You can use the Makie visualisation helper script from Lecture 7 for this purpose.</p>
+<p>Use <code>sbtach</code> command to launch a non-interactive job which may take about 5h30-6h to execute.</p>
+<p>Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled <code>## Porous convection 3D MPI</code> in the <code>PorousConvection</code> project subfolder&#39;s <code>README.md</code>. You can use the Makie visualisation helper script from Lecture 7 for this purpose &#40;making sure to adapt the resolution and other input params if needed&#41;.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -299,7 +386,7 @@ nvis        = <span class=hljs-number >100</span></code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 12, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 13, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
