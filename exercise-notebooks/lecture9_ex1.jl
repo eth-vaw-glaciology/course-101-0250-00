@@ -9,8 +9,6 @@ The goal of this exercise is to:
 - Further familiarise with distributed computing
 - Combine [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) and [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 - Learn about GPU MPI on the way
-
-\warn{Code from this exercise 2 has to be uploaded to the `scripts` folder within your `PorousConvection` project.}
 """
 
 md"""
