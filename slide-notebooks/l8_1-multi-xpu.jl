@@ -360,11 +360,29 @@ Then, we need to (2.) implement a boundary update routine, which can have the fo
 @views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbour 1 ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
-        # ...
+#hint=        sendbuf = ??
+#hint=        recvbuf = ??
+#hint=        MPI.Send(??,  neighbors_x[?], 0, comm)
+#hint=        MPI.Recv!(??, neighbors_x[?], 1, comm)
+#hint=        A[1] = ??
+#sol=        sendbuf = A[2]
+#sol=        recvbuf = zeros(1)
+#sol=        MPI.Send(sendbuf,  neighbors_x[1], 0, comm)
+#sol=        MPI.Recv!(recvbuf, neighbors_x[1], 1, comm)
+#sol=        A[1] = recvbuf[1]
     end
     # Send to / receive from neighbour 2 ("right neighbor")
     if neighbors_x[2] != MPI.MPI_PROC_NULL
-        # ...
+#hint=        sendbuf = ??
+#hint=        recvbuf = ??
+#hint=        MPI.Recv!(??, neighbors_x[?], 0, comm)
+#hint=        MPI.Send(??,  neighbors_x[?], 1, comm)
+#hint=        A[end] = ??
+#sol=        sendbuf = A[end-1]
+#sol=        recvbuf = zeros(1)
+#sol=        MPI.Recv!(recvbuf, neighbors_x[2], 0, comm)
+#sol=        MPI.Send(sendbuf,  neighbors_x[2], 1, comm)
+#sol=        A[end] = recvbuf[1]
     end
     return
 end
