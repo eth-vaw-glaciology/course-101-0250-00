@@ -8,8 +8,6 @@ The goal of this exercise is to:
 - Combine [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) and [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 - Learn about GPU MPI on the way
 
-\warn{Code from this exercise 2 has to be uploaded to the `scripts` folder within your `PorousConvection` project.}
-
 In this exercise, you will:
 - Create a multi-xPU version of the 3D thermal porous convection code from lecture 7
 - Keep it xPU compatible using `ParallelStencil.jl`
