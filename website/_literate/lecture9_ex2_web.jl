@@ -52,7 +52,6 @@ heatmap(B)
 md"""
 3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions
 For this, you need to add the `.github/workflow` folder (the one containing your `CI.yml` for testing) following `Literate.yml` script
-
 ```yml
 name: Run Literate.jl
 # adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
@@ -105,8 +104,7 @@ jobs:
           git push origin main
 ```
 
-
-
+4. That's all! Head to the [Project](/logistics/#project) section in Logistics for a check-list about what you should hand in for this first project.
 """
 
 
