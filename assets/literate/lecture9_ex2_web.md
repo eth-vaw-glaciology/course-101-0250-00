@@ -39,9 +39,69 @@ Add to the `bin_io_script.jl` a `main()` function that will:
 - initialise a second array `B` to hold the read-in results
 - call the `save_array` function and save the random number array
 - call the `load_array` function and read the random number array in `B`
-- plot `B` using `heatmap`
+- return B
+- call the main function making and plotting as following
+
+````julia:ex2
+B = main()
+heatmap(B)
+````
 
 3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions
+For this, you need to add the `.github/workflow` folder (the one containing your `CI.yml` for testing) following `Literate.yml` script
+
+```yml
+name: Run Literate.jl
+# adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
+
+on: push
+
+jobs:
+  lit:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the branch
+      - uses: actions/checkout@v2
+
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1.8'
+          arch: x64
+
+      - uses: actions/cache@v1
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+
+      - uses: julia-actions/julia-buildpkg@v1
+
+      - name: run Literate
+        run: |
+          cd PorousConvection
+          julia --color=yes --project -e 'using Pkg; Pkg.instantiate()'
+          julia --color=yes --project -e 'cd("scripts"); include("literate-script.jl")'
+          cd ..
+
+      - name: setup git config
+        run: |
+          # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
+      - name: commit
+        run: |
+          # Stage the file, commit and push
+          git add PorousConvection/scripts/md/*
+          git commit -m "Commit markdown files from Literate"
+          git push origin main
+```
+
 
 🚧 more infos after the lecture.
 

@@ -16,3 +16,6 @@ function load_array(Aname,A)
     fid=open(fname,"r"); read!(fid,A); close(fid)
 end
 
+B = main()
+heatmap(B)
+

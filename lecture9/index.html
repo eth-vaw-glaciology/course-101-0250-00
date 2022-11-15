@@ -333,7 +333,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <ol>
 <li><p>Copy the <code>PorousConvection_3D_xpu.jl</code> code from exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p>
 
-<li><p>Refer to the steps outlined in the <a href="#multi_-_xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a> section from Lecture 9 to implement the changes needed to port the 3D single xPU code &#40;from Lecture 7&#41; to multi-xPU.</p>
+<li><p>Refer to the steps outlined in the <a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a> section from Lecture 9 to implement the changes needed to port the 3D single xPU code &#40;from Lecture 7&#41; to multi-xPU.</p>
 
 <li><p>Upon completion, verify the script converges and produces expected output for following parameters:</p>
 
@@ -411,13 +411,67 @@ Some docstring
 
 <li><p>call the <code>load_array</code> function and read the random number array in <code>B</code></p>
 
-<li><p>plot <code>B</code> using <code>heatmap</code></p>
+<li><p>return B</p>
+
+<li><p>call the main function making and plotting as following</p>
 
 </ul>
+<pre><code class="julia hljs">B = main()
+heatmap(B)</code></pre>
 <ol start=3 >
 <li><p>Make the Literate-based workflow to automatically build on GitHub using GitHub Actions</p>
 
 </ol>
+<p>For this, you need to add the <code>.github/workflow</code> folder &#40;the one containing your <code>CI.yml</code> for testing&#41; following <code>Literate.yml</code> script</p>
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
+<span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
+
+<span class=hljs-attr >on:</span> <span class=hljs-string >push</span>
+
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >lit:</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >ubuntu-latest</span>
+    <span class=hljs-attr >steps:</span>
+      <span class=hljs-comment ># Checkout the branch</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >&#x27;1.8&#x27;</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >x64</span>
+
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v1</span>
+        <span class=hljs-attr >env:</span>
+          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
+          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
+
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >run</span> <span class=hljs-string >Literate</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >|
+          cd PorousConvection
+          julia --color=yes --project -e &#x27;using Pkg; Pkg.instantiate()&#x27;
+          julia --color=yes --project -e &#x27;cd(&quot;scripts&quot;); include(&quot;literate-script.jl&quot;)&#x27;
+          cd ..
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >setup</span> <span class=hljs-string >git</span> <span class=hljs-string >config</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >|
+          # setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default
+          git config user.name &quot;GitHub Actions Bot&quot;
+          git config user.email &quot;&lt;&gt;&quot;
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
+        <span class=hljs-attr >run:</span> <span class=hljs-string >|
+          # Stage the file, commit and push
+          git add PorousConvection/scripts/md/*
+          git commit -m &quot;Commit markdown files from Literate&quot;
+          git push origin main</span></code></pre>
 <p>🚧 more infos after the lecture.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
