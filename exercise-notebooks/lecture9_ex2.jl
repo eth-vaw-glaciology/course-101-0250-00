@@ -103,5 +103,5 @@ jobs:
           git push origin main
 ```
 
-4. That's all! Head to the [Project](/logistics/#project) section in Logistics for a check-list about what you should hand in for this first project.
+4. That's all! Head to the [Project section in Logistics](/logistics/#project) for a check-list about what you should hand in for this first project.
 """
