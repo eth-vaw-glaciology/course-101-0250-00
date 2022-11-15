@@ -74,6 +74,23 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 2. Make sure to follow the basic repo structure (using `PkgTemplates.jl` to generate it) as described in [Lecture 7](/lecture7/#infos_about_projects)
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
+#### Project hand-in checklist
+The project submission deadline is set to **30.11.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the Lecture 9 section.
+
+Make sure to have following items in your private GitHub repository:
+- a `PorousConvection` folder containing the structure proposed in [Lecture 7](lecture7/#preparing_the_project_folder_in_your_github_repo)
+- the 2D and 3D scripts from Lecture 7
+- the CI set-up to test the 2D and 3D porous convection scripts
+- a `lecture_8` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 8](lecture8/#exercises_-_lecture_8)
+- the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 9](lecture9/#exercises_-_lecture_9).
+
+**In addition** enhance the `README.md` within the `PorousConvection` folder to include:
+- a short motivation/introduction
+- concise information about the equations you are solving
+- concise information about the numerical method and implementation
+- the results, incl. figures with labels, captions, etc...
+- a short discussion/conclusion section about the performed work, results, and outlook
+
 _Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
 
 ### Final project
