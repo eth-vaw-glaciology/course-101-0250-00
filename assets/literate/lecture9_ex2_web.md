@@ -102,6 +102,3 @@ jobs:
           git push origin main
 ```
 
-
-🚧 more infos after the lecture.
-
