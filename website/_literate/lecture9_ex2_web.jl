@@ -106,7 +106,6 @@ jobs:
 ```
 
 
-🚧 more infos after the lecture.
 
 """
 
