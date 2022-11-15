@@ -50,8 +50,7 @@ B = main()
 heatmap(B)
 
 md"""
-3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions
-For this, you need to add the `.github/workflow` folder (the one containing your `CI.yml` for testing) following `Literate.yml` script
+3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add the `.github/workflow` folder (the one containing your `CI.yml` for testing) following `Literate.yml` script
 ```yml
 name: Run Literate.jl
 # adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
