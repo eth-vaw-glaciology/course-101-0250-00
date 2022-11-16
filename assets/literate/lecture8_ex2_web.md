@@ -62,7 +62,7 @@ nout    = 20
 me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
 ````
 
-Save the global `C_v` output array. Ensure its size matches the single xPU produced output and then compare the results to the existing 2 outputs produced in Task 2
+Save the global `C_v` output array. Ensure its size matches the inner points of the single xPU produced output (`C[2:end-1,2:end-1]`) and then compare the results to the existing 2 outputs produced in Task 2
 
 ### Task 4
 
