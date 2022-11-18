@@ -42,4 +42,4 @@ Show your creativity by coming up with your own problem that could be modelled u
 
 ## Getting started with the final projects
 
-Head to [Logistics](/logistics) in order to find infos on getting started and submission.
+Head to [Logistics](/logistics/#final_project) in order to find infos on getting started and submission.
