@@ -31,6 +31,7 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 Schedule to be defined (on Element/Zoom or in-person)
 
 ## Discussion
+
 We plan to use the [Element-chat (https://chat.ethz.ch/)](https://chat.ethz.ch/) as the main communication channel for the course, both between the teachers and the students, and hopefully also between students. We encourage ETH students to ask course, exercises and technical questions there.
 
 Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) to get started with Element:
@@ -66,7 +67,13 @@ Personal feedback and sample solution codes will be provided after submission de
 
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
-### Project 
+### Feedback
+After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
+
+Personal feedback and points (not grades) for weekly homework exercises will be shared individually among participants using a private file or folder on Polybox.
+
+## Project
+
 Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
 The exercises **in lecture 7** will serve as starting point for the first project:
@@ -74,7 +81,7 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 2. Make sure to follow the basic repo structure (using `PkgTemplates.jl` to generate it) as described in [Lecture 7](/lecture7/#infos_about_projects)
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
-#### Project hand-in checklist
+### Project hand-in checklist
 The project submission deadline is set to **30.11.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
@@ -93,15 +100,52 @@ Make sure to have following items in your private GitHub repository:
 
 _Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
 
-### Final project
-Infos to come soon 🚧
+## Final project
 
-### Feedback
-After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084).
+For information about topics for the final project, head to [Information about final projects](/final_proj) page.
 
-Personal feedback and points (not grades) for weekly homework exercises will be shared individually among participants using a private file or folder on Polybox.
+### Getting started
+
+coming soon 🚧
+
+<!-- The following steps will get you started with the final projects:
+1. Find a classmate to work with (being your own mate is fine too)
+2. Select a topic of your choice
+3. Copy or the [**template**](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) for the final project.
+4. Rename it to 🚧
+5. Share the final project private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
+6. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Tuesday November 29, 2022**, with subject _**Final projects**_ including
+    - your project mate
+    - a brief description of your choice
+    - a link to your final project GitHub repository
+    - _anything else missing in this list_
+7. Work on you final project, asking for help
+    - in the Element _Helpdesk_ channel for general question
+    - as **GitHub "issue"** for project specific questions
+    - during class hours serving as helpdesk
+
+### Final project submission
+Submission deadline for the project is **December 22, 2022 -- 23h59 CET**.
+
+Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
+
+Also, add the last commit HSA to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-10) as for the exercises.
+ -->
+### Final project grading
+Grading of the final project will contribute 30% of the final grade.
+
+For a successful outcome, final projects are expected to be handed-in as single GitHub repository featuring the following items:
+- documented and polished scripts (using e.g. docstrings, in-line comments)
+- documentation including:
+  - an enhanced `README.md` following to proposed structure with equations, cross-references, figures, figure captions
+  - instructions to run the software and reproduce the results
+  - references
+- unit and reference testing
+- Continuous Integration (CI - using e.g. GitHub Actions)
+- additional features if needed
 
 ## Evaluation
+
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) (& GitHub):
 1. 5 (out of 6) weekly assignments (30% of the final grade) during the course's Part 1. _**Weekly coding exercises can be done alone or in groups of two**_.
 2. A project during Part 2 (35% of the final grade). _**Projects submission includes codes in a git repository and an automatic generated documentation**_.
