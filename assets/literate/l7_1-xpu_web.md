@@ -129,7 +129,7 @@ By analogy, update `update_Pf!`.
 
 ````julia:ex3
 @parallel function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
-    Pf = ...
+    @all(Pf) = @all(Pf) - (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
     return nothing
 end
 ````
