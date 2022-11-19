@@ -231,7 +231,7 @@ Note that currently the shorthand `-=` notation is not supported and we need to 
 By analogy, update `update_Pf!`.
 """
 @parallel function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
-    Pf = ...
+    @all(Pf) = @all(Pf) - (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
     return nothing
 end
 
