@@ -102,11 +102,11 @@ _Note that for evaluation will be considered the following (non-exhaustive) item
 
 ## Final project
 
-For information about topics for the final project, head to [Information about final projects](/final_proj) page.
+For information about **topics** for the final project, head to [Information about final projects](/final_proj) page.
 
 ### Getting started
 
-coming soon 🚧
+More infos coming soon 🚧
 
 <!-- The following steps will get you started with the final projects:
 1. Find a classmate to work with (being your own mate is fine too)
@@ -123,14 +123,14 @@ coming soon 🚧
     - in the Element _Helpdesk_ channel for general question
     - as **GitHub "issue"** for project specific questions
     - during class hours serving as helpdesk
-
+ -->
 ### Final project submission
 Submission deadline for the project is **December 22, 2022 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
 Also, add the last commit HSA to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-10) as for the exercises.
- -->
+
 ### Final project grading
 Grading of the final project will contribute 30% of the final grade.
 
