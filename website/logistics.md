@@ -128,7 +128,7 @@ Final submission timestamp is enforced upon tagging the v1.0.0 version release o
 Also, add the last commit SHA to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-10) as for the exercises.
 
 ### Final project grading
-Grading of the final project will contribute 30% of the final grade.
+Grading of the final project will contribute 35% of the final grade.
 
 For a successful outcome, final projects are expected to be handed-in as single GitHub repository featuring the following items:
 - documented and polished scripts (using e.g. docstrings, in-line comments)
