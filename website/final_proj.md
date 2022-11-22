@@ -6,8 +6,6 @@ Final projects will provide 30% of the course grade. We recommend you work in te
 
 _Note that a single GitHub repository is sufficient per project._
 
-<!-- [**Project template** available here](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) - copy or clone to get started. -->
-
 \warn{The final project GitHub repository should **remain private** until submission on December 23, 2021.}
 
 

@@ -108,22 +108,21 @@ For information about **topics** for the final project, head to [Information abo
 
 More infos coming soon 🚧
 
-<!-- The following steps will get you started with the final projects:
+The following steps will get you started with the final projects:
 1. Find a classmate to work with (being your own mate is fine too)
 2. Select a topic of your choice
-3. Copy or the [**template**](https://github.com/eth-vaw-glaciology/FinalProjectRepo.jl) for the final project.
-4. Rename it to 🚧
+4. Initiate a private GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`)
 5. Share the final project private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-6. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Tuesday November 29, 2022**, with subject _**Final projects**_ including
+6. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Wednesday November 30, 2022**, with subject _**Final projects**_ including
     - your project mate
     - a brief description of your choice
     - a link to your final project GitHub repository
     - _anything else missing in this list_
-7. Work on you final project, asking for help
+7. Work on your final project, asking for help
     - in the Element _Helpdesk_ channel for general question
     - as **GitHub "issue"** for project specific questions
     - during class hours serving as helpdesk
- -->
+
 ### Final project submission
 Submission deadline for the project is **December 22, 2022 -- 23h59 CET**.
 
