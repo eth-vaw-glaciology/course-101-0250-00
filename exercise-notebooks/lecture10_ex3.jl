@@ -20,7 +20,7 @@ Prerequisites:
 md"""
 ### Getting started
 
-👉 Download the [`lecture9_ex3.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex3.ipynb) notebook and edit it.
+👉 Download the [`lecture10_ex3.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex3.ipynb) notebook and edit it.
 """
 
 md"""
@@ -38,7 +38,7 @@ using BenchmarkTools
 using Plots
 
 md"""
-In the last notebook ([`lecture9_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture9_ex2.ipynb)), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
+In the previous notebook ([`lecture10_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex2.ipynb)), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
 
 Here is the documentation of the function `cumsum!`
 ```julia-repl

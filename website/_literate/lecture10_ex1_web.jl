@@ -14,11 +14,10 @@ md"""
 ### Getting started
 
 👉 Make sure:
-1. You are logged-in to your node on octopus ([how-to](/software_install/#login_to_your_node))
-2. Head to `/scratch/<username>/lecture09/`
-3. Get your Julia environment ready so that you can [start a Jupyter notebook server](/software_install/#running_a_jupyter_notebook)
-4. Open the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* (`/scratch/<username>/lecture09/l6_1-gpu-memcopy.ipynb`)
-5. Run the notebook to establish the performance baseline *(you should have a copy of it in your `lecture09` folder on octopus)*.
+1. Log into your [JupyterLab](software_install/#jupyterhub) on Piz Daint
+2. Download the [`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb) notebooks and copy it to your `scratch` space on Piz Daint.
+4. Open the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* [l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb)
+5. Run the notebook to establish the performance baseline (you will need the value in the next exercises).
 """
 
 

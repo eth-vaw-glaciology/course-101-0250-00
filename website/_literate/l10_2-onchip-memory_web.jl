@@ -58,7 +58,7 @@ As a result, we will need to read the data corresponding to a thread block (see 
 md"""
 Making basic use of "local memory" is very simple: it is enough to define a variable inside a kernel and it will be allocated private to the each thread.
 
-Scalars (and possibly small arrays) will be stored in registers if the kernel does not use too many (else it is stored in global memory as noted earlier).
+Scalars (and possibly small arrays) will be stored in registers if the kernel does not use too many resources (else it is stored in global memory as noted earlier).
 """
 
 #src #########################################################################
