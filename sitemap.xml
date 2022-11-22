@@ -44,6 +44,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://pde-on-gpu.vaw.ethz.ch/lecture10/index.html</loc>
+    <lastmod>2022-11-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://pde-on-gpu.vaw.ethz.ch/homework/index.html</loc>
     <lastmod>2022-11-22</lastmod>
     <changefreq>monthly</changefreq>
