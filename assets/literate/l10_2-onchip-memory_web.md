@@ -23,7 +23,7 @@ As a result, we will need to read the data corresponding to a thread block (see 
 
 Making basic use of "local memory" is very simple: it is enough to define a variable inside a kernel and it will be allocated private to the each thread.
 
-Scalars (and possibly small arrays) will be stored in registers if the kernel does not use too many (else it is stored in global memory as noted earlier).
+Scalars (and possibly small arrays) will be stored in registers if the kernel does not use too many resources (else it is stored in global memory as noted earlier).
 
 This "control" of register usage becomes often particularly useful when each thread does not only compute the results for one cell but for multiple cells, e.g., adjacent in the last dimension.
 

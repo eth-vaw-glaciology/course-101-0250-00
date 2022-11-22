@@ -55,29 +55,3 @@ Defining the $T_\mathrm{eff}$ metric, we assume that:
 
 \note{Fields within the effective memory access that do not depend on their own history; such fields can be re-computed on the fly or stored on-chip.}
 
-When solving the [exercises](#exercises_-_lecture_9) later, we invite you to a "time travel"!
-
-We will ask you to solve them first on the consumer electronics GPU Titan Xm in double precision, even though its double precision floating point peak performance is very low; then, we will ask you to rerun your solutions on the Tesla V100 GPUs.
-
-Why do we talk about "time travel"?
-
-It is because the Titan Xm's ratio between compute access speed and memory access speed is much lower for double precision than for single precision.
-
-The ratio for double precision corresponds to what was common in the early 2000s. So we "time-travel" 15 to 20 years back!
-
-![flop_to_memaccess_ratio](../assets/literate_figures/l10_flop_to_memaccess_ratio2.png)
-*Source: John McCalpin, Texas Advanced Computing Center (modified)*
-\note{The position of the memory wall is to be considered very approximative.}
-
-Let us compute the Titan Xm's ratio for double precision (the specifications are, e.g., found [here](https://www.techpowerup.com/gpu-specs/geforce-gtx-titan-x.c2632)):
-
-$$ \frac{209 ~\mathrm{[GFlop/s]}}{337 ~\mathrm{[GB/s]}}~×~8 = 5 $$
-
-So we can do only 5 floating point operations per number read from main memory or written to it.
-
-\note{As a consquence, think in every exercise if you are compute-bound or memory-bound when using the Titan Xm in double precision!}
-
-As a side note, in single precision, we can do 80 floating point operations per number read from main memory or written to it:
-
-$$ \frac{6690 ~\mathrm{[GFlop/s]}}{337 ~\mathrm{[GB/s]}}~×~4 = 80 $$
-
