@@ -110,7 +110,7 @@ The following steps will get you started with the final projects:
 2. Select a topic of your choice
 4. Initiate a private GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`)
 5. Share the final project private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Friday December 2, 2022**, with subject _**Final projects**_ including
+6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Tuesday December 6, 2022**, with subject _**Final projects**_ including
     - your project mate
     - a brief description of your choice
     - a link to your final project GitHub repository
