@@ -6,7 +6,7 @@ Final projects will provide 35% of the course grade. We recommend you work in te
 
 _Note that a single GitHub repository is sufficient per project._
 
-\warn{The final project GitHub repository should **remain private** until submission on December 23, 2021.}
+\warn{The final project GitHub repository should **remain private** until submission on December 22, 2022 (unless you need it to be public for, e.g., deploying documentation.)}
 
 
 Final projects should to be handed-in on a single GitHub repository, including scripts, documentation (and code documentation), unit and reference testing, Continuous Integration (CI - using e.g. GitHub Actions), instructions to run the software and reproduce the results, references.

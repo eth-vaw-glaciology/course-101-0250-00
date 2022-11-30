@@ -82,7 +82,7 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
-The project submission deadline is set to **30.11.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the Lecture 9 section.
+The project submission deadline is set to **02.12.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
 - a `PorousConvection` folder containing the structure proposed in [Lecture 7](lecture7/#preparing_the_project_folder_in_your_github_repo)
@@ -110,7 +110,7 @@ The following steps will get you started with the final projects:
 2. Select a topic of your choice
 4. Initiate a private GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`)
 5. Share the final project private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-6. Send and email to Ludovic (luraess@ethz.ch) and Mauro (werder@vaw.baug.ethz.ch) by **Wednesday November 30, 2022**, with subject _**Final projects**_ including
+6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Friday December 2, 2022**, with subject _**Final projects**_ including
     - your project mate
     - a brief description of your choice
     - a link to your final project GitHub repository
