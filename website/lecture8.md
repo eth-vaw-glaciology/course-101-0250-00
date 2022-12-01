@@ -33,7 +33,7 @@ noeval = true
 
 # Exercises - lecture 8
 
-\warn{Exercises have to be handed in and uploaded to your private (shared) GitHub repository, in a _**newly created `lecture_8`**_ folder (and _**not**_ in the `PorousConvection` folder). The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{Exercises have to be handed in and uploaded to your private (shared) GitHub repository, in a _**newly created `lecture8`**_ folder (and _**not**_ in the `PorousConvection` folder). The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture8_ex1_web.jl}
 
