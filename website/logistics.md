@@ -121,7 +121,7 @@ The following steps will get you started with the final projects:
     - during class hours serving as helpdesk
 
 ### Final project submission
-Submission deadline for the project is **December 22, 2022 -- 23h59 CET**.
+Submission deadline for the project is **December 23, 2022 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
