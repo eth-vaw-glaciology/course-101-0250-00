@@ -85,11 +85,11 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 The project submission deadline is set to **02.12.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
-- a `PorousConvection` folder containing the structure proposed in [Lecture 7](lecture7/#preparing_the_project_folder_in_your_github_repo)
+- a `PorousConvection` folder containing the structure proposed in [Lecture 7](/lecture7/#preparing_the_project_folder_in_your_github_repo)
 - the 2D and 3D scripts from Lecture 7
 - the CI set-up to test the 2D and 3D porous convection scripts
-- a `lecture_8` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 8](lecture8/#exercises_-_lecture_8)
-- the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 9](lecture9/#exercises_-_lecture_9).
+- a `lecture_8` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 8](/lecture8/#exercises_-_lecture_8)
+- the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 9](/lecture9/#exercises_-_lecture_9).
 
 **In addition** enhance the `README.md` within the `PorousConvection` folder to include:
 - a short motivation/introduction
