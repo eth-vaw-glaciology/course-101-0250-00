@@ -51,14 +51,14 @@ The goal of this course is to offer a practical approach to solve systems of dif
   - frictional heating
   - Navier-Stokes equations
 
-> Detailed content is available on [**ETHZ course catalogue**](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2022W&ansicht=KATALOGDATEN&lerneinheitId=162403&lang=en)
+> Detailed content is available on [**ETHZ course catalogue**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2023W&ansicht=KATALOGDATEN&lerneinheitId=172289&lang=en)
 
 > Course repository: [https://github.com/eth-vaw-glaciology/course-101-0250-00](https://github.com/eth-vaw-glaciology/course-101-0250-00)
 
 
 ## Teaching staff
-- [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
+- [Ludovic Räss](https://github.com/luraess) - Unil / ETHZ
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
 - [Ivan Utkin](https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
-- Teaching Assistant: [Alexander Mandt]()
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
+- Teaching Assistant: [Giacomo Aloisi](https://github.com/GiackAloZ) - ETHZ

@@ -15,14 +15,14 @@ All the course slides are [Jupyter notebooks](https://jupyter.org/); browser-bas
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) or download them and run them them locally if you're already set-up.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) or download them and run them them locally if you're already set-up.
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
 ## JupyterHub
-You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084), clicking on [![JupyterHub](/assets/JHub.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=18084)
+You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175), clicking on [![JupyterHub](/assets/JHub.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=20175)
 
 Upon login to the server, you should see the following launcher environment, including a notebook (file) browser, ability to create a notebook, launch a Julia console (REPL), or a regular terminal.
 
@@ -35,9 +35,9 @@ Check you have an active internet connexion and [download Julia v1.8](https://ju
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.8.2-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.8.2-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.9.3-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.9.3-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.9.3-linux-x86_64.tar.gz # Linux x86
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
@@ -84,7 +84,7 @@ Welcome in the [Julia REPL](https://docs.julialang.org/en/v1/stdlib/REPL/) (comm
   (_)     | (_) (_)    |
    _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
   | | | | | | |/ _` |  |
-  | | |_| | | | (_| |  |  Version 1.8.1 (2022-09-06)
+  | | |_| | | | (_| |  |  Version 1.9.3 (2023-08-24)
  _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
 |__/                   |
 
@@ -92,11 +92,11 @@ julia>
 ```
 the shell mode by hitting `;`, where you can enter Unix commands,
 ```julia-repl
-shell> 
+shell>
 ```
 and the [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) (package manager) by hitting `]`, that will be used to add and manage packages, and environments,
 ```julia-repl
-(@v1.8) pkg> 
+(@v1.9) pkg>
 ```
 
 You can interactively execute commands in the REPL, like adding two numbers
@@ -119,12 +119,12 @@ here passing the `-O3` optimisation flag, and the Julia `--check-bounds` flag se
 ### Package manager
 The [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) permits you to install and manage Julia packages, and control the project's environment.
 
-Environments or Projects are an efficient way that enable portability and reproducibility. Upon activating a local environment, you generate a local `Project.toml` file that stores the packages and version you are using within a specific project (code-s), and a `Manifest.toml` file that keeps track locally of the state of the environment. 
+Environments or Projects are an efficient way that enable portability and reproducibility. Upon activating a local environment, you generate a local `Project.toml` file that stores the packages and version you are using within a specific project (code-s), and a `Manifest.toml` file that keeps track locally of the state of the environment.
 
 To activate an project-specific environment, navigate to your targeted project folder, launch Julia
 ```sh
 mkdir my_cool_project
-cd my_cool_project 
+cd my_cool_project
 julia
 ```
 and activate it
@@ -132,12 +132,12 @@ and activate it
 ```julia-repl
 julia> ]
 
-(@v1.8) pkg> 
+(@v1.9) pkg>
 
-(@v1.8) pkg> activate .
+(@v1.9) pkg> activate .
   Activating new environment at `~/my_cool_project/Project.toml`
 
-(my_cool_project) pkg> 
+(my_cool_project) pkg>
 ```
 
 Then, let's install the `Plots.jl` package
@@ -166,23 +166,23 @@ julia> heatmap(rand(10,10))
 
 Let's assume you're handed your `my_cool_project` to someone to reproduce your cool random plot. To do so, you can open julia from the `my_cool_project` folder with the `--project` option
 ```sh
-cd my_cool_project 
+cd my_cool_project
 julia --project
 ```
 
 Or you can rather activate it afterwards
 ```sh
-cd my_cool_project 
+cd my_cool_project
 julia
 ```
 and then,
 ```julia-repl
 julia> ]
 
-(@v1.8) pkg> activate .
+(@v1.9) pkg> activate .
   Activating environment at `~/my_cool_project/Project.toml`
 
-(my_cool_project) pkg> 
+(my_cool_project) pkg>
 
 (my_cool_project) pkg> st
       Status `~/my_cool_project/Project.toml`
@@ -242,7 +242,7 @@ _For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Dai
 
 ## GPU computing on Piz Daint
 
-GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system. 
+GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system.
 
 \warn{Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.}
 
@@ -260,15 +260,15 @@ Please follow the steps listed hereafter to get ready and set-up on daint.
 ssh <username>@ela.cscs.ch
 ```
 
-3. On ela, change the password to another one and remember it! Password policy. The new password should comply with the following: 
+3. On ela, change the password to another one and remember it! Password policy. The new password should comply with the following:
    - be at least 12 characters
    - include upper and lower case letters
    - include numeric digits
    - include special characters like `# , . / : = ? @ [ ] ^ { } ~`
 ```sh
 [test@ela1 ~]$ kpasswd
-Password for <username>@CSCS.CH: (current password) 
-Enter new password: (new password) 
+Password for <username>@CSCS.CH: (current password)
+Enter new password: (new password)
 Enter it again: (new password)
 ```
 
@@ -303,12 +303,12 @@ Host nid*
   ProxyJump daint
   RequestTTY yes
   RemoteCommand module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda && bash -l
-``` 
+```
 
 6. Now you should be able to perform password-less login to daint as following
 ```sh
 ssh daint
-``` 
+```
 Moreover, you will get the Julia related modules loaded as we add the `RemoteCommand`
 
 > At this stage, you are logged into daint, but still on a login node and not a compute node.
@@ -404,7 +404,7 @@ module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
 ```julia-repl
 shell> nvidia-smi
-Tue Oct 25 08:18:11 2022       
+Tue Oct 25 08:18:11 2022
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
 |-------------------------------+----------------------+----------------------+
@@ -416,7 +416,7 @@ Tue Oct 25 08:18:11 2022
 | N/A   23C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
 |                               |                      |                  N/A |
 +-------------------------------+----------------------+----------------------+
-                                                                               
+
 +-----------------------------------------------------------------------------+
 | Processes:                                                                  |
 |  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
@@ -488,8 +488,8 @@ srun -n4 julia -O3 --check-bounds=no <my_script.jl>
 ```
 
 #### CUDA-aware MPI on Piz Daint
-You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to 
-1. Export the appropriate `ENV` vars 
+You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to
+1. Export the appropriate `ENV` vars
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1

@@ -2,7 +2,7 @@
 
 Final projects will provide 35% of the course grade. We recommend you work in teams of two, but being your own teammate is fine too.
 
-**Project's due date is December 23, 2022 -- 23h59 CET (enforced by a "release tag v1.0.0").**
+**Project's due date is December 22, 2023 -- 23h59 CET (enforced by a "release tag v1.0.0").**
 
 _Note that a single GitHub repository is sufficient per project._
 
