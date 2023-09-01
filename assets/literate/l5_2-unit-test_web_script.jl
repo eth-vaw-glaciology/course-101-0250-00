@@ -27,4 +27,3 @@ square!(x) = x^2
     @test square!("a") == "aa"
     @test square!("bb") == "bbbb"
 end;
-

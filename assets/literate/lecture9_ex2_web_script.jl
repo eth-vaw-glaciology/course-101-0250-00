@@ -18,4 +18,3 @@ end
 
 B = main()
 heatmap(B)
-

@@ -197,4 +197,3 @@ T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
 
 t_it = @belapsed begin CUDA.cumsum!($B, $A; dims=1); synchronize() end
 T_eff_cs = 2*1/1e9*nx*ny*nz*sizeof(Float64)/t_it
-

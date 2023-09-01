@@ -68,4 +68,3 @@ nx,ny       = 2*(nz+1)-1,nz
 b_width     = (8,8,4) # for comm / comp overlap
 nt          = 500
 nvis        = 50
-

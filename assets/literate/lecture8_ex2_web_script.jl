@@ -23,4 +23,3 @@ me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
 @hide_communication (2,2)
 @hide_communication (16,4)
 @hide_communication (16,16)
-

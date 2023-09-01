@@ -30,4 +30,3 @@ function car_travel_1D()
 end
 
 T, X = car_travel_1D()
-

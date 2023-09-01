@@ -186,4 +186,3 @@ T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 # solution
 T_peak = 561 # Peak memory throughput of the Tesla P100 GPU
 T_eff/T_peak
-

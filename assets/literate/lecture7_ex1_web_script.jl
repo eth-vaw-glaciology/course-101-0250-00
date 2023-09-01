@@ -42,4 +42,3 @@ ncheck  = ceil(2max(nx,ny))
 end
 
 @parallel (1:size(T,2)) bc_x!(T)
-

@@ -49,4 +49,3 @@ using Plots
 end
 
 car_travel_1D()
-

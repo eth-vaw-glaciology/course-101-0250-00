@@ -143,4 +143,3 @@ t_it = @belapsed begin memcopy_triad_AP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 println("nx=ny=$nx; threads=$threads; blocks=$blocks")
-
