@@ -2,17 +2,17 @@
 
 👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 
-**Welcome to ETH course 101-0250-00 ✨ Second edition - Fall 2022**
+**Welcome to ETH course 101-0250-00 ✨ Third edition - Fall 2023**
 
 This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.
 
 ## Staff
 The teaching staff is composed of:
-- [Ludovic Räss](https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
+- [Ludovic Räss](https://github.com/luraess) - Unil / ETHZ
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
 - [Ivan Utkin](https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
-- Teaching Assistant: [Alexander Mandt]()
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
+- Teaching Assistant: [Giacomo Aloisi](https://github.com/GiackAloZ) - ETHZ
 
 ## Organisation
 
