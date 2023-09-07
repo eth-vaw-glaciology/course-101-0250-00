@@ -76,7 +76,7 @@ Personal feedback and points (not grades) for weekly homework exercises will be 
 
 Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
-The exercises **in lecture 7** will serve as starting point for the first project:
+<!-- The exercises **in lecture 7** will serve as starting point for the first project:
 1. Create a `project` directory at the root of your shared private `pde-on-gpu-<lastname>` repository.
 2. Make sure to follow the basic repo structure (using `PkgTemplates.jl` to generate it) as described in [Lecture 7](/lecture7/#infos_about_projects)
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
@@ -99,12 +99,13 @@ Make sure to have following items in your private GitHub repository:
 - a short discussion/conclusion section about the performed work, results, and outlook
 
 _Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
+ -->
 
 ## Final project
 
 For information about **topics** for the final project, head to [Information about final projects](/final_proj) page.
 
-### Getting started
+<!-- ### Getting started
 The following steps will get you started with the final projects:
 1. Find a classmate to work with (being your own mate is fine too)
 2. Select a topic of your choice
@@ -139,6 +140,7 @@ For a successful outcome, final projects are expected to be handed-in as single 
 - unit and reference testing
 - Continuous Integration (CI - using e.g. GitHub Actions)
 - additional features if needed
+ -->
 
 ## Evaluation
 
