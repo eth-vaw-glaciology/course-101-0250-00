@@ -15,14 +15,14 @@ All the course slides are [Jupyter notebooks](https://jupyter.org/); browser-bas
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) or download them and run them them locally if you're already set-up.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) or download them and run them them locally if you're already set-up.
 
 For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
 ## JupyterHub
-You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175), clicking on [![JupyterHub](/assets/JHub.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=20175)
+You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222), clicking on [![JupyterHub](/assets/JHub2.png#badge)](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222)
 
 Upon login to the server, you should see the following launcher environment, including a notebook (file) browser, ability to create a notebook, launch a Julia console (REPL), or a regular terminal.
 
@@ -30,8 +30,8 @@ Upon login to the server, you should see the following launcher environment, inc
 
 \warn{It is recommended to duplicate and rename any files you are planning to work on and to download your work as back-up before leaving the session.}
 
-## Installing Julia v1.8 (or later)
-Check you have an active internet connexion and [download Julia v1.8](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
+## Installing Julia v1.9 (or later)
+Check you have an active internet connexion and [download Julia v1.9](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
@@ -41,7 +41,7 @@ wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.9.3-linux-x86_
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
-\note{_**For Windows users:**_ When installing Julia 1.8 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
+\note{_**For Windows users:**_ When installing Julia 1.9 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
 ### Terminal + external editor
 Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
