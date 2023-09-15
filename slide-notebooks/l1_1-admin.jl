@@ -34,7 +34,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- Alexander Mandt (Teaching Assistant)
+- Giacomo Aloisi (Teaching Assistant)
 """
 
 #src #########################################################################
@@ -62,7 +62,7 @@ md"""
 We use the Element-chat as the main communication channel for the course, both between the teachers and the student, and hopefully also between students.
 
 Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with you NETHZ username & password.
-  - Login link is available on [Moodle](https://moodle-app2.let.ethz.ch/mod/url/view.php?id=781163).
+  - Login link is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175&lang=en).
   - Join the _**General**_ (course infos) and _**Helpdesk**_ (exercises Q&A) rooms.
 """
 
