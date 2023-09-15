@@ -137,8 +137,8 @@ lam = _dx = _dy = dt = rand();
 
 ````julia:ex7
 # solution
-t_it = @belapsed begin diffusion2D_step!($T, $Ci, $qTx, $qTy, $dTdt, $lam, $dt, $_dx, $_dy); synchronize() end
-T_tot_lb = 11*1/1e9*nx*ny*sizeof(Float64)/t_it
+t_it = @belapsed begin ... end
+T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
 ````
 
 Save the measured minimal runtime and the computed `T_tot_lb` in other variables (`t_it_task1` and `T_tot_lb_task1`) in order not to overwrite them later (adapt these two lines if you used other variable names!); moreover, we will remove the arrays we do no longer need in order to save space:
@@ -220,12 +220,7 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 ````julia:ex10
 # solution
 @inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.*Ci[2:end-1,2:end-1].*(                        # T_new = T_old + ∂t 1/cp (
-                            .- (   (.-lam.*(T[3:end  ,2:end-1] .- T[2:end-1,2:end-1]).*_dx)
-                                .- (.-lam.*(T[2:end-1,2:end-1] .- T[1:end-2,2:end-1]).*_dx)).*_dx  #         - ∂(-λ ∂T/∂x)/∂x
-                            .- (   (.-lam.*(T[2:end-1,3:end  ] .- T[2:end-1,2:end-1]).*_dy)
-                                .- (.-lam.*(T[2:end-1,2:end-1] .- T[2:end-1,1:end-2]).*_dy)).*_dy  #         - ∂(-λ ∂T/∂y)/∂y
-                            )                                                                      #         )
+    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
 end
 ````
 
@@ -235,11 +230,11 @@ Benchmark the new function `diffusion2D_step!` and compute the runtime speed-up 
 
 ````julia:ex11
 # solution
-T2 = CUDA.zeros(Float64, nx, ny);
-t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+T2 = ...
+t_it = @belapsed begin ...; synchronize() end
 speedup = t_it_task1/t_it
-T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+ratio_T_tot_lb = ...
 ````
 
 Save the measured minimal runtime and the computed T_tot_lb in other variables (`t_it_task3` and `T_tot_lb_task3`) in order not to overwrite them later (adapt these two lines if you used other variable names!):
@@ -268,20 +263,17 @@ Rewrite the function `diffusion2D_step!` using GPU kernel programming: from with
 
 ````julia:ex13
 # solution
-function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    threads = (32, 8)
-    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
-    @cuda blocks=blocks threads=threads update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+function diffusion2D_step!(...)
+    threads = (..., ...)
+    blocks  = (size(...)÷threads[1], size(...)÷threads[2])
+    @cuda ...
 end
 
-function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-    ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-    iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
-        @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*(
-                              - ((-lam*(T[ix+1,iy] - T[ix,iy])*_dx) - (-lam*(T[ix,iy] - T[ix-1,iy])*_dx))*_dx
-                              - ((-lam*(T[ix,iy+1] - T[ix,iy])*_dy) - (-lam*(T[ix,iy] - T[ix,iy-1])*_dy))*_dy
-                              ))
+function update_temperature!(...)
+    ix = ...
+    iy = ...
+    if (ix... && iy... )
+        @inbounds T2[ix,iy] = T[ix,iy] + dt*(Ci[ix,iy]*( ... ))
     end
     return
 end
@@ -293,10 +285,10 @@ Just like in Task 3, benchmark the new function `diffusion2D_step!` and compute 
 
 ````julia:ex14
 # solution
-t_it = @belapsed begin diffusion2D_step!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-speedup = t_it_task1/t_it
-T_tot_lb = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
-ratio_T_tot_lb = T_tot_lb/T_tot_lb_task1
+t_it = @belapsed begin ...; synchronize() end
+speedup = ...
+T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
+ratio_T_tot_lb = ...
 ````
 
 The runtime speedup is probably even higher (a speedup of factor 5 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
@@ -320,9 +312,9 @@ Compute the effective memory throughput, $T_\mathrm{eff}$, for the solvers bench
 
 ````julia:ex15
 # solution
-T_eff_task1 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task1
-T_eff_task3 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it_task3
-T_eff_task5 = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+T_eff_task1 = .../t_it_task1
+T_eff_task3 = .../t_it_task3
+T_eff_task5 = .../t_it
 speedup_Teff_task3 = T_eff_task3/T_eff_task1
 speedup_Teff_task5 = T_eff_task5/T_eff_task1
 ````
