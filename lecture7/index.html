@@ -16,7 +16,7 @@ help?&gt; @inn_x
     <span class=hljs-meta >@inn_y</span>(qDy) = <span class=hljs-meta >@inn_y</span>(qDy) - (<span class=hljs-meta >@inn_y</span>(qDy) + k_ηf_dy*<span class=hljs-meta >@d_ya</span>(Pf))*_1_θ_dτ
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span></code></pre> <p>Note that currently the shorthand <code>-&#61;</code> notation is not supported and we need to explicitly write out the equality. Now that we&#39;re done with <code>compute_flux&#33;</code>, your turn&#33;</p> <p>By analogy, update <code>update_Pf&#33;</code>.</p> <pre><code class="julia hljs"><span class=hljs-meta >@parallel</span> <span class=hljs-keyword >function</span> update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
-    <span class=hljs-meta >@all</span>(Pf) = <span class=hljs-meta >@all</span>(Pf) - (<span class=hljs-meta >@d_xa</span>(qDx)*_dx + <span class=hljs-meta >@d_ya</span>(qDy)*_dy)*_β_dτ
+    Pf = ...
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span></code></pre> <p>So far so good. We are done with the kernels. Let&#39;s see what changes are needed in the main part of the script.</p> <p>In the <code># numerics</code> section, <code>threads</code> and <code>blocks</code> are no longer needed; the kernel launch parameters being now automatically adapted:</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> Pf_diffusion_2D(;do_check=<span class=hljs-literal >false</span>)
     <span class=hljs-comment ># physics</span>

@@ -13,12 +13,12 @@ nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 # array initialisation
 C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
-qx   = zeros(Float64, nx-1)
+qx   = zeros(Float64, nx) # won't work
 
 # time loop
 for it = 1:nt
-    qx          .= .-dc.*diff(C )./dx
-    C[2:end-1] .-=   dt.*diff(qx)./dx
+    #qx          .= # add solution
+    #C[2:end-1] .-= # add solution
     # visualisation
 end
 

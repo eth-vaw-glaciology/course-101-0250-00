@@ -88,8 +88,8 @@ The idea of this fake parallelisation approach is the following:
 CL[2:end-1] .= CL[2:end-1] .+ dt*D*diff(diff(CL)/dx)/dx
 CR[2:end-1] .= CR[2:end-1] .+ dt*D*diff(diff(CR)/dx)/dx
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 # Global picture
 C .= [CL[1:end-1]; CR[2:end]]
 ```
@@ -104,8 +104,8 @@ Then, add the required boundary update:
 
 ```julia
 # Update boundaries (MPI)
-CL[end] = CR[2]
-CR[1]   = CL[end-1]
+CL[end] = ...
+CR[1]   = ...
 ```
 
 in order make the code work properly and run it again. Note what has changed in the visualisation.
@@ -123,8 +123,7 @@ for ip = 1:np # compute physics locally
     C[2:end-1,ip] .= C[2:end-1,ip] .+ dt*D*diff(diff(C[:,ip])/dxg)/dxg
 end
 for ip = 1:np-1 # update boundaries
-   C[end,ip  ] = C[    2,ip+1]
-   C[  1,ip+1] = C[end-1,ip  ]
+   # ...
 end
 for ip = 1:np # global picture
     i1 = 1 + (ip-1)*(nx-2)
@@ -144,7 +143,7 @@ In the code below, which serves to define a Gaussian anomaly in the centre of th
 # Initial condition
 for ip = 1:np
     for ix = 1:nx
-       x[ix,ip] = ( (ip-1)*(nx-2) + (ix-0.5) )*dxg - 0.5*lx
+        x[ix,ip] = ...
         C[ix,ip] = exp(-x[ix,ip]^2)
     end
     i1 = 1 + (ip-1)*(nx-2)
@@ -205,19 +204,19 @@ Then, we need to (2.) implement a boundary update routine, which can have the fo
 @views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbour 1 ("left neighbor")
     if neighbors_x[1] != MPI.MPI_PROC_NULL
-        sendbuf = A[2]
-        recvbuf = zeros(1)
-        MPI.Send(sendbuf,  neighbors_x[1], 0, comm)
-        MPI.Recv!(recvbuf, neighbors_x[1], 1, comm)
-        A[1] = recvbuf[1]
+        sendbuf = ??
+        recvbuf = ??
+        MPI.Send(??,  neighbors_x[?], 0, comm)
+        MPI.Recv!(??, neighbors_x[?], 1, comm)
+        A[1] = ??
     end
     # Send to / receive from neighbour 2 ("right neighbor")
     if neighbors_x[2] != MPI.MPI_PROC_NULL
-        sendbuf = A[end-1]
-        recvbuf = zeros(1)
-        MPI.Recv!(recvbuf, neighbors_x[2], 0, comm)
-        MPI.Send(sendbuf,  neighbors_x[2], 1, comm)
-        A[end] = recvbuf[1]
+        sendbuf = ??
+        recvbuf = ??
+        MPI.Recv!(??, neighbors_x[?], 0, comm)
+        MPI.Send(??,  neighbors_x[?], 1, comm)
+        A[end] = ??
     end
     return
 end
