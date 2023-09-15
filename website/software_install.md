@@ -32,8 +32,8 @@ Upon login to the server, you should see the following launcher environment, inc
 
 ## Installing Julia v1.9 (or later)
 There are two recommended ways to install Julia v1.9:
-1. Using the Julia installer [**Juliaup**](https://github.com/JuliaLang/juliaup) (preferred approach).
-2. Downloading the binaries for your platform (following the install directions provided under **[help]**).
+1. Using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer (preferred approach).
+2. [Downloading the binaries](https://julialang.org/downloads/) for your platform from the Julia website (following the install directions provided under **[help]**).
 
 \note{_**For Windows users:**_ When installing Julia 1.9 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
