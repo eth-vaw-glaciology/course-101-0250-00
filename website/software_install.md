@@ -35,9 +35,9 @@ Check you have an active internet connexion and [download Julia v1.9](https://ju
 
 Alternatively, open a terminal and download the binaries (select the one for your platform):
 ```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.8/julia-1.9.3-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.8/julia-1.9.3-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.9.3-linux-x86_64.tar.gz # Linux x86
+wget https://julialang-s3.julialang.org/bin/winnt/x64/1.9/julia-1.9.3-win64.exe # Windows
+wget https://julialang-s3.julialang.org/bin/mac/x64/1.9/julia-1.9.3-mac64.dmg # macOS
+wget https://julialang-s3.julialang.org/bin/linux/x64/1.9/julia-1.9.3-linux-x86_64.tar.gz # Linux x86
 ```
 Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
 
@@ -237,7 +237,7 @@ and add `-host localhost` to the execution script:
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
-
+<!--
 _For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section._
 
 ## GPU computing on Piz Daint
@@ -539,4 +539,4 @@ export IGG_CUDAAWARE_MPI=1
 srun -n4 bash -c 'LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>'
 ```
 
-\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
+\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.} -->
