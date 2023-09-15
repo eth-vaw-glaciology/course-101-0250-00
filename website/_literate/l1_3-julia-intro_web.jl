@@ -36,7 +36,7 @@ md"""
 6. Assembler
 7. Coq, Brainfuck, ...
 
-https://docs.google.com/forms/d/13BF2S2HaKHN9m1aK3CyR6CHoUJskQHJpIK7L2DrmN3M/edit#responses
+[Google survey link](https://docs.google.com/forms/d/1ROOY4QLaL-_vM8eXKhCp72FCPfaTshfCrR2syv562BE/edit#responses)
 """
 
 #src #########################################################################
