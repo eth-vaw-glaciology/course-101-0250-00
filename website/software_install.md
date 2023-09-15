@@ -31,15 +31,9 @@ Upon login to the server, you should see the following launcher environment, inc
 \warn{It is recommended to duplicate and rename any files you are planning to work on and to download your work as back-up before leaving the session.}
 
 ## Installing Julia v1.9 (or later)
-Check you have an active internet connexion and [download Julia v1.9](https://julialang.org/downloads/) for your platform following the install directions provided under **[help]**.
-
-Alternatively, open a terminal and download the binaries (select the one for your platform):
-```sh
-wget https://julialang-s3.julialang.org/bin/winnt/x64/1.9/julia-1.9.3-win64.exe # Windows
-wget https://julialang-s3.julialang.org/bin/mac/x64/1.9/julia-1.9.3-mac64.dmg # macOS
-wget https://julialang-s3.julialang.org/bin/linux/x64/1.9/julia-1.9.3-linux-x86_64.tar.gz # Linux x86
-```
-Then extract them and add Julia to `PATH` (usually done in your `.bashrc`, `.profile`, or `config` file).
+There are two recommended ways to install Julia v1.9:
+1. Using the Julia installer [**Juliaup**](https://github.com/JuliaLang/juliaup) (preferred approach).
+2. Downloading the binaries for your platform (following the install directions provided under **[help]**).
 
 \note{_**For Windows users:**_ When installing Julia 1.9 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
