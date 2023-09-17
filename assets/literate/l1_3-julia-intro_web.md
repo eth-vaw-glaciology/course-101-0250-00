@@ -656,7 +656,7 @@ plot( (1:10).^2 )
 All public Julia packages are listed on [https://juliahub.com/ui/Packages](https://juliahub.com/ui/Packages).
 
 You can install a package, say `UnPack.jl` by
-```
+```julia-repl
 using Pkg
 Pkg.add("UnPack.jl")
 using UnPack

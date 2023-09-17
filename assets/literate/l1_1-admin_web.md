@@ -43,7 +43,7 @@ Join [Element (https://chat.ethz.ch/)](https://chat.ethz.ch/) by logging in with
 
 Bring your laptop to all lectures!
 
-- Who has access to an Nvidia GPU?
+- Who has access to an Nvidia / AMD GPU?
 - What operating system are you on?
 
 In the first few lecture we will use JupyterHub (accessible within Moodle) to get you started. Later we plan to get you all setup with a personal Julia installation.
@@ -55,6 +55,6 @@ In the first few lecture we will use JupyterHub (accessible within Moodle) to ge
 
 If some important info is missing, ping us so we can add it or make a PR.
 
-> **Suggestion:**\
+> **Suggestion:** \
 > Bookmark [https://pde-on-gpu.vaw.ethz.ch](hhttps://pde-on-gpu.vaw.ethz.ch)
 
