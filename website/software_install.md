@@ -15,9 +15,9 @@ All the course slides are [Jupyter notebooks](https://jupyter.org/); browser-bas
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You'll find them on Moodle within your [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) or download them and run them them locally if you're already set-up.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) or download them and run them them locally if you're already set-up.
 
-For submission, download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
+For submission, you can directly submit the folder containing all notebooks of a lecture from within JupyterHub/Moodle. Alternatively, you should be able to download the final `.ipynb` notebooks from the server, or collect the local `.ipynb` notebooks into a single local folder you then upload to Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
@@ -28,7 +28,7 @@ Upon login to the server, you should see the following launcher environment, inc
 
 ![JupyterHub](/assets/JHubLauncher.png)
 
-\warn{It is recommended to duplicate and rename any files you are planning to work on and to download your work as back-up before leaving the session.}
+\warn{It is recommended to download your work as back-up before leaving the session.}
 
 ## Installing Julia v1.9 (or later)
 There are two recommended ways to install Julia v1.9:

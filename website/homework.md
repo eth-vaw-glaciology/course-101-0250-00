@@ -7,7 +7,7 @@ hascode = false
 
 |  Assignment  |  Due date              |  Submission                                                             |  Notes  |
 | :----------: | :--------------------: | :---------------------------------------------------------------------: | :-----: |
-| Lect. 1      | 27.09.2023 - 23h59 CET | [Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=951185) | Submit a folder containing all required Jupyter notebooks from your [JupyterHub](https://jhub-let-04-20175.let.ethz.ch/hub/home).|
+| Lect. 1      | 27.09.2023 - 23h59 CET | [Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=951185) | Submit a folder containing all exercise notebooks from [JupyterHub](https://jhub-let-04-20175.let.ethz.ch/hub/home). |
 | Lect. 2      | 04.10.2023 - 23h59 CET |                                                                         |         |
 | Lect. 3      | 11.10.2023 - 23h59 CET |                                                                         |         |
 | Lect. 4      | 18.10.2023 - 23h59 CET |                                                                         |         |
