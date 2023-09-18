@@ -17,7 +17,7 @@ Code cells are executed by putting the cursor into the cell and hitting `shift +
 ### Exercises and homework
 The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) or download them and run them them locally if you're already set-up.
 
-For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should ba able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
+For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should be able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
@@ -44,7 +44,7 @@ From within the terminal, type
 ```sh
 julia
 ```
-to make sure that the Julia REPL (aka terminal) starts. Then you should ba able to add `1+1` and verify you get the expected result. Exit with `Ctrl-d`.
+to make sure that the Julia REPL (aka terminal) starts. Then you should be able to add `1+1` and verify you get the expected result. Exit with `Ctrl-d`.
 
 ![Julia from Terminal](/assets/julia_terminal.png)
 
