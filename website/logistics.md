@@ -53,10 +53,10 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 <!-- Personal feedback and sample solution codes will be provided after submission deadline via a shared [Polybox](https://polyboxdoc.ethz.ch) folder. Make sure to register to the service and install the finder extension if possible. -->
 
 ### Submission
-- Submission of scripts (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
+- Submission of notebooks (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
-**Starting from lecture 3 and onwards**, homework script submission happens on GitHub.
+**Starting from lecture 3 and onwards**, the developement of homework scripts happens on GitHub AND you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the related _git commit hash (SHA)_ submission activity.
 
 :construction: More infos to come soon.
 
@@ -71,9 +71,13 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 \note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.} -->
 
 ### Feedback
-After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
+<!-- OLD: After submission deadline, you will find relevant scripts in a shared Polybox folder. Information on how to access it is available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
 
-Personal feedback and points (not grades) for weekly homework exercises will be shared individually among participants using a private file or folder on Polybox.
+Personal feedback and points (not grades) for weekly homework exercises will be shared individually among participants using a private file or folder on Polybox. -->
+
+After the submission deadline, we will correct your assignments, grade them and give feedback directly on the [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) submission.
+
+We will try to correct your assignments before the lecture right after the homework's deadline, so you get your feedback and you are able to ask eventual questions as soon as possible.
 
 ## Project
 
