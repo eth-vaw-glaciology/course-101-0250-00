@@ -11,11 +11,10 @@ function lorenz(x)
      x[1]*x[2] - β*x[3]]
 end
 
-# integrate dx/dt = lorenz(t,x) numerically from t=0 to t=5 and starting point x₀
-tspan = (0.0, 5.0)
+# integrate dx/dt = lorenz(t,x) numerically for 500 steps
 dt = 0.01
 x₀ = [2.0, 0.0, 0.0]
-out = zeros(3, Int(tspan[2]÷dt))
+out = zeros(3, 500)
 out[:,1] = x₀
 for i=2:size(out,2)
     out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt

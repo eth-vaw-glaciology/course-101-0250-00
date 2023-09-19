@@ -9,18 +9,17 @@ function lorenz&#40;x&#41;
      x&#91;1&#93;*x&#91;2&#93; - β*x&#91;3&#93;&#93;
 end
 
-# integrate dx/dt &#61; lorenz&#40;t,x&#41; numerically from t&#61;0 to t&#61;5 and starting point x₀
-tspan &#61; &#40;0.0, 5.0&#41;
+# integrate dx/dt &#61; lorenz&#40;t,x&#41; numerically for 500 steps
 dt &#61; 0.01
 x₀ &#61; &#91;2.0, 0.0, 0.0&#93;
-out &#61; zeros&#40;3, Int&#40;tspan&#91;2&#93;÷dt&#41;&#41;
+out &#61; zeros&#40;3, 500&#41;
 out&#91;:,1&#93; &#61; x₀
 for i&#61;2:size&#40;out,2&#41;
     out&#91;:,i&#93; &#61; out&#91;:,i-1&#93; &#43; lorenz&#40;out&#91;:,i-1&#93;&#41; * dt
-end</code></pre> <p>Yes, this takes some time... Julia is Just-Ahead-of-Time compiled. I.e. Julia is compiling.</p> <p>And its solution plotted</p> <pre><code class=language-julia >plot&#40;out&#91;1,:&#93;, out&#91;2,:&#93;, out&#91;3,:&#93;&#41;</code></pre>
+end</code></pre> <p>Yes, this takes some time... Julia is Just-Ahead-of-Time compiled. I.e. Julia is compiling. &#40;Note that Julia 1.9 improved a lot with respect to compilation time.&#41;</p> <p>And its solution plotted</p> <pre><code class=language-julia >plot&#40;out&#91;1,:&#93;, out&#91;2,:&#93;, out&#91;3,:&#93;&#41;</code></pre>
 <p><img src="../assets/literate_figures/l1_lorenz.png" alt=lorenz  /></p>
 <h3 id=julia_in_brief ><a href="#julia_in_brief" class=header-anchor >Julia in brief</a></h3>
-<p>Julia 1.0 released 2018, now at version 1.8.1</p>
+<p>Julia 1.0 released 2018, now at version 1.9</p>
 <p>Features:</p>
 <ul>
 <li><p>general purpose language with a focus on technical computing</p>
@@ -403,8 +402,8 @@ combine&#40;Rock&#40;&#41;, Paper&#40;&#41;&#41;</code></pre>
 <h2 id=modules_and_packages ><a href="#modules_and_packages" class=header-anchor >Modules and packages</a></h2>
 <p>Modules can be used to structure code into larger entities, and be used to divide it into different name spaces.  We will not make much use of those, but if interested see <a href="https://docs.julialang.org/en/v1/manual/modules/">https://docs.julialang.org/en/v1/manual/modules/</a></p>
 <p><strong>Packages</strong> are the way people distribute code and we&#39;ll make use of them extensively. In the first example, the Lorenz ODE, you saw</p>
-<pre><code class=language-julia >using OrdinaryDiffEq, Plots</code></pre>
-<p>This statement loads the two packages <code>OrdinaryDiffEq</code> and <code>Plots</code> and makes their functions and types available in the current session.</p>
+<pre><code class=language-julia >using Plots</code></pre>
+<p>This statement loads the package <code>Plots</code> and makes its functions and types available in the current session and use it like so:</p>
 <pre><code class=language-julia >using Plots
 plot&#40; &#40;1:10&#41;.^2 &#41;</code></pre>
 <h3 id=packages ><a href="#packages" class=header-anchor >Packages</a></h3>
