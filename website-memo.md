@@ -18,6 +18,28 @@ julia> run(`sudo $(npm_cmd()) install highlight.js`)
 
 ## How-to
 
+#### Notebook deploy: make ipynb files and prepare for web-site upload
+
+Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-notebooks) and [exercise-notebooks](exercise-notebooks) folder will:
+- create `.ipynb` from the `.jl` script
+- move the `.ipynb` and figures to the `./notebook` folder (and `./notebook/figures`)
+- create a `_web.jl` script and move it to `website/_literate` to be included in the website lecture pages. Figure links in the `_web.jl` files are changes from `./figures/` to `../website/_assets/literate_figures/` for correct rendering in html file.
+- create, if needed, a figures folder in `website/_assets/literate_figures` folder to hold figures for Literate scripts
+- :bulb: both deploy script contain a variable `incl::String` you can set to only include specific scripts (e.g. `incl=l2`, `incl=lecture2`)
+
+**Important note:** The `deploy_notebooks.jl` script in [slide-notebooks](slide-notebooks) makes it possible to preprocess the Literate script for _hints_ and _solution_ keywords:
+```julia
+## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
+sol = true
+```
+
+You can populate lines beginning of Literate script with `#hint=` or `#sol=` which will permit to corresponding lines to be removed upon preprocessing (e.g. before / after the lecture).
+
+**To deploy notebooks**
+1. Run the deploy script from its folder
+2. Include the correct `_web.jl` filename in e.g. `website/lectureXY.md` file
+3. Push
+
 ### Add YouTube video
 To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Embed>`, and copy-paste the script into an html block:
 ```md
@@ -49,28 +71,6 @@ Note that there are 2 pre-defined box environments to highlight **note** and **w
 #md # \note{...}
 #md # \warn{...}
 ```
-
-#### Notebook deploy
-
-Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-notebooks) and [exercise-notebooks](exercise-notebooks) folder will:
-- create `.ipynb` from the `.jl` script
-- move the `.ipynb` and figures to the `./notebook` folder (and `./notebook/figures`)
-- create a `_web.jl` script and move it to `website/_literate` to be included in the website lecture pages. Figure links in the `_web.jl` files are changes from `./figures/` to `../website/_assets/literate_figures/` for correct rendering in html file.
-- create, if needed, a figures folder in `website/_assets/literate_figures` folder to hold figures for Literate scripts
-- :bulb: both deploy script contain a variable `incl::String` you can set to only include specific scripts (e.g. `incl=l2`, `incl=lecture2`)
-
-**Important note:** The `deploy_notebooks.jl` script in [slide-notebooks](slide-notebooks) makes it possible to preprocess the Literate script for _hints_ and _solution_ keywords:
-```julia
-## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
-sol = true
-```
-
-You can populate lines beginning of Literate script with `#hint=` or `#sol=` which will permit to corresponding lines to be removed upon preprocessing (e.g. before / after the lecture).
-
-**To deploy notebooks**
-1. Run the deploy script from its folder
-2. Include the correct `_web.jl` filename in e.g. `website/lectureXY.md` file
-3. Push
 
 #### Launch a notebook from the script
 
