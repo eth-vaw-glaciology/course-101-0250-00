@@ -1,8 +1,8 @@
 # This file was generated, do not modify it.
 
-using OrdinaryDiffEq, Plots
+using Plots
 
-function lorenz(x, p, t)
+function lorenz(x)
     σ = 10
     β = 8/3
     ρ = 28
@@ -11,12 +11,17 @@ function lorenz(x, p, t)
      x[1]*x[2] - β*x[3]]
 end
 
-# integrate dx/dt = lorenz(t,x) numerically from t=0 to t=50 and starting point x₀
-tspan = (0.0, 50.0)
+# integrate dx/dt = lorenz(t,x) numerically from t=0 to t=5 and starting point x₀
+tspan = (0.0, 5.0)
+dt = 0.01
 x₀ = [2.0, 0.0, 0.0]
-sol = solve(ODEProblem(lorenz, x₀, tspan), Tsit5())
+out = zeros(3, Int(tspan[2]÷dt))
+out[:,1] = x₀
+for i=2:size(out,2)
+    out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
+end
 
-plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
+plot(out[1,:], out[2,:], out[3,:])
 
 # ?cos
 
