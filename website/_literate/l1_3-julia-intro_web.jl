@@ -73,17 +73,17 @@ function lorenz(x)
      x[1]*x[2] - β*x[3]]
 end
 
-## integrate dx/dt = lorenz(t,x) numerically from t=0 to t=5 and starting point x₀
-tspan = (0.0, 5.0)
+## integrate dx/dt = lorenz(t,x) numerically for 500 steps
 dt = 0.01
 x₀ = [2.0, 0.0, 0.0]
-out = zeros(3, Int(tspan[2]÷dt))
+out = zeros(3, 500)
 out[:,1] = x₀
 for i=2:size(out,2)
     out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
 end
 
 # Yes, this takes some time... Julia is Just-Ahead-of-Time compiled.  I.e. Julia is compiling.
+# (Note that Julia 1.9 improved a lot with respect to compilation time.)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -98,7 +98,7 @@ plot(out[1,:], out[2,:], out[3,:])
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.8.1
+Julia 1.0 released 2018, now at version 1.9
 
 Features:
 - general purpose language with a focus on technical computing
@@ -169,6 +169,7 @@ and also:
 md"""
 ![](../assets/literate_figures/l1_flux-vs-tensorflow.png)
 """
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -747,10 +748,10 @@ different name spaces.  We will not make much use of those, but if interested se
 **Packages** are the way people distribute code and we'll make use of them extensively.
 In the first example, the Lorenz ODE, you saw
 ```
-using OrdinaryDiffEq, Plots
+using Plots
 ```
-This statement loads the two packages `OrdinaryDiffEq` and `Plots` and makes their functions
-and types available in the current session.
+This statement loads the package `Plots` and makes its functions
+and types available in the current session and use it like so:
 """
 
 using Plots
