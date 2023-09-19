@@ -133,13 +133,13 @@ Fire up your JupyterHub, either via the [Moodle page](https://moodle-app2.let.et
 
 [Brief explanation on JupyterHub]
 
-This notebook and other should be on you JupyterHub in the folder
+This notebook you can get onto your JupyterHub by
 
-    course-101-0250-00-JupyterLab.git/
+- opening the hub
+- opening a terminal
+- pasting into the terminal `wget https://people.ee.ethz.ch/~werderm/l1.ipynb`
 
-if not, to get this notebook (and other stuff), open a terminal on JupyterHub and run:
-
-    git clone https://tinyurl.com/pdeongpu
+Open it by clicking on it in the sidebar.
 
 ###  Let's get our hands dirty!
 
