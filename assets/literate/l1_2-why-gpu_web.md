@@ -76,7 +76,7 @@ GPUs are _massively_ parallel devices
 ![julia-gpu](../assets/literate_figures/l1_julia-gpu.png)
 
 #### GPU are cool
-- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
+- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve 🚀
 
 ![perf_gpu](../assets/literate_figures/l1_perf_gpu.png)
 
