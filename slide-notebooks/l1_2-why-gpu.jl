@@ -146,7 +146,7 @@ md"""
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 #### GPU are cool
-- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve :rocket:
+- Price vs Performance; Close to **1.5TB/s** memory throughput (nonlinear diffusion) that one can achieve 🚀
 
 ![perf_gpu](./figures/l1_perf_gpu.png)
 """
