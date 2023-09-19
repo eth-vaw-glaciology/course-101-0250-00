@@ -15,8 +15,8 @@ md"""
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 """
 
-#nb # > 💡 note: You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) server.
-#md # \note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) server.}
+#nb # > 💡 note: You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) server.
+#md # \note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) server.}
 
 md"""
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
@@ -51,8 +51,8 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.8.1 (09.2022)
-- thriving community, for instance there are currently around 8300 [packages registered](https://juliahub.com/ui/Packages)
+- current version 1.9.3 (09.2023) [ETH's JupyterHub is on 1.8]
+- thriving community, for instance there are currently around 10000 [packages registered](https://juliahub.com/ui/Packages)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -62,9 +62,9 @@ md"""
 An example solving the Lorenz system of ODEs:
 """
 
-using OrdinaryDiffEq, Plots
+using Plots
 
-function lorenz(x, p, t)
+function lorenz(x)
     σ = 10
     β = 8/3
     ρ = 28
@@ -73,10 +73,15 @@ function lorenz(x, p, t)
      x[1]*x[2] - β*x[3]]
 end
 
-## integrate dx/dt = lorenz(t,x) numerically from t=0 to t=50 and starting point x₀
-tspan = (0.0, 50.0)
+## integrate dx/dt = lorenz(t,x) numerically from t=0 to t=5 and starting point x₀
+tspan = (0.0, 5.0)
+dt = 0.01
 x₀ = [2.0, 0.0, 0.0]
-sol = solve(ODEProblem(lorenz, x₀, tspan), Tsit5())
+out = zeros(3, Int(tspan[2]÷dt))
+out[:,1] = x₀
+for i=2:size(out,2)
+    out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
+end
 
 # Yes, this takes some time... Julia is Just-Ahead-of-Time compiled.  I.e. Julia is compiling.
 
@@ -85,7 +90,7 @@ sol = solve(ODEProblem(lorenz, x₀, tspan), Tsit5())
 md"""
 And its solution plotted
 """
-plot(sol, idxs=(1,2,3)) # plot Lorenz attractor
+plot(out[1,:], out[2,:], out[3,:])
 
 #md # ![lorenz](../assets/literate_figures/l1_lorenz.png)
 
@@ -170,8 +175,7 @@ md"""
 md"""
 ###  Let's get our hands dirty!
 
-Head to the course's moodle page https://moodle-app2.let.ethz.ch/course/view.php?id=18084
-and fire up your JupyterHub.
+Fire up your JupyterHub, either via the [Moodle page](https://moodle-app2.let.ethz.ch/course/view.php?id=20175), or directly via [this link](https://jhub-let-04-20175.let.ethz.ch/hub/home).
 
 [Brief explanation on JupyterHub]
 """
