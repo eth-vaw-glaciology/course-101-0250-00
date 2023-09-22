@@ -215,7 +215,7 @@ Furthermore, documentation can be gotten with `?xyz`
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Variables, assignments, and types
+## Variables, assignments, and types [5min]
 [https://docs.julialang.org/en/v1/manual/variables/](https://docs.julialang.org/en/v1/manual/variables/)
 """
 
@@ -284,7 +284,7 @@ Dict("a"=>1, "b"=>cos)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Array exercises
+## Array exercises [15min]
 
 We will use arrays extensively in this course.
 
@@ -501,7 +501,7 @@ The rest about Arrays you will learn-by-doing.
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Control flow
+## Control flow [10min]
 
 Julia provides a variety of [control flow constructs](https://docs.julialang.org/en/v1/manual/control-flow/), of which we look at:
 
@@ -604,14 +604,14 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Functions
+## Functions [15min]
 
 Functions can be defined in Julia in a number of ways.  In particular there is one variant
 more suited to longer definitions, and one for one-liners:
 
 ```
 function f(a, b)
-   a * b
+   return a * b
 end
 f(a, b) = a * b
 ```
@@ -789,7 +789,7 @@ This is a key characteristic of the Julia package ecosystem.
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Modules and packages
+## Modules and packages [5min]
 
 Modules can be used to structure code into larger entities, and be used to divide it into
 different name spaces.  We will not make much use of those, but if interested see
