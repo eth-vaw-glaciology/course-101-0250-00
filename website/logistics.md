@@ -56,17 +56,20 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 
 **Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub AND you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the related _git commit hash (SHA)_ submission activity.
 
-:construction: More infos to come soon.
+<!-- :construction: More infos to come soon. -->
 
-<!-- 1. Create a **private** GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
-2. Share this private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-3. **For each homework submission**, you will:
-    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
+### Private GitHub repository setup
+Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
+1. Create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+2. Select an `MIT License` and add a `README.md` file.
+3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
+4. **For each homework submission**, you will:
+    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into (except for lecture 2 homework);
     - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175). It will serve to control the material was pushed on time.
 
 \warn{Make sure to only include the `lectureX` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
 
-\note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.} -->
+\note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
 ### Feedback
 
