@@ -11,7 +11,7 @@ As final homework task for this second lecture, you will have to
 
 ### Julia install
 Ensure you have access to
-- the latest version of Julia (>= v1.8)
+- the latest version of Julia (>= v1.9)
 - a fully functional REPL (command window)
 
 You should be able to visualise scripts' output graphically when, e.g., plotting something:
@@ -25,11 +25,12 @@ display(heatmap(rand(10,10)))
 
 ### Git repository
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
-1. Create a **private** GitHub repository named `pde-on-gpu-<lastname>`, where `<lastname>` has to be replaced by your last name. Select an `MIT License` and add a `README`.
-2. Share this private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-3. **For each homework submission**, you will:
-    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into;
-    - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084). It will serve to control the material was pushed on time.
+1. Create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+2. Select an `MIT License` and add a `README.md` file.
+3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
+4. **For each homework submission**, you will:
+    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into (except for lecture 2 homework);
+    - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175). It will serve to control the material was pushed on time.
 
 👉 See [Logistics](/logistics/#submission) for details.
 
