@@ -65,7 +65,7 @@ There are (too) many resources on the web...
 - get out of a git mess: [http://justinhileman.info/article/git-pretty/git-pretty.png](http://justinhileman.info/article/git-pretty/git-pretty.png)
 
 ## Other tools for git
-There is plenty of software to interact with git, graphical, command line, etc.  Feel free to use those.
+There is plenty of software to interact with git, graphical, command line, VSCode, etc.  Feel free to use those.
 
 But we will only be able to help you with vanilla, command-line git.
 """
