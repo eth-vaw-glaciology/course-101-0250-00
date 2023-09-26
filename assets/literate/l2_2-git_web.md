@@ -47,7 +47,7 @@ There are (too) many resources on the web...
 - get out of a git mess: [http://justinhileman.info/article/git-pretty/git-pretty.png](http://justinhileman.info/article/git-pretty/git-pretty.png)
 
 ## Other tools for git
-There is plenty of software to interact with git, graphical, command line, etc.  Feel free to use those.
+There is plenty of software to interact with git, graphical, command line, VS-code, etc.  Feel free to use those.
 
 But we will only be able to help you with vanilla, command-line git.
 
@@ -72,8 +72,9 @@ Make such that you can push and pull without entering a password
 
 ![github-bar](../assets/literate_figures/l2_github-bar.png)
 
-- local: tell git to store credentials:
-  `git config --global credential.helper cache`
+- local: tell git to store credentials: `git config --global credential.helper cache`
+  (this may not be needed on all operating systems, potentially a built-in password/credential
+   manager will do this automatically)
 - github.com:
   - "Settings" -> "Developer settings" -> "Personal access tokens" -> "Generate new token"
     - Give the token a description/name and select the scope of the token
@@ -89,11 +90,30 @@ Make such that you can push and pull without entering a password
 - local: `git push`
   - here enter your username + the **token** generated before
 
-## Work with other peoples code: fork
+## Work with other people: pull request (PR)
+
+When you contribute new code to a repo (in particular a repo which other people work on too), the new code is submitted via a "pull request".  This code is then in a separate branch.  A pull request then makes a web-interface where one can review the changes, request amendments and finally merge the code.
+
+In a repo with write permission, the use following work-flow:
+- make a branch and switch to it: `git switch -c some-branch-name`
+- make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
+- push the branch to Github
+- on the Github web-page a bar with a "open pull request" should show: click it
+- if you got more changes, just commit and push them to that branch
+- when happy merge the PR
+
+This work-flow you will use to submit homework for the course.
+
+## Work with other people: forks
 
 ![github-bar](../assets/literate_figures/l2_github-bar.png)
 
+For repos without write access, to contribute do:
+
 - fork a repository on github.com (top right)
+- make a branch on that fork and work on it
+- push that to github and open a PR with respect to that fork
+- (not needed in this lecture course)
 
 ## Git: questions?
 
