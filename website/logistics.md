@@ -54,7 +54,7 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 - Submission of notebooks (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
-**Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub AND you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the related _git commit hash (SHA)_ submission activity.
+**Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub **and** you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the related _git commit hash (SHA)_ submission activity.
 
 <!-- :construction: More infos to come soon. -->
 
