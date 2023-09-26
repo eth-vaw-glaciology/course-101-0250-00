@@ -495,24 +495,39 @@ display(heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number 
 
 <li><p><strong>For each homework submission</strong>, you will:</p>
 <ul>
-<li><p>create a new folder named <code>lectureX</code> &#40;X <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∈</mo><mo stretchy=false >[</mo><mn>3</mn><mo>−</mo><mi mathvariant=normal >.</mi><mi mathvariant=normal >.</mi><mi mathvariant=normal >.</mi><mo stretchy=false >]</mo></mrow><annotation encoding="application/x-tex">\in [3-...]</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.5782em;vertical-align:-0.0391em;"></span><span class=mrel >∈</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mopen >[</span><span class=mord >3</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span><span class=mbin >−</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mord >.</span><span class=mord >.</span><span class=mord >.</span><span class=mclose >]</span></span></span></span>&#41; to push the exercise codes into &#40;except for lecture 2 homework&#41;;</p>
+<li><p>create a git branch named <code>homework-X</code> &#40;X <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∈</mo><mo stretchy=false >[</mo><mn>2</mn><mo>−</mo><mi mathvariant=normal >.</mi><mi mathvariant=normal >.</mi><mi mathvariant=normal >.</mi><mo stretchy=false >]</mo></mrow><annotation encoding="application/x-tex">\in [2-...]</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.5782em;vertical-align:-0.0391em;"></span><span class=mrel >∈</span><span class=mspace  style="margin-right:0.2777777777777778em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mopen >[</span><span class=mord >2</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span><span class=mbin >−</span><span class=mspace  style="margin-right:0.2222222222222222em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mord >.</span><span class=mord >.</span><span class=mord >.</span><span class=mclose >]</span></span></span></span>&#41; and switch to that branch &#40;<code>git switch -c homework-X</code>&#41;</p>
 
-<li><p>copy <strong>the single git commit hash &#40;or SHA&#41; of the final push</strong> and upload it on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;20175">Moodle</a>. It will serve to control the material was pushed on time.</p>
+<li><p>create a new folder named <code>homework-X</code> to put the exercise codes into &#40;except for lecture 2 homework, when the codes are on JupyterHub/Moodle and the repo only contains dummy files&#41;;</p>
+
+<li><p>&#40;don&#39;t forget to <code>git add</code> the code-files&#41;</p>
+
+<li><p>push to GitHub and open a pull request &#40;PR&#41; on GitHub</p>
+
+<li><p>copy <strong>the single git commit hash &#40;or SHA&#41; of the final push</strong> and submit it and the link to the PR on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;20175">Moodle</a> as the assignment hand-in. It will serve to control the material was pushed on time.</p>
 
 </ul>
 
 </ol>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for details.</p>
 <h3 id=github_task ><a href="#github_task" class=header-anchor >GitHub task</a></h3>
-<p>For this week, edit the <code>README.md</code> of your private repository:</p>
+<p>For this week:</p>
+<p>First an edit without a PR</p>
 <ul>
-<li><p>Add one or two description sentences in there &#40;to get familiar with the Markdown syntax&#41;.</p>
+<li><p>edit the <code>README.md</code> of your private repository &#40;add one or two description sentences in there &#40;to get familiar with the Markdown syntax&#41;.</p>
 
-<li><p>Then <code>commit</code> the change and <code>push</code> it.</p>
-
-<li><p>Copy the commit hash &#40;or SHA&#41; and past it to <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;18084">Moodle</a> in the <em>git commit hash &#40;SHA&#41;</em> activity.</p>
+<li><p>commit this to the <code>main</code> branch &#40;i.e. no PR&#41; and push</p>
 
 </ul>
+<p>Second, an edit with a PR:</p>
+<ul>
+<li><p>create and switch to <code>homework-2</code> branch</p>
+
+<li><p>create a file <code>homework-2/just-a-test</code> with content <code>This is to make a PR</code></p>
+
+<li><p>push and create a PR</p>
+
+</ul>
+<p>Copy the commit hash &#40;or SHA&#41; and paste it to <a href="https://moodle-app2.let.ethz.ch/course/view.php?id&#61;18084">Moodle</a> in the <em>git commit hash &#40;SHA&#41;</em> activity as well as the link to the PR.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
