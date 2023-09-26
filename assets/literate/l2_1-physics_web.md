@@ -89,6 +89,14 @@ nx   = 200
 nvis = 5
 ```
 
+We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centers `xc`:
+
+```julia
+# derived numerics
+dx   = lx/nx
+xc   = LinRange(dx/2,lx-dx/2,nx)
+```
+
 In the `# array initialisation` section, we need to initialise one array to store the concentration field `C`, and the diffusive flux in the x direction `qx`:
 
 ```julia

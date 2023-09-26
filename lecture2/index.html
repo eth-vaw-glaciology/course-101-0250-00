@@ -10,6 +10,10 @@ dc   = <span class=hljs-number >1.0</span></code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># numerics</span>
 nx   = <span class=hljs-number >200</span>
 nvis = <span class=hljs-number >5</span></code></pre>
+<p>We introduce additional numerical parameters: the grid spacing <code>dx</code> and the coordinates of cell centers <code>xc</code>:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># derived numerics</span>
+dx   = lx/nx
+xc   = <span class=hljs-built_in >LinRange</span>(dx/<span class=hljs-number >2</span>,lx-dx/<span class=hljs-number >2</span>,nx)</code></pre>
 <p>In the <code># array initialisation</code> section, we need to initialise one array to store the concentration field <code>C</code>, and the diffusive flux in the x direction <code>qx</code>:</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># array initialisation</span>
 C    = @. <span class=hljs-number >0.5</span>cos(<span class=hljs-number >9</span><span class=hljs-literal >π</span>*xc/lx)+<span class=hljs-number >0.5</span>; C_i = copy(C)
