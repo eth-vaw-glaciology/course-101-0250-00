@@ -50,7 +50,7 @@ First an edit without a PR
 
 Second, an edit with a PR:
 - create and switch to `homework-2` branch
-- create a file `homework-2/just-a-test` with content `This is to make a PR"
+- create a file `homework-2/just-a-test` with content `This is to make a PR`
 - push and create a PR
 
 Copy the commit hash (or SHA) and paste it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity as well as the link to the PR.
