@@ -64,12 +64,12 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 2. Select an `MIT License` and add a `README.md` file.
 3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
 4. **For each homework submission**, you will:
-    - create a git branch named `homework-X` (X $\in [2-...]$) and switch to that branch (`git switch -c homework-X`)
-    - create a new folder named `homework-X` to put the exercise codes into (except for lecture 2 homework, when the codes are on JupyterHub/Moodle and the repo only contains dummy files);
-    - (don't forget to `git add` the code-files)
-    - push to GitHub and open a pull request (PR) on GitHub
-    - copy **the single git commit hash (or SHA) of the final push** and submit it and the link to the PR on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in. It will serve to control the material was pushed on time.
-	- (do not merge the PR yet)
+    - create a git branch named `homework-X` (X $\in [2-...]$) and switch to that branch (`git switch -c homework-X`);
+    - create a new folder named `homework-X` to put the exercise codes into;
+    - (don't forget to `git add` the code-files and `git commit` them);
+    - push to GitHub and open a pull request (PR) on the `main` branch on GitHub;
+    - copy **the single git commit hash (or SHA) of the final push and the link to the PR** and submit **both** on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in (it will serve to control the material was pushed on time);
+    - (do not merge the PR yet).
 
 \warn{Make sure to only include the `homework-X` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
 
