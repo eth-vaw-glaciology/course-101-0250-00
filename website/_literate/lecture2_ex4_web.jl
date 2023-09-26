@@ -33,16 +33,27 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 2. Select an `MIT License` and add a `README.md` file.
 3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
 4. **For each homework submission**, you will:
-    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into (except for lecture 2 homework);
-    - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175). It will serve to control the material was pushed on time.
+    - create a git branch named `homework-X` (X $\in [2-...]$) and switch to that branch (`git switch -c homework-X`)
+    - create a new folder named `homework-X` to put the exercise codes into (except for lecture 2 homework, when the codes are on JupyterHub/Moodle and the repo only contains dummy files);
+    - (don't forget to `git add` the code-files)
+    - push to GitHub and open a pull request (PR) on GitHub
+    - copy **the single git commit hash (or SHA) of the final push** and submit it and the link to the PR on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in. It will serve to control the material was pushed on time.
 
 👉 See [Logistics](/logistics/#submission) for details.
 
 ### GitHub task
-For this week, edit the `README.md` of your private repository:
-- Add one or two description sentences in there (to get familiar with the Markdown syntax).
-- Then `commit` the change and `push` it.
-- Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity.
+For this week:
+
+First an edit without a PR
+- edit the `README.md` of your private repository (add one or two description sentences in there (to get familiar with the Markdown syntax).
+- commit this to the `main` branch (i.e. no PR) and push
+
+Second, an edit with a PR:
+- create and switch to `homework-2` branch
+- create a file `homework-2/just-a-test` with content `This is to make a PR`
+- push and create a PR
+
+Copy the commit hash (or SHA) and paste it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity as well as the link to the PR.
 """
 
 
