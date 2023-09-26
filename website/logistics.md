@@ -64,20 +64,16 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 2. Select an `MIT License` and add a `README.md` file.
 3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
 4. **For each homework submission**, you will:
-    - create a git branch named `homework-X` (X $\in [2-...]$) and switch to that branch (`git switch -c homework-X`)
-    - create a new folder named `homework-X` to put the exercise codes into (except for lecture 2 homework, when the codes are on JupyterHub/Moodle and the repo only contains dummy files);
-    - (don't forget to `git add` the code-files)
-    - push to GitHub and open a pull request (PR) on GitHub
-    - copy **the single git commit hash (or SHA) of the final push** and submit it and the link to the PR on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in. It will serve to control the material was pushed on time.
-	- (do not merge the PR yet)
+    - create a new folder named `lectureX` (X $\in [3-...]$) to push the exercise codes into (except for lecture 2 homework);
+    - copy **the single git commit hash (or SHA) of the final push** and upload it on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175). It will serve to control the material was pushed on time.
 
-\warn{Make sure to only include the `homework-X` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
+\warn{Make sure to only include the `lectureX` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
 
-\note{For homework 3 and later, the respective folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
+\note{Homework folders on GitHub should be Julia projects and thus contain a `Project.toml` file. The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`. Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.}
 
 ### Feedback
 
-After the submission deadline, we will correct and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).  Once you got feedback, please merge the PR.
+After the submission deadline, we will correct and grade your assignments. You will get personal feedback directly on the [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) submission.
 
 We will try to correct your assignments before the lecture following the homework's deadline. This should allow you to get rapid feedback in order to clarify the points you may struggle on as soon as possible.
 

@@ -39,19 +39,10 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 👉 See [Logistics](/logistics/#submission) for details.
 
 ### GitHub task
-For this week:
-
-First an edit without a PR
-- edit the `README.md` of your private repository (add one or two description sentences in there (to get familiar with the Markdown syntax).
-- commit this to the `main` branch (i.e. no PR) and push
-
-Second, an edit with a PR:
-- create and switch to `homework-2` branch
-- create a file `homework-2/just-a-test` with content `This is to make a PR"
-- push and create a PR
-
-
-Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity as well as the link to the PR.
+For this week, edit the `README.md` of your private repository:
+- Add one or two description sentences in there (to get familiar with the Markdown syntax).
+- Then `commit` the change and `push` it.
+- Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity.
 """
 
 
