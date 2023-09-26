@@ -1,55 +1,49 @@
 md"""
-## Exercise 2 - **Reaction-Diffusion**
-"""
-
-#md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture2_ex2.ipynb)
-
-#md # \warn{Write a monolithic Julia script to solve this exercise in a Jupyter notebook and hand it in on Moodle ([more](/homework)).}
-
-md"""
-The goal of this exercise is to couple physical processes implementing:
-- 1D reaction-diffusion
-- Non-dimensional numbers
+## Exercise 4 - **Julia install and Git repo**
 """
 
 md"""
-The goal of this exercise is to combine reaction and diffusion processes acting on the concentration of a quantity $C$. The reaction equation is an ODE, as the evolution of the quantity $C$ does not depend on the neighbouring values (or spatial gradients). Consider the following reaction ODE
+The goal of this homework is to:
+- finalise your local Julia install
+- create a private git repo to upload your homework
+"""
 
-$$ \frac{∂C}{∂t} = -\frac{(C-C_\mathrm{eq})}{ξ}~,$$
+md"""
+As final homework task for this second lecture, you will have to
+1. Finalise your local Julia install
+2. Create a private git repository on GitHub and share it only with the teaching staff
 
-where $C_\mathrm{eq}$ is the equilibrium concentration and $ξ$ the reaction rate.
+### Julia install
+Ensure you have access to
+- the latest version of Julia (>= v1.9)
+- a fully functional REPL (command window)
 
-From what you learned in class, write an reaction-diffusion code having following physical input parameters:
-
-```
-# Physics
-lx   = 20.0  # domain length
-dc   = 0.1   # diffusion coefficient
-ξ    = 10.0  # reaction rate
-Ceq  = 0.4   # equilibrium concentration
-ttot = 20.0  # total simulation time
-```
-
-Discretise your domain in 200 finite-difference cells such that the first cell centre is located at `dx/2` and the last cell centre at `lx-dx/2`. Use following explicit time step limiters:
+You should be able to visualise scripts' output graphically when, e.g., plotting something:
 
 ```julia
-dt   = dx^2/dc/2
+using Plots
+display(heatmap(rand(10,10)))
 ```
 
-As initial condition, define a Gaussian profile of concentration `C` of amplitude and standard deviation equal to 1, located at `lx/4`.
+![random-noise](./figures/l2_random-noise.png)
 
-Update all entries of the array for the reaction process (ODE) but only inner points for the diffusion process (PDE), thus leading to the fact that boundary points will only be affected by reaction and not diffusion.
-"""
+### Git repository
+Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
+1. Create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+2. Select an `MIT License` and add a `README.md` file.
+3. Share this private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot).
+4. **For each homework submission**, you will:
+    - create a git branch named `homework-X` (X $\in [2-...]$) and switch to that branch (`git switch -c homework-X`)
+    - create a new folder named `homework-X` to put the exercise codes into (except for lecture 2 homework, when the codes are on JupyterHub/Moodle and the repo only contains dummy files);
+    - (don't forget to `git add` the code-files)
+    - push to GitHub and open a pull request (PR) on GitHub
+    - copy **the single git commit hash (or SHA) of the final push** and submit it and the link to the PR on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in. It will serve to control the material was pushed on time.
 
-#nb # > 💡 hint: Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.
-#md # \note{Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.}
+👉 See also [Logistics](/logistics/#submission) for details.
 
-md"""
-### Question 1
-
-Report the initial and final distribution of concentration on a figure with axis-label, title, and plotted line labels. Also, report on the figure (as text in one label of your choice) the maximal final concentration value and its $x$ location.
-
-### Question 2
-
-Repeat the exercise but introduce the non-dimensional [Damköhler number](https://en.wikipedia.org/wiki/Damköhler_numbers) $Da = lx^2/dc/ξ$ as physical quantity defining the diffusion coefficient `dc` as a `# Derived physics` quantity. Confirm the if $Da < 0.1$ most of the mass diffuses away from $C_{eq}$, and the opposite holds for $Da > 1000$.
+### GitHub task
+For this week, edit the `README.md` of your private repository:
+- Add one or two description sentences in there (to get familiar with the Markdown syntax).
+- Then `commit` the change and `push` it.
+- Copy the commit hash (or SHA) and past it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=18084) in the _git commit hash (SHA)_ activity.
 """

@@ -161,18 +161,6 @@ nvis = 5
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centers `xc`:
-
-```julia
-# derived numerics
-dx   = lx/nx
-xc   = LinRange(dx/2,lx-dx/2,nx)
-```
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
 In the `# array initialisation` section, we need to initialise one array to store the concentration field `C`, and the diffusive flux in the x direction `qx`:
 
 ```julia
