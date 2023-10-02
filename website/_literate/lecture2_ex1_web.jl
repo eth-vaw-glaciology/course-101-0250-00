@@ -53,4 +53,7 @@ Report the initial and final distribution of concentration on a figure with axis
 Repeat the exercise but introduce the non-dimensional [Péclet number](https://en.wikipedia.org/wiki/Péclet_number) $Pe = lx~vx/dc$ as physical quantity defining the diffusion coefficient `dc` as a `# Derived physics` quantity. Confirm the if $Pe >> 100$ the diffusion happens in a much longer time compared to the advection, and the opposite for $Pe << 100$.
 """
 
+#nb # > 💡 hint: You may want to adapt (potentially reduce) `ttot` in one of the cases as to avoid the simulation to run forever.
+#md # \note{You may want to adapt (potentially reduce) `ttot` in one of the cases as to avoid the simulation to run forever.}
+
 
