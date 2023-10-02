@@ -382,7 +382,7 @@ dtd  = dx^<span class=hljs-number >2</span>/dc/<span class=hljs-number >2</span>
 dt   = min(dtd, dta)</code></pre>
 <p>As initial condition, define a Gaussian profile of concentration <code>C</code> of amplitude and standard deviation equal to 1, located at <code>lx/4</code>.</p>
 <p>In the time-loop, add a condition that would change de direction of the velocity <code>vx</code> at time <code>ttot/2</code>.</p>
-<p>Keep the concentration at the boundaries at <code>C&#61;0</code>.</p>
+<p>Set Dirichlet boundary conditions on the concentration for the diffusion process such that <code>C&#61;0</code> at the boundaries. This can be implicitly achieved by updating only the inner points of <code>C</code> with the divergence of the diffusive flux &#40;i.e. <code>C&#91;2:end-1&#93;</code>&#41;. For the advection part, implement upwind scheme making sure to treat cases for both positive and negative velocities <code>vx</code>.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Don&#39;t forget to initialise &#40;pre-allocate&#41; all arrays &#40;vectors&#41; needed in the calculations.</div></div>
 <h3 id=question_1 ><a href="#question_1" class=header-anchor >Question 1</a></h3>
@@ -560,7 +560,7 @@ display(heatmap(rand(<span class=hljs-number >10</span>,<span class=hljs-number 
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: September 26, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 02, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
