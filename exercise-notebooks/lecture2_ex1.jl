@@ -37,7 +37,7 @@ As initial condition, define a Gaussian profile of concentration `C` of amplitud
 
 In the time-loop, add a condition that would change de direction of the velocity `vx` at time `ttot/2`.
 
-Keep the concentration at the boundaries at `C=0`.
+Set Dirichlet boundary conditions on the concentration for the diffusion process such that `C=0` at the boundaries. This can be implicitly achieved by updating only the inner points of `C` with the divergence of the diffusive flux (i.e. `C[2:end-1]`). For the advection part, implement upwind scheme making sure to treat cases for both positive and negative velocities `vx`.
 """
 
 #nb # > 💡 hint: Don't forget to initialise (pre-allocate) all arrays (vectors) needed in the calculations.
