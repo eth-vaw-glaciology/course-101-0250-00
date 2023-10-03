@@ -158,7 +158,7 @@ Re-run the simulation and see the results:
 
 Now, this is much better! We observe that in less time steps, we get a much faster convergence. However, we introduced the new parameter, $\rho$. Does the solution depend on the value of $\rho$?
 
-\note{as we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`}
+\note{As we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`.}
 
 ## Problem of finding the iteration parameters
 
