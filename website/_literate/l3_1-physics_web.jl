@@ -269,8 +269,8 @@ Now, this is much better! We observe that in less time steps, we get a much fast
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 note: as we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`
-#md # \note{as we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`}
+#nb # > 💡 note: As we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`.
+#md # \note{As we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
