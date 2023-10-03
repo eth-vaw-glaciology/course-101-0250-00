@@ -25,7 +25,7 @@ $$
 \frac{\partial C}{\partial t} - D\frac{\partial^2 C^n}{\partial x^2} = 0
 $$
 
-Use one of your previous scripts or the [`diffusion_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started. Use the following parameters:
+Use one of your previous scripts or the [`l2_diffusion_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started. Use the following parameters:
 
 ```julia
 # physics
