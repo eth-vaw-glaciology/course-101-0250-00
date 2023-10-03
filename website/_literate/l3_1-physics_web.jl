@@ -7,7 +7,7 @@ md"""
 # Solving elliptic PDEs
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 3 is to familiarise (or refresh) with:
@@ -267,6 +267,10 @@ Re-run the simulation and see the results:
 md"""
 Now, this is much better! We observe that in less time steps, we get a much faster convergence. However, we introduced the new parameter, $\rho$. Does the solution depend on the value of $\rho$?
 """
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # > 💡 note: as we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`
+#md # \note{as we now consider pseudo-time to reach a steady state instead of physical time, we should replce `t` by `τ`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
