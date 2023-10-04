@@ -3,20 +3,21 @@
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
-The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver (e.g., solving steady-state diffusion).
+The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver (i.e., solving the steady-state diffusion).
 
-You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter `re` on a regular grid of values.
+You will make the systematic study of the convergence rate of the pseudo-transient method solving a steady-state diffusion process, varying the numerical parameter `re` on a regular grid of values.
 
 ### Getting started
 
-1. 👉 Download the `l3_steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
+1. 👉 Start from the script we did in class, or download the `l3_steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
 2. Create a new code `steady_diffusion_parametric_1D.jl` for this exercise and add it to the `lecture3` folder in your private GitHub repo.
 3. Report the results of this exercise within a new section in the `README.md`.
 
 ### Task 1
 
-Start from the 1D elliptic solver.
-Add the new variable storing the range of factors to multiply the `re` parameter with to the `# numerics` section. Add new array to store the number of iterations per grid block for each value of this factor:
+Start from the 1D elliptic solver we developed in class which implements the pseudo-transient method (damping).
+Add a new variable to store the range of factors to multiply the `re` parameter with to the `# numerics` section.
+Add new array to store the number of iterations per grid block for each value of this factor:
 
 ```julia
 # numerics

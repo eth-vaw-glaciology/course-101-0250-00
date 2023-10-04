@@ -406,11 +406,11 @@ display&#40;plot&#40;p1,p2;layout&#61;&#40;2,1&#41;&#41;&#41;</code></pre>
 <hr />
 <h2 id=exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method ><a href="#exercise_4_-_optimal_iteration_parameters_for_pseudo-transient_method" class=header-anchor >Exercise 4 - <strong>Optimal iteration parameters for pseudo-transient method</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
-<p>The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver &#40;e.g., solving steady-state diffusion&#41;.</p>
-<p>You will make the systematic study of the convergence rate of the pseudo-transient method, varying the numerical parameter <code>re</code> on a regular grid of values.</p>
+<p>The goal of this exercise is to confirm numerically the optimality of the pseudo-transient parameters for a 1D elliptic solver &#40;i.e., solving the steady-state diffusion&#41;.</p>
+<p>You will make the systematic study of the convergence rate of the pseudo-transient method solving a steady-state diffusion process, varying the numerical parameter <code>re</code> on a regular grid of values.</p>
 <h3 id=getting_started__4 ><a href="#getting_started__4" class=header-anchor >Getting started</a></h3>
 <ol>
-<li><p>👉 Download the <code>l3_steady_diffusion_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
+<li><p>👉 Start from the script we did in class, or download the <code>l3_steady_diffusion_1D.jl</code> script <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">here</a> if needed &#40;available after the course&#41;.</p>
 
 <li><p>Create a new code <code>steady_diffusion_parametric_1D.jl</code> for this exercise and add it to the <code>lecture3</code> folder in your private GitHub repo.</p>
 
@@ -418,7 +418,7 @@ display&#40;plot&#40;p1,p2;layout&#61;&#40;2,1&#41;&#41;&#41;</code></pre>
 
 </ol>
 <h3 id=task_1__4 ><a href="#task_1__4" class=header-anchor >Task 1</a></h3>
-<p>Start from the 1D elliptic solver. Add the new variable storing the range of factors to multiply the <code>re</code> parameter with to the <code># numerics</code> section. Add new array to store the number of iterations per grid block for each value of this factor:</p>
+<p>Start from the 1D elliptic solver we developed in class which implements the pseudo-transient method &#40;damping&#41;. Add a new variable to store the range of factors to multiply the <code>re</code> parameter with to the <code># numerics</code> section. Add new array to store the number of iterations per grid block for each value of this factor:</p>
 <pre><code class=language-julia ># numerics
 fact &#61; 0.5:0.1:1.5
 conv &#61; zeros&#40;size&#40;fact&#41;&#41;</code></pre>
