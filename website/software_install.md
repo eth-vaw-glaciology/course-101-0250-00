@@ -106,9 +106,9 @@ julia> include("my_script.jl")
 ```
 Alternatively, you can also execute a Julia script from the shell
 ```sh
-julia -O3 --check-bounds=no my_script.jl
+julia -O3 my_script.jl
 ```
-here passing the `-O3` optimisation flag, and the Julia `--check-bounds` flag set to `no` in order to deactivate out-of-bound checking.
+here passing the `-O3` optimisation flag.
 
 ### Package manager
 The [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) permits you to install and manage Julia packages, and control the project's environment.
