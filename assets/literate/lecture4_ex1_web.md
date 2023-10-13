@@ -117,7 +117,7 @@ For visualisation, embed the plotting into a `nvis` statement setting `nvis=5`. 
 # visualisation
 if it % nvis == 0
     qDxc  .= # average qDx in x
-    qDyc  .= # average qDx in y
+    qDyc  .= # average qDy in y
     qDmag .= sqrt.(qDxc.^2 .+ qDyc.^2)
     qDxc  ./= qDmag
     qDyc  ./= qDmag
