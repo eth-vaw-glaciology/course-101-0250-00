@@ -45,8 +45,8 @@
 <p>Within this class, we will mainly work with Julia scripts. You can run them using the <code>include&#40;&#41;</code> function in the REPL</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > include(<span class=hljs-string >&quot;my_script.jl&quot;</span>)</span></code></pre>
 <p>Alternatively, you can also execute a Julia script from the shell</p>
-<pre><code class="sh hljs">julia -O3 --check-bounds=no my_script.jl</code></pre>
-<p>here passing the <code>-O3</code> optimisation flag, and the Julia <code>--check-bounds</code> flag set to <code>no</code> in order to deactivate out-of-bound checking.</p>
+<pre><code class="sh hljs">julia -O3 my_script.jl</code></pre>
+<p>here passing the <code>-O3</code> optimisation flag.</p>
 <h3 id=package_manager ><a href="#package_manager" class=header-anchor >Package manager</a></h3>
 <p>The <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode">Pkg mode</a> permits you to install and manage Julia packages, and control the project&#39;s environment.</p>
 <p>Environments or Projects are an efficient way that enable portability and reproducibility. Upon activating a local environment, you generate a local <code>Project.toml</code> file that stores the packages and version you are using within a specific project &#40;code-s&#41;, and a <code>Manifest.toml</code> file that keeps track locally of the state of the environment.</p>
