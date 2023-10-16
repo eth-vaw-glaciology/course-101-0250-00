@@ -189,14 +189,14 @@ qTx         = zeros(nx-<span class=hljs-number >1</span>,ny-<span class=hljs-num
 qTy         = zeros(nx-<span class=hljs-number >2</span>,ny-<span class=hljs-number >1</span>)</code></pre>
 <p>Note that the sizes of the arrays <code>qTx</code> and <code>qTy</code> are different from the arrays for the Darcy fluxes <code>qDx</code> and <code>qDy</code>. The reason for this is that we use the different boundary conditions for the temperature, and don&#39;t want to update the temperature at the domain boundaries.</p>
 <h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
-<p>Move the temperature update into the iteration loop. Rename the variable <code>err</code> to <code>err_D</code> to avoid confusion. Introduce the new variable <code>err_T</code> to store the residual for the temperature evolution equation and modify the exit criteria to break iterations when both errors are less than tolerance:</p>
+<p>Move the temperature update into the iteration loop. Rename the variable <code>err_Pf</code> to <code>err_D</code> to avoid confusion. Introduce the new variable <code>err_T</code> to store the residual for the temperature evolution equation and modify the exit criteria to break iterations when both errors are less than tolerance:</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># iteration loop</span>
-iter = <span class=hljs-number >1</span>; err_Pf = <span class=hljs-number >2</span>ϵtol; err_T = <span class=hljs-number >2</span>ϵtol
-<span class=hljs-keyword >while</span> max(err_D,err_T) &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
+iter = <span class=hljs-number >1</span>; err_D = <span class=hljs-number >2</span>ϵtol; err_T = <span class=hljs-number >2</span>ϵtol
+<span class=hljs-keyword >while</span> max(err_D, err_T) &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
 ...
 <span class=hljs-keyword >end</span></code></pre>
 <p>Annotate the Darcy fluxes and pressure update with a comment, and introduce the new section for temperature update:</p>
-<pre><code class="julia hljs"><span class=hljs-keyword >while</span> max(err_Pf,err_T) &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
+<pre><code class="julia hljs"><span class=hljs-keyword >while</span> max(err_D, err_T) &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
     <span class=hljs-comment ># fluid pressure update</span>
     qDx[<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>,:] .-= ...
     qDy[:,<span class=hljs-number >2</span>:<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>] .-= ...
@@ -231,7 +231,7 @@ T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:]   
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 16, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
