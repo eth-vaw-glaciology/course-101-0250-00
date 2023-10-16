@@ -66,11 +66,11 @@ qTy         = zeros(nx-2,ny-1)
 Note that the sizes of the arrays `qTx` and `qTy` are different from the arrays for the Darcy fluxes `qDx` and `qDy`. The reason for this is that we use the different boundary conditions for the temperature, and don't want to update the temperature at the domain boundaries.
 
 ### Task 2
-Move the temperature update into the iteration loop. Rename the variable `err` to `err_D` to avoid confusion. Introduce the new variable `err_T` to store the residual for the temperature evolution equation and modify the exit criteria to break iterations when both errors are less than tolerance:
+Move the temperature update into the iteration loop. Rename the variable `err_Pf` to `err_D` to avoid confusion. Introduce the new variable `err_T` to store the residual for the temperature evolution equation and modify the exit criteria to break iterations when both errors are less than tolerance:
 ```julia
 # iteration loop
-iter = 1; err_Pf = 2ϵtol; err_T = 2ϵtol
-while max(err_D,err_T) >= ϵtol && iter <= maxiter
+iter = 1; err_D = 2ϵtol; err_T = 2ϵtol
+while max(err_D, err_T) >= ϵtol && iter <= maxiter
 ...
 end
 ```
@@ -78,7 +78,7 @@ end
 Annotate the Darcy fluxes and pressure update with a comment, and introduce the new section for temperature update:
 
 ```julia
-while max(err_Pf,err_T) >= ϵtol && iter <= maxiter
+while max(err_D, err_T) >= ϵtol && iter <= maxiter
     # fluid pressure update
     qDx[2:end-1,:] .-= ...
     qDy[:,2:end-1] .-= ...
