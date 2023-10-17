@@ -181,26 +181,28 @@ niter = ???</code></pre>
 
 <li><p>Can be used when developing</p>
 
-<li><p>Should be used in package for CI</p>
+<li><p>Should be used in package for continous integration &#40;aka CI; when tests are run on GitHub automatically on a push&#41;</p>
 
 </ul>
 <h2 id=basic_unit_tests ><a href="#basic_unit_tests" class=header-anchor >Basic unit tests</a></h2>
 <p>Simple unit testing can be performed with the <code>@test</code> and <code>@test_throws</code> macros:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >using</span> Test
 
-<span class=hljs-meta >@test</span> <span class=hljs-literal >true</span></code></pre>
+<span class=hljs-meta >@test</span> <span class=hljs-number >1</span>==<span class=hljs-number >1</span>
+
+<span class=hljs-meta >@test_throws</span> <span class=hljs-built_in >MethodError</span> <span class=hljs-number >1</span>+<span class=hljs-string >&quot;a&quot;</span> <span class=hljs-comment >## the expected error must be provided too</span></code></pre>
 <p>Or another example</p>
 <pre><code class="julia hljs"><span class=hljs-meta >@test</span> [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>] + [<span class=hljs-number >2</span>, <span class=hljs-number >1</span>] == [<span class=hljs-number >3</span>, <span class=hljs-number >3</span>]</code></pre>
-<p>Testing an expression which is a call using infix syntax such as approximate comparisons</p>
+<p>Testing an expression which is a call using infix syntax such as approximate comparisons &#40;<code>\approx</code> &#43; tab&#41;</p>
 <pre><code class="julia hljs"><span class=hljs-meta >@test</span> <span class=hljs-literal >π</span> ≈ <span class=hljs-number >3.14</span> atol=<span class=hljs-number >0.01</span></code></pre>
-<p>For example, suppose we want to check our new function <code>square&#33;&#40;x&#41;</code> works as expected:</p>
-<pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span></code></pre>
+<p>For example, suppose we want to check our new function <code>square&#40;x&#41;</code> works as expected:</p>
+<pre><code class="julia hljs">square(x) = x^<span class=hljs-number >2</span></code></pre>
 <p>If the condition is true, a <code>Pass</code> is returned:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span></code></pre>
+<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span></code></pre>
 <p>If the condition is false, then a <code>Fail</code> is returned and an exception is thrown:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span></code></pre>
+<pre><code class="julia hljs"><span class=hljs-meta >@test</span> square(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span></code></pre>
 <pre><code class="julia hljs">Test Failed at none:<span class=hljs-number >1</span>
-  Expression: square!(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
+  Expression: square(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
    Evaluated: <span class=hljs-number >25</span> == <span class=hljs-number >20</span>
 Test.FallbackTestSetException(<span class=hljs-string >&quot;There was an error during testing&quot;</span>)</code></pre>
 <h2 id=working_with_a_test_sets ><a href="#working_with_a_test_sets" class=header-anchor >Working with a test sets</a></h2>
@@ -214,25 +216,25 @@ Test.FallbackTestSetException(<span class=hljs-string >&quot;There was an error 
     <span class=hljs-meta >@test</span> sin(<span class=hljs-number >2</span>θ) ≈ <span class=hljs-number >2</span>*sin(θ)*cos(θ)
     <span class=hljs-meta >@test</span> cos(<span class=hljs-number >2</span>θ) ≈ cos(θ)^<span class=hljs-number >2</span> - sin(θ)^<span class=hljs-number >2</span>
 <span class=hljs-keyword >end</span>;</code></pre>
-<p>Let&#39;s try it with our <code>square&#33;&#40;&#41;</code> function</p>
-<pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span>
+<p>Let&#39;s try it with our <code>square&#40;&#41;</code> function</p>
+<pre><code class="julia hljs">square(x) = x^<span class=hljs-number >2</span>
 
 <span class=hljs-meta >@testset</span> <span class=hljs-string >&quot;Square Tests&quot;</span> <span class=hljs-keyword >begin</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;a&quot;</span>) == <span class=hljs-string >&quot;aa&quot;</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;bb&quot;</span>) == <span class=hljs-string >&quot;bbbb&quot;</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-string >&quot;a&quot;</span>) == <span class=hljs-string >&quot;aa&quot;</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-string >&quot;bb&quot;</span>) == <span class=hljs-string >&quot;bbbb&quot;</span>
 <span class=hljs-keyword >end</span>;</code></pre>
 <p>If we now introduce a bug</p>
-<pre><code class="julia hljs">square!(x) = x^<span class=hljs-number >2</span>
+<pre><code class="julia hljs">square(x) = x^<span class=hljs-number >2</span>
 
 <span class=hljs-meta >@testset</span> <span class=hljs-string >&quot;Square Tests&quot;</span> <span class=hljs-keyword >begin</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;a&quot;</span>) == <span class=hljs-string >&quot;aa&quot;</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-string >&quot;bb&quot;</span>) == <span class=hljs-string >&quot;bbbb&quot;</span>
-    <span class=hljs-meta >@test</span> square!(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-number >5</span>) == <span class=hljs-number >25</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-string >&quot;a&quot;</span>) == <span class=hljs-string >&quot;aa&quot;</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-string >&quot;bb&quot;</span>) == <span class=hljs-string >&quot;bbbb&quot;</span>
+    <span class=hljs-meta >@test</span> square(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
 <span class=hljs-keyword >end</span>;</code></pre>
 <pre><code class="julia hljs">Square Tests: Test Failed at none:<span class=hljs-number >6</span>
-  Expression: square!(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
+  Expression: square(<span class=hljs-number >5</span>) == <span class=hljs-number >20</span>
    Evaluated: <span class=hljs-number >25</span> == <span class=hljs-number >20</span>
 Stacktrace:
  [...]
@@ -240,6 +242,27 @@ Test Summary: | Pass  Fail  Total
 Square Tests  |    <span class=hljs-number >3</span>     <span class=hljs-number >1</span>      <span class=hljs-number >4</span>
 <span class=hljs-built_in >Some</span> tests did not pass: <span class=hljs-number >3</span> passed, <span class=hljs-number >1</span> failed, <span class=hljs-number >0</span> errored, <span class=hljs-number >0</span> broken.</code></pre>
 <p>Then then the reporting tells us a test failed.</p>
+<h3 id=where_to_put_them_how_to_run_them ><a href="#where_to_put_them_how_to_run_them" class=header-anchor >Where to put them, how to run them</a></h3>
+<p>The simplest is to just put the tests in your script, along the tested function. Then the tests run every time the script is executed.</p>
+<p>However, for bigger pieces of software, such as packages, this becomes unwieldly and also undesired &#40;as we don&#39;t want tests to run all the time&#41;.  Then tests are put into <code>test/runtests.jl</code>.  If they are there they will be run when called from package mode or from automated test &#40;CI&#41;.</p>
+<p>Example for the package <code>Literate.jl</code> &#40;we use that to generate the website&#41;:</p>
+<pre><code class="julia hljs">julia&gt; <span class=hljs-keyword >using</span> Pkg
+
+julia&gt; Pkg.test(<span class=hljs-string >&quot;Literate&quot;</span>)
+     Testing Literate
+   ...
+     Testing Running tests...
+Test Summary:  | Pass  Total  Time
+Literate.parse |  <span class=hljs-number >533</span>    <span class=hljs-number >533</span>  <span class=hljs-number >0.8</span>s
+Test Summary:   | Pass  Broken  Total  Time
+Literate.script |   <span class=hljs-number >36</span>       <span class=hljs-number >1</span>     <span class=hljs-number >37</span>  <span class=hljs-number >2.1</span>s
+Test Summary:     | Pass  Broken  Total  Time
+Literate.markdown |   <span class=hljs-number >82</span>       <span class=hljs-number >2</span>     <span class=hljs-number >84</span>  <span class=hljs-number >4.3</span>s
+Test Summary:     | Pass  Broken  Total  Time
+Literate.notebook |   <span class=hljs-number >86</span>       <span class=hljs-number >1</span>     <span class=hljs-number >87</span>  <span class=hljs-number >5.2</span>s
+Test Summary: | Pass  Total  Time
+Configuration |    <span class=hljs-number >7</span>      <span class=hljs-number >7</span>  <span class=hljs-number >0.3</span>s
+     Testing Literate tests passed</code></pre>
 <h3 id=wrapping-up__2 ><a href="#wrapping-up__2" class=header-anchor >Wrapping-up</a></h3>
 <ul>
 <li><p>The <code>Test</code> module provides simple <em>unit testing</em> functionality.</p>
@@ -376,7 +399,7 @@ maxiter = <span class=hljs-number >500</span></code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 16, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 17, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
