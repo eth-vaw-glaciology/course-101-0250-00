@@ -1,6 +1,16 @@
 <!--This file was generated, do not modify it.-->
 # Parallel computing (on CPUs) and performance assessment
 
+## Performance
+
+### ❓ some questions for you:
+
+- How to assess the performance of numerical application?
+
+- Are you familiar the concept of wall-time?
+
+- What are the key ingredients to understand performance?
+
 ### The goal of this lecture 5 is to introduce:
 - Performance limiters
 - Effective memory throughput metric $T_\mathrm{eff}$
@@ -12,7 +22,7 @@
 
 ### Hardware
 - Recent processors (CPUs and GPUs) have multiple (or many) cores
-- Recent processors use their parallelism to hide latency
+- Recent processors use their parallelism to hide latency (i.e. overlapping execution times (latencies) of individual operations with execution times of other operations)
 - Multi-core CPUs and GPUs share similar challenges
 
 *Recall from lecture 1 (**why we do it**) ...*
