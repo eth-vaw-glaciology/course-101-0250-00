@@ -7,7 +7,30 @@ md"""
 # Parallel computing (on CPUs) and performance assessment
 """
 
-#src ######################################################################### 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Performance
+
+### ❓ some questions for you:
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+- How to assess the performance of numerical application?
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+- Are you familiar the concept of wall-time?
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+- What are the key ingredients to understand performance?
+"""
+
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 5 is to introduce:
@@ -28,7 +51,7 @@ md"""
 
 ### Hardware
 - Recent processors (CPUs and GPUs) have multiple (or many) cores
-- Recent processors use their parallelism to hide latency
+- Recent processors use their parallelism to hide latency (i.e. overlapping execution times (latencies) of individual operations with execution times of other operations)
 - Multi-core CPUs and GPUs share similar challenges
 """
 
@@ -184,7 +207,7 @@ The effective memory access $A_\mathrm{eff}$ [GB]
 
 Sum of:
 - twice the memory footprint of the unknown fields, $D_\mathrm{u}$, (fields that depend on their own history and that need to be updated every iteration)
-- known fields, $D_\mathrm{k}$, that do not change every iteration. 
+- known fields, $D_\mathrm{k}$, that do not change every iteration.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -199,7 +222,7 @@ $$ T_\mathrm{eff} = \frac{A_\mathrm{eff}}{t_\mathrm{it}} $$
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured, e.g., by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue. 
+The upper bound of $T_\mathrm{eff}$ is $T_\mathrm{peak}$ as measured, e.g., by [McCalpin, 1995](https://www.researchgate.net/publication/51992086_Memory_bandwidth_and_machine_balance_in_high_performance_computers) for CPUs or a GPU analogue.
 
 Defining the $T_\mathrm{eff}$ metric, we assume that:
 1. we evaluate an iterative stencil-based solver,
@@ -412,7 +435,7 @@ In this last step, the goal is to define `compute` functions to hold the physics
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Create a `compute_flux!()` and `compute_Pf!()` functions that take input and output arrays and needed scalars as argument and return nothing. 
+Create a `compute_flux!()` and `compute_Pf!()` functions that take input and output arrays and needed scalars as argument and return nothing.
 """
 
 function compute_flux!(...)
