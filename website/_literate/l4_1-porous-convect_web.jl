@@ -64,16 +64,16 @@ In the following, we will introduce the equation governing the thermal porous co
 md"""
 ## Thermal porous convection: a physical model
 
-Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\varphi$, the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
+Consider a layer of porous material of size $l_x \times l_y$. We assume that this layer is saturated with fluid, i.e., the pore space is completely filled by fluid. We introduce the _porosity_ $\phi$, the volume fraction of material taken by pore space. The conservation of mass for the fluid requires:
 
 $$
-\frac{\partial\rho\varphi}{\partial t} + \nabla\cdot(\rho\varphi\boldsymbol{v}) = 0
+\frac{\partial\rho\phi}{\partial t} + \nabla\cdot(\rho\phi\boldsymbol{v}) = 0
 $$
 
-Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e., $\varphi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
+Here $\rho$ is the density of the fluid, and $\boldsymbol{v}$ is the fluid velocity. If the porous material is undeformable, i.e., $\phi = \mathrm{const}$ and the fluid is incompressible, i.e., $\mathrm{d}\rho/\mathrm{d}t = \partial\rho/\partial t + \boldsymbol{v}\cdot\nabla\rho = 0$, the conservation of mass reduces to the following:
 
 $$
-\nabla\cdot(\varphi\boldsymbol{v}) = 0
+\nabla\cdot(\phi\boldsymbol{v}) = 0
 $$
 """
 
@@ -82,7 +82,7 @@ $$
 md"""
 ### Darcy's law
 
-We define the quantity $\boldsymbol{q_D} = \varphi\boldsymbol{v}$, which is called the _Darcy flux_ or _Darcy velocity_ and is the volumetric flow rate per unit area of the porous media.
+We define the quantity $\boldsymbol{q_D} = \phi\boldsymbol{v}$, which is called the _Darcy flux_ or _Darcy velocity_ and is the volumetric flow rate per unit area of the porous media.
 Standard approximation is the linear dependence between $\boldsymbol{q_D}$ and the pressure gradient, known as the [_Darcy's law_](https://en.wikipedia.org/wiki/Darcy's_law):
 
 $$
@@ -107,7 +107,7 @@ $$
 md"""
 ### Heat convection in porous media
 
-In the following, we assume for simplicity that the porosity is constant: $\varphi=\mathrm{const}$.
+In the following, we assume for simplicity that the porosity is constant: $\phi=\mathrm{const}$.
 
 Conservation of energy in the fluid results in the following equation for the temperature $T$:
 $$
@@ -127,10 +127,10 @@ $$
 
 where $\lambda$ is the _thermal conductivity_. Assuming $\lambda=\mathrm{const}$, substituting the Fourier's law into the energy equation, and using the definition of the Darcy flux we obtain:
 $$
-\frac{\partial T}{\partial t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T - \frac{\lambda}{\rho c_p} \nabla\cdot\nabla T = 0
+\frac{\partial T}{\partial t} + \frac{1}{\phi}\boldsymbol{q_D}\cdot\nabla T - \frac{\lambda}{\rho c_p} \nabla\cdot\nabla T = 0
 $$
 
-This is the transient advection-diffusion equation. The temperature is advected with the fluid velocity $\boldsymbol{q_D}/\varphi$ and diffused with the diffusion coefficient $\lambda/(\rho c_p)$
+This is the transient advection-diffusion equation. The temperature is advected with the fluid velocity $\boldsymbol{q_D}/\phi$ and diffused with the diffusion coefficient $\lambda/(\rho c_p)$
 """
 
 #src #########################################################################
@@ -200,7 +200,7 @@ $$
 $$
 
 $$
-\frac{\partial T}{\partial t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+\frac{\partial T}{\partial t} + \frac{1}{\phi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
 $$
 """
 
@@ -227,7 +227,7 @@ $$
 $$
 
 $$
-\frac{\partial T}{\partial \tau} + \frac{T-T_\mathrm{old}}{\mathrm{d}t} + \frac{1}{\varphi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
+\frac{\partial T}{\partial \tau} + \frac{T-T_\mathrm{old}}{\mathrm{d}t} + \frac{1}{\phi}\boldsymbol{q_D}\cdot\nabla T + \nabla\cdot\boldsymbol{q_T} = 0
 $$
 
 Here, $\beta$ is the pseudo-compressibility, $\mathrm{d}t$ is the physical time step, and $T_\mathrm{old}$ is the distribution of temperature at the previous physical time step.
@@ -238,7 +238,9 @@ Here, $\beta$ is the pseudo-compressibility, $\mathrm{d}t$ is the physical time 
 md"""
 This new system of equations is amendable to the efficient solution by the pseudo-transient method. We'll implement the thermal porous convection solver in 2 stages:
 - in the first stage, we'll program the efficient elliptic solver for the pressure, leaving the temperature update explicit, and;
-- in the second stage, we'll make the temperature (advection-diffusion) solver also implicit. 
+- in the second stage, we'll make the temperature (advection-diffusion) solver also implicit.
+
+Refer to the exercises for the steps to take to implement the porous convection solver.
 """
 
 #src #########################################################################
