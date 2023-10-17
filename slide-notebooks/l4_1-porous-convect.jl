@@ -238,7 +238,9 @@ Here, $\beta$ is the pseudo-compressibility, $\mathrm{d}t$ is the physical time 
 md"""
 This new system of equations is amendable to the efficient solution by the pseudo-transient method. We'll implement the thermal porous convection solver in 2 stages:
 - in the first stage, we'll program the efficient elliptic solver for the pressure, leaving the temperature update explicit, and;
-- in the second stage, we'll make the temperature (advection-diffusion) solver also implicit. 
+- in the second stage, we'll make the temperature (advection-diffusion) solver also implicit.
+
+Refer to the exercises for the steps to take to implement the porous convection solver.
 """
 
 #src #########################################################################
