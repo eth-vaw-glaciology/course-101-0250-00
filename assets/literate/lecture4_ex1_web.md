@@ -58,7 +58,7 @@ Finally, remove the error saving procedure used to plot convergence.
 
 ### Task 3
 
-Wrap the iteration loop into a time loop. Make `nt=10` time steps. Move visualisation part out of the iteration loop and ass also an error monitoring step after the iteration loop as
+Wrap the iteration loop into a time loop. Make `nt=10` time steps. Move visualisation part out of the iteration loop and add also an error monitoring step after the iteration loop as
 ```julia
 @printf("it = %d, iter/nx=%.1f, err_Pf=%1.3e\n",it,iter/nx,err_Pf)
 ```

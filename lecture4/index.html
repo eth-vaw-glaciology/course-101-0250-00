@@ -85,7 +85,7 @@ err_Pf = maximum(abs.(r_Pf))</code></pre>
 <pre><code class="julia hljs"><span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;  iter/nx=%.1f, err_Pf=%1.3e\n&quot;</span>,iter/nx,err_Pf)</code></pre>
 <p>Finally, remove the error saving procedure used to plot convergence.</p>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
-<p>Wrap the iteration loop into a time loop. Make <code>nt&#61;10</code> time steps. Move visualisation part out of the iteration loop and ass also an error monitoring step after the iteration loop as</p>
+<p>Wrap the iteration loop into a time loop. Make <code>nt&#61;10</code> time steps. Move visualisation part out of the iteration loop and add also an error monitoring step after the iteration loop as</p>
 <pre><code class="julia hljs"><span class=hljs-meta >@printf</span>(<span class=hljs-string >&quot;it = %d, iter/nx=%.1f, err_Pf=%1.3e\n&quot;</span>,it,iter/nx,err_Pf)</code></pre>
 <p>to verify convergence.</p>
 <h3 id=task_4 ><a href="#task_4" class=header-anchor >Task 4</a></h3>
@@ -231,7 +231,7 @@ T[[<span class=hljs-number >1</span>,<span class=hljs-keyword >end</span>],:]   
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 17, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 20, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
