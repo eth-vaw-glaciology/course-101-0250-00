@@ -231,7 +231,7 @@ and add `-host localhost` to the execution script:
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
-<!--
+
 _For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section._
 
 ## GPU computing on Piz Daint
@@ -244,16 +244,18 @@ The login procedure is as follow. First a login to the front-end (or login) mach
 
 Both daint and ela share a `home` folder. However, the `scratch` folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint's scratch directly. We will use Julia module to have all Julia-related tools ready.
 
+Make sure to have the Remote-SSH extension installed in VS code [see here for details on how-to](#vs-code-remote---ssh-setup).
+
 Please follow the steps listed hereafter to get ready and set-up on daint.
 
 ### Account setup
-1. Fetch your personal username and password credentials from the shared Polybox folder, stored in a `daint_login.md` file.
+1. Fetch your personal username and password credentials from Moodle.
 
 2. Open a terminal (in Windows, use a tool as e.g. [PuTTY]() or [OpenSSH](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui)) and `ssh` to ela and enter the password:
 ```sh
 ssh <username>@ela.cscs.ch
 ```
-
+<!--
 3. On ela, change the password to another one and remember it! Password policy. The new password should comply with the following:
    - be at least 12 characters
    - include upper and lower case letters
@@ -265,17 +267,18 @@ Password for <username>@CSCS.CH: (current password)
 Enter new password: (new password)
 Enter it again: (new password)
 ```
+-->
 
 \note{👉 For Lecture 6, you can jump directly to the [JupyterLab](#jupyterlab_access_on_piz_daint) setup.}
 
-4. Generate a `ed25519` keypair as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor). On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`. Alternatively, you can copy the keys manually as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor).
+3. Generate a `ed25519` keypair as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor). On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`. Alternatively, you can copy the keys manually as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor).
 ```sh
 ssh-keygen -t ed25519
 ssh-copy-id <username>@ela.cscs.ch
 ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
 ```
 
-5. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
+4. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
 ```sh
 Host ela
   HostName ela.cscs.ch
@@ -287,19 +290,21 @@ Host daint
   User <username>
   IdentityFile ~/.ssh/id_ed25519
   ProxyJump ela
+  ForwardAgent yes
   RequestTTY yes
-  RemoteCommand module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda && bash -l
+  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda && bash -l
 
 Host nid*
   HostName %h
   User <username>
   IdentityFile ~/.ssh/id_ed25519
   ProxyJump daint
+  ForwardAgent yes
   RequestTTY yes
-  RemoteCommand module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda && bash -l
+  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda && bash -l
 ```
 
-6. Now you should be able to perform password-less login to daint as following
+5. Now you should be able to perform password-less login to daint as following
 ```sh
 ssh daint
 ```
@@ -343,12 +348,16 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 3. Make sure to remember the **node number** returned upon successful allocation, e.g., `salloc: Nodes nid02145 are ready for job`
 
-4. Once you have your allocation and the node (here `nid02145`) you requested, open another terminal (tab) **without closing the previous one** and `ssh` to your node replacing the `XXXXX` with appropriate node id from step 2. If needed, accept the key fingerprint prompt and you should be on the node with Julia environment loaded.
-```sh
-ssh nidXXXXX
-```
+4. Once you have your allocation and the node (here `nid02145`), you have two solutions to access the compute node:
+- In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded.
+- Alternatively, you can also access a compute node after having performed the `salloc` step by following `srun` command:
+  ```sh
+  srun -n1 --pty /bin/bash -l
+  module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
+  ```
+  you should be on the node with Julia environment loaded.
 
-4. You should not be able to launch Julia
+5. You should then be able to launch Julia
 ```sh
 julia
 ```
@@ -356,11 +365,11 @@ julia
 #### :eyes: ONLY the first time
 1. Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status `] st` and add `CUDA`:
 ```julia-repl
-(@1.7-daint-gpu) pkg> st
+(@1.9-daint-gpu) pkg> st
   Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu`
-      Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.7-daint-gpu/Project.toml` (empty project)
+      Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.9-daint-gpu/Project.toml` (empty project)
 
-(@1.7-daint-gpu) pkg> add CUDA
+(@1.9-daint-gpu) pkg> add CUDA
 ```
 
 2. Then load it and query version info
@@ -386,13 +395,6 @@ julia> c. = a .+ b
 ```
 
 If you made it up to here, you're all set 🚀
-
-\note{Alternatively, you can also access a compute node after having performed the `salloc` step by following:
-```sh
-srun -n1 --pty /bin/bash -l
-module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda
-```
-}
 
 #### Monitoring GPU usage
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
@@ -435,9 +437,9 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --account class04
 
 module load daint-gpu
-module load Julia/1.7.2-CrayGNU-21.09-cuda
+module load Julia/1.9.3-CrayGNU-21.09-cuda
 
-srun julia -O3 --check-bounds=no <my_julia_gpu_script.jl>
+srun julia -O3 <my_julia_gpu_script.jl>
 ```
 
 ### JupyterLab access on Piz Daint
@@ -463,14 +465,15 @@ To use VS code as development tool, make sure to have installed the `Remote-SSH`
 
 The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
 
-\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.7.2-CrayGNU-21.09-cuda`.}
+\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda`.}
 
+<!--
 ### Julia MPI GPU on Piz Daint
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
 1. Make sure to have the Julia GPU environment loaded
 ```sh
 module load daint-gpu
-module load Julia/1.7.2-CrayGNU-21.09-cuda
+module load Julia/1.9.3-CrayGNU-21.09-cuda
 ```
 2. Then, you would need to allocate more than one node, let's say 4 nodes for 2 hours, using `salloc`
 ```
@@ -478,19 +481,14 @@ salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
 ```
 3. To launch a Julia (GPU) MPI script on 4 nodes (GPUs) using MPI, you can simply use `srun`
 ```sh
-srun -n4 julia -O3 --check-bounds=no <my_script.jl>
+srun -n4 julia -O3 <my_mpi_script.jl>
 ```
 
 #### CUDA-aware MPI on Piz Daint
-You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to
-1. Export the appropriate `ENV` vars
+You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
-```
-2. Because of a current issue with Cray-MPICH (the Cray MPI distribution used on Piz Daint), you need also to dynamically preload `libcudart.so` library. This can be achieved upon launching your Julia executable script
-```sh
-LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_script.jl>
 ```
 
 In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via `srun`. You can create, e.g., a [`runme_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh) script containing:
@@ -498,12 +496,12 @@ In the CUDA-aware MPI case, a more robust launch procedure may be to launch a sh
 #!/bin/bash -l
 
 module load daint-gpu
-module load Julia/1.7.2-CrayGNU-21.09-cuda
+module load Julia/1.9.3-CrayGNU-21.09-cuda
 
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 
-LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_script.jl>
+julia -O3 <my_script.jl>
 ```
 
 Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
@@ -525,12 +523,12 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --account class04
 
 module load daint-gpu
-module load Julia/1.7.2-CrayGNU-21.09-cuda
+module load Julia/1.9.3-CrayGNU-21.09-cuda
 
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 
-srun -n4 bash -c 'LD_PRELOAD="/usr/lib64/libcuda.so:/usr/local/cuda/lib64/libcudart.so" julia -O3 --check-bounds=no <my_julia_mpi_gpu_script.jl>'
+srun -n4 bash -c 'julia -O3 <my_julia_mpi_gpu_script.jl>'
 ```
 
 \note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.} -->
