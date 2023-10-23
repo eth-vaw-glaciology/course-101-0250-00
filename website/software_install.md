@@ -244,7 +244,7 @@ The login procedure is as follow. First a login to the front-end (or login) mach
 
 Both daint and ela share a `home` folder. However, the `scratch` folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint's scratch directly. We will use Julia module to have all Julia-related tools ready.
 
-Make sure to have the Remote-SSH extension installed in VS code [see here for details on how-to](#vs-code-remote---ssh-setup).
+Make sure to have the Remote-SSH extension installed in VS code [(see here for details on how-to)](#vs_code_remote_-_ssh_setup).
 
 Please follow the steps listed hereafter to get ready and set-up on daint.
 
@@ -421,6 +421,8 @@ Tue Oct 25 08:18:11 2022
 +-----------------------------------------------------------------------------+
 ```
 
+\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda`.}
+
 ### Running a remote job on Piz Daint
 If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `submit.sh` you can launch (without need of an allocation) as `sbatch submit.sh`:
 ```sh
@@ -463,8 +465,6 @@ Given that daint's `scratch` is not mounted on ela, it is unfortunately impossib
 To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs_code_remote_-_ssh_setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
 
 The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
-
-\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda`.}
 
 <!--
 ### Julia MPI GPU on Piz Daint
