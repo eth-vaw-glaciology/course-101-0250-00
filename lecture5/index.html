@@ -380,10 +380,10 @@ A       = copy(C)</code></pre>
 <li><p>Group the tests in a test-set</p>
 
 </ul>
-<p>For this exercise, you will implement a test set of basic unit tests to verify the implementation of the diffusion and acoustic 2D solvers.</p>
+<p>For this exercise, you will implement a test set of basic unit tests using Julia&#39;s built-in testing infrastructure to verify the implementation of the diffusion and acoustic 2D solvers.</p>
 <h3 id=task_1__3 ><a href="#task_1__3" class=header-anchor >Task 1</a></h3>
 <p>In the <code>Pf_diffusion_2D</code> folder, duplicate the <code>Pf_diffusion_2D_perf_loop_fun.jl</code> script and rename it <code>Pf_diffusion_2D_test.jl</code>.</p>
-<p>Implement a test set in order to test <code>Pf&#91;xtest, ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>. Make sure to set <code>do_check &#61; false</code> i.e. to ensure the code to run 500 iterations.</p>
+<p>Implement a test set using <code>@testset</code> and <code>@test</code> macros from Test.jl in order to test <code>Pf&#91;xtest, ytest&#93;</code> and assess that the values returned are approximatively equal to the following ones for the given values of <code>nx &#61; ny</code>. Make sure to set <code>do_check &#61; false</code> i.e. to ensure the code to run 500 iterations.</p>
 <pre><code class="julia hljs">xtest = [<span class=hljs-number >5</span>, <span class=hljs-built_in >Int</span>(cld(<span class=hljs-number >0.6</span>*lx, dx)), nx-<span class=hljs-number >10</span>]
 ytest = <span class=hljs-built_in >Int</span>(cld(<span class=hljs-number >0.5</span>*ly, dy))</code></pre>
 <p>for</p>
@@ -399,7 +399,7 @@ maxiter = <span class=hljs-number >500</span></code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 20, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 23, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
