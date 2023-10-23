@@ -11,7 +11,7 @@ The goal of this exercise is to:
 """
 
 md"""
-For this exercise, you will implement a test set of basic unit tests to verify the implementation of the diffusion and acoustic 2D solvers.
+For this exercise, you will implement a test set of basic unit tests using Julia's built-in testing infrastructure to verify the implementation of the diffusion and acoustic 2D solvers.
 """
 
 md"""
@@ -19,7 +19,7 @@ md"""
 
 In the `Pf_diffusion_2D` folder, duplicate the `Pf_diffusion_2D_perf_loop_fun.jl` script and rename it `Pf_diffusion_2D_test.jl`.
 
-Implement a test set in order to test `Pf[xtest, ytest]` and assess that the values returned are approximatively equal to the following ones for the given values of `nx = ny`. Make sure to set `do_check = false` i.e. to ensure the code to run 500 iterations.
+Implement a test set using `@testset` and `@test` macros from Test.jl in order to test `Pf[xtest, ytest]` and assess that the values returned are approximatively equal to the following ones for the given values of `nx = ny`. Make sure to set `do_check = false` i.e. to ensure the code to run 500 iterations.
 """
 
 xtest = [5, Int(cld(0.6*lx, dx)), nx-10]
