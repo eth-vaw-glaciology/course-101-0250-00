@@ -231,12 +231,11 @@ println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-sub
 <ul>
 <li><p>In the command bar of VS code &#40;<code>cmd &#43; shit &#43; P</code> on macOS, <code>ctrl &#43; shift &#43; P</code> on Windows&#41;, type <code>Remote-SSH: Connect to Host...</code>. Accept what should be accepted and continue. Then type in the node and id &#40;node number&#41; as from previous step &#40;here <code>nid02145</code>&#41;. Upon hitting enter, you should be on the node with Julia environment loaded.</p>
 
-<li><p>Alternatively, you can also access a compute node after having performed the <code>salloc</code> step by following <code>srun</code> command:</p>
+<li><p>Alternatively, you can also access a compute node after having performed the <code>salloc</code> step by following <code>srun</code> command, upon which you should be on the node with Julia environment loaded:</p>
 
 </ul>
 <pre><code class="sh hljs">srun -n1 --pty /bin/bash -l
-  module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
-<p>you should be on the node with Julia environment loaded.</p>
+module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
 <ol start=5 >
 <li><p>You should then be able to launch Julia</p>
 
