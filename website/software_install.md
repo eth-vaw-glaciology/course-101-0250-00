@@ -350,12 +350,11 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 4. Once you have your allocation and the node (here `nid02145`), you have two solutions to access the compute node:
 - In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded.
-- Alternatively, you can also access a compute node after having performed the `salloc` step by following `srun` command:
-  ```sh
-  srun -n1 --pty /bin/bash -l
-  module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
-  ```
-  you should be on the node with Julia environment loaded.
+- Alternatively, you can also access a compute node after having performed the `salloc` step by following `srun` command, upon which you should be on the node with Julia environment loaded:
+```sh
+srun -n1 --pty /bin/bash -l
+module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
+```
 
 5. You should then be able to launch Julia
 ```sh
