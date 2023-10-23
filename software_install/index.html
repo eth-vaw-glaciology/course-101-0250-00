@@ -143,7 +143,7 @@ $ Hello world, I am 3 of 3</code></pre>
 <div class=messg >Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our <strong>helpdesk</strong> room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.</div></div>
 <p>The login procedure is as follow. First a login to the front-end &#40;or login&#41; machine Ela &#40;hereafter referred to as &quot;ela&quot;&#41; is needed before one can log into Piz Daint. Login is performed using <code>ssh</code>. We will set-up a proxy-jump in order to simplify the procedure and directly access Piz Daint &#40;hereafter referred to as &quot;daint&quot;&#41;</p>
 <p>Both daint and ela share a <code>home</code> folder. However, the <code>scratch</code> folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint&#39;s scratch directly. We will use Julia module to have all Julia-related tools ready.</p>
-<p>Make sure to have the Remote-SSH extension installed in VS code <a href="#vs-code-remote---ssh-setup">see here for details on how-to</a>.</p>
+<p>Make sure to have the Remote-SSH extension installed in VS code <a href="#vs_code_remote_-_ssh_setup">&#40;see here for details on how-to&#41;</a>.</p>
 <p>Please follow the steps listed hereafter to get ready and set-up on daint.</p>
 <h3 id=account_setup ><a href="#account_setup" class=header-anchor >Account setup</a></h3>
 <ol>
@@ -297,6 +297,8 @@ Tue Oct 25 08:18:11 2022
 |=============================================================================|
 |  No running processes found                                                 |
 +-----------------------------------------------------------------------------+</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You can also use VS code&#39;s integrated terminal to launch Julia on daint. However, you can&#39;t use the Julia extension nor the direct node login and would have to use <code>srun -n1 --pty /bin/bash -l</code> and load the needed modules, namely <code>module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code>.</div></div>
 <h3 id=running_a_remote_job_on_piz_daint ><a href="#running_a_remote_job_on_piz_daint" class=header-anchor >Running a remote job on Piz Daint</a></h3>
 <p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>submit.sh</code> you can launch &#40;without need of an allocation&#41; as <code>sbatch submit.sh</code>:</p>
 <pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
@@ -335,8 +337,6 @@ srun julia -O3 &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
 <p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
 <p>The next step should work out of the box. You should be able to select <code>daint</code> from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at <code>/scratch/snx3000/&lt;username&gt;/</code>. Just drag and drop files in there to transfer them.</p>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >You can also use VS code&#39;s integrated terminal to launch Julia on daint. However, you can&#39;t use the Julia extension nor the direct node login and would have to use <code>srun -n1 --pty /bin/bash -l</code> and load the needed modules, namely <code>module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code>.</div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
