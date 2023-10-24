@@ -236,7 +236,7 @@ _For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Dai
 
 ## GPU computing on Piz Daint
 
-GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system.
+GPU computing on [Piz Daint](https://www.cscs.ch/computers/piz-daint/) at [CSCS](https://www.cscs.ch). The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 6000 node hour allocation for our course on the system.
 
 \warn{Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.}
 
@@ -292,7 +292,6 @@ Host daint
   ProxyJump ela
   ForwardAgent yes
   RequestTTY yes
-  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda && bash -l
 
 Host nid*
   HostName %h
@@ -301,7 +300,6 @@ Host nid*
   ProxyJump daint
   ForwardAgent yes
   RequestTTY yes
-  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda && bash -l
 ```
 
 5. Now you should be able to perform password-less login to daint as following
@@ -348,13 +346,13 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 3. Make sure to remember the **node number** returned upon successful allocation, e.g., `salloc: Nodes nid02145 are ready for job`
 
-4. Once you have your allocation and the node (here `nid02145`), you have two solutions to access the compute node:
-- In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded.
-- Alternatively, you can also access a compute node after having performed the `salloc` step by following `srun` command, upon which you should be on the node with Julia environment loaded:
+4. Once you have your allocation (`salloc`) and the node (here `nid02145`), you can access the compute node by using the following `srun` command followed by loading the required modules:
 ```sh
 srun -n1 --pty /bin/bash -l
 module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
 ```
+
+<!-- - In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded. -->
 
 5. You should then be able to launch Julia
 ```sh
@@ -362,13 +360,16 @@ julia
 ```
 
 #### :eyes: ONLY the first time
-1. Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status `] st` and add `CUDA`:
+1. Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status `] st` and `add CUDA@v4`.
+
+\warn{Because some driver discovery compatibility issues, you need to add specifically version 4 of CUDA.jl, upon typing `add CUDA@v4` in the package mode.}
+
 ```julia-repl
 (@1.9-daint-gpu) pkg> st
   Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu`
       Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.9-daint-gpu/Project.toml` (empty project)
 
-(@1.9-daint-gpu) pkg> add CUDA
+(@1.9-daint-gpu) pkg> add CUDA@v4
 ```
 
 2. Then load it and query version info
@@ -376,10 +377,9 @@ julia
 julia> using CUDA
 
 julia> CUDA.versioninfo()
-  Downloaded artifact: CUDA_compat
-CUDA toolkit 11.0, local installation
-NVIDIA driver 470.57.2, for CUDA 11.4
-CUDA driver 11.7
+CUDA runtime 11.0, local installation
+CUDA driver 12.1
+NVIDIA driver 470.57.2, originally for CUDA 11.4
 ```
 
 3. Try out your first calculation on the P100 GPU
@@ -399,7 +399,7 @@ If you made it up to here, you're all set 🚀
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
 ```julia-repl
 shell> nvidia-smi
-Tue Oct 25 08:18:11 2022
+Tue Oct 24 18:42:45 2023
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
 |-------------------------------+----------------------+----------------------+
@@ -408,7 +408,7 @@ Tue Oct 25 08:18:11 2022
 |                               |                      |               MIG M. |
 |===============================+======================+======================|
 |   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
-| N/A   23C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
+| N/A   21C    P0    25W / 250W |      2MiB / 16280MiB |      0%   E. Process |
 |                               |                      |                  N/A |
 +-------------------------------+----------------------+----------------------+
 
