@@ -138,7 +138,7 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
 <p><em>For running Julia at scale on Piz Daint, refer to the &#91;Julia MPI GPU on Piz Daint&#93;&#40;#julia</em>mpi<em>gpu</em>on<em>piz</em>daint&#41; section._</p>
 <h2 id=gpu_computing_on_piz_daint ><a href="#gpu_computing_on_piz_daint" class=header-anchor >GPU computing on Piz Daint</a></h2>
-<p>GPU computing on <a href="https://www.cscs.ch/computers/piz-daint/">Piz Daint</a> at <a href="https://www.cscs.ch">CSCS</a>. The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 2000 node hour allocation for our course on the system.</p>
+<p>GPU computing on <a href="https://www.cscs.ch/computers/piz-daint/">Piz Daint</a> at <a href="https://www.cscs.ch">CSCS</a>. The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 6000 node hour allocation for our course on the system.</p>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our <strong>helpdesk</strong> room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.</div></div>
 <p>The login procedure is as follow. First a login to the front-end &#40;or login&#41; machine Ela &#40;hereafter referred to as &quot;ela&quot;&#41; is needed before one can log into Piz Daint. Login is performed using <code>ssh</code>. We will set-up a proxy-jump in order to simplify the procedure and directly access Piz Daint &#40;hereafter referred to as &quot;daint&quot;&#41;</p>
@@ -178,7 +178,6 @@ Host daint
   ProxyJump ela
   ForwardAgent <span class=hljs-built_in >yes</span>
   RequestTTY <span class=hljs-built_in >yes</span>
-  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda &amp;&amp; bash -l
 
 Host nid*
   HostName %h
@@ -186,8 +185,7 @@ Host nid*
   IdentityFile ~/.ssh/id_ed25519
   ProxyJump daint
   ForwardAgent <span class=hljs-built_in >yes</span>
-  RequestTTY <span class=hljs-built_in >yes</span>
-  RemoteCommand module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda &amp;&amp; bash -l</code></pre>
+  RequestTTY <span class=hljs-built_in >yes</span></code></pre>
 <ol start=5 >
 <li><p>Now you should be able to perform password-less login to daint as following</p>
 
@@ -225,15 +223,9 @@ println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-sub
 <ol start=3 >
 <li><p>Make sure to remember the <strong>node number</strong> returned upon successful allocation, e.g., <code>salloc: Nodes nid02145 are ready for job</code></p>
 
-<li><p>Once you have your allocation and the node &#40;here <code>nid02145</code>&#41;, you have two solutions to access the compute node:</p>
+<li><p>Once you have your allocation &#40;<code>salloc</code>&#41; and the node &#40;here <code>nid02145</code>&#41;, you can access the compute node by using the following <code>srun</code> command followed by loading the required modules:</p>
 
 </ol>
-<ul>
-<li><p>In the command bar of VS code &#40;<code>cmd &#43; shit &#43; P</code> on macOS, <code>ctrl &#43; shift &#43; P</code> on Windows&#41;, type <code>Remote-SSH: Connect to Host...</code>. Accept what should be accepted and continue. Then type in the node and id &#40;node number&#41; as from previous step &#40;here <code>nid02145</code>&#41;. Upon hitting enter, you should be on the node with Julia environment loaded.</p>
-
-<li><p>Alternatively, you can also access a compute node after having performed the <code>salloc</code> step by following <code>srun</code> command, upon which you should be on the node with Julia environment loaded:</p>
-
-</ul>
 <pre><code class="sh hljs">srun -n1 --pty /bin/bash -l
 module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
 <ol start=5 >
@@ -243,14 +235,16 @@ module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
 <pre><code class="sh hljs">julia</code></pre>
 <h4 id=only_the_first_time ><a href="#only_the_first_time" class=header-anchor >👀 ONLY the first time</a></h4>
 <ol>
-<li><p>Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status <code>&#93; st</code> and add <code>CUDA</code>:</p>
+<li><p>Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status <code>&#93; st</code> and <code>add CUDA@v4</code>.</p>
 
 </ol>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Because some driver discovery compatibility issues, you need to add specifically version 4 of CUDA.jl, upon typing <code>add CUDA@v4</code> in the package mode.</div></div>
 <pre><code class="julia-repl hljs"><span class=hljs-metap>(@1.9-daint-gpu) pkg&gt;</span> st
   Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu`
       Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.9-daint-gpu/Project.toml` (empty project)
 
-<span class=hljs-metap>(@1.9-daint-gpu) pkg&gt;</span> add CUDA</code></pre>
+<span class=hljs-metap>(@1.9-daint-gpu) pkg&gt;</span> add CUDA@v4</code></pre>
 <ol start=2 >
 <li><p>Then load it and query version info</p>
 
@@ -258,10 +252,9 @@ module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> CUDA
 </span>
 <span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > CUDA.versioninfo()
-</span>  Downloaded artifact: CUDA_compat
-CUDA toolkit 11.0, local installation
-NVIDIA driver 470.57.2, for CUDA 11.4
-CUDA driver 11.7</code></pre>
+</span>CUDA runtime 11.0, local installation
+CUDA driver 12.1
+NVIDIA driver 470.57.2, originally for CUDA 11.4</code></pre>
 <ol start=3 >
 <li><p>Try out your first calculation on the P100 GPU</p>
 
@@ -277,7 +270,7 @@ CUDA driver 11.7</code></pre>
 <h4 id=monitoring_gpu_usage ><a href="#monitoring_gpu_usage" class=header-anchor >Monitoring GPU usage</a></h4>
 <p>You can use the <code>nvidia-smi</code> command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia&#39;s REPL &#40;in shell mode&#41;:</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metas>shell&gt;</span> nvidia-smi
-Tue Oct 25 08:18:11 2022
+Tue Oct 24 18:42:45 2023
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
 |-------------------------------+----------------------+----------------------+
@@ -286,7 +279,7 @@ Tue Oct 25 08:18:11 2022
 |                               |                      |               MIG M. |
 |===============================+======================+======================|
 |   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
-| N/A   23C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
+| N/A   21C    P0    25W / 250W |      2MiB / 16280MiB |      0%   E. Process |
 |                               |                      |                  N/A |
 +-------------------------------+----------------------+----------------------+
 
@@ -340,7 +333,7 @@ srun julia -O3 &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 23, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 24, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
