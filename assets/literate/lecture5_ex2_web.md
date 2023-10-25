@@ -68,7 +68,7 @@ Add the above figure in a new section of the `Pf_diffusion_2D/README.md`, and pr
 
 ### Task 3
 
-Repeat the strong scaling benchmark you just realised in Task 2 using the various fluid pressure diffusion 2D codes (`Pf_diffusion_2D_Teff.jl`; `Pf_diffusion_2D_perf.jl`; `Pf_diffusion_2D_loop_fun.jl` - `for`, `Threads.@threads` for the latter).
+Repeat the strong scaling benchmark you just realised in Task 2 using the various fluid pressure diffusion 2D codes (`Pf_diffusion_2D_Teff.jl`; `Pf_diffusion_2D_perf.jl`; `Pf_diffusion_2D_loop_fun.jl` - with/without `Threads.@threads` for the latter).
 
 Report on a figure $T_\mathrm{eff}$ of the 4 diffusion solvers' implementations as function of number of grid points `nx × ny`. Vary `nx`and `ny` such that `nx = ny = 16 * 2 .^ (1:8)`. **Use the `BenchmarlTools`-based evaluation approach.**
 
