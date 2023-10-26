@@ -60,7 +60,7 @@ B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);</code></pre>
 <p>We can write a memory copy simply as <code>A .&#61; B</code>; and wrap it in a function using Julia&#39;s concise notation, it looks as follows:</p>
 <pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> memcopy_AP!(A, B) = (A .= B)</code></pre>
 <div class=note ><div class=title >💡 Note</div>
-<div class=messg >We use <code>@inbounds</code> macro to make sure no array bounds checking is performed, which would slow down significantly. Note, furthermore, that outside of these exercises it can be more convenient not to use the <code>@inbounds</code> macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : <code>julia --check-bounds&#61;no ...</code></div></div>
+<div class=messg >We use <code>@inbounds</code> macro to make sure no array bounds checking is performed, which would slow down significantly.</div></div>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg ><code>A &#61; B</code> would not do a memcopy, but make <code>A</code> an alias of <code>B</code>, i.e. make <code>A</code> point to the same data in memory as <code>B</code>.</div></div>
 <p>We also benchmark it and compute <code>T_tot</code>:</p>

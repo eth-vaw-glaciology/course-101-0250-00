@@ -220,7 +220,7 @@ We can write a memory copy simply as `A .= B`; and wrap it in a function using J
 @inbounds memcopy_AP!(A, B) = (A .= B)
 ````
 
-\note{We use `@inbounds` macro to make sure no array bounds checking is performed, which would slow down significantly. Note, furthermore, that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`}
+\note{We use `@inbounds` macro to make sure no array bounds checking is performed, which would slow down significantly.}
 
 \note{`A = B` would not do a memcopy, but make `A` an alias of `B`, i.e. make `A` point to the same data in memory as `B`.}
 
