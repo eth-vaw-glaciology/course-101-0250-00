@@ -16,7 +16,7 @@ noeval = true
 > - GPU codes for diffusion 2D
 > - Reference testing in Julia
 
---- 
+---
 
 \label{content}
 **Content**
@@ -37,7 +37,7 @@ noeval = true
 
 # Exercises - lecture 6
 
-\warn{Exercises (including the `.ipynb`) have to be uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{Exercises (including the `.ipynb`) have to be uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
 \literate{/_literate/lecture6_ex1_web.jl}
 
