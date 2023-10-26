@@ -230,8 +230,8 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 #nb # > 💡 hint: To verify that it does the right computations, you can launch `diffusion2D()`.
 #md # \note{**hint**: To verify that it does the right computations, you can launch `diffusion2D()`.}
 
-#nb # > 💡 hint: Only add the `@inbounds` macro to the function once you have verified that it work as they should. Remember that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`
-#md # \note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should. Remember that outside of these exercises it can be more convenient not to use the `@inbounds` macro, but to deactivate bounds checking instead globally for high performance runs by calling julia as follows : `julia --check-bounds=no ...`}
+#nb # > 💡 hint: Only add the `@inbounds` macro to the function once you have verified that it work as they should.`
+#md # \note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should.`}
 
 #-
 ## solution
