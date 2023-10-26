@@ -215,7 +215,7 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 
 \note{**hint**: To verify that it does the right computations, you can launch `diffusion2D()`.}
 
-\note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should.`}
+\note{**hint**: Only add the `@inbounds` macro to the function once you have verified that it work as they should.}
 
 ````julia:ex10
 # solution
