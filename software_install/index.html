@@ -195,7 +195,7 @@ Host nid*
 <blockquote>
 <p>At this stage, you are logged into daint, but still on a login node and not a compute node.</p>
 </blockquote>
-<p>You can reach your home folder upon typing <code>&#36;HOME</code>, and your scratch space upon typing <code>&#36;SCRATCH</code>. Always make sure to run and save files from scratch folder.</p>
+<p>You can reach your home folder upon typing <code>cd &#36;HOME</code>, and your scratch space upon typing <code>cd &#36;SCRATCH</code>. Always make sure to run and save files from scratch folder.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg ><p>To make things easier, you can create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code> as this will also be useful in a JupyterLab setting</p>
 <pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre></div></div>
@@ -265,8 +265,8 @@ NVIDIA driver 470.57.2, originally for CUDA 11.4</code></pre>
 </span>
 <span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > c = CUDA.zeros(<span class=hljs-number >3</span>,<span class=hljs-number >4</span>);
 </span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > c. = a .+ b</span></code></pre>
-<p>If you made it up to here, you&#39;re all set 🚀</p>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > c .= a .+ b</span></code></pre>
+<p>If you made it to here, you&#39;re all set 🚀</p>
 <h4 id=monitoring_gpu_usage ><a href="#monitoring_gpu_usage" class=header-anchor >Monitoring GPU usage</a></h4>
 <p>You can use the <code>nvidia-smi</code> command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia&#39;s REPL &#40;in shell mode&#41;:</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metas>shell&gt;</span> nvidia-smi
@@ -330,10 +330,15 @@ srun julia -O3 &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
 <p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
 <p>The next step should work out of the box. You should be able to select <code>daint</code> from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at <code>/scratch/snx3000/&lt;username&gt;/</code>. Just drag and drop files in there to transfer them.</p>
+<p>Another way is to use <code>sshfs</code> which lets you mount the file system on servers with ssh-access &#40;works on Linux, there are MacOS and Windows ports too&#41;.  After installing <code>sshfs</code> on your laptop, create a empty directory to mount &#40;<code>mkdir -p ~/mnt/daint</code>&#41;, you should be able to mount via</p>
+<pre><code class="julia hljs">sshfs class227<span class=hljs-meta >@daint</span>.cscs.ch:/ /home/$USER/mnt_daint  -o compression=yes -o reconnect -o idmap=user -o gid=<span class=hljs-number >100</span> -o workaround=rename -o follow_symlinks -o ProxyJump=ela</code></pre>
+<p>and unmount via</p>
+<pre><code class="julia hljs">fusermount -u -z /home/$USER/mnt_daint</code></pre>
+<p>For convenience it is suggested to also symlink to the home-directory <code>ln -s ~/mnt/daint/users/&lt;your username on daint&gt; ~/mnt/daint_home</code>.  &#40;Note that we mount the root directory <code>/</code> with <code>sshfs</code> such that access to <code>/scratch</code> is possible.&#41;</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 26, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 27, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
