@@ -468,7 +468,7 @@ The next step should work out of the box. You should be able to select `daint` f
 
 Another way is to use `sshfs` which lets you mount the file system on servers with ssh-access (works on Linux, there are MacOS and Windows ports too).  After installing `sshfs` on your laptop, create a empty directory to mount (`mkdir -p ~/mnt/daint`), you should be able to mount via
 ```
-sshfs class227@daint.cscs.ch:/ /home/$USER/mnt_daint  -o compression=yes -o reconnect -o idmap=user -o gid=100 -o workaround=rename -o follow_symlinks -o ProxyJump=ela
+sshfs <your username on daint>@daint.cscs.ch:/ /home/$USER/mnt_daint  -o compression=yes -o reconnect -o idmap=user -o gid=100 -o workaround=rename -o follow_symlinks -o ProxyJump=ela
 ```
 and unmount via
 ```
