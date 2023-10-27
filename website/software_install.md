@@ -310,7 +310,7 @@ Moreover, you will get the Julia related modules loaded as we add the `RemoteCom
 
 > At this stage, you are logged into daint, but still on a login node and not a compute node.
 
-You can reach your home folder upon typing `$HOME`, and your scratch space upon typing `$SCRATCH`. Always make sure to run and save files from scratch folder.
+You can reach your home folder upon typing `cd $HOME`, and your scratch space upon typing `cd $SCRATCH`. Always make sure to run and save files from scratch folder.
 
 \note{To make things easier, you can create a soft link from your `$HOME` pointing to `$SCRATCH` as this will also be useful in a JupyterLab setting
 ```sh
@@ -390,10 +390,10 @@ julia> b = CUDA.rand(3,4);
 
 julia> c = CUDA.zeros(3,4);
 
-julia> c. = a .+ b
+julia> c .= a .+ b
 ```
 
-If you made it up to here, you're all set 🚀
+If you made it to here, you're all set 🚀
 
 #### Monitoring GPU usage
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
@@ -465,6 +465,16 @@ Given that daint's `scratch` is not mounted on ela, it is unfortunately impossib
 To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs_code_remote_-_ssh_setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
 
 The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
+
+Another way is to use `sshfs` which lets you mount the file system on servers with ssh-access (works on Linux, there are MacOS and Windows ports too).  After installing `sshfs` on your laptop, create a empty directory to mount (`mkdir -p ~/mnt/daint`), you should be able to mount via
+```
+sshfs class227@daint.cscs.ch:/ /home/$USER/mnt_daint  -o compression=yes -o reconnect -o idmap=user -o gid=100 -o workaround=rename -o follow_symlinks -o ProxyJump=ela
+```
+and unmount via
+```
+fusermount -u -z /home/$USER/mnt_daint
+```
+For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
 
 <!--
 ### Julia MPI GPU on Piz Daint
