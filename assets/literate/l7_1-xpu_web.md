@@ -61,8 +61,8 @@ ParallelStencil enables to:
 
 ParallelStencil relies on the native kernel programming capabilities of:
 - [CUDA.jl](https://cuda.juliagpu.org/stable/) for high-performance computations on Nvidia GPUs
+- [AMDGPU.jl](https://amdgpu.juliagpu.org/stable/) for high-performance computations on AMD GPUs
 - [Base.Threads](https://docs.julialang.org/en/v1/base/multi-threading/#Base.Threads) for high-performance computations on CPUs
-- And _to be released soon_ [AMDGPU.jl](https://amdgpu.juliagpu.org/stable/) for high-performance computations on AMD GPUs
 
 ### Short tour of ParallelStencil's `README`
 
@@ -87,11 +87,11 @@ const USE_GPU = false
 using ParallelStencil
 using ParallelStencil.FiniteDifferences2D
 @static if USE_GPU
-    @init_parallel_stencil(CUDA, Float64, 2)
+    @init_parallel_stencil(CUDA, Float64, 2, inbounds = false)
 else
-    @init_parallel_stencil(Threads, Float64, 2)
+    @init_parallel_stencil(Threads, Float64, 2, inbounds = false)
 end
-using Plots,Plots.Measures,Printf
+using Plots, Plots.Measures, Printf
 ````
 
 Then, we need to update the two compute functions , `compute_flux!` and `update_Pf!`.
@@ -116,9 +116,9 @@ So, back to our compute function (kernel). The `compute_flux!` function gets the
 Inside, we define the flux definition as following:
 
 ````julia:ex2
-@parallel function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
-    @inn_x(qDx) = @inn_x(qDx) - (@inn_x(qDx) + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
-    @inn_y(qDy) = @inn_y(qDy) - (@inn_y(qDy) + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+@parallel function compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    @inn_x(qDx) = @inn_x(qDx) - (@inn_x(qDx) + k_ηf_dx * @d_xa(Pf)) * _1_θ_dτ
+    @inn_y(qDy) = @inn_y(qDy) - (@inn_y(qDy) + k_ηf_dy * @d_ya(Pf)) * _1_θ_dτ
     return nothing
 end
 ````
@@ -128,7 +128,7 @@ Note that currently the shorthand `-=` notation is not supported and we need to 
 By analogy, update `update_Pf!`.
 
 ````julia:ex3
-@parallel function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
+@parallel function update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
     Pf = ...
     return nothing
 end
@@ -155,10 +155,10 @@ In the `# array initialisation` section, we need to wrap the Gaussian by `Data.A
 ````julia:ex5
 # [...]
 # array initialisation
-Pf      = Data.Array( @. exp(-(xc-lx/2)^2 -(yc'-ly/2)^2) )
-qDx     = @zeros(nx+1,ny  )
-qDy     = @zeros(nx  ,ny+1)
-r_Pf    = @zeros(nx  ,ny  )
+Pf      = Data.Array(@. exp(-(xc - lx / 2)^2 - (yc' - ly / 2)^2))
+qDx     = @zeros(nx + 1, ny    )
+qDy     = @zeros(nx    , ny + 1)
+r_Pf    = @zeros(nx    , ny    )
 # [...]
 ````
 
@@ -171,9 +171,9 @@ iter = 1; err_Pf = 2ϵtol
 t_tic = 0.0; niter = 0
 while err_Pf >= ϵtol && iter <= maxiter
     if (iter==11) t_tic = Base.time(); niter = 0 end
-    @parallel compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
-    @parallel update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
-    if do_check && (iter%ncheck == 0)
+    @parallel compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    @parallel update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
+    if do_check && (iter % ncheck == 0)
         #  [...]
     end
     iter += 1; niter += 1
@@ -187,6 +187,8 @@ The performance evaluation section remaining unchanged, we are all set!
 - Let's execute the code having the `USE_GPU = false` flag set. We are running on multi-threading CPU backend with multi-threading enabled.
 
 - Changing the `USE_GPU` flag to `true` (having first relaunched a Julia session) will make the application running on a GPU. On the GPU, you can reduce `ttot` and increase `nx, ny` in order achieve higher $T_\mathrm{eff}$.
+
+- Changing the `inbounds=false` flag to `inbounds=true` will globally apply `@inbounds` in front of compute statements and deliver better performance. Beware to enable this option only once the code delivers epxected results.
 
 \note{Curious to see how it works under the hood? Feel free to [explore the source code](https://github.com/omlins/ParallelStencil.jl/blob/cd59a5b0d1fd32ceaecbf7fc922ab87a24257781/src/ParallelKernel/parallel.jl#L263). Another nice bit of open source software (and the fact that Julia's meta programming rocks 🚀).}
 
@@ -205,16 +207,15 @@ We can keep the package handling and initialisation identical to what we impleme
 Then, we can modify the `compute_flux!` function definition from the `diffusion_2D_perf_gpu.jl` script, removing the `ix`, `iy` indices as those are now handled by ParallelStencil. The function definition takes however the `@parallel_indices` macro and the `(ix,iy)` tuple:
 
 ````julia:ex7
-macro d_xa(A)  esc(:( $A[ix+1,iy]-$A[ix,iy] )) end
-macro d_ya(A)  esc(:( $A[ix,iy+1]-$A[ix,iy] )) end
-
-@parallel_indices (ix,iy) function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
-    nx,ny=size(Pf)
-    if (ix<=nx-1 && iy<=ny  )  qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ  end
-    if (ix<=nx   && iy<=ny-1)  qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ  end
+@parallel_indices (ix, iy) function compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    nx, ny = size(Pf)
+    if (ix <= nx - 1 && iy <= ny) qDx[ix+1, iy] -= (qDx[ix+1, iy] + k_ηf_dx * @d_xa(Pf)) * _1_θ_dτ end
+    if (ix <= nx && iy <= ny - 1) qDy[ix, iy+1] -= (qDy[ix, iy+1] + k_ηf_dy * @d_ya(Pf)) * _1_θ_dτ end
     return nothing
 end
 ````
+
+\warn{Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.}
 
 The `# physics` section remains unchanged, and the `# numerics section` is identical to the previous `xpu` script, i.e., no need for explicit block and thread definition.
 
@@ -233,9 +234,9 @@ iter = 1; err_Pf = 2ϵtol
 t_tic = 0.0; niter = 0
 while err_Pf >= ϵtol && iter <= maxiter
     if (iter==11) t_tic = Base.time(); niter = 0 end
-    @parallel compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
-    @parallel update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
-    if do_check && (iter%ncheck == 0)
+    @parallel compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    @parallel update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
+    if do_check && (iter % ncheck == 0)
         # [...]
     end
     iter += 1; niter += 1
@@ -274,10 +275,10 @@ These are the steps to follow in order to make the transition happen.
 The initialisation can be done as following:
 
 ````julia:ex9
-Pf = Data.Array([exp(-(xc[ix]-lx/2)^2 -(yc[iy]-ly/2)^2 -(zc[iz]-lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz])
+Pf = Data.Array([exp(-(xc[ix] - lx / 2)^2 - (yc[iy] - ly / 2)^2 - (zc[iz] - lz / 2)^2) for ix = 1:nx, iy = 1:ny, iz = 1:nz])
 ````
 
 And don't forget to update `A_eff` in the performance formula!
 
-_Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`._
+\note{Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`.}
 

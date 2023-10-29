@@ -31,32 +31,32 @@ Make sure to use the `z`-direction as the vertical coordinate changing all relev
 
 ````julia:ex1
 # physics
-lx,ly,lz    = 40.0,20.0,20.0
-αρg         = 1.0
-Ra          = 1000
-λ_ρCp       = 1/Ra*(αρg*k_ηf*ΔT*lz/ϕ) # Ra = αρg*k_ηf*ΔT*lz/λ_ρCp/ϕ
+lx, ly, lz = 40.0, 20.0, 20.0
+αρg        = 1.0
+Ra         = 1000
+λ_ρCp      = 1 / Ra * (αρg * k_ηf * ΔT * lz / ϕ) # Ra = αρg*k_ηf*ΔT*lz/λ_ρCp/ϕ
 # numerics
-nz          = 63
-ny          = nz
-nx          = 2*(nz+1)-1
-nt          = 500
-cfl         = 1.0/sqrt(3.1)
+nz         = 63
+ny         = nz
+nx         = 2 * (nz + 1) - 1
+nt         = 500
+cfl        = 1.0 / sqrt(3.1)
 ````
 
 Also, modify the physical time-step definition accordingly:
 
 ````julia:ex2
 dt = if it == 1
-    0.1*min(dx,dy,dz)/(αρg*ΔT*k_ηf)
+    0.1 * min(dx, dy, dz) / (αρg * ΔT * k_ηf)
 else
-    min(5.0*min(dx,dy,dz)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)), dz/maximum(abs.(qDz)))/3.1)
+    min(5.0 * min(dx, dy, dz) / (αρg * ΔT * k_ηf), ϕ * min(dx / maximum(abs.(qDx)), dy / maximum(abs.(qDy)), dz / maximum(abs.(qDz))) / 3.1)
 end
 ````
 
 Initial conditions for temperature can be done by analogy to the 2D case, but using the iterative approach presented in class (see [here](#towards_3d_thermal_porous_convection)).
 
 ````julia:ex3
-T = [ΔT*exp(-xc[ix]^2 -yc[iy]^2 -(zc[iz]+lz/2)^2) for ix=1:nx,iy=1:ny,iz=1:nz]
+T = [ΔT * exp(-xc[ix]^2 - yc[iy]^2 - (zc[iz] + lz / 2)^2) for ix = 1:nx, iy = 1:ny, iz = 1:nz]
 ````
 
 Make sure to have `yc` defined using extends similar to `xc`, and `zc` being the vertical dimension.
@@ -64,13 +64,13 @@ Make sure to have `yc` defined using extends similar to `xc`, and `zc` being the
 For boundary conditions, apply heating from the bottom (zc=-lz) and cooling from top `zc=0` in the vertical `z`-direction. Extend the adiabatic condition for the walls to the `xz` and `yz` planes. The `yz` BC kernel could be defined and called as following:
 
 ````julia:ex4
-@parallel_indices (iy,iz) function bc_x!(A)
-    A[1  ,iy,iz] = A[2    ,iy,iz]
-    A[end,iy,iz] = A[end-1,iy,iz]
+@parallel_indices (iy, iz) function bc_x!(A)
+    A[1  , iy, iz] = A[2    , iy, iz]
+    A[end, iy, iz] = A[end-1, iy, iz]
     return
 end
 
-@parallel (1:size(T,2),1:size(T,3)) bc_x!(T)
+@parallel (1:size(T, 2), 1:size(T, 3)) bc_x!(T)
 ````
 
 Verify that the code runs using the above low-resolution configuration and produces sensible output. To this end, you can recycle the 2D visualisation (removing the quiver plotting) in order to visualise a 2D slice of your 3D data, e.g., at `ly/2`:
@@ -78,8 +78,8 @@ Verify that the code runs using the above low-resolution configuration and produ
 ````julia:ex5
 iframe = 0
 if do_viz && (it % nvis == 0)
-    p1=heatmap(xc,zc,Array(T)[:,ceil(Int,ny/2),:]';xlims=(xc[1],xc[end]),ylims=(zc[1],zc[end]),aspect_ratio=1,c=:turbo)
-    png(p1,@sprintf("viz3D_out/%04d.png",iframe+=1))
+    p1 = heatmap(xc, zc, Array(T)[:, ceil(Int, ny / 2), :]'; xlims=(xc[1], xc[end]), ylims=(zc[1], zc[end]), aspect_ratio=1, c=:turbo)
+    png(p1, @sprintf("viz3D_out/%04d.png", iframe += 1))
 end
 ````
 
@@ -88,13 +88,13 @@ end
 Upon having verified your code, run it with following parameters on Piz Daint, using one GPU:
 
 ````julia:ex6
-Ra       = 1000
+Ra         = 1000
 # [...]
-nx,ny,nz = 255,127,127
-nt       = 2000
-ϵtol     = 1e-6
-nvis     = 50
-ncheck   = ceil(2max(nx,ny,nz))
+nx, ny, nz = 255, 127, 127
+nt         = 2000
+ϵtol       = 1e-6
+nvis       = 50
+ncheck     = ceil(2max(nx, ny, nz))
 ````
 
 The run may take about three hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme3D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
@@ -105,15 +105,15 @@ For the figure, you can use `GLMakie` to produce some isocontours visualisation;
 
 ````julia:ex7
 function save_array(Aname,A)
-    fname = string(Aname,".bin")
-    out = open(fname,"w"); write(out,A); close(out)
+    fname = string(Aname, ".bin")
+    out = open(fname, "w"); write(out, A); close(out)
 end
 ````
 
 which you can call as following at the end of your simulation
 
 ````julia:ex8
-save_array("out_T",convert.(Float32,Array(T)))
+save_array("out_T", convert.(Float32, Array(T)))
 ````
 
 Then, once you've created the `out_T.bin` file, read it in using the following code and produce a figure
@@ -121,22 +121,22 @@ Then, once you've created the `out_T.bin` file, read it in using the following c
 ````julia:ex9
 using GLMakie
 
-function load_array(Aname,A)
-    fname = string(Aname,".bin")
-    fid=open(fname,"r"); read!(fid,A); close(fid)
+function load_array(Aname, A)
+    fname = string(Aname, ".bin")
+    fid=open(fname, "r"); read!(fid, A); close(fid)
 end
 
 function visualise()
-    lx,ly,lz = 40.0,20.0,20.0
+    lx, ly, lz = 40.0, 20.0, 20.0
     nx = 255
     ny = nz = 127
-    T  = zeros(Float32,nx,ny,nz)
-    load_array("out_T",T)
-    xc,yc,zc = LinRange(0,lx,nx),LinRange(0,ly,ny),LinRange(0,lz,nz)
-    fig      = Figure(resolution=(1600,1000),fontsize=24)
-    ax       = Axis3(fig[1,1];aspect=(1,1,0.5),title="Temperature",xlabel="lx",ylabel="ly",zlabel="lz")
-    surf_T   = contour!(ax,xc,yc,zc,T;alpha=0.05,colormap=:turbo)
-    save("T_3D.png",fig)
+    T  = zeros(Float32, nx, ny, nz)
+    load_array("out_T", T)
+    xc, yc, zc = LinRange(0, lx, nx), LinRange(0, ly, ny), LinRange(0, lz, nz)
+    fig = Figure(resolution=(1600, 1000), fontsize=24)
+    ax  = Axis3(fig[1, 1]; aspect=(1, 1, 0.5), title="Temperature", xlabel="lx", ylabel="ly", zlabel="lz")
+    surf_T = contour!(ax, xc, yc, zc, T; alpha=0.05, colormap=:turbo)
+    save("T_3D.png", fig)
     return fig
 end
 
