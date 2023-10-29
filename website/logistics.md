@@ -85,13 +85,13 @@ We will try to correct your assignments before the lecture following the homewor
 
 Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
-<!-- The exercises **in lecture 7** will serve as starting point for the first project:
-1. Create a `project` directory at the root of your shared private `pde-on-gpu-<lastname>` repository.
+The exercises **in lecture 7** will serve as starting point for the first project:
+1. Create a `project` directory at the root of your shared private `pde-on-gpu-<moodleprofilename>` repository.
 2. Make sure to follow the basic repo structure (using `PkgTemplates.jl` to generate it) as described in [Lecture 7](/lecture7/#infos_about_projects)
 3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
-The project submission deadline is set to **02.12.2022 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the Lecture 9 section.
+The project submission deadline is set to **01.12.2023 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
 - a `PorousConvection` folder containing the structure proposed in [Lecture 7](/lecture7/#preparing_the_project_folder_in_your_github_repo)
@@ -108,7 +108,6 @@ Make sure to have following items in your private GitHub repository:
 - a short discussion/conclusion section about the performed work, results, and outlook
 
 _Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
- -->
 
 ## Final project
 
