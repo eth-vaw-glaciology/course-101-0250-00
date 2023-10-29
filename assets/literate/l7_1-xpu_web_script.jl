@@ -4,9 +4,9 @@ const USE_GPU = false
 using ParallelStencil
 using ParallelStencil.FiniteDifferences2D
 @static if USE_GPU
-    @init_parallel_stencil(CUDA, Float64, 2, inbounds = false)
+    @init_parallel_stencil(CUDA, Float64, 2, inbounds=false)
 else
-    @init_parallel_stencil(Threads, Float64, 2, inbounds = false)
+    @init_parallel_stencil(Threads, Float64, 2, inbounds=false)
 end
 using Plots, Plots.Measures, Printf
 
