@@ -33,7 +33,7 @@ Finalise the `Pf_diffusion_2D_xpu.jl` script from class.
 
 Finalise the `Pf_diffusion_2D_perf_xpu.jl` script from class.
 - This version should contain compute functions (kernels) definitions using `@parallel_indices` approach.
-- You can use macros for the derivative definition.
+- You can keep using `ParallelStencil.FiniteDifferences2D` submodule macros for the derivative definition.
 - Include the kwarg `do_visu` (or `do_check`) to allow disabling plotting/error-checking when assessing performance.
 - Also, make sure to include and update the performance evaluation section at the end of the script.
 
@@ -47,30 +47,30 @@ Make sure to use following physical and numerical parameters and compare the xPU
 """
 
 ## physics
-lx,ly       = 40.0,20.0
-k_ηf        = 1.0
-αρgx,αρgy   = 0.0,1.0
-αρg         = sqrt(αρgx^2+αρgy^2)
-ΔT          = 200.0
-ϕ           = 0.1
-Ra          = 1000
-λ_ρCp       = 1/Ra*(αρg*k_ηf*ΔT*ly/ϕ) # Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ
+lx, ly     = 40.0, 20.0
+k_ηf       = 1.0
+αρgx, αρgy = 0.0, 1.0
+αρg        = sqrt(αρgx^2 + αρgy^2)
+ΔT         = 200.0
+ϕ          = 0.1
+Ra         = 1000
+λ_ρCp      = 1 / Ra * (αρg * k_ηf * ΔT * ly / ϕ) # Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ
 ## numerics
-ny          = 63
-nx          = 2*(ny+1)-1
-nt          = 500
-re_D        = 4π
-cfl         = 1.0/sqrt(2.1)
-maxiter     = 10max(nx,ny)
-ϵtol        = 1e-6
-nvis        = 20
-ncheck      = ceil(max(nx,ny))
+ny         = 63
+nx         = 2 * (ny + 1) - 1
+nt         = 500
+re_D       = 4π
+cfl        = 1.0 / sqrt(2.1)
+maxiter    = 10max(nx, ny)
+ϵtol       = 1e-6
+nvis       = 20
+ncheck     = ceil(max(nx, ny))
 ## [...]
 ## time step
-dt = if it == 1 
-    0.1*min(dx,dy)/(αρg*ΔT*k_ηf)
+dt = if it == 1
+    0.1 * min(dx, dy) / (αρg * ΔT * k_ηf)
 else
-    min(5.0*min(dx,dy)/(αρg*ΔT*k_ηf),ϕ*min(dx/maximum(abs.(qDx)), dy/maximum(abs.(qDy)))/2.1)
+    min(5.0 * min(dx, dy) / (αρg * ΔT * k_ηf), ϕ * min(dx / maximum(abs.(qDx)), dy / maximum(abs.(qDy))) / 2.1)
 end
 
 md"""
@@ -89,7 +89,7 @@ nx,ny   = 511,1023
 nt      = 4000
 ϵtol    = 1e-6
 nvis    = 50
-ncheck  = ceil(2max(nx,ny))
+ncheck  = ceil(2max(nx, ny))
 
 md"""
 The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme2D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
@@ -109,12 +109,12 @@ md"""
 
 - Array(s) can be initialised on the CPU and then made xPU ready upon wrapping them around `Data.Array` statement (use `Array` to gather them back on CPU host).
 - Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following `Array(T)'` or `qDx_c .= avx(Array(qDx))`.
-- Boundary condition kernel to replace `T[[1,end],:] .= T[[2,end-1],:]` can be implemented and called as following:
+- Boundary condition kernel to replace `T[[1, end], :] .= T[[2, end-1], :]` can be implemented and called as following:
 """
 
 @parallel_indices (iy) function bc_x!(A)
-    A[1  ,iy] = A[2    ,iy]
-    A[end,iy] = A[end-1,iy]
+    A[1  , iy] = A[2    , iy]
+    A[end, iy] = A[end-1, iy]
     return
 end
 

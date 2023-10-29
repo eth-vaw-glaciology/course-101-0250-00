@@ -30,8 +30,8 @@ function runtests()
 
     printstyled("Testing PorousConvection.jl\n"; bold=true, color=:white)
 
-    run(`$exename -O3 --startup-file=no --check-bounds=no $(joinpath(testdir, "test2D.jl"))`)
-    run(`$exename -O3 --startup-file=no --check-bounds=no $(joinpath(testdir, "test3D.jl"))`)
+    run(`$exename -O3 --startup-file=no $(joinpath(testdir, "test2D.jl"))`)
+    run(`$exename -O3 --startup-file=no $(joinpath(testdir, "test3D.jl"))`)
 
     return
 end
