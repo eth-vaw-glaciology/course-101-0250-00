@@ -145,17 +145,17 @@ As first task, we'll compute the $T_\mathrm{eff}$ for the 2D fluid pressure (dif
 - Compute the elapsed time `t_toc` at the end of the time loop and report:
 
 ````julia:ex1
-t_toc = ...
-A_eff = ...          # Effective main memory access per iteration [GB]
-t_it  = ...          # Execution time per iteration [s]
-T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
+t_toc = Base.time() - t_tic
+A_eff = (3*2)/1e9*nx*ny*sizeof(Float64)  # Effective main memory access per iteration [GB]
+t_it  = t_toc/niter                      # Execution time per iteration [s]
+T_eff = A_eff/t_it                       # Effective memory throughput [GB/s]
 ````
 
 - Report `t_toc`, `T_eff` and `niter` at the end of the code, formatting output using `@printf()` macro.
 - Round `T_eff` to the 3rd significant digit.
 
 ```julia
-@printf("Time = %1.3f sec, ... \n", t_toc, ...)
+@printf("Time = %1.3f sec, T_eff = %1.2f GB/s (niter = %d)\n", t_toc, round(T_eff, sigdigits=3), niter)
 ```
 
 ### Deactivate visualisation (and error checking)
@@ -163,8 +163,10 @@ T_eff = A_eff/t_it   # Effective memory throughput [GB/s]
 - Define a `do_check` flag set to `false`
 
 ````julia:ex2
-function Pf_diffusion_2D(;??)
+function Pf_diffusion_2D(;do_check=false)
+    if do_check && (iter%ncheck == 0)
     ...
+    end
     return
 end
 ````
@@ -217,19 +219,19 @@ The goal is now to write out the diffusion physics in a loop fashion over $x$ an
 Implement a nested loop, taking car of bounds and staggering.
 
 ````julia:ex6
-for iy=??
-    for ix=??
-        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=1:ny
+    for ix=1:nx-1
+        qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*(Pf[ix+1,iy]-Pf[ix,iy]))*_1_θ_dτ
     end
 end
-for iy=??
-    for ix=??
-        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=1:ny-1
+    for ix=1:nx
+        qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*(Pf[ix,iy+1]-Pf[ix,iy]))*_1_θ_dτ
     end
 end
-for iy=??
-    for ix=??
-        Pf[??]  -= ??
+for iy=1:ny
+    for ix=1:nx
+        Pf[ix,iy]  -= ((qDx[ix+1,iy]-qDx[ix,iy])*_dx + (qDy[ix,iy+1]-qDy[ix,iy])*_dy)*_β_dτ
     end
 end
 ````
@@ -239,26 +241,26 @@ We could now use macros to make the code nicer and clearer. Macro expression wil
 Let's use macros to replace the derivative implementations
 
 ````julia:ex7
-macro d_xa(A)  esc(:( $A[??]-$A[??] )) end
-macro d_ya(A)  esc(:( $A[??]-$A[??] )) end
+macro d_xa(A)  esc(:( $A[ix+1,iy]-$A[ix,iy] )) end
+macro d_ya(A)  esc(:( $A[ix,iy+1]-$A[ix,iy] )) end
 ````
 
 And update the code within the iteration loop:
 
 ````julia:ex8
-for iy=??
-    for ix=??
-        qDx[??] -= (qDx[??] + k_ηf_dx* ?? )*_1_θ_dτ
+for iy=1:ny
+    for ix=1:nx-1
+        qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
     end
 end
-for iy=??
-    for ix=??
-        qDy[??] -= (qDy[??] + k_ηf_dy* ?? )*_1_θ_dτ
+for iy=1:ny-1
+    for ix=1:nx
+        qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
     end
 end
-for iy=??
-    for ix=??
-        Pf[??]  -= ??
+for iy=1:ny
+    for ix=1:nx
+        Pf[ix,iy]  -= (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
     end
 end
 ````
@@ -278,15 +280,28 @@ In this last step, the goal is to define `compute` functions to hold the physics
 Create a `compute_flux!()` and `compute_Pf!()` functions that take input and output arrays and needed scalars as argument and return nothing.
 
 ````julia:ex9
-function compute_flux!(...)
+function compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
     nx,ny=size(Pf)
-    ...
+    for iy=1:ny,
+        for ix=1:nx-1
+            qDx[ix+1,iy] -= (qDx[ix+1,iy] + k_ηf_dx*@d_xa(Pf))*_1_θ_dτ
+        end
+    end
+    for iy=1:ny-1
+        for ix=1:nx
+            qDy[ix,iy+1] -= (qDy[ix,iy+1] + k_ηf_dy*@d_ya(Pf))*_1_θ_dτ
+        end
+    end
     return nothing
 end
 
-function update_Pf!(Pf,...)
+function update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
     nx,ny=size(Pf)
-    ...
+    for iy=1:ny
+        for ix=1:nx
+            Pf[ix,iy]  -= (@d_xa(qDx)*_dx + @d_ya(qDy)*_dy)*_β_dτ
+        end
+    end
     return nothing
 end
 ````
@@ -306,9 +321,9 @@ Let's evaluate the performance of our code using `BenchmarkTools`. We will need 
 The `compute!()` function:
 
 ````julia:ex10
-function compute!(Pf,qDx,qDy, ???)
-    compute_flux!(...)
-    update_Pf!(...)
+function compute!(Pf,qDx,qDy,k_ηf_dx,k_ηf_dy,_1_θ_dτ,_dx,_dy,_β_dτ)
+    compute_flux!(qDx,qDy,Pf,k_ηf_dx,k_ηf_dy,_1_θ_dτ)
+    update_Pf!(Pf,qDx,qDy,_dx,_dy,_β_dτ)
     return nothing
 end
 ````
@@ -316,8 +331,8 @@ end
 can then be called using `@belapsed` to return elapsed time for a single iteration, letting `BenchmarkTools` taking car about sampling
 
 ````julia:ex11
-t_toc = @belapsed compute!($Pf,$qDx,$qDy,???)
-niter = ???
+t_toc = @belapsed compute!($Pf,$qDx,$qDy,$k_ηf_dx,$k_ηf_dy,$_1_θ_dτ,$_dx,$_dy,$_β_dτ)
+niter = 1
 ````
 
 \note{Note that variables need to be interpolated into the function call, thus taking a `$` in front.}
