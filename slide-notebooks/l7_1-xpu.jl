@@ -179,9 +179,9 @@ const USE_GPU = false
 using ParallelStencil
 using ParallelStencil.FiniteDifferences2D
 @static if USE_GPU
-    @init_parallel_stencil(CUDA, Float64, 2, inbounds = false)
+    @init_parallel_stencil(CUDA, Float64, 2, inbounds=false)
 else
-    @init_parallel_stencil(Threads, Float64, 2, inbounds = false)
+    @init_parallel_stencil(Threads, Float64, 2, inbounds=false)
 end
 using Plots, Plots.Measures, Printf
 
@@ -350,7 +350,7 @@ end
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 #nb # > 💡 note: Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.
-#md # \warn{Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.}
+#md # \note{Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
