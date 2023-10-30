@@ -1,7 +1,6 @@
 # This file was generated, do not modify it.
 
-push!(LOAD_PATH, "../src")
-
+using Test
 using PorousConvection
 
 function runtests()

@@ -129,18 +129,18 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
     <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
     <span class=hljs-attr >strategy:</span>
       <span class=hljs-attr >matrix:</span>
-        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.8&#x27;</span>]
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.9&#x27;</span>]
         <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
         <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
 
     <span class=hljs-attr >steps:</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v4</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
         <span class=hljs-attr >with:</span>
           <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
           <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@v1</span></code></pre>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@latest</span></code></pre>
 <h4 id=see_it_running ><a href="#see_it_running" class=header-anchor >See it running</a></h4>
 <ul>
 <li><p>add, commit and push to GitHub</p>
@@ -164,22 +164,33 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
   [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
 <span class=hljs-attr >jobs:</span>
   <span class=hljs-attr >test:</span>
+    <span class=hljs-attr >name:</span> <span class=hljs-string >Julia</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >github.event_name</span> <span class=hljs-string >}}</span>
     <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
     <span class=hljs-attr >strategy:</span>
       <span class=hljs-attr >fail-fast:</span> <span class=hljs-literal >false</span>
       <span class=hljs-attr >matrix:</span>
-        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.8&#x27;</span>]
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.9&#x27;</span>]
         <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
         <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
-
     <span class=hljs-attr >steps:</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v4</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
         <span class=hljs-attr >with:</span>
           <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
           <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;); import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v3</span>
+        <span class=hljs-attr >env:</span>
+          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
+          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+</span>      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;);
+                                   import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
 <p>Note that you have to <em><strong>adjust</strong></em> the bit: <code>cd&#40;&quot;&lt;subfolder-of-julia-project&gt;&quot;&#41;</code>.</p>
 <p>👉 The <em><strong>example</strong></em> is in <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">course-101-0250-00-L6Testing-subfolder.jl</a>.</p>
 <p>👉 As you go along in the course you&#39;ll want to test different subfolders, thus just change the line in the <code>ci.yml</code> file.</p>
@@ -467,8 +478,7 @@ visualise()</code></pre>
 
 </ol>
 <p>You may realise that you can&#39;t initialise ParallelStencil for 2D and 3D configurations within the same test script. A good practice is to place one test2D.jl and another test3D.jl scripts within the <code>test</code> folder and call these scripts from the <code>runtests.jl</code> mains script, which could contain following:</p>
-<pre><code class="julia hljs">push!(<span class=hljs-literal >LOAD_PATH</span>, <span class=hljs-string >&quot;../src&quot;</span>)
-
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> Test
 <span class=hljs-keyword >using</span> PorousConvection
 
 <span class=hljs-keyword >function</span> runtests()
@@ -492,7 +502,7 @@ exit(runtests())</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 29, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 30, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
