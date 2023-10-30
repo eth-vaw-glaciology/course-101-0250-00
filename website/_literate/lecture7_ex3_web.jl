@@ -20,8 +20,7 @@ md"""
 You may realise that you can't initialise ParallelStencil for 2D and 3D configurations within the same test script. A good practice is to place one test2D.jl and another test3D.jl scripts within the `test` folder and call these scripts from the `runtests.jl` mains script, which could contain following:
 """
 
-push!(LOAD_PATH, "../src")
-
+using Test
 using PorousConvection
 
 function runtests()
