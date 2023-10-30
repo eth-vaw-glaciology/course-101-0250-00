@@ -31,18 +31,18 @@ Pay attention that you need to enforce array bound checking (this was previously
 if (ix<=nx && iy<=ny)  Pf[ix,iy] = ...  end
 ```
 
-Moving to the `# Time loop`, you'll now have to add information in order to allow the compute function to execute on the GPU. This can be achieved by adding `@cuda blocks threads` prior to the function call, turning, e.g.,
+Moving to the `# Time loop`, you'll now have to add information in order to allow a compute function (e.g. `my_kernel!`) to execute on the GPU. This can be achieved by adding `@cuda blocks threads` prior to the function call, turning, e.g.,
 ```julia
-compute!(...)
+my_kernel!(...)
 ```
 into
 ```julia
-@cuda blocks blocks=blocks threads=threads compute!(...)
+@cuda blocks blocks=blocks threads=threads my_kernel!(...)
 synchronize()
 ```
 or alternatively
 ```julia
-CUDA.@sync @cuda blocks=blocks threads=threads compute!(...)
+CUDA.@sync @cuda blocks=blocks threads=threads my_kernel!(...)
 ```
 
 \warn{Don't forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.}

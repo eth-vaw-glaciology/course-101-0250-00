@@ -594,13 +594,13 @@ T_peak = ... <span class=hljs-comment ># Peak memory throughput of the Tesla P10
 iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y</code></pre>
 <p>Pay attention that you need to enforce array bound checking &#40;this was previously done by the loop bounds&#41;. A convenient way of doing so is using <code>if</code> conditions:</p>
 <pre><code class="julia hljs"><span class=hljs-keyword >if</span> (ix&lt;=nx &amp;&amp; iy&lt;=ny)  Pf[ix,iy] = ...  <span class=hljs-keyword >end</span></code></pre>
-<p>Moving to the <code># Time loop</code>, you&#39;ll now have to add information in order to allow the compute function to execute on the GPU. This can be achieved by adding <code>@cuda blocks threads</code> prior to the function call, turning, e.g.,</p>
-<pre><code class="julia hljs">compute!(...)</code></pre>
+<p>Moving to the <code># Time loop</code>, you&#39;ll now have to add information in order to allow a compute function &#40;e.g. <code>my_kernel&#33;</code>&#41; to execute on the GPU. This can be achieved by adding <code>@cuda blocks threads</code> prior to the function call, turning, e.g.,</p>
+<pre><code class="julia hljs">my_kernel!(...)</code></pre>
 <p>into</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@cuda</span> blocks blocks=blocks threads=threads compute!(...)
+<pre><code class="julia hljs"><span class=hljs-meta >@cuda</span> blocks blocks=blocks threads=threads my_kernel!(...)
 synchronize()</code></pre>
 <p>or alternatively</p>
-<pre><code class="julia hljs">CUDA.<span class=hljs-meta >@sync</span> <span class=hljs-meta >@cuda</span> blocks=blocks threads=threads compute!(...)</code></pre>
+<pre><code class="julia hljs">CUDA.<span class=hljs-meta >@sync</span> <span class=hljs-meta >@cuda</span> blocks=blocks threads=threads my_kernel!(...)</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Don&#39;t forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.</div></div>
 <p>Finally, for visualisation, you&#39;ll need to &quot;gather&quot; information from the GPU array &#40;<code>CuArray</code>&#41; back to the CPU array &#40;<code>Array</code>&#41; in order to plot it. This can be achieved by calling <code>Array&#40;Pf&#41;</code> in your visualisation routine.</p>
