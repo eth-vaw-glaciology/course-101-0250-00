@@ -159,36 +159,25 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 <p>👉 <em><strong>See code</strong></em> on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl</a></p>
 <h4 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our GitHub repo...</a></h4>
 <p>This makes the <code>.yml</code> a bit more complicated:</p>
-<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >CI</span>
-<span class=hljs-attr >on:</span>
-  [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >tests</span>
+<span class=hljs-attr >on:</span> [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
 <span class=hljs-attr >jobs:</span>
   <span class=hljs-attr >test:</span>
-    <span class=hljs-attr >name:</span> <span class=hljs-string >Julia</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span> <span class=hljs-bullet >-</span> <span class=hljs-string >${{</span> <span class=hljs-string >github.event_name</span> <span class=hljs-string >}}</span>
     <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
     <span class=hljs-attr >strategy:</span>
-      <span class=hljs-attr >fail-fast:</span> <span class=hljs-literal >false</span>
       <span class=hljs-attr >matrix:</span>
         <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.9&#x27;</span>]
         <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
         <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
+
     <span class=hljs-attr >steps:</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v4</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
         <span class=hljs-attr >with:</span>
           <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
           <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v3</span>
-        <span class=hljs-attr >env:</span>
-          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
-        <span class=hljs-attr >with:</span>
-          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
-          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
-          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
-</span>      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/cache@v1</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >run:</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;&lt;subfolder-of-julia-project&gt;&quot;);
                                    import Pkg; Pkg.activate(&quot;.&quot;); Pkg.test()&#x27;</span></code></pre>
 <p>Note that you have to <em><strong>adjust</strong></em> the bit: <code>cd&#40;&quot;&lt;subfolder-of-julia-project&gt;&quot;&#41;</code>.</p>
