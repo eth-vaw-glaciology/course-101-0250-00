@@ -86,9 +86,10 @@ We will try to correct your assignments before the lecture following the homewor
 Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
 The exercises **in lecture 7** will serve as starting point for the first project:
-1. Create a `project` directory at the root of your shared private `pde-on-gpu-<moodleprofilename>` repository.
-2. Make sure to follow the basic repo structure (using `PkgTemplates.jl` to generate it) as described in [Lecture 7](/lecture7/#infos_about_projects)
-3. During lectures 7,8,9, you will be asked to add material to this project folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+
+1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l7_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
+2. Follow the specific instructions given in [Lecture 7 - infos about projects](/lecture7/#infos_about_projects).
+3. During lectures 7 and 9 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
 The project submission deadline is set to **01.12.2023 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the Lecture 9 section.
