@@ -305,7 +305,8 @@ md"""
 - Changing the `inbounds=false` flag to `inbounds=true` will globally apply `@inbounds` in front of compute statements and deliver better performance. Beware to enable this option only once the code delivers epxected results.
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 note: Curious to see how it works under the hood? Feel free to [explore the source code](https://github.com/omlins/ParallelStencil.jl/blob/cd59a5b0d1fd32ceaecbf7fc922ab87a24257781/src/ParallelKernel/parallel.jl#L263). Another nice bit of open source software (and the fact that Julia's meta programming rocks 🚀).
 #md # \note{Curious to see how it works under the hood? Feel free to [explore the source code](https://github.com/omlins/ParallelStencil.jl/blob/cd59a5b0d1fd32ceaecbf7fc922ab87a24257781/src/ParallelKernel/parallel.jl#L263). Another nice bit of open source software (and the fact that Julia's meta programming rocks 🚀).}
 
@@ -348,7 +349,8 @@ Then, we can modify the `compute_flux!` function definition from the `diffusion_
     return nothing
 end
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 note: Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.
 #md # \note{Using `@parallel_indices` one can specify to activate `inbounds=true` on a per-kernel basis (`@parallel_indices (ix, iy) inbounds=true function`). This option can be globally overwrritten by `@init_parallel_stencil`.}
 
