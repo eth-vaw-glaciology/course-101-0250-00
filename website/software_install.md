@@ -476,7 +476,6 @@ fusermount -u -z /home/$USER/mnt_daint
 ```
 For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
 
-<!--
 ### Julia MPI GPU on Piz Daint
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
 1. Make sure to have the Julia GPU environment loaded
@@ -518,7 +517,7 @@ Which you then launch using `srun` upon having made it executable (`chmod +x run
 srun -n4 ./runme_mpi_daint.sh
 ```
 
-If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
+If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
 ```sh
 #!/bin/bash -l
 #SBATCH --job-name="diff2D"
@@ -540,4 +539,4 @@ export IGG_CUDAAWARE_MPI=1
 srun -n4 bash -c 'julia -O3 <my_julia_mpi_gpu_script.jl>'
 ```
 
-\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.} -->
+\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
