@@ -261,7 +261,7 @@ t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0<
 
 </ul>
 <h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
-<p>Starting from the <code>porous_convection_implicit_2D.jl</code> from Lecture 4, create a xPU version to run on GPUs. Copy and rename the <code>porous_convection_implicit_2D.jl</code> script to <code>PorousConvection_2D_xpu.jl</code> &#40;if you do not have a working 2D implicit thermal porous convection, fetch a copy in the <code>solutions</code> folder on the shared Polybox&#41;.</p>
+<p>Starting from the <code>porous_convection_implicit_2D.jl</code> from Lecture 4, create a xPU version to run on GPUs. Copy and rename the <code>porous_convection_implicit_2D.jl</code> script to <code>PorousConvection_2D_xpu.jl</code> &#40;if you do not have a working 2D implicit thermal porous convection, fetch a copy in the <code>solutions - lectrue 4</code> on Moodle&#41;.</p>
 <p>Implement similar changes as you did in the previous 2 tasks, preferring the <code>@parallel</code> &#40;instead of <code>@parallel_indices</code>&#41; whenever possible.</p>
 <p>Make sure to use following physical and numerical parameters and compare the xPU &#40;CPU and GPU using ParallelStencil&#41; implementations versus the reference code from lecture 4 using the following &#40;slightly updated&#41; parameters:</p>
 <pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
@@ -491,7 +491,7 @@ exit(runtests())</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 05, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 06, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
