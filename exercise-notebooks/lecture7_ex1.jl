@@ -39,7 +39,7 @@ Finalise the `Pf_diffusion_2D_perf_xpu.jl` script from class.
 
 ### Task 3
 
-Starting from the `porous_convection_implicit_2D.jl` from Lecture 4, create a xPU version to run on GPUs. Copy and rename the `porous_convection_implicit_2D.jl` script to `PorousConvection_2D_xpu.jl` (if you do not have a working 2D implicit thermal porous convection, fetch a copy in the `solutions` folder on the shared Polybox).
+Starting from the `porous_convection_implicit_2D.jl` from Lecture 4, create a xPU version to run on GPUs. Copy and rename the `porous_convection_implicit_2D.jl` script to `PorousConvection_2D_xpu.jl` (if you do not have a working 2D implicit thermal porous convection, fetch a copy in the `solutions - lectrue 4` on Moodle).
 
 Implement similar changes as you did in the previous 2 tasks, preferring the `@parallel` (instead of `@parallel_indices`) whenever possible.
 
