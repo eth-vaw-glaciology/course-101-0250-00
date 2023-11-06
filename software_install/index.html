@@ -335,6 +335,61 @@ srun julia -O3 &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <p>and unmount via</p>
 <pre><code class="julia hljs">fusermount -u -z /home/$USER/mnt_daint</code></pre>
 <p>For convenience it is suggested to also symlink to the home-directory <code>ln -s ~/mnt/daint/users/&lt;your username on daint&gt; ~/mnt/daint_home</code>.  &#40;Note that we mount the root directory <code>/</code> with <code>sshfs</code> such that access to <code>/scratch</code> is possible.&#41;</p>
+<h3 id=julia_mpi_gpu_on_piz_daint ><a href="#julia_mpi_gpu_on_piz_daint" class=header-anchor >Julia MPI GPU on Piz Daint</a></h3>
+<p>The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.</p>
+<ol>
+<li><p>Make sure to have the Julia GPU environment loaded</p>
+
+</ol>
+<pre><code class="sh hljs">module load daint-gpu
+module load Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
+<ol start=2 >
+<li><p>Then, you would need to allocate more than one node, let&#39;s say 4 nodes for 2 hours, using <code>salloc</code></p>
+
+</ol>
+<pre><code class="julia hljs">salloc -C&#x27;gpu&#x27; -Aclass04 -N4 -n4 --time=<span class=hljs-number >02</span>:<span class=hljs-number >00</span>:<span class=hljs-number >00</span></code></pre>
+<ol start=3 >
+<li><p>To launch a Julia &#40;GPU&#41; MPI script on 4 nodes &#40;GPUs&#41; using MPI, you can simply use <code>srun</code></p>
+
+</ol>
+<pre><code class="sh hljs">srun -n4 julia -O3 &lt;my_mpi_script.jl&gt;</code></pre>
+<h4 id=cuda-aware_mpi_on_piz_daint ><a href="#cuda-aware_mpi_on_piz_daint" class=header-anchor >CUDA-aware MPI on Piz Daint</a></h4>
+<p>You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate <code>ENV</code> variables</p>
+<pre><code class="sh hljs"><span class=hljs-built_in >export</span> MPICH_RDMA_ENABLED_CUDA=1
+<span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1</code></pre>
+<p>In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via <code>srun</code>. You can create, e.g., a <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh"><code>runme_mpi_daint.sh</code></a> script containing:</p>
+<pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
+
+module load daint-gpu
+module load Julia/1.9.3-CrayGNU-21.09-cuda
+
+<span class=hljs-built_in >export</span> MPICH_RDMA_ENABLED_CUDA=1
+<span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1
+
+julia -O3 &lt;my_script.jl&gt;</code></pre>
+<p>Which you then launch using <code>srun</code> upon having made it executable &#40;<code>chmod &#43;x runme_mpi_daint.sh</code>&#41;</p>
+<pre><code class="sh hljs">srun -n4 ./runme_mpi_daint.sh</code></pre>
+<p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on daint. Example of a <code>sbatch_mpi_daint.sh</code> you can launch &#40;without need of an allocation&#41; as <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh"><code>sbatch sbatch_mpi_daint.sh</code></a>:</p>
+<pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
+<span class=hljs-comment >#SBATCH --job-name=&quot;diff2D&quot;</span>
+<span class=hljs-comment >#SBATCH --output=diff2D.%j.o</span>
+<span class=hljs-comment >#SBATCH --error=diff2D.%j.e</span>
+<span class=hljs-comment >#SBATCH --time=00:05:00</span>
+<span class=hljs-comment >#SBATCH --nodes=4</span>
+<span class=hljs-comment >#SBATCH --ntasks-per-node=1</span>
+<span class=hljs-comment >#SBATCH --partition=normal</span>
+<span class=hljs-comment >#SBATCH --constraint=gpu</span>
+<span class=hljs-comment >#SBATCH --account class04</span>
+
+module load daint-gpu
+module load Julia/1.9.3-CrayGNU-21.09-cuda
+
+<span class=hljs-built_in >export</span> MPICH_RDMA_ENABLED_CUDA=1
+<span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1
+
+srun -n4 bash -c <span class=hljs-string >&#x27;julia -O3 &lt;my_julia_mpi_gpu_script.jl&gt;&#x27;</span></code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >The 2 scripts above can be found in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/">scripts</a> folder.</div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
