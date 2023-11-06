@@ -232,7 +232,7 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
 
-_For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section._
+For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section.
 
 ## GPU computing on Piz Daint
 
