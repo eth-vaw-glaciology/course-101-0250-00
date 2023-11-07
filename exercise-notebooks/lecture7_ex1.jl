@@ -85,7 +85,7 @@ Upon having verified the your code, run it with following parameters on Piz Dain
 
 Ra      = 1000
 ## [...]
-nx,ny   = 511,1023
+nx,ny   = 1023, 511
 nt      = 4000
 ϵtol    = 1e-6
 nvis    = 50
