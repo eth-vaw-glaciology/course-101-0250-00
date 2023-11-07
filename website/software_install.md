@@ -494,6 +494,8 @@ srun -n4 julia -O3 <my_mpi_script.jl>
 ```
 
 #### CUDA-aware MPI on Piz Daint
+\warn{There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure **not to run** with CUDA-aware MPI, i.e., having both `MPICH_RDMA_ENABLED_CUDA` and `IGG_CUDAAWARE_MPI` set to 0.}
+
 You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
