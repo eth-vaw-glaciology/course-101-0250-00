@@ -9,11 +9,11 @@ if !@isdefined do_save; do_save=true end
 # MPI functions
 @views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbor 1 ("left neighbor")
-    if neighbors_x[1] != MPI.MPI_PROC_NULL
+    if neighbors_x[1] != MPI.PROC_NULL
         # ...
     end
     # Send to / receive from neighbor 2 ("right neighbor")
-    if neighbors_x[2] != MPI.MPI_PROC_NULL
+    if neighbors_x[2] != MPI.PROC_NULL
         # ...
     end
     return
