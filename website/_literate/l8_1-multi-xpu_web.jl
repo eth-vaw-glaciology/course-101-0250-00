@@ -7,7 +7,7 @@ md"""
 # Distributed computing in Julia
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### The goal of this lecture 8:
@@ -16,11 +16,9 @@ md"""
   - Fake parallelisation
   - Julia MPI (CPU + GPU)
   - Using `ParallelStencil.jl` together with `ImplicitGlobalGrid.jl`
-  - Thermal porous convection 3D using GPU MPI
-- Automatic documentation and CI
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## New to distributed computing?
@@ -32,7 +30,7 @@ md"""
 _If this is the case or not - hold-on, we certainly have some good stuff for everyone_
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Distributed computing
@@ -48,7 +46,7 @@ md"""
   - GPUs: overcome the device memory limitation
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Simply said:
@@ -61,7 +59,7 @@ md"""
 Distributed (memory) computing permits to take advantage of computing "clusters", many similar compute nodes interconnected by high-throughput network. That's also what supercomputers are.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Parallel scaling
@@ -73,7 +71,7 @@ Two scaling approaches exist:
 - weak scaling
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Increasing the amount of computing resources to resolve the same global problem would increase parallelism and may result in faster execution (wall-time). This parallelisation is called _**strong scaling**_; the resources are increased but the global problem size does not change, resulting in an increase in the number of (smaller) local problems that can be solved in parallel.
@@ -84,7 +82,7 @@ md"""
 The _**strong scaling**_ approach is often used when parallelising legacy CPU codes, as increasing the number of parallel local problems can lead to some speed-up, reaching an optimum beyond which additional local processes is no longer be beneficial.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 However, we won't follow that path when developing parallel multi-GPU applications from scratch. Why?
@@ -98,7 +96,7 @@ When developing multi-GPU applications from scratch, it is likely more suitably 
 defining first the optimal local problem size to resolve on a single GPU and then increasing the number of optimal local problems (and the number of GPUs) until reaching the global problem one originally wants to solve.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Implicit Global Grid
@@ -106,13 +104,13 @@ md"""
 We can thus replicate a local problem multiple times in each dimension of the Cartesian space to obtain a global grid, which is therefore defined implicitly. Local problems define each others local boundary conditions by exchanging internal boundary values using intra-node communication (e.g., message passing interface - [MPI](https://en.wikipedia.org/wiki/Message_Passing_Interface)), as depicted on the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ![IGG](../assets/literate_figures/l8_igg.png)
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Distributing computations - challenges
@@ -130,7 +128,7 @@ md"""
 Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources proportionally with the global problem size (i.e. keeping the constant local problem sizes), meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ![Parallel scaling](../assets/literate_figures/l8_par_eff.png)
@@ -138,7 +136,7 @@ md"""
 
 #md # ---
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Let's get started
@@ -153,7 +151,7 @@ We're going to work out the following steps to tackle distributed parallelisatio
 - [**Julia and MPI**](#julia_and_mpi)
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Fake parallelisation
@@ -169,13 +167,13 @@ md"""
 In this "fake parallelisation" code, the computations for the left and right domain are performed sequentially on one process, but they could be computed on two distinct processes if the needed boundary update (often referred to as halo update in literature) was done with MPI.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ![1D Global grid](../assets/literate_figures/l8_1D_global_grid.png)
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The idea of this fake parallelisation approach is the following:
@@ -191,13 +189,13 @@ C .= [CL[1:end-1]; CR[2:end]]
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 We see that a correct boundary update will be the critical part for a successful implementation. In our approach, we need an overlap of 2 cells between `CL` and `CR` in order to avoid any wrong computations at the transition between the left and right domains.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Step 1 (fake parallelisation with 2 fake processes)
@@ -218,7 +216,7 @@ CR[1]   = ...
 in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
@@ -226,7 +224,7 @@ in order make the code work properly and run it again. Note what has changed in 
 # </center>
 #md # ~~~
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The next step will be to generalise the fake parallelisation with `2` fake processes to work with `n` fake processes. The idea of this generalised fake parallelisation approach is the following:
@@ -245,7 +243,7 @@ end
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The array `C` contains now `n` local domains where each domain belongs to one fake process, namely the fake process indicated by the second index of `C` (ip). The boundary updates are to be adapted accordingly. All the physical calculations happen on the local chunks of the arrays.
@@ -253,7 +251,7 @@ The array `C` contains now `n` local domains where each domain belongs to one fa
 We only need "global" knowledge in the definition of the initial condition.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The previous simple initial conditions can be easily defined without computing any Cartesian coordinates. To define other initial conditions we often need to compute global coordinates.
@@ -261,7 +259,7 @@ The previous simple initial conditions can be easily defined without computing a
 In the code below, which serves to define a Gaussian anomaly in the centre of the domain, Cartesian coordinates can be computed for each cell based on the process ID (`ip`), the cell ID (`ix`), the array size (`nx`), the overlap of the local domains (`2`) and the grid spacing of the global grid (`dxg`); moreover, the origin of the coordinate system can be moved to any position using the global domain length (`lx`):
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ```julia
@@ -278,7 +276,7 @@ end
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Step 2 (fake parallelisation with `n` fake processes)
@@ -288,7 +286,7 @@ Modify the initial condition in the 1-D diffusion code [`l8_diffusion_1D_nprocs.
 Then run this code which is missing the boundary updates of the `n` fake processes and describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
@@ -297,7 +295,7 @@ Then run this code which is missing the boundary updates of the `n` fake process
 #md # ~~~
 
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Julia and MPI
@@ -308,7 +306,7 @@ We are now ready to write a code that will truly distribute calculations on diff
 #nb # > 💡 note: At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.
 #md # \note{At this point, make sure to have a working Julia MPI environment. Head to [Julia MPI install](/software_install/#julia_mpi) to set-up Julia MPI. See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Let us see what are the somewhat minimal requirements that will allow us to write a distributed code in Julia using MPI.jl. We will solve the following linear diffusion physics (see [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/)):
@@ -325,7 +323,7 @@ To enable distributed parallelisation, we will do the following steps:
 4. Finalise MPI
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 To (1.) initialise MPI and prepare the Cartesian communicator, we do (upon `import MPI`):
@@ -345,7 +343,7 @@ neighbors_x = MPI.Cart_shift(comm_cart, 0, 1)
 where `me` represents the process ID unique to each MPI process (the analogue to `ip` in the fake parallelisation).
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, we need to (2.) implement a boundary update routine, which can have the following structure:
@@ -372,7 +370,7 @@ end
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, we (3.) initialize `C` with a "global" initial Gaussian anomaly that spans correctly over all local domains. This can be achieved, e.g., as given here:
@@ -384,7 +382,7 @@ C     = exp.(.-xc.^2)
 where `x0` represents the first global x-coordinate on every process (computed in function of `coords`) and `xc` represents the local chunk of the global coordinates on each local process (this is analogue to the initialisation in the fake parallelisation).
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Last, we need to (4.) finalise MPI prior to returning from the main function:
@@ -394,7 +392,7 @@ MPI.Finalize()
 All the above described is found in the code [`l8_diffusion_1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/), except for the boundary updates (see 2.).
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Step 3 (1-D parallelisation with MPI)
@@ -410,12 +408,12 @@ md"""
 Visualise the results after each run with the [`l8_vizme1D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (_**adapt the variable `nprocs`!**_). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 hint: For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and `receive` buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the array.
 #md # \note{For the boundary updates, you can use the following approach for the communication with each neighbour: 1) create a `sendbuffer` and `receive` buffer, storing the right value in the send buffer; 2) use `MPI.Send` and `MPI.Recv!` to send/receive the data; 3) store the received data in the right position in the array.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Congratulations! You just did a distributed memory diffusion solver in only 70 lines of code.
@@ -425,7 +423,7 @@ Let us now do the same in 2D: there is not much new there, but it may be interes
 👉 You'll find a working 1D script in the [scripts/l8_scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder after the lecture.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Step 4 (2-D parallelisation with MPI)
@@ -439,7 +437,7 @@ Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://gith
 #md # ![diffusion 2D MPI](../assets/literate_figures/l8_diff_2D_mpi.png)
 #md # @@
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.
@@ -447,7 +445,7 @@ The last step is to create a multi-GPU solver out of the above multi-CPU solver.
 Besides facilitating the programming, it can leverage Remote Direct Memory Access (RDMA) which can be of great benefit in many HPC scenarios.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Step 5 (multi-GPU)
@@ -460,7 +458,7 @@ Use a similar approach as implemented in the CPU code to perform the boundary up
 #nb # > 💡 note: Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.
 #md # \note{Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea on how to select a GPU based on node-local MPI infos.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Head to the [exercise section](#exercises_-_lecture_8) for further directions on this step which is part of this week's homework assignments.
@@ -469,7 +467,7 @@ Head to the [exercise section](#exercises_-_lecture_8) for further directions on
 #nb # > 💡 hint: As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built for that purpose.
 #md # \note{As alternative, one could use the same approach as in the CPU code to perform the boundary updates thanks to CUDA-aware MPI (it allows to pass GPU arrays directly to the MPI functions). However, this requires MPI being specifically built for that purpose.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 This completes the introduction to distributed parallelisation with Julia.
@@ -477,7 +475,7 @@ This completes the introduction to distributed parallelisation with Julia.
 Note that high-level Julia packages as for example [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) can render distributed parallelisation with GPU and CPU for HPC a very simple task. Let's check it out!
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Using `ImplicitGlobalGrid.jl`
@@ -492,7 +490,7 @@ md"""
 Finally, the cool part: using both packages together enables to [hide communication behind computation](https://github.com/omlins/ParallelStencil.jl#seamless-interoperability-with-communication-packages-and-hiding-communication). This feature enables a parallel efficiency close to 1.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 For this development, we'll start from the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code.
@@ -505,7 +503,7 @@ Only a few changes are required to enable multi-xPU execution, namely:
 5. Tune visualisation
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 But before we start programming the multi-xPU implementation, let's get setup with GPU MPI on Piz Daint. Follow steps are needed:
@@ -517,7 +515,7 @@ But before we start programming the multi-xPU implementation, let's get setup wi
 #nb # > 💡 note: See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.
 #md # \note{See [Julia MPI GPU on Piz Daint](/software_install/#julia_mpi_gpu_on_piz_daint) for detailed information on how to run MPI GPU (multi-GPU) applications on Piz Daint.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 To (**1.**) initialise the global grid, one first needs to use the package
@@ -531,12 +529,12 @@ dx, dy  = Lx/nx_g(), Ly/ny_g()
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 note: The function `init_global_grid` takes care of MPI GPU mapping based on node-local MPI infos. Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea about the process.
 #md # \note{The function `init_global_grid` takes care of MPI GPU mapping based on node-local MPI infos. Have a look at the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get an idea about the process.}
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, for (**2.**), one can use `x_g()` and `y_g()` to compute the global coordinates in the initialisation (to correctly spread the Gaussian distribution over all local processes)
@@ -546,7 +544,7 @@ C      .= Data.Array([exp(-(x_g(ix,dx,C)+dx/2 -Lx/2)^2 -(y_g(iy,dy,C)+dy/2 -Ly/2
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The halo update (**3.**) can be simply performed adding following line after the `compute!` kernel
@@ -557,7 +555,7 @@ update_halo!(C)
 Now, when running on GPUs, it is possible to hide MPi communication behind computations!
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 This option implements as:
@@ -571,17 +569,17 @@ end
 The `@hide_communication (8, 2)` will first compute the first and last 8 and 2 grid points in x and y dimension, respectively. Then, while exchanging boundaries the rest of the local domains computations will be perform (overlapping the MPI communication).
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To (**4.**) finalise the global grid, 
+To (**4.**) finalise the global grid,
 ```julia
 finalize_global_grid()
 ```
 needs to be added before the `return` of the "main".
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 The last changes to take care of is to (**5.**) handle visualisation in an appropriate fashion. Here, several options exists.
@@ -593,7 +591,7 @@ md"""
 - Another approach would be to gather the global grid results on a master process before doing further steps as disk saving or plotting.
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 To implement the latter and generate a `gif`, one needs to define a global array for visualisation:
@@ -609,7 +607,7 @@ end
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Then, the plotting routine can be adapted to first gather the inner points of the local domains into the global array (using `gather!` function) and then plot and/or save the global array (here `C_v`) from the master process `me==0`:
@@ -629,13 +627,13 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
 """
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 note: We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.
 #md # \note{We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
 
 
-#src ######################################################################### 
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ### Wrapping up
