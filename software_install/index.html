@@ -354,6 +354,8 @@ module load Julia/1.9.3-CrayGNU-21.09-cuda</code></pre>
 </ol>
 <pre><code class="sh hljs">srun -n4 julia -O3 &lt;my_mpi_script.jl&gt;</code></pre>
 <h4 id=cuda-aware_mpi_on_piz_daint ><a href="#cuda-aware_mpi_on_piz_daint" class=header-anchor >CUDA-aware MPI on Piz Daint</a></h4>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure <strong>not to run</strong> with CUDA-aware MPI, i.e., having both <code>MPICH_RDMA_ENABLED_CUDA</code> and <code>IGG_CUDAAWARE_MPI</code> set to 0.</div></div>
 <p>You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate <code>ENV</code> variables</p>
 <pre><code class="sh hljs"><span class=hljs-built_in >export</span> MPICH_RDMA_ENABLED_CUDA=1
 <span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1</code></pre>
