@@ -16,7 +16,11 @@ This lecture we will learn:
   - docstrings
   - [https://github.com/fredrikekre/Literate.jl](https://github.com/fredrikekre/Literate.jl)
   - [https://github.com/JuliaDocs/Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)
+"""
 
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # _Lecture 8_
+md"""
 ![comic](https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg)
 """
 
@@ -60,19 +64,12 @@ md"""
 ### Documentation tools: doc-strings
 
 A Julia doc-string ([Julia manual](https://docs.julialang.org/en/v1/manual/documentation/)):
-- is just a string before the object (no new-line); interpreted as markdown-string
+- is just a string before the object (no blank-line inbetween); interpreted as markdown-string
 - can be attached to most things (functions, variables, modules, macros, types)
 - can be queried with `?`
 """
 
-"""
-    transform(r, θ) = (r*cos(θ), r*sin(θ))
-
-Transform polar to cartesian coordinates.
-"""
-transform(r, θ) = (r*cos(θ), r*sin(θ))
-
-"Typical size of beer crate"
+"Typical size of a beer crate"
 const BEERBOX = 12
 
 #-
@@ -84,14 +81,14 @@ md"""
 
 One can add examples to doc-strings (they can even be part of testing: [doc-tests](https://juliadocs.github.io/Documenter.jl/stable/man/doctests/)).
 
-- run it in the REPL and copy paste to the docstring
+(Run it in the REPL and copy paste to the docstring.)
 """
 
 
 """
-    transform(r, θ) = (r*cos(θ), r*sin(θ))
+    transform(r, θ)
 
-Transform polar to cartesian coordinates.
+Transform polar `(r,θ)` to cartesian coordinates `(x,y)`.
 
 ## Example
 ```jldoctest
@@ -144,6 +141,8 @@ Literate.markdown("car_travels.jl", directory_of_this_file, execute=true, docume
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragement"}}
 md"""
 But this is not automatic!  Manual steps: run Literate, add files, commit and push...
+
+or use Github Actions...
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -154,43 +153,26 @@ Demonstrated in the repo [course-101-0250-00-L8Documentation.jl](https://github.
 ```yml
 name: Run Literate.jl
 # adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
-
 on: push
-
 jobs:
   lit:
     runs-on: ubuntu-latest
     steps:
       # Checkout the branch
       - uses: actions/checkout@v2
-
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1.8'
+          version: '1.9'
           arch: x64
-
-      - uses: actions/cache@v1
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
-
-      - uses: julia-actions/julia-buildpkg@v1
-
+      - uses: julia-actions/cache@v1
+      - uses: julia-actions/julia-buildpkg@latest
       - name: run Literate
-        run: julia --color=yes --project -e 'cd("scripts"); include("literate-script.jl")'
-
+        run: QT_QPA_PLATFORM=offscreen julia --color=yes --project -e 'cd("scripts"); include("literate-script.jl")'
       - name: setup git config
         run: |
           # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-
       - name: commit
         run: |
           # Stage the file, commit and push
@@ -217,7 +199,7 @@ _**Notes:**_
 - for more free-form websites, use [https://github.com/tlienart/Franklin.jl](https://github.com/tlienart/Franklin.jl) (as the course website does)
 - if you want to use it, it's easiest to generate your package with [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl)
   which will generate the Documenter-setup for you.
-- we don't use it in this course
+- **we don't use it in this course**
 """
 
 
