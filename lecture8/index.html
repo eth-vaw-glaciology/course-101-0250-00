@@ -40,7 +40,7 @@ me          = MPI.Comm_rank(comm_cart)
 coords      = MPI.Cart_coords(comm_cart)
 neighbors_x = MPI.Cart_shift(comm_cart, <span class=hljs-number >0</span>, <span class=hljs-number >1</span>)</code></pre> <p>where <code>me</code> represents the process ID unique to each MPI process &#40;the analogue to <code>ip</code> in the fake parallelisation&#41;.</p> <p>Then, we need to &#40;2.&#41; implement a boundary update routine, which can have the following structure:</p> <pre><code class="julia hljs"><span class=hljs-meta >@views</span> <span class=hljs-keyword >function</span> update_halo!(A, neighbors_x, comm)
     <span class=hljs-comment ># Send to / receive from neighbour 1 (&quot;left neighbor&quot;)</span>
-    <span class=hljs-keyword >if</span> neighbors_x[<span class=hljs-number >1</span>] != MPI.MPI_PROC_NULL
+    <span class=hljs-keyword >if</span> neighbors_x[<span class=hljs-number >1</span>] != MPI.PROC_NULL
         sendbuf = ??
         recvbuf = ??
         MPI.Send(??,  neighbors_x[?], <span class=hljs-number >0</span>, comm)
@@ -48,7 +48,7 @@ neighbors_x = MPI.Cart_shift(comm_cart, <span class=hljs-number >0</span>, <span
         A[<span class=hljs-number >1</span>] = ??
     <span class=hljs-keyword >end</span>
     <span class=hljs-comment ># Send to / receive from neighbour 2 (&quot;right neighbor&quot;)</span>
-    <span class=hljs-keyword >if</span> neighbors_x[<span class=hljs-number >2</span>] != MPI.MPI_PROC_NULL
+    <span class=hljs-keyword >if</span> neighbors_x[<span class=hljs-number >2</span>] != MPI.PROC_NULL
         sendbuf = ??
         recvbuf = ??
         MPI.Recv!(??, neighbors_x[?], <span class=hljs-number >0</span>, comm)
