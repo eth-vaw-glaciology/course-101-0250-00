@@ -3,8 +3,8 @@ using Plots
 
 @views function diffusion_1D_2procs(; do_visu=false)
     # Physics
-    Cl  = 10.0   # left  H
-    Cr  = 1.0    # right H
+    Cl  = 10.0   # left  C
+    Cr  = 1.0    # right C
     D   = 1.0    # diffusion coeff
     nt  = 200    # number of time steps
     # Numerics
@@ -33,7 +33,7 @@ using Plots
         if do_visu
             fontsize = 12
             plot(Cg, legend=false, linewidth=0, markershape=:circle, markersize=5, yaxis=font(fontsize, "Courier"), xaxis=font(fontsize, "Courier"), titlefontsize=fontsize, titlefont="Courier")
-            display(plot!(C, legend=false, linewidth=3, framestyle=:box, xlabel="Lx", ylabel="H", title="diffusion (it=$(it))"))
+            display(plot!(C, legend=false, linewidth=3, framestyle=:box, xlabel="Lx", ylabel="C", title="diffusion (it=$(it))"))
         end
     end
     return
