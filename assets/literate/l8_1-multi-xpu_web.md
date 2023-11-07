@@ -7,8 +7,6 @@
   - Fake parallelisation
   - Julia MPI (CPU + GPU)
   - Using `ParallelStencil.jl` together with `ImplicitGlobalGrid.jl`
-  - Thermal porous convection 3D using GPU MPI
-- Automatic documentation and CI
 
 ## New to distributed computing?
 
