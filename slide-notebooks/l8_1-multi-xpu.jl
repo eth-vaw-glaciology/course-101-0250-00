@@ -357,7 +357,7 @@ Then, we need to (2.) implement a boundary update routine, which can have the fo
 ```julia
 @views function update_halo!(A, neighbors_x, comm)
     # Send to / receive from neighbour 1 ("left neighbor")
-    if neighbors_x[1] != MPI.MPI_PROC_NULL
+    if neighbors_x[1] != MPI.PROC_NULL
 #hint=        sendbuf = ??
 #hint=        recvbuf = ??
 #hint=        MPI.Send(??,  neighbors_x[?], 0, comm)
@@ -370,7 +370,7 @@ Then, we need to (2.) implement a boundary update routine, which can have the fo
 #sol=        A[1] = recvbuf[1]
     end
     # Send to / receive from neighbour 2 ("right neighbor")
-    if neighbors_x[2] != MPI.MPI_PROC_NULL
+    if neighbors_x[2] != MPI.PROC_NULL
 #hint=        sendbuf = ??
 #hint=        recvbuf = ??
 #hint=        MPI.Recv!(??, neighbors_x[?], 0, comm)
