@@ -17,7 +17,7 @@ In this exercise, you will:
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code in the solutions folder on Polybox after exercises deadline if needed to get you started.
+👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code on Moodle after exercises deadline if needed to get you started.
 
 1. Copy the `PorousConvection_3D_xpu.jl` code from exercises in Lecture 7 and rename it `PorousConvection_3D_multixpu.jl`.
 
@@ -26,11 +26,11 @@ In this exercise, you will:
 3. Upon completion, verify the script converges and produces expected output for following parameters:
 """
 
-lx,ly,lz    = 40.0,20.0,20.0
+lx,ly,lz    = 40.0, 20.0, 20.0
 Ra          = 1000
 nz          = 63
-nx,ny       = 2*(nz+1)-1,nz
-b_width     = (8,8,4) # for comm / comp overlap
+nx,ny       = 2 * (nz + 1) - 1, nz
+b_width     = (8, 8, 4) # for comm / comp overlap
 nt          = 500
 nvis        = 50
 
@@ -45,7 +45,7 @@ The final 2D slice (at `ny_g()/2`) produced should look similar as the figure de
 Now that you made sure the code runs as expected, launch `PorousConvection_3D_multixpu.jl` for 2000 steps on 8 GPUs at higher resolution (global grid of `508x252x252`) setting:
 """
 nz          = 127
-nx,ny       = 2*(nz+1)-1,nz
+nx,ny       = 2 * (nz + 1) - 1, nz
 nt          = 2000
 nvis        = 100
 
@@ -56,4 +56,5 @@ Use `sbtach` command to launch a non-interactive job which may take about 5h30-6
 
 Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled `## Porous convection 3D MPI` in the `PorousConvection` project subfolder's `README.md`. You can use the Makie visualisation helper script from Lecture 7 for this purpose (making sure to adapt the resolution and other input params if needed).
 """
+
 
