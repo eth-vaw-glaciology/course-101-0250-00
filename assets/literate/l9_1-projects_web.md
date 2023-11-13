@@ -24,7 +24,7 @@ Let's step through the following content:
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code in the solutions folder on Polybox after exercises deadline if needed to get you started.
+👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code in the solutions folder on Moodle after exercises deadline if needed to get you started.
 
 ### Enable multi-xPU support
 Only a few changes are required to enable multi-xPU support, namely:
