@@ -13,7 +13,7 @@ In this exercise, you will:
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code in the solutions folder on Polybox after exercises deadline if needed to get you started.
+👉 You'll find a version of the `PorousConvection_3D_xpu.jl` code on Moodle after exercises deadline if needed to get you started.
 
 1. Copy the `PorousConvection_3D_xpu.jl` code from exercises in Lecture 7 and rename it `PorousConvection_3D_multixpu.jl`.
 
@@ -22,11 +22,11 @@ In this exercise, you will:
 3. Upon completion, verify the script converges and produces expected output for following parameters:
 
 ````julia:ex1
-lx,ly,lz    = 40.0,20.0,20.0
+lx,ly,lz    = 40.0, 20.0, 20.0
 Ra          = 1000
 nz          = 63
-nx,ny       = 2*(nz+1)-1,nz
-b_width     = (8,8,4) # for comm / comp overlap
+nx,ny       = 2 * (nz + 1) - 1, nz
+b_width     = (8, 8, 4) # for comm / comp overlap
 nt          = 500
 nvis        = 50
 ````
@@ -41,7 +41,7 @@ Now that you made sure the code runs as expected, launch `PorousConvection_3D_mu
 
 ````julia:ex2
 nz          = 127
-nx,ny       = 2*(nz+1)-1,nz
+nx,ny       = 2 * (nz + 1) - 1, nz
 nt          = 2000
 nvis        = 100
 ````
