@@ -114,14 +114,14 @@ _Note that for evaluation will be considered the following (non-exhaustive) item
 
 For information about **topics** for the final project, head to [Information about final projects](/final_proj) page.
 
-<!-- ### Getting started
+### Getting started
 The following steps will get you started with the final projects:
 1. Find a classmate to work with (being your own mate is fine too)
 2. Select a topic of your choice
 4. Initiate a private GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`)
-5. Share the final project private repository on GitHub with the [exercise-bot (https://github.com/eth-vaw-glaciology-exercise-bot)](https://github.com/eth-vaw-glaciology-exercise-bot)
-6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Tuesday December 6, 2022**, with subject _**Final projects**_ including
-    - your project mate
+5. Share the final project private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot)
+6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Tuesday December 5, 2023**, with subject _**Final projects**_ including
+    - your project partner
     - a brief description of your choice
     - a link to your final project GitHub repository
     - _anything else missing in this list_
@@ -131,11 +131,11 @@ The following steps will get you started with the final projects:
     - during class hours serving as helpdesk
 
 ### Final project submission
-Submission deadline for the project is **December 23, 2022 -- 23h59 CET**.
+Submission deadline for the project is **December 22, 2023 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
-Also, add the last commit SHA to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=15755#section-10) as for the exercises.
+Also, add the last commit SHA to [Moodle - Final project submission](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as for the exercises.
 
 ### Final project grading
 Grading of the final project will contribute 35% of the final grade.
@@ -149,7 +149,6 @@ For a successful outcome, final projects are expected to be handed-in as single 
 - unit and reference testing
 - Continuous Integration (CI - using e.g. GitHub Actions)
 - additional features if needed
- -->
 
 ## Evaluation
 
