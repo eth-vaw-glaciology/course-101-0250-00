@@ -47,58 +47,7 @@ B = main()
 heatmap(B)
 ````
 
-3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add the `.github/workflow` folder (the one containing your `CI.yml` for testing) following `Literate.yml` script
-```yml
-name: Run Literate.jl
-# adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions
-
-on: push
-
-jobs:
-  lit:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the branch
-      - uses: actions/checkout@v2
-
-      - uses: julia-actions/setup-julia@v1
-        with:
-          version: '1.8'
-          arch: x64
-
-      - uses: actions/cache@v1
-        env:
-          cache-name: cache-artifacts
-        with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
-
-      - uses: julia-actions/julia-buildpkg@v1
-
-      - name: run Literate
-        run: |
-          cd PorousConvection
-          julia --color=yes --project -e 'using Pkg; Pkg.instantiate()'
-          julia --color=yes --project -e 'cd("scripts"); include("literate-script.jl")'
-          cd ..
-
-      - name: setup git config
-        run: |
-          # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
-
-      - name: commit
-        run: |
-          # Stage the file, commit and push
-          git add PorousConvection/scripts/md/*
-          git commit -m "Commit markdown files from Literate"
-          git push origin main
-```
+3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add to the `.github/workflow` folder (the one containing your `CI.yml` for testing) the `Literate.yml` script which we saw in this lecture's section [Documentation tools: Automating Literate.jl](lecture9/#documentation_tools_automating_literatejl).
 
 4. That's all! Head to the [Project section in Logistics](/logistics/#project) for a check-list about what you should hand in for this first project.
 

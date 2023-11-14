@@ -241,27 +241,34 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <p>Demonstrated in the repo <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
 <pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
 <span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
+
 <span class=hljs-attr >on:</span> <span class=hljs-string >push</span>
+
 <span class=hljs-attr >jobs:</span>
   <span class=hljs-attr >lit:</span>
     <span class=hljs-attr >runs-on:</span> <span class=hljs-string >ubuntu-latest</span>
     <span class=hljs-attr >steps:</span>
       <span class=hljs-comment ># Checkout the branch</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
+
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
         <span class=hljs-attr >with:</span>
           <span class=hljs-attr >version:</span> <span class=hljs-string >&#x27;1.9&#x27;</span>
           <span class=hljs-attr >arch:</span> <span class=hljs-string >x64</span>
+
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/cache@v1</span>
       <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+
       <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >run</span> <span class=hljs-string >Literate</span>
         <span class=hljs-attr >run:</span> <span class=hljs-string >QT_QPA_PLATFORM=offscreen</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >--project</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;scripts&quot;); include(&quot;literate-script.jl&quot;)&#x27;</span>
+
       <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >setup</span> <span class=hljs-string >git</span> <span class=hljs-string >config</span>
         <span class=hljs-attr >run:</span> <span class=hljs-string >|
           # setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default
           git config user.name &quot;GitHub Actions Bot&quot;
           git config user.email &quot;&lt;&gt;&quot;
-</span>      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
+</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
         <span class=hljs-attr >run:</span> <span class=hljs-string >|
           # Stage the file, commit and push
           git add scripts/md/*
@@ -404,59 +411,8 @@ Some docstring
 <pre><code class="julia hljs">B = main()
 heatmap(B)</code></pre>
 <ol start=3 >
-<li><p>Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add the <code>.github/workflow</code> folder &#40;the one containing your <code>CI.yml</code> for testing&#41; following <code>Literate.yml</code> script</p>
+<li><p>Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add to the <code>.github/workflow</code> folder &#40;the one containing your <code>CI.yml</code> for testing&#41; the <code>Literate.yml</code> script which we saw in this lecture&#39;s section <a href="lecture9/#documentation_tools_automating_literatejl">Documentation tools: Automating Literate.jl</a>.</p>
 
-</ol>
-<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
-<span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
-
-<span class=hljs-attr >on:</span> <span class=hljs-string >push</span>
-
-<span class=hljs-attr >jobs:</span>
-  <span class=hljs-attr >lit:</span>
-    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >ubuntu-latest</span>
-    <span class=hljs-attr >steps:</span>
-      <span class=hljs-comment ># Checkout the branch</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
-        <span class=hljs-attr >with:</span>
-          <span class=hljs-attr >version:</span> <span class=hljs-string >&#x27;1.8&#x27;</span>
-          <span class=hljs-attr >arch:</span> <span class=hljs-string >x64</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/cache@v1</span>
-        <span class=hljs-attr >env:</span>
-          <span class=hljs-attr >cache-name:</span> <span class=hljs-string >cache-artifacts</span>
-        <span class=hljs-attr >with:</span>
-          <span class=hljs-attr >path:</span> <span class=hljs-string >~/.julia/artifacts</span>
-          <span class=hljs-attr >key:</span> <span class=hljs-string >${{</span> <span class=hljs-string >runner.os</span> <span class=hljs-string >}}-test-${{</span> <span class=hljs-string >env.cache-name</span> <span class=hljs-string >}}-${{</span> <span class=hljs-string >hashFiles(&#x27;**/Project.toml&#x27;)</span> <span class=hljs-string >}}</span>
-          <span class=hljs-attr >restore-keys:</span> <span class=hljs-string >|
-            ${{ runner.os }}-test-${{ env.cache-name }}-
-            ${{ runner.os }}-test-
-            ${{ runner.os }}-
-</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@v1</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >run</span> <span class=hljs-string >Literate</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >|
-          cd PorousConvection
-          julia --color=yes --project -e &#x27;using Pkg; Pkg.instantiate()&#x27;
-          julia --color=yes --project -e &#x27;cd(&quot;scripts&quot;); include(&quot;literate-script.jl&quot;)&#x27;
-          cd ..
-</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >setup</span> <span class=hljs-string >git</span> <span class=hljs-string >config</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >|
-          # setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default
-          git config user.name &quot;GitHub Actions Bot&quot;
-          git config user.email &quot;&lt;&gt;&quot;
-</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >|
-          # Stage the file, commit and push
-          git add PorousConvection/scripts/md/*
-          git commit -m &quot;Commit markdown files from Literate&quot;
-          git push origin main</span></code></pre>
-<ol start=4 >
 <li><p>That&#39;s all&#33; Head to the <a href="/logistics/#project">Project section in Logistics</a> for a check-list about what you should hand in for this first project.</p>
 
 </ol>
@@ -465,7 +421,7 @@ heatmap(B)</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 14, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
