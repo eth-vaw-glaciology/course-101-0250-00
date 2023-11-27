@@ -47,7 +47,7 @@ B = main()
 heatmap(B)
 ````
 
-3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add to the `.github/workflow` folder (the one containing your `CI.yml` for testing) the `Literate.yml` script which we saw in this lecture's section [Documentation tools: Automating Literate.jl](lecture9/#documentation_tools_automating_literatejl).
+3. Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add to the `.github/workflow` folder (the one containing your `CI.yml` for testing) the `Literate.yml` script which we saw in this lecture's section [Documentation tools: Automating Literate.jl](#documentation_tools_automating_literatejl).
 
 4. That's all! Head to the [Project section in Logistics](/logistics/#project) for a check-list about what you should hand in for this first project.
 
