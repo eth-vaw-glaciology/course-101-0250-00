@@ -110,7 +110,7 @@ run(`ffmpeg -i input_anim.gif -c libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:
 ```
 Or generate them from `png`s:
 ```julia
-run(`ffmpeg -framerate 30 -i %%04d.png -c libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white" -y output_anim.mp4`)
+run(`ffmpeg -framerate 30 -i %04d.png -c libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white" -y output_anim.mp4`)
 ```
 The `mp4` animation can then be embedded as follow in `Literate.jl` scripts:
 ```julia
