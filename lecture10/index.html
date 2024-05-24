@@ -64,15 +64,14 @@ lam = _dx = _dy = dt = rand();</code></pre>
 <h3 id=task_1_performance_evaluation ><a href="#task_1_performance_evaluation" class=header-anchor >Task 1 &#40;Performance evaluation&#41;</a></h3>
 <p>Determine the effective memory throughput, <code>T_eff</code>, of the kernel <code>update_temperature&#33;</code> in function of the number of threads, fixing the number of threads in x dimension to 32. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >You can base yourself on the corresponding activity in the introduction notebook &#40;remember to compute now <code>T_eff</code> rather than <code>T_tot</code>&#41;.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
-max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
+<pre><code class="julia hljs">max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 thread_count = []
 throughputs  = []
 <span class=hljs-keyword >for</span> pow = <span class=hljs-number >0</span>:<span class=hljs-built_in >Int</span>(log2(max_threads/<span class=hljs-number >32</span>))
     threads = (<span class=hljs-number >32</span>, <span class=hljs-number >2</span>^pow)
-    blocks  = <span class=hljs-comment >#...</span>
-    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...</span>
-    T_eff = <span class=hljs-comment >#...</span>
+    blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny÷threads[<span class=hljs-number >2</span>])
+    t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+    T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it
     push!(thread_count, prod(threads))
     push!(throughputs, T_eff)
     println(<span class=hljs-string >&quot;(threads=<span class=hljs-variable >$threads</span>) T_eff = <span class=hljs-subst >$(T_eff)</span>&quot;</span>)
@@ -101,47 +100,30 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
 <div class=messg >Use <a href="https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem"><code>@cuDynamicSharedMem</code></a> to allocate the required shared memory</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Shared memory is block-local, i.e., shared between the threads of a same block.</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device &#40;attribute <code>CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK</code>&#41;. The CUDA occupancy API lets query the maximum number of threads possible for a given kernel &#40;see <a href="https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads"><code>maxthreads</code></a>&#41;.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
 <span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    tx = <span class=hljs-comment ># local thread id, x dimension</span>
-    ty = <span class=hljs-comment ># local thread id, y dimension</span>
-    T_l = <span class=hljs-comment ># allocation of a block-local temperature array (in shared memory)</span>
-    <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = <span class=hljs-comment ># read the values of the temperature array `T` into shared memory</span>
+    tx = threadIdx().x
+    ty = threadIdx().y
+    T_l = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(T), (blockDim().x, blockDim().y))
+    <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
     <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
-        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = <span class=hljs-comment >#=read temperature values from shared memory=#</span>  + dt*Ci[ix,iy]
+        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span>
 <span class=hljs-keyword >end</span></code></pre>
 <h3 id=task_3_shared_memory_basics ><a href="#task_3_shared_memory_basics" class=header-anchor >Task 3 &#40;Shared memory basics&#41;</a></h3>
 <p>Launch the kernel requesting the required amount of shared memory; compute the <code>T_eff</code> achieved. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >The <code>@cuda</code> macro supports the keyword <code>shmem</code> to request the required amount of shared memory; note that it must be indicated in bytes &#40;use sizeof&#40;&#41; to get the number of bytes used by the datatype used&#41;.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># solution</span></code></pre>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=prod($threads)*sizeof(<span class=hljs-built_in >Float64</span>) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>You should not observe any significant change in <code>T_eff</code> compared to the previous kernel &#40;measured as before 561 GB/s with the Tesla P100 GPU&#41;.</p>
 <p>When we will add back the derivatives later, then each thread will read values on the left, right, bottom and top of it. We will want the threads to read the temperature values from the block-local array <code>T_l</code>, not from <code>T</code> anymore. However, right now each thread maps directly to a cell of <code>T_l</code>; thus, the threads at the boundary of the block would read out-of-bounds when reading the &quot;neighbour cells&quot;. We therefore need to add a &quot;halo&quot; to <code>T_l</code> that will contain the required values.</p>
 <h3 id=task_4_shared_memory ><a href="#task_4_shared_memory" class=header-anchor >Task 4 &#40;Shared memory&#41;</a></h3>
 <p>Modify the <code>update_temperature&#33;</code> kernel from Task 2 as follows: add a &quot;halo&quot; of size <code>1</code> to <code>T_l</code> on each side, i.e. on the left, right, bottom and top. To this purpose, you need to modify the allocation of <code>T_l</code> and adapt the local thread ids <code>tx</code> and <code>ty</code> accordingly. Then, launch the new kernel adjusting the required amount of shared memory and compute <code>T_eff</code>. To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
-    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
-    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    tx =  <span class=hljs-comment ># adjust the local thread id in y dimension</span>
-    ty =  <span class=hljs-comment ># adjust the local thread id in y dimension</span>
-    T_l = <span class=hljs-comment ># adjust the shared memory allocation</span>
-    <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
-    <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
-        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
-    <span class=hljs-keyword >end</span>
-    <span class=hljs-keyword >return</span>
-<span class=hljs-keyword >end</span>
-
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=<span class=hljs-comment >#=adjust the shared memory=#</span> update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
-T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
-<p><code>T_eff</code> did certainly not significantly change, as you probably expected as we did not access more data than before &#40;measured as before 561 GB/s with the Tesla P100 GPU&#41;.</p>
-<h3 id=task_5_shared_memory ><a href="#task_5_shared_memory" class=header-anchor >Task 5 &#40;Shared memory&#41;</a></h3>
-<p>Modify the <code>update_temperature&#33;</code> kernel from Task 4 as follows: read the required values into the newly added halo of <code>T_l</code>. Then, compute again <code>T_eff</code>. To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
 <span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
@@ -150,10 +132,29 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
     T_l = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(T), (blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>))
     <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
     <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
-        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == <span class=hljs-number >1</span>)            <span class=hljs-comment >#=read the required values to the left halo of `T_l`=#</span> <span class=hljs-keyword >end</span>
-        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == blockDim().x) <span class=hljs-comment >#=read the required values to the right halo of `T_l`=#</span> <span class=hljs-keyword >end</span>
-        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span>                                 <span class=hljs-comment >#=read the required values to the bottom halo of `T_l`=#</span> <span class=hljs-keyword >end</span>
-        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span>                                 <span class=hljs-comment >#=read the required values to the top halo of `T_l`=#</span> <span class=hljs-keyword >end</span>
+        <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=prod($threads.+<span class=hljs-number >2</span>)*sizeof(<span class=hljs-built_in >Float64</span>) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
+<p><code>T_eff</code> did certainly not significantly change, as you probably expected as we did not access more data than before &#40;measured as before 561 GB/s with the Tesla P100 GPU&#41;.</p>
+<h3 id=task_5_shared_memory ><a href="#task_5_shared_memory" class=header-anchor >Task 5 &#40;Shared memory&#41;</a></h3>
+<p>Modify the <code>update_temperature&#33;</code> kernel from Task 4 as follows: read the required values into the newly added halo of <code>T_l</code>. Then, compute again <code>T_eff</code>. To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
+<span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    tx = threadIdx().x+<span class=hljs-number >1</span>
+    ty = threadIdx().y+<span class=hljs-number >1</span>
+    T_l = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(T), (blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>))
+    <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
+    <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
+        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == <span class=hljs-number >1</span>)            T_l[tx-<span class=hljs-number >1</span>,ty] = T[ix-<span class=hljs-number >1</span>,iy] <span class=hljs-keyword >end</span>
+        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == blockDim().x) T_l[tx+<span class=hljs-number >1</span>,ty] = T[ix+<span class=hljs-number >1</span>,iy] <span class=hljs-keyword >end</span>
+        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().y == <span class=hljs-number >1</span>)            T_l[tx,ty-<span class=hljs-number >1</span>] = T[ix,iy-<span class=hljs-number >1</span>] <span class=hljs-keyword >end</span>
+        <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().y == blockDim().y) T_l[tx,ty+<span class=hljs-number >1</span>] = T[ix,iy+<span class=hljs-number >1</span>] <span class=hljs-keyword >end</span>
         <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span>
@@ -165,7 +166,7 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
 <h3 id=task_6_shared_memory ><a href="#task_6_shared_memory" class=header-anchor >Task 6 &#40;Shared memory&#41;</a></h3>
 <p>Modify the <code>update_temperature&#33;</code> kernel from Task 5 as follows: add back the derivatives that we removed at the beginning of the notebook and modify them to read the temperature from <code>T_l</code> rather then from <code>T</code>. Then, verify that the diffusion works as expected and compute again <code>T_eff</code>.</p>
 <p>To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
 <span class=hljs-keyword >function</span> update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
@@ -180,23 +181,30 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
         <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().y == blockDim().y) T_l[tx,ty+<span class=hljs-number >1</span>] = T[ix,iy+<span class=hljs-number >1</span>] <span class=hljs-keyword >end</span>
         sync_threads()
         <span class=hljs-meta >@inbounds</span> T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]*(
-                    <span class=hljs-comment ># add the computation of the derivatives</span>
-                    <span class=hljs-comment ># ...</span>
+                    - ((-lam*(T_l[tx+<span class=hljs-number >1</span>,ty] - T_l[tx,ty])*_dx) - (-lam*(T_l[tx,ty] - T_l[tx-<span class=hljs-number >1</span>,ty])*_dx))*_dx
+                    - ((-lam*(T_l[tx,ty+<span class=hljs-number >1</span>] - T_l[tx,ty])*_dy) - (-lam*(T_l[tx,ty] - T_l[tx,ty-<span class=hljs-number >1</span>])*_dy))*_dy
                     )
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span>
 <span class=hljs-keyword >end</span>
 
-diffusion2D()
+<span class=hljs-keyword >function</span> diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    threads = (<span class=hljs-number >32</span>, <span class=hljs-number >8</span>)
+    blocks  = (size(T2,<span class=hljs-number >1</span>)÷threads[<span class=hljs-number >1</span>], size(T2,<span class=hljs-number >2</span>)÷threads[<span class=hljs-number >2</span>])
+    <span class=hljs-meta >@cuda</span> blocks=blocks threads=threads shmem=prod(threads.+<span class=hljs-number >2</span>)*sizeof(<span class=hljs-built_in >Float64</span>) update_temperature!(T2, T, Ci, lam, dt, _dx, _dy); synchronize()
+<span class=hljs-keyword >end</span>
 
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=prod($threads.+<span class=hljs-number >2</span>)*sizeof(<span class=hljs-built_in >Float64</span>) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
+diffusion2D()</code></pre>
+<pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=prod($threads.+<span class=hljs-number >2</span>)*sizeof(<span class=hljs-built_in >Float64</span>) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() <span class=hljs-keyword >end</span>
 T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<span class=hljs-number >1</span>)*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >The we have added a call to <code>sync_threads&#40;&#41;</code> at the end of all reads into shared memory &#40;i.e. <code>T_l</code>&#41; in order to ensure that no thread tries to read a from a &quot;neighboring cell&quot; before it contains the required value.</div></div>
 <p><code>T_eff</code> should not have decreased significantly when adding back the derivatives &#40;measured, as in Task 5, 538 GB/s with the Tesla P100 GPU&#41; even though they constitute the major part of the computations&#33; This confirms one more time empirically that the performance of solvers as the above is essentially defined by how much we can avoid redundant main memory accesses.</p>
 <h3 id=task_7_performance_evaluation ><a href="#task_7_performance_evaluation" class=header-anchor >Task 7 &#40;Performance evaluation&#41;</a></h3>
 <p>Compute by how much percent you can improve the performance of the solver at most.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># solution</span></code></pre>
+<pre><code class="julia hljs"><span class=hljs-comment ># solution</span>
+T_peak = <span class=hljs-number >561</span> <span class=hljs-comment ># Peak memory throughput of the Tesla P100 GPU</span>
+T_eff/T_peak</code></pre>
 <p>Congratulations&#33; You have implemented a 2-D diffusion solver using shared memory&#33;</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
@@ -270,12 +278,11 @@ T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<spa
 <p>Modify the above <code>memcopy&#33;</code> kernel to read in A and write B in a serial manner with respect to the third dimension &#40;index <code>iz</code>&#41;, i.e., with parallelization only over the first two dimensions &#40;index <code>ix</code> and <code>iy</code>&#41;. Launch the kernel with the same thread configuration as above and adapt the the block configuration for the third dimension correctly. Verify the correctness of your kernel. Then, compute <code>T_tot</code> and explain the measured performance. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >You need to launch the kernel with only one thread and one block in the third dimension and, inside the kernel, do a loop over the third dimension. Use <code>iz</code> as loop index as it will replace the previous <code>iz</code> computed from the thread location in the grid.</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >The operator <code>≈</code> allows to check if two arrays contain the same values &#40;within a tolerance&#41;. Use this to verify your memory copy kernel.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> memcopy!(B, A)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy!(B, A)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    <span class=hljs-keyword >for</span> iz <span class=hljs-comment >#...</span>
-        <span class=hljs-comment >#...</span>
+    <span class=hljs-keyword >for</span> iz = <span class=hljs-number >1</span>:size(A,<span class=hljs-number >3</span>)
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = A[ix,iy,iz]
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
@@ -284,33 +291,33 @@ threads = (<span class=hljs-number >32</span>, <span class=hljs-number >8</span>
 blocks  = (nx÷threads[<span class=hljs-number >1</span>], ny÷threads[<span class=hljs-number >2</span>], <span class=hljs-number >1</span>)</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Verification</span>
 B .= <span class=hljs-number >0.0</span>;
-<span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...</span>
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-comment >#...# end</span>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() <span class=hljs-keyword >end</span>
 T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>Great&#33; You just implemented a so called <a href="https://developer.nvidia.com/blog/cuda-pro-tip-write-flexible-kernels-grid-stride-loops/">grid-stride loop</a>. It exhibits a good memory access pattern and it allows to easily reuse, e.g., intermediate results from previous iterations in the loop. You probably observe a <code>T_tot</code> that is a bit below the one measured in the previous experiment &#40;measured 520 GB/s with the Tesla P100 GPU&#41;. There is certainly room to improve this memory copy kernel a bit, but we will consider it sufficient in order to continue with this exercise.</p>
 <h3 id=task_2_controlling_registers ><a href="#task_2_controlling_registers" class=header-anchor >Task 2 &#40;controlling registers&#41;</a></h3>
 <p>Write a kernel <code>cumsum_dim3&#33;</code> which computes the cumulative sum over the 3rd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 1. Verify the correctness of your kernel against <code>CUDA.cumsum&#33;</code>. Then, compute <code>T_eff_cs</code> as defined above, explain the measured performance and compare it to the one obtained with the generic <code>CUDA.cumsum&#33;</code>. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Define a variable <code>cumsum_iz</code> before the loop and initialize it to 0.0 in order to cumulate the sum.</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >The operator <code>≈</code> allows to check if two arrays contain the same values &#40;within a tolerance&#41;. Use this to verify your results against <code>CUDA.cumsum&#33;</code> &#40;remember that for the verification, we already preallocated an array <code>B_ref</code> at the beginning, which you can use now&#41;.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> cumsum_dim3!(B, A)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> cumsum_dim3!(B, A)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
     cumsum_iz = <span class=hljs-number >0.0</span>
-    <span class=hljs-keyword >for</span> iz <span class=hljs-comment >#...</span>
-        <span class=hljs-comment >#...</span>
+    <span class=hljs-keyword >for</span> iz = <span class=hljs-number >1</span>:size(A,<span class=hljs-number >3</span>)
+        <span class=hljs-meta >@inbounds</span> cumsum_iz  += A[ix,iy,iz]
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = cumsum_iz
     <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
 <span class=hljs-comment ># Verification</span>
-<span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...</span>
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads cumsum_dim3!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=<span class=hljs-number >3</span>);
 B ≈ B_ref</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...# end</span>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads cumsum_dim3!($B, $A); synchronize() <span class=hljs-keyword >end</span>
 T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> CUDA.cumsum!($B, $A; dims=<span class=hljs-number >3</span>); synchronize() <span class=hljs-keyword >end</span>
 T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
@@ -318,97 +325,126 @@ T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<
 <p>We will now implement the cummulative sum over the 2nd dimension &#40;index <code>iy</code>&#41;. As for the previous implementation, the first step is to read in A &#40;and write B&#41; in a way that will later allow to easily do the required cumsums without exhibiting significant memory throughput degradation.</p>
 <h3 id=task_3_kernel_loops ><a href="#task_3_kernel_loops" class=header-anchor >Task 3 &#40;kernel loops&#41;</a></h3>
 <p>Modify the <code>memcopy&#33;</code> kernel given in the beginning to read in A and write B in a serial manner with respect to the second dimension &#40;index <code>iy</code>&#41;, i.e., with parallelization only over the first and the last dimensions &#40;index <code>ix</code> and <code>iz</code>&#41;. Launch the kernel with the same amount of threads as in Task 1, however, place them all in the first dimension &#40;i.e. use one thread in the second and third dimensions&#41;; adapt the the block configuration correctly. Verify the correctness of your kernel. Then, compute <code>T_tot</code> and explain the measured performance.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> memcopy!(B, A)
-    <span class=hljs-comment >#...</span>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy!(B, A)
+    ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
+    iz = (blockIdx().z-<span class=hljs-number >1</span>) * blockDim().z + threadIdx().z
+    <span class=hljs-keyword >for</span> iy = <span class=hljs-number >1</span>:size(A,<span class=hljs-number >2</span>)
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = A[ix,iy,iz]
+    <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
 threads = (<span class=hljs-number >256</span>, <span class=hljs-number >1</span>, <span class=hljs-number >1</span>)
-blocks  = <span class=hljs-comment >#...</span></code></pre>
+blocks  = (nx÷threads[<span class=hljs-number >1</span>], <span class=hljs-number >1</span>, nz÷threads[<span class=hljs-number >3</span>])</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Verification</span>
 B .= <span class=hljs-number >0.0</span>;
-<span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...</span>
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads memcopy!(B, A); synchronize()
 B ≈ A</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...# end</span>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() <span class=hljs-keyword >end</span>
 T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>You should observe no big difference between <code>T_tot</code> measured here and <code>T_tot</code> computed in Task 1 &#40;measured 519 GB/s with the Tesla P100 GPU&#41; as this kernel is accessing memory also in large contiguous chunks.</p>
 <h3 id=task_4_controlling_registers ><a href="#task_4_controlling_registers" class=header-anchor >Task 4 &#40;controlling registers&#41;</a></h3>
 <p>Write a kernel <code>cumsum_dim2&#33;</code> which computes the cumulative sum over the 2nd dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 3. Verify the correctness of your kernel against <code>CUDA.cumsum&#33;</code>. Then, compute <code>T_eff_cs</code> as defined above, explain the measured performance and compare it to the one obtained with the generic <code>CUDA.cumsum&#33;</code>.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> cumsum_dim2!(B, A)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> cumsum_dim2!(B, A)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iz = (blockIdx().z-<span class=hljs-number >1</span>) * blockDim().z + threadIdx().z
     cumsum_iy = <span class=hljs-number >0.0</span>
-    <span class=hljs-comment >#...</span>
+    <span class=hljs-keyword >for</span> iy = <span class=hljs-number >1</span>:size(A,<span class=hljs-number >2</span>)
+        <span class=hljs-meta >@inbounds</span> cumsum_iy  += A[ix,iy,iz]
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = cumsum_iy
+    <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
 <span class=hljs-comment ># Verification</span>
-<span class=hljs-meta >@cuda</span> <span class=hljs-comment >#...</span>
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads cumsum_dim2!(B, A); synchronize()
 CUDA.cumsum!(B_ref, A; dims=<span class=hljs-number >2</span>);
 B ≈ B_ref</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-comment >#...# end</span>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads cumsum_dim2!($B, $A); synchronize() <span class=hljs-keyword >end</span>
 T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
-<pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-comment >#...</span>
+<pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> CUDA.cumsum!($B, $A; dims=<span class=hljs-number >2</span>); synchronize() <span class=hljs-keyword >end</span>
 T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>Again, you should observe no significant difference between <code>T_eff_cs</code> measured here and <code>T_tot</code> computed in Task 3 &#40;measured 519 GB/s with the Tesla P100 GPU&#41;, as you probably expected.</p>
 <p>We will now implement the cumulative sum over the 1st dimension &#40;index <code>ix</code>&#41;. As for the previous implementations, the first step is to read in A &#40;and write B&#41; in a way that will later allow to easily do the required cumsums without exhibiting significant memory throughput degradation.</p>
 <h3 id=task_5_kernel_loops ><a href="#task_5_kernel_loops" class=header-anchor >Task 5 &#40;kernel loops&#41;</a></h3>
 <p>Modify the <code>memcopy&#33;</code> kernel given in the beginning to read in A and write B in a serial manner with respect to the first dimension &#40;index <code>ix</code>&#41;, i.e., with parallelization only over the second and third dimensions &#40;index <code>iy</code> and <code>iz</code>&#41;. Launch the kernel with the same amount of threads as in Task 1, however, place them all in the second dimension &#40;i.e. use one thread in the first and third dimensions&#41;; adapt the the block configuration correctly. Verify the correctness of your kernel. Then, think about what performance you expect, compute <code>T_tot</code> and explain the measured performance.</p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> memcopy!(B, A)
-    <span class=hljs-comment >#...</span>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy!(B, A)
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    iz = (blockIdx().z-<span class=hljs-number >1</span>) * blockDim().z + threadIdx().z
+    <span class=hljs-keyword >for</span> ix = <span class=hljs-number >1</span>:size(A,<span class=hljs-number >1</span>)
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = A[ix,iy,iz]
+    <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
 threads = (<span class=hljs-number >1</span>, <span class=hljs-number >256</span>, <span class=hljs-number >1</span>)
-blocks  = <span class=hljs-comment >#...</span></code></pre>
+blocks  = (<span class=hljs-number >1</span>, ny÷threads[<span class=hljs-number >2</span>], nz÷threads[<span class=hljs-number >3</span>])</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Verification</span>
-<span class=hljs-comment >#...</span></code></pre>
+B .= <span class=hljs-number >0.0</span>;
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads memcopy!(B, A); synchronize()
+B ≈ A</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-comment >#...</span>
-T_tot = <span class=hljs-comment >#...</span></code></pre>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>You likely observe <code>T_tot</code> to be an order of magnitude or more below <code>T_tot</code> measured in Task 1 and 3 &#40;measured 36 GB/s with the Tesla P100 GPU&#41; because, in contrast to the previous kernels, this kernel accesses memory discontinuously with a large stride &#40;of <code>nx</code> numbers&#41; between each requested number.</p>
 <p>There obviously is no point in creating a <code>cumsum&#33;</code> kernel out of this <code>memcopy&#33;</code> kernel: the performance could only be the same or worse &#40;even though worse is not to expect&#41;. Hence, we will try to improve this memory copy kernel by accessing multiple contiguous numbers from memory, which we can achieve by launching more then one threads in the first dimension, adapting the loop accordingly.</p>
 <h3 id=task_6_kernel_loops ><a href="#task_6_kernel_loops" class=header-anchor >Task 6 &#40;kernel loops&#41;</a></h3>
 <p>Modify the <code>memcopy&#33;</code> kernel from Task 5 to enable reading in 32 numbers at a time in the first dimension &#40;index <code>ix</code>&#41; rather than one number at a time as before. Launch the kernel with just 32 threads, all placed in the first dimension; adapt the the block configuration if you need to. Verify the correctness of your kernel. Then, think about what performance you expect now, compute <code>T_tot</code> and explain the measured performance. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >You could hardcode the kernel to read 32 numbers at a time, but we prefer to write it more generally allowing to launch the kernel with a different number of threads in the first dimension &#40;however, we do not want to enable more then one block though in this dimension&#41;.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> memcopy!(B, A)
-    <span class=hljs-comment >#...</span>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy!(B, A)
+    iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
+    iz = (blockIdx().z-<span class=hljs-number >1</span>) * blockDim().z + threadIdx().z
+    <span class=hljs-keyword >for</span> ix_offset = <span class=hljs-number >0</span> : blockDim().x : size(A,<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>
+        ix = threadIdx().x + ix_offset
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = A[ix,iy,iz]
+    <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
-threads = <span class=hljs-comment >#...</span>
-blocks  = <span class=hljs-comment >#...</span></code></pre>
+threads = (<span class=hljs-number >32</span>, <span class=hljs-number >1</span>, <span class=hljs-number >1</span>)
+blocks  = (<span class=hljs-number >1</span>, ny÷threads[<span class=hljs-number >2</span>], nz÷threads[<span class=hljs-number >3</span>])</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Verification</span>
-<span class=hljs-comment >#...</span></code></pre>
+B .= <span class=hljs-number >0.0</span>;
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads memcopy!(B, A); synchronize()
+B ≈ A</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-comment >#...</span>
-T_tot = <span class=hljs-comment >#...</span></code></pre>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads memcopy!($B, $A); synchronize() <span class=hljs-keyword >end</span>
+T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p><code>T_tot</code> should now be similar to the one obtained in Task 1 and 3 or even a bit better &#40;measured 534 GB/s with the Tesla P100 GPU&#41; thanks to the additional concurrency compared to the other <code>memcopy&#33;</code> versions. We are therefore ready to implement the cummulative sum over the 1st dimension.</p>
 <h3 id=task_7_communication_via_shared_memory ><a href="#task_7_communication_via_shared_memory" class=header-anchor >Task 7 &#40;communication via shared memory&#41;</a></h3>
 <p>Write a kernel <code>cumsum_dim1&#33;</code> which computes the cumulative sum over the 1st dimension of a 3-D array. To this purpose modify the memory copy kernel from Task 6. Verify the correctness of your kernel against <code>CUDA.cumsum&#33;</code>. Then, compute <code>T_eff_cs</code> as defined above, explain the measured performance and compare it to the one obtained with the generic <code>CUDA.cumsum&#33;</code>. <div class=note ><div class=title >💡 Note</div>
 <div class=messg >If you read the data into shared memory, then you can compute the cumulative sum, e.g., with the first thread.</div></div></p>
-<pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
-<span class=hljs-keyword >function</span> cumsum_dim1!(B, A)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> cumsum_dim1!(B, A)
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
     iz = (blockIdx().z-<span class=hljs-number >1</span>) * blockDim().z + threadIdx().z
     tx = threadIdx().x
     shmem = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(A), blockDim().x)
     cumsum_ix = <span class=hljs-number >0.0</span>
-    <span class=hljs-comment >#...</span>
+    <span class=hljs-keyword >for</span> ix_offset = <span class=hljs-number >0</span> : blockDim().x : size(A,<span class=hljs-number >1</span>)-<span class=hljs-number >1</span>
+        ix = threadIdx().x + ix_offset
+        <span class=hljs-meta >@inbounds</span> shmem[tx] = A[ix,iy,iz]       <span class=hljs-comment ># Read the x-dimension chunk into shared memory.</span>
+        sync_threads()
+        <span class=hljs-keyword >if</span> tx == <span class=hljs-number >1</span>                            <span class=hljs-comment ># Compute the cumsum only with the first thread, accessing only shared memory</span>
+            <span class=hljs-keyword >for</span> i = <span class=hljs-number >1</span>:blockDim().x
+                <span class=hljs-meta >@inbounds</span> cumsum_ix += shmem[i]
+                <span class=hljs-meta >@inbounds</span> shmem[i] = cumsum_ix
+            <span class=hljs-keyword >end</span>
+        <span class=hljs-keyword >end</span>
+        sync_threads()
+        <span class=hljs-meta >@inbounds</span> B[ix,iy,iz] = shmem[tx]       <span class=hljs-comment ># Write the x-dimension chunk to main memory.</span>
+    <span class=hljs-keyword >end</span>
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
 <span class=hljs-comment ># Verification</span>
-<span class=hljs-comment >#...</span></code></pre>
+<span class=hljs-meta >@cuda</span> blocks=blocks threads=threads shmem=prod(threads)*sizeof(<span class=hljs-built_in >Float64</span>) cumsum_dim1!(B, A); synchronize()
+CUDA.cumsum!(B_ref, A; dims=<span class=hljs-number >1</span>);
+B ≈ B_ref</code></pre>
 <pre><code class="julia hljs"><span class=hljs-comment ># Performance</span>
-t_it = <span class=hljs-comment >#...</span>
-T_eff_cs = <span class=hljs-comment >#...</span></code></pre>
+t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> <span class=hljs-meta >@cuda</span> blocks=$blocks threads=$threads shmem=<span class=hljs-number >2</span>*prod($threads)*sizeof(<span class=hljs-built_in >Float64</span>) cumsum_dim1!($B, $A); synchronize() <span class=hljs-keyword >end</span>
+T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> CUDA.cumsum!($B, $A; dims=<span class=hljs-number >1</span>); synchronize() <span class=hljs-keyword >end</span>
 T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*nz*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p><code>T_eff_cs</code> is probably significantly less good than the one obtained for the cumulative sums over the other dimensions, but still quite good if we keep in mind the <code>T_tot</code> achieved with the first memcopy manner in Task 5. A good strategy for tackling an optimal implementation would certainly be to use warp-level functions &#40;and if needed a more complex summation algorithm&#41;.</p>
@@ -417,7 +453,7 @@ T_eff_cs = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 27, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: May 24, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
