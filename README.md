@@ -2,7 +2,7 @@
 
 👉 [**Go to course website**](https://pde-on-gpu.vaw.ethz.ch/)
 
-**Welcome to ETH course 101-0250-00 ✨ Third edition - Fall 2024**
+**Welcome to ETH course 101-0250-00 ✨ 4th edition - Fall 2024**
 
 This course aims to cover state-of-the-art methods in modern parallel Graphical Processing Unit (GPU) computing, supercomputing and code development with applications to natural sciences and engineering.
 
