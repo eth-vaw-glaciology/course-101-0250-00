@@ -118,19 +118,18 @@ Determine the effective memory throughput, `T_eff`, of the kernel `update_temper
 #md # \note{You can base yourself on the corresponding activity in the introduction notebook (remember to compute now `T_eff` rather than `T_tot`).}
 
 #-
+## solution
 max_threads  = attribute(device(),CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 thread_count = []
 throughputs  = []
 for pow = 0:Int(log2(max_threads/32))
     threads = (32, 2^pow)
-    blocks  = (nx÷threads[1], ny÷threads[2])
-    t_it = @belapsed begin @cuda blocks=$blocks threads=$threads update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-    T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
+    blocks  = #...
+    t_it = @belapsed begin @cuda #...
+    T_eff = #...
     push!(thread_count, prod(threads))
     push!(throughputs, T_eff)
     println("(threads=$threads) T_eff = $(T_eff)")
-#src     #IJulia.clear_output(true)
-#src     #display(plot(thread_count, throughputs))
 end
 
 md"""
@@ -182,16 +181,16 @@ To help you, the structure of the kernel is already given; you only need to comp
 #md # \note{Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [`maxthreads`](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).}
 
 #-
-## solution
+## hint
 function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    tx = threadIdx().x
-    ty = threadIdx().y
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x, blockDim().y))
-    @inbounds T_l[tx,ty] = T[ix,iy]
+    tx = # local thread id, x dimension
+    ty = # local thread id, y dimension
+    T_l = # allocation of a block-local temperature array (in shared memory)
+    @inbounds T_l[tx,ty] = # read the values of the temperature array `T` into shared memory
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
-        @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
+        @inbounds T2[ix,iy] = #=read temperature values from shared memory=#  + dt*Ci[ix,iy]
     end
     return
 end
@@ -206,8 +205,6 @@ Launch the kernel requesting the required amount of shared memory; compute the `
 
 #-
 ## solution
-t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
-T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 md"""
 You should not observe any significant change in `T_eff` compared to the previous kernel (measured as before 561 GB/s with the Tesla P100 GPU).
@@ -223,13 +220,13 @@ To help you, the structure of the kernel is already given; you only need to comp
 """
 
 #-
-## solution
+## hint
 function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    tx = threadIdx().x+1
-    ty = threadIdx().y+1
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    tx =  # adjust the local thread id in y dimension
+    ty =  # adjust the local thread id in y dimension
+    T_l = # adjust the shared memory allocation
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
         @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
@@ -237,7 +234,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     return
 end
 
-t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
+t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=#=adjust the shared memory=# update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 md"""
@@ -252,7 +249,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 """
 
 #-
-## solution
+## hint
 function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -261,10 +258,10 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
-        @inbounds if (threadIdx().x == 1)            T_l[tx-1,ty] = T[ix-1,iy] end
-        @inbounds if (threadIdx().x == blockDim().x) T_l[tx+1,ty] = T[ix+1,iy] end
-        @inbounds if (threadIdx().y == 1)            T_l[tx,ty-1] = T[ix,iy-1] end
-        @inbounds if (threadIdx().y == blockDim().y) T_l[tx,ty+1] = T[ix,iy+1] end
+        @inbounds if (threadIdx().x == 1)            #=read the required values to the left halo of `T_l`=# end
+        @inbounds if (threadIdx().x == blockDim().x) #=read the required values to the right halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the bottom halo of `T_l`=# end
+        @inbounds if                                 #=read the required values to the top halo of `T_l`=# end
         @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]
     end
     return
@@ -286,7 +283,7 @@ To help you, the structure of the kernel is already given; you only need to comp
 """
 
 #-
-## solution
+## hint
 function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
@@ -301,21 +298,15 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
         @inbounds if (threadIdx().y == blockDim().y) T_l[tx,ty+1] = T[ix,iy+1] end
         sync_threads()
         @inbounds T2[ix,iy] = T_l[tx,ty] + dt*Ci[ix,iy]*(
-                    - ((-lam*(T_l[tx+1,ty] - T_l[tx,ty])*_dx) - (-lam*(T_l[tx,ty] - T_l[tx-1,ty])*_dx))*_dx
-                    - ((-lam*(T_l[tx,ty+1] - T_l[tx,ty])*_dy) - (-lam*(T_l[tx,ty] - T_l[tx,ty-1])*_dy))*_dy
+                    ## add the computation of the derivatives
+                    ## ...
                     )
     end
     return
 end
 
-function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    threads = (32, 8)
-    blocks  = (size(T2,1)÷threads[1], size(T2,2)÷threads[2])
-    @cuda blocks=blocks threads=threads shmem=prod(threads.+2)*sizeof(Float64) update_temperature!(T2, T, Ci, lam, dt, _dx, _dy); synchronize()
-end
-
 diffusion2D()
-#-
+
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads shmem=prod($threads.+2)*sizeof(Float64) update_temperature!($T2, $T, $Ci, $lam, $dt, $_dx, $_dy); synchronize() end
 T_eff = (2*1+1)*1/1e9*nx*ny*sizeof(Float64)/t_it
 
@@ -333,8 +324,6 @@ Compute by how much percent you can improve the performance of the solver at mos
 """
 #-
 ## solution
-T_peak = 561 # Peak memory throughput of the Tesla P100 GPU
-T_eff/T_peak
 
 md"""
 Congratulations! You have implemented a 2-D diffusion solver using shared memory!
