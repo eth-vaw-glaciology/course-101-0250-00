@@ -6,7 +6,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 🎉 Welcome to ETH's **course 101-0250-00L** on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/).
 
-> **Announce:** 2023 edition starts Tuesday Sept. 19, 12h45. Welcome!
+> **Announce:** 2024 edition starts Tuesday Sept. 17, 12h45. Welcome!
 
 ## Course informations
 This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
@@ -51,14 +51,14 @@ The goal of this course is to offer a practical approach to solve systems of dif
   - frictional heating
   - Navier-Stokes equations
 
-> Detailed content is available on [**ETHZ course catalogue**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2023W&ansicht=KATALOGDATEN&lerneinheitId=172289&lang=en)
+> Detailed content is available on [**ETHZ course catalogue**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en)
 
-> Course repository: [https://github.com/eth-vaw-glaciology/course-101-0250-00](https://github.com/eth-vaw-glaciology/course-101-0250-00)
+> Course GitHub repository: [https://github.com/eth-vaw-glaciology/course-101-0250-00](https://github.com/eth-vaw-glaciology/course-101-0250-00)
 
 
 ## Teaching staff
+- [Ivan Utkin](https://github.com/utkinis) - ETHZ / WSL
 - [Ludovic Räss](https://github.com/luraess) - Unil / ETHZ
 - [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Ivan Utkin](https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html) - ETHZ / WSL
 - [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
-- Teaching Assistant: [Giacomo Aloisi](https://github.com/GiackAloZ) - ETHZ
+- Teaching Assistant: [You Wu](https://github.com/youwuyou) - ETHZ

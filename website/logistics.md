@@ -7,7 +7,7 @@ hascode = false
 
 [![Element chat](/assets/element_chat.svg#badge)](https://chat.ethz.ch)
 [![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://ethz.zoom.us/j/63706156394)
-[![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=20175)
+[![ETHZ Moodle](/assets/moodle.png#badge)](https://moodle-app2.let.ethz.ch/course/view.php?id=23586)
 
 > **Suggestion:** Bookmark this page for easy access to all infos you need for the course.
 
@@ -24,7 +24,7 @@ The course will be taught in a hands-on fashion, putting emphasis on you writing
 
 ### Live lectures | Tuesdays 12h45-15h30
 - In person lectures will take place in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en).
-- Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/63706156394) (ETH Students only - Password _and password-less login_ available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175)).
+- Online attendance will be possible on [Zoom](https://ethz.zoom.us/j/63706156394) (ETH Students only - Password _and password-less login_ available on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586)).
 - **Exercise session** follow the lectures; they will not be broadcasted _(no online support will be provided during the exercise session)_.
 
 ### Office hours
@@ -34,11 +34,11 @@ Schedule to be defined (on Element/Zoom or in-person)
 
 We plan to use the [Element-chat (https://chat.ethz.ch/)](https://chat.ethz.ch/) as the main communication channel for the course, both between the teachers and the students, and hopefully also between students. We encourage ETH students to ask course, exercises and technical questions there.
 
-Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) to get started with Element:
+Head to the [_Course chat space (Element)_ link on Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) to get started with Element:
 1. Select **Start Student-Chat**.
 2. Login using your NETHZ credentials to start using the browser-based client.
-3. Join the **_General_** and **_Helpdesk_** rooms _(you may see an error upon accessing the rooms - refreshing the app should solve the issue)._
-4. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access.
+3. Join "manually" the **_General_** and **_Helpdesk_** rooms.
+4. Download the [Element Desktop/Mobile client](https://element.io/) for more comfortable access (less encryption-related issues).
 
 ## Homework
 
@@ -51,12 +51,10 @@ Homework assignments can be carried-out by groups of 2. However, **_note that ev
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
 ### Submission
-- Submission of notebooks (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).
+- Submission of notebooks (weeks 1 & 2), GitHub commit hash (or SHA) (week 3 and onwards) or other documents happens on the course's [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586).
 - Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
 
-**Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub **and** you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the related _git commit hash (SHA)_ submission activity.
-
-<!-- :construction: More infos to come soon. -->
+**Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub **and** you will have to submit the git commit hash (or SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) in the related _git commit hash (SHA)_ submission activity.
 
 ### Private GitHub repository setup
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments (scripts):
@@ -68,7 +66,7 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
     - create a new folder named `homework-X` to put the exercise codes into;
     - (don't forget to `git add` the code-files and `git commit` them);
     - push to GitHub and open a pull request (PR) on the `main` branch on GitHub;
-    - copy **the single git commit hash (or SHA) of the final push and the link to the PR** and submit **both** on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in (it will serve to control the material was pushed on time);
+    - copy **the single git commit hash (or SHA) of the final push and the link to the PR** and submit **both** on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) as the assignment hand-in (it will serve to control the material was pushed on time);
     - (do not merge the PR yet).
 
 \warn{Make sure to only include the `homework-X` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the syncing as lightweight as possible.}
@@ -77,7 +75,7 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
 
 ### Feedback
 
-After the submission deadline, we will correct and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175).  Once you got feedback, please merge the PR.
+After the submission deadline, we will correct and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586).  Once you got feedback, please merge the PR.
 
 We will try to correct your assignments before the lecture following the homework's deadline. This should allow you to get rapid feedback in order to clarify the points you may struggle on as soon as possible.
 
@@ -85,6 +83,9 @@ We will try to correct your assignments before the lecture following the homewor
 
 Starting from lecture 7 (until lecture 9), homework contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
+:construction: More infos to come in due time.
+
+<!--
 The exercises **in lecture 7** will serve as starting point for the first project:
 
 1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l7_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
@@ -92,7 +93,7 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 3. During lectures 7 and 9 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
-The project submission deadline is set to **01.12.2023 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the Lecture 9 section.
+The project submission deadline is set to **01.12.2023 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
 - a `PorousConvection` folder containing the structure proposed in [Lecture 7](/lecture7/#preparing_the_project_folder_in_your_github_repo)
@@ -135,7 +136,7 @@ Submission deadline for the project is **December 22, 2023 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
-Also, add the last commit SHA to [Moodle - Final project submission](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as for the exercises.
+Also, add the last commit SHA to [Moodle - Final project submission](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) as for the exercises.
 
 ### Final project grading
 Grading of the final project will contribute 35% of the final grade.
@@ -149,10 +150,11 @@ For a successful outcome, final projects are expected to be handed-in as single 
 - unit and reference testing
 - Continuous Integration (CI - using e.g. GitHub Actions)
 - additional features if needed
+-->
 
 ## Evaluation
 
-Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) (& GitHub):
+Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) (& GitHub):
 1. 5 (out of 6) weekly assignments (30% of the final grade) during the course's Part 1. _**Weekly coding exercises can be done alone or in groups of two**_.
 2. A project during Part 2 (35% of the final grade). _**Projects submission includes codes in a git repository and an automatic generated documentation**_.
 3. A final project during Part 3 (35% of the final grade). _**Final projects submission includes codes in a git repository and an automatic generated documentation**_.

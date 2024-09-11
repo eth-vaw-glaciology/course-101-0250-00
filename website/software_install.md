@@ -30,12 +30,12 @@ Upon login to the server, you should see the following launcher environment, inc
 
 \warn{It is recommended to download your work as back-up before leaving the session.}
 
-## Installing Julia v1.9 (or later)
-There are two recommended ways to install Julia v1.9:
-1. Using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer (preferred approach).
-2. [Downloading the binaries](https://julialang.org/downloads/) for your platform from the Julia website (following the install directions provided under **[help]**).
+## Installing Julia v1.10 (or later)
 
-\note{_**For Windows users:**_ When installing Julia 1.9 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
+### Juliaup installer
+Follow the instructions from the [Julia Download page](https://julialang.org/downloads/) to install Julia v1.10 (which is using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer under the hood).
+
+\note{_**For Windows users:**_ When installing Julia 1.10 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
 ### Terminal + external editor
 Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
@@ -60,8 +60,6 @@ VS Code's [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vs
 
 \note{This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.}
 
-\warn{The Remote-SSH setup is limited on Piz Daint because of a security issue, not allowing direct node execution nor supporting remote command execution which would be needed to correctly launch the Julia extension to allow for e.g. graphics redirection (more [here](https://user.cscs.ch/news/#23-10-2020-remote-vscode-configuration)).}
-
 ## Running Julia
 
 ### First steps
@@ -78,7 +76,7 @@ Welcome in the [Julia REPL](https://docs.julialang.org/en/v1/stdlib/REPL/) (comm
   (_)     | (_) (_)    |
    _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
   | | | | | | |/ _` |  |
-  | | |_| | | | (_| |  |  Version 1.9.3 (2023-08-24)
+  | | |_| | | | (_| |  |  Version 1.10.5 (2024-08-27)
  _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
 |__/                   |
 
@@ -90,7 +88,7 @@ shell>
 ```
 and the [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) (package manager) by hitting `]`, that will be used to add and manage packages, and environments,
 ```julia-repl
-(@v1.9) pkg>
+(@v1.10) pkg>
 ```
 
 You can interactively execute commands in the REPL, like adding two numbers
@@ -106,7 +104,7 @@ julia> include("my_script.jl")
 ```
 Alternatively, you can also execute a Julia script from the shell
 ```sh
-julia -O3 my_script.jl
+julia -03 my_script.jl
 ```
 here passing the `-O3` optimisation flag.
 
@@ -126,9 +124,9 @@ and activate it
 ```julia-repl
 julia> ]
 
-(@v1.9) pkg>
+(@v1.10) pkg>
 
-(@v1.9) pkg> activate .
+(@v1.10) pkg> activate .
   Activating new environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg>
@@ -173,7 +171,7 @@ and then,
 ```julia-repl
 julia> ]
 
-(@v1.9) pkg> activate .
+(@v1.10) pkg> activate .
   Activating environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg>
@@ -195,6 +193,7 @@ which will launch Julia with as many threads are there are cores on your machine
 ### Julia on GPUs
 The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch compute kernels on Nvidia GPUs natively from within Julia. [JuliaGPU](https://juliagpu.org) provides further reading and [introductory material](https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/) about GPU ecosystems within Julia.
 
+<!--
 ### Julia MPI
 The following steps permit you to install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your machine and test it:
 1. If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the `instantiate` command from within the package manager [see here](#package_manager). If not, MPI.jl can be added from within the package manager (typing `add MPI` in package mode).
@@ -230,9 +229,9 @@ and add `-host localhost` to the execution script:
 ```sh
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
-}
+} -->
 
-
+<!--
 For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section.
 
 ## GPU computing on Piz Daint
@@ -256,19 +255,6 @@ Please follow the steps listed hereafter to get ready and set-up on daint.
 ```sh
 ssh <username>@ela.cscs.ch
 ```
-<!--
-3. On ela, change the password to another one and remember it! Password policy. The new password should comply with the following:
-   - be at least 12 characters
-   - include upper and lower case letters
-   - include numeric digits
-   - include special characters like `# , . / : = ? @ [ ] ^ { } ~`
-```sh
-[test@ela1 ~]$ kpasswd
-Password for <username>@CSCS.CH: (current password)
-Enter new password: (new password)
-Enter it again: (new password)
-```
--->
 
 \note{👉 For Lecture 6, you can jump directly to the [JupyterLab](#jupyterlab_access_on_piz_daint) setup.}
 
@@ -353,7 +339,7 @@ srun -n1 --pty /bin/bash -l
 module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
 ```
 
-<!-- - In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded. -->
+- In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded.
 
 5. You should then be able to launch Julia
 ```sh
@@ -542,4 +528,4 @@ export IGG_CUDAAWARE_MPI=1
 srun -n4 bash -c 'julia -O3 <my_julia_mpi_gpu_script.jl>'
 ```
 
-\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
+\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.} -->
