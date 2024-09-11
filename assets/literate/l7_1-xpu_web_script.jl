@@ -17,7 +17,7 @@ using Plots, Plots.Measures, Printf
 end
 
 @parallel function update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
-    @all(Pf) = @all(Pf) - (@d_xa(qDx) * _dx + @d_ya(qDy) * _dy) * _β_dτ
+    Pf = ...
     return nothing
 end
 
