@@ -7,7 +7,7 @@
 
 These slides are a [Jupyter notebook](https://jupyter.org/); a browser-based computational notebook.
 
-\note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) server.}
+\note{You can follow the lecture along live from the Moodle-based [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076) server.}
 
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`.  For more
 info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
@@ -129,7 +129,7 @@ and also:
 
 ###  Let's get our hands dirty!
 
-Fire up your JupyterHub, either via the [Moodle page](https://moodle-app2.let.ethz.ch/course/view.php?id=20175), or directly via [this link](https://jhub-let-04-20175.let.ethz.ch/hub/home).
+Fire up your JupyterHub, either via the [Moodle page](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076), or directly via [this link](https://jhub-let-04-23586.ethz.ch/hub/home).
 
 [Brief explanation on JupyterHub]
 
