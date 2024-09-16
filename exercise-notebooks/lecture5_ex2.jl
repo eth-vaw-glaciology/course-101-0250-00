@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - **Performance evaluation**
+## Exercise 2 — **Performance evaluation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

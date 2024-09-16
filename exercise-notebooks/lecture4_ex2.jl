@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - **Thermal porous convection with implicit temperature update**
+## Exercise 2 — **Thermal porous convection with implicit temperature update**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
