@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Thermal porous convection in 2D**
+## Exercise 1 — **Thermal porous convection in 2D**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

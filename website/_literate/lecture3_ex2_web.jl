@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - **Operator-splitting for advection-diffusion**
+## Exercise 2 — **Operator splitting for advection-diffusion**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -42,4 +42,5 @@ dτ      = ...
 
 Report with the figure, plotting a spatial distribution of concentration `C` after `nt=10` time steps, on top of the plot of the initial concentration distribution. Add the figure to the `README.md` file.
 """
+
 

@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Multi-xPU computing projects**
+## Exercise 1 — **Multi-xPU computing projects**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

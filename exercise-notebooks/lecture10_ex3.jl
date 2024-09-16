@@ -1,5 +1,5 @@
 md"""
-## Exercise 3 - **Advanced data transfer optimisations (part 2)**
+## Exercise 3 — **Advanced data transfer optimisations (part 2)**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

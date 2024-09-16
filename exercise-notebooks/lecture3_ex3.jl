@@ -1,5 +1,5 @@
 md"""
-## Exercise 3 - **Advection-diffusion in 2D**
+## Exercise 3 — **Advection-diffusion in 2D**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

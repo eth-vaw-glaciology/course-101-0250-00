@@ -1,5 +1,5 @@
 md"""
-## Exercise 3 - **CI and GitHub Actions**
+## Exercise 3 — **CI and GitHub Actions**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

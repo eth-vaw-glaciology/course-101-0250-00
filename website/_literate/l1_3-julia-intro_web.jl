@@ -5,7 +5,7 @@ using Markdown #src
 md"""
 # Tool for the job: introduction to Julia
 
-![julia-logo](../assets/literate_figures/l1_julia-logo.png)
+![julia-logo](../assets/literate_figures/l1_julia-logo.svg)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}

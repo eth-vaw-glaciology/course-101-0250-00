@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Towards distributed memory computing on GPUs**
+## Exercise 1 — **Towards distributed memory computing on GPUs**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

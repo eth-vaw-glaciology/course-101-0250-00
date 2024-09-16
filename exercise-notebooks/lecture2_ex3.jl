@@ -1,5 +1,5 @@
 md"""
-## Exercise 3 - **Nonlinear problems**
+## Exercise 3 — **Nonlinear problems**
 """
 
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture2_ex3.ipynb)

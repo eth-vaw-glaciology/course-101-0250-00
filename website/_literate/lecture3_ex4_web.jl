@@ -1,5 +1,5 @@
 md"""
-## Exercise 4 - **Optimal iteration parameters for pseudo-transient method**
+## Exercise 4 — **Optimal iteration parameters for pseudo-transient method**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -56,4 +56,5 @@ After every elliptic solve, store the `iter/nx` value in the `conv[ifact]`. Repo
 
 ![checkmark](../assets/literate_figures/l3_checkmark.png)
 """
+
 
