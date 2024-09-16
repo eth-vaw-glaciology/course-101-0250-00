@@ -15,14 +15,14 @@ All the course slides are [Jupyter notebooks](https://jupyter.org/); browser-bas
 Code cells are executed by putting the cursor into the cell and hitting `shift + enter`. For more info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/).
 
 ### Exercises and homework
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222) or download them and run them them locally if you're already set-up.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076) or download them and run them them locally if you're already set-up.
 
 For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should be able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
 Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
 
 ## JupyterHub
-You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222), clicking on [![JupyterHub](/assets/JHub2.png#badge)](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=938222)
+You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076), clicking on [![JupyterHub](/assets/JHub2.png#badge)](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076)
 
 Upon login to the server, you should see the following launcher environment, including a notebook (file) browser, ability to create a notebook, launch a Julia console (REPL), or a regular terminal.
 
