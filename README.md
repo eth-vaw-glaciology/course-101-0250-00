@@ -35,7 +35,7 @@ Head to the [course chat space (Element)](https://chat.ethz.ch) to get started w
 ### Homework and Evaluation
 All homework assigments can be done alone or in groups of two.
 
-Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) & GitHub:
+Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) and GitHub:
 1. Six weekly assignments during the course's Part 1 and Part 2 constitute 30% of the final grade. **The best five out of six homeworks will be counted**.
 2. A project developed during Part 3 of the course consitutes 35% of the final grade
 3. A final project consitutes 35% of the final grade
