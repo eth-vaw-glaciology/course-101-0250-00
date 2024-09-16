@@ -203,7 +203,7 @@ julia&gt; transform(4.5, pi/5)
 &quot;&quot;&quot;</span>
 transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 <pre><code class="julia hljs">?transform</code></pre>
-<h3 id=documentation_tools_github_markdown_rendering ><a href="#documentation_tools_github_markdown_rendering" class=header-anchor >Documentation tools: Github markdown rendering</a></h3>
+<h3 id=documentation_tools_github_markdown_rendering ><a href="#documentation_tools_github_markdown_rendering" class=header-anchor >Documentation tools: GitHub markdown rendering</a></h3>
 <p>The easiest way to write long-form documentation is to just use GitHub&#39;s markdown rendering.</p>
 <p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21">this short course</a> by Ludovic &#40;incidentally about solving PDEs on GPUs 🙂&#41;.</p>
 <ul>
@@ -218,7 +218,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <p>👉 this is a good and low-overhead way to produce pretty nice documentation</p>
 <h3 id=documentation_tools_literatejl ><a href="#documentation_tools_literatejl" class=header-anchor >Documentation tools: Literate.jl</a></h3>
-<p>There are several tools which render .jl files &#40;with special formatting&#41; into markdown files.  These files can then be added to Github and will be rendered there.</p>
+<p>There are several tools which render .jl files &#40;with special formatting&#41; into markdown files.  These files can then be added to GitHub and will be rendered there.</p>
 <ul>
 <li><p>we&#39;re using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a></p>
 
@@ -236,7 +236,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <pre><code class="julia hljs">Literate.markdown(<span class=hljs-string >&quot;car_travels.jl&quot;</span>, directory_of_this_file, execute=<span class=hljs-literal >true</span>, documenter=<span class=hljs-literal >false</span>, credit=<span class=hljs-literal >false</span>)</code></pre>
 <p>But this is not automatic&#33;  Manual steps: run Literate, add files, commit and push...</p>
-<p>or use Github Actions...</p>
+<p>or use GitHub Actions...</p>
 <h3 id=documentation_tools_automating_literatejl ><a href="#documentation_tools_automating_literatejl" class=header-anchor >Documentation tools: Automating Literate.jl</a></h3>
 <p>Demonstrated in the repo <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
 <pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
