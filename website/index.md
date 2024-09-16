@@ -8,8 +8,8 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 > **Announce:** 2024 edition starts Tuesday Sept. 17, 12h45. Welcome!
 
-## Course informations
-This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and code development with applications to natural sciences and engineering.
+## Course information
+This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and scientific software development with applications to natural sciences and engineering.
 
 ~~~
 <center>
@@ -18,14 +18,13 @@ This course aims to cover state-of-the-art methods in modern parallel GPU comput
 ~~~
 
 ### Objective
-The goal of this course is to offer a practical approach to solve systems of differential equations in parallel on GPUs using the [Julia programming language](http://www.julialang.org/). Julia combines high-level language conciseness to low-level language performance which enables efficient code development. The Julia GPU applications will be hosted on a git-platform and implement modern software development practices.
-
+The goal of this course is to offer a practical approach to solve systems of partial differential equations in parallel on GPUs using the [Julia programming language](http://www.julialang.org/). Julia combines high-level language expressiveness and low-level language performance which enables efficient code development. The Julia GPU applications will be hosted on Github and implement modern software development practices.
 
 ### Outline
 - **Part 1**  _Introducing Julia & PDEs_
   - The Julia language: hands-on
   - Solving physical processes: advection, reaction, diffusion & wave propagation
-  - Spatial and temporal discretisation: finite-differences and explicit time-stepping
+  - Spatial and temporal discretisation: finite differences and explicit time-stepping
   - Software development tools: Git, Continuous Integration
 
 - **Part 2**  _Solving PDEs on GPUs_
@@ -44,12 +43,14 @@ The goal of this course is to offer a practical approach to solve systems of dif
 - **Final projects**
 
   Solve a solid mechanics or fluid dynamics problem of your interest, such as:
-  - the shallow water / ice equation
-  - acoustic wave propagation, nonlinear diffusion
-  - viscous flow or elastic deformation
-  - viscous or elastic poromechanics
-  - frictional heating
-  - Navier-Stokes equations
+  - dynamic elasticity — seismic wave propagation
+  - Maxwell's equations — electromagnetic fields propagation
+  - shallow-water equations — rivers, lakes, or oceans
+  - shallow ice approximation — ice sheet evolution
+  - Navier–Stokes equations — fluid or smoke
+  - thermo-mechanically coupled Stokes flow — mantle convection
+  - hydro-mechanically coupled Stokes flow — subsurface CO2 flow
+  - your own idea
 
 > Detailed content is available on [**ETHZ course catalogue**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en)
 
@@ -57,8 +58,8 @@ The goal of this course is to offer a practical approach to solve systems of dif
 
 
 ## Teaching staff
-- [Ivan Utkin](https://github.com/utkinis) - ETHZ / WSL
-- [Ludovic Räss](https://github.com/luraess) - Unil / ETHZ
-- [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) - WSL / ETHZ
-- [Samuel Omlin](https://www.cscs.ch/about/staff/) - CSCS, ETHZ
-- Teaching Assistant: [You Wu](https://github.com/youwuyou) - ETHZ
+- [Ivan Utkin](https://github.com/utkinis) — ETHZ / WSL
+- [Ludovic Räss](https://github.com/luraess) — Unil / ETHZ
+- [Mauro Werder](https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402) — WSL / ETHZ
+- [Samuel Omlin](https://www.cscs.ch/about/staff/) — CSCS / ETHZ
+- Teaching Assistant: [You Wu](https://github.com/youwuyou) — ETHZ
