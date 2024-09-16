@@ -33,7 +33,7 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.9.3 (09.2023) [ETH's JupyterHub is on 1.8]
+- current version 1.10.5 (09.2024) [ETH's JupyterHub is on 1.10.2]
 - thriving community, for instance there are currently around 10000 [packages registered](https://juliahub.com/ui/Packages)
 
 ### What does Julia look like
@@ -74,7 +74,7 @@ plot(out[1,:], out[2,:], out[3,:])
 ![lorenz](../assets/literate_figures/l1_lorenz.png)
 
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.9
+Julia 1.0 released 2018, now at version 1.10
 
 Features:
 - general purpose language with a focus on technical computing
