@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 4 - **Julia install and Git repo**
+## Exercise 4 — **Julia install and Git repo**
 
 The goal of this homework is to:
 - finalise your local Julia install

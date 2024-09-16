@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 3 - **CI and GitHub Actions**
+## Exercise 3 — **CI and GitHub Actions**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

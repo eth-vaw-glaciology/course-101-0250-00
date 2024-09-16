@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # Tool for the job: introduction to Julia
 
-![julia-logo](../assets/literate_figures/l1_julia-logo.png)
+![julia-logo](../assets/literate_figures/l1_julia-logo.svg)
 
 ## Aside 1: Jupyter Notebooks
 

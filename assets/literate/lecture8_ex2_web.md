@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 2 - **Multi-xPU computing**
+## Exercise 2 — **Multi-xPU computing**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

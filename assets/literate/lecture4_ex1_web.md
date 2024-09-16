@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Thermal porous convection in 2D**
+## Exercise 1 — **Thermal porous convection in 2D**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

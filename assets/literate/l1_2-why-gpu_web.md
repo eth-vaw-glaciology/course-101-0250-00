@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-# Why solve PDEs on GPUs? & The tool for the job
+# Why solve PDEs on GPUs? The tool for the job
 
 ## Why solve PDEs on GPUs?
 

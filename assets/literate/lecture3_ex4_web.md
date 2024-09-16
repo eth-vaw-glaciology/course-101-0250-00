@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 4 - **Optimal iteration parameters for pseudo-transient method**
+## Exercise 4 — **Optimal iteration parameters for pseudo-transient method**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

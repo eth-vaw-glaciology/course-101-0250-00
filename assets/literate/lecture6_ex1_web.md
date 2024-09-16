@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Data transfer optimisations**
+## Exercise 1 — **Data transfer optimisations**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Towards distributed memory computing on GPUs**
+## Exercise 1 — **Towards distributed memory computing on GPUs**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

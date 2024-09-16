@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 2 - **Solving PDEs on GPUs**
+## Exercise 2 — **Solving PDEs on GPUs**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

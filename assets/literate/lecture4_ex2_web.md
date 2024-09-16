@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 2 - **Thermal porous convection with implicit temperature update**
+## Exercise 2 — **Thermal porous convection with implicit temperature update**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

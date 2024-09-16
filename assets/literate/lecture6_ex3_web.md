@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 3 - **Unit and reference tests**
+## Exercise 3 — **Unit and reference tests**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

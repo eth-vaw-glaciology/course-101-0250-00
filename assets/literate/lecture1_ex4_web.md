@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 4 _(optional)_ - **Orbital around a centre of mass**
+## Exercise 4 _(optional)_ — **Orbital around a centre of mass**
 
 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex4.ipynb)
 

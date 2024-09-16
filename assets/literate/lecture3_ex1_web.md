@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Implicit transient diffusion using dual timestepping**
+## Exercise 1 — **Implicit transient diffusion using dual timestepping**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

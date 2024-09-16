@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 1 - **Performance implementation**
+## Exercise 1 — **Performance implementation**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 3 - **Unit tests**
+## Exercise 3 — **Unit tests**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 

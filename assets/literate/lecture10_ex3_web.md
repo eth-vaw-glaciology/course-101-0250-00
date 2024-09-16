@@ -1,5 +1,5 @@
 <!--This file was generated, do not modify it.-->
-## Exercise 3 - **Advanced data transfer optimisations (part 2)**
+## Exercise 3 — **Advanced data transfer optimisations (part 2)**
 
 👉 See [Logistics](/logistics/#submission) for submission details.
 
