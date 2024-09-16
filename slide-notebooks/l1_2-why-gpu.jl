@@ -4,7 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 1_
 md"""
-# Why solve PDEs on GPUs? & The tool for the job
+# Why solve PDEs on GPUs? The tool for the job
 """
 
 #src #########################################################################
