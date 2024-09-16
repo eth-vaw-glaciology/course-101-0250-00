@@ -68,7 +68,7 @@ md"""
 md"""
 ## Grading
 
-All excercises and projects can be done either alone or in groups of two
+All homework assignements can be done either alone or in groups of two. However, **note that every student has to hand in a personal version of the homework**.
 
 - 6 Weekly exercises in Part 1 and Part 2 of the course as homework — **30%**
   - Best five out of six are graded
