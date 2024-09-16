@@ -4,12 +4,12 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 # Solving PDEs in parallel on GPUs with Julia
 
-🎉 Welcome to ETH's **course 101-0250-00L** on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/).
+:tada: Welcome to ETH's [**course 101-0250-00L**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en) on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/).
 
-> **Announce:** 2024 edition starts Tuesday Sept. 17, 12h45. Welcome!
+\note{2024 edition starts Tuesday Sept. 17, 12h45. Welcome!}
 
 ## Course information
-This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and scientific software development with applications to natural sciences and engineering.
+This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and scientific software development with applications to natural sciences and engineering. The course is open source and is available on [Github](https://github.com/eth-vaw-glaciology/course-101-0250-00)
 
 ~~~
 <center>
@@ -51,11 +51,6 @@ The goal of this course is to offer a practical approach to solve systems of par
   - thermo-mechanically coupled Stokes flow — mantle convection
   - hydro-mechanically coupled Stokes flow — subsurface CO2 flow
   - your own idea
-
-> Detailed content is available on [**ETHZ course catalogue**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en)
-
-> Course GitHub repository: [https://github.com/eth-vaw-glaciology/course-101-0250-00](https://github.com/eth-vaw-glaciology/course-101-0250-00)
-
 
 ## Teaching staff
 - [Ivan Utkin](https://github.com/utkinis) — ETHZ / WSL
