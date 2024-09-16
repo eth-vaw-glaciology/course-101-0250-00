@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Push-ups with memory copy**
+## Exercise 1 — **Push-ups with memory copy**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details (this exercise doesn't need to be handed-in).

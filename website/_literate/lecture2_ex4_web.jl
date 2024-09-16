@@ -1,5 +1,5 @@
 md"""
-## Exercise 4 - **Julia install and Git repo**
+## Exercise 4 — **Julia install and Git repo**
 """
 
 md"""

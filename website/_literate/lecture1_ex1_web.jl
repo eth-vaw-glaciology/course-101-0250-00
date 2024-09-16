@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Car travel**
+## Exercise 1 — **Car travel**
 """
 
 #md # 👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex1.ipynb)

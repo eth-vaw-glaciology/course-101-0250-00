@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - **Automatic documentation in Julia**
+## Exercise 2 — **Automatic documentation in Julia**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 - **Data transfer optimisations**
+## Exercise 1 — **Data transfer optimisations**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.

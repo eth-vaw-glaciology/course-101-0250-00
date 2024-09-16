@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 - **3D thermal porous convection xPU implementation**
+## Exercise 2 — **3D thermal porous convection xPU implementation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
