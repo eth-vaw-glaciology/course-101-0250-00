@@ -67,8 +67,8 @@ Let's now add CI to this:
 For step 2 we follow the documentation on [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest).
 """
 
-#nb # > 💡 note: [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable Github Actions file..
-#md # \note{[PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable Github Actions file.}
+#nb # > 💡 note: [PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable GitHub Actions file..
+#md # \note{[PkgTemplates.jl](https://github.com/invenia/PkgTemplates.jl) is a handy package, which can generate a suitable GitHub Actions file.}
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""

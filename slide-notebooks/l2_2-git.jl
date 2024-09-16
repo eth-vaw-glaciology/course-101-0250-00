@@ -133,8 +133,8 @@ When you contribute new code to a repo (in particular a repo which other people 
 In a repo with write permission, the use following work-flow:
 - make a branch and switch to it: `git switch -c some-branch-name`
 - make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
-- push the branch to Github
-- on the Github web-page a bar with a "open pull request" should show: click it
+- push the branch to GitHub
+- on the GitHub web-page a bar with a "open pull request" should show: click it
 - if you got more changes, just commit and push them to that branch
 - when happy merge the PR
 

@@ -9,7 +9,7 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 \note{2024 edition starts Tuesday Sept. 17, 12h45. Welcome!}
 
 ## Course information
-This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and scientific software development with applications to natural sciences and engineering. The course is open source and is available on [Github](https://github.com/eth-vaw-glaciology/course-101-0250-00)
+This course aims to cover state-of-the-art methods in modern parallel GPU computing, supercomputing and scientific software development with applications to natural sciences and engineering. The course is open source and is available on [GitHub](https://github.com/eth-vaw-glaciology/course-101-0250-00).
 
 ~~~
 <center>
@@ -18,7 +18,7 @@ This course aims to cover state-of-the-art methods in modern parallel GPU comput
 ~~~
 
 ### Objective
-The goal of this course is to offer a practical approach to solve systems of partial differential equations in parallel on GPUs using the [Julia programming language](http://www.julialang.org/). Julia combines high-level language expressiveness and low-level language performance which enables efficient code development. The Julia GPU applications will be hosted on Github and implement modern software development practices.
+The goal of this course is to offer a practical approach to solve systems of partial differential equations in parallel on GPUs using the [Julia programming language](http://www.julialang.org/). Julia combines high-level language expressiveness and low-level language performance which enables efficient code development. The Julia GPU applications will be hosted on GitHub and implement modern software development practices.
 
 ### Outline
 - **Part 1**  _Introducing Julia & PDEs_

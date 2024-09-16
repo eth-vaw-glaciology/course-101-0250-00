@@ -103,7 +103,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Documentation tools: Github markdown rendering
+### Documentation tools: GitHub markdown rendering
 
 The easiest way to write long-form documentation is to just use GitHub's markdown rendering.
 
@@ -123,7 +123,7 @@ md"""
 ### Documentation tools: Literate.jl
 
 There are several tools which render .jl files (with special formatting) into
-markdown files.  These files can then be added to Github and will be rendered there.
+markdown files.  These files can then be added to GitHub and will be rendered there.
 
 - we're using [Literate.jl](https://github.com/fredrikekre/Literate.jl)
 - format is described [here](https://fredrikekre.github.io/Literate.jl/v2/fileformat/)
@@ -142,7 +142,7 @@ Literate.markdown("car_travels.jl", directory_of_this_file, execute=true, docume
 md"""
 But this is not automatic!  Manual steps: run Literate, add files, commit and push...
 
-or use Github Actions...
+or use GitHub Actions...
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
