@@ -22,7 +22,8 @@ info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/)
 6. Assembler
 7. Coq, Brainfuck, ...
 
-[Survey](https://docs.google.com/forms/d/1ROOY4QLaL-_vM8eXKhCp72FCPfaTshfCrR2syv562BE/edit#responses)
+### Survery for you to fill in now (click or scan, 3min):
+[![survey](../assets/literate_figures/l1_survey_qr.png)](https://forms.gle/FRxEV3PU7iKx5q3L8)
 
 ## The Julia programming language
 
@@ -138,7 +139,9 @@ This notebook you can get onto your JupyterHub by
 
 - opening the hub
 - opening a terminal
-- pasting into the terminal `wget https://people.ee.ethz.ch/~werderm/l1.ipynb`
+- pasting into the terminal:
+
+`wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/main/slide-notebooks/notebooks/l1_3-julia-intro.ipynb`
 
 Open it by clicking on it in the sidebar.
 
