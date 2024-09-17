@@ -36,7 +36,7 @@ md"""
 6. Assembler
 7. Coq, Brainfuck, ...
 
-[Google survey link](https://docs.google.com/forms/d/1ROOY4QLaL-_vM8eXKhCp72FCPfaTshfCrR2syv562BE/edit#responses)
+[Survey](https://docs.google.com/forms/d/1ROOY4QLaL-_vM8eXKhCp72FCPfaTshfCrR2syv562BE/edit#responses)
 """
 
 #src #########################################################################
@@ -52,7 +52,7 @@ language with a bend on technical computing.
 - first released in 2012
 - reached version 1.0 in 2018
 - current version 1.10.5 (09.2024) [ETH's JupyterHub is on 1.10.2]
-- thriving community, for instance there are currently around 10000 [packages registered](https://juliahub.com/ui/Packages)
+- thriving community, for instance there are currently around 11000 [packages registered](https://juliahub.com/ui/Packages)
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -82,8 +82,7 @@ for i=2:size(out,2)
     out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
 end
 
-# Yes, this takes some time... Julia is Just-Ahead-of-Time compiled.  I.e. Julia is compiling.
-# (Note that Julia 1.9 improved a lot with respect to compilation time.)
+# Yes, this takes a bit of time... Julia is Just-Ahead-of-Time compiled.  I.e. Julia is compiling.
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -125,11 +124,12 @@ md"""
 
 **One language for the users  --  one language for under-the-hood**
 - Numpy (python -- C)
-- machine-learning: pytorch, tensorflow
+- machine-learning: PyTorch, TensorFlow
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Code stats for PyTorch and TensorFlow:
 ![](../assets/literate_figures/l1_ml.png)
 """
 
@@ -165,8 +165,9 @@ and also:
 - fast
 """
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+Code stats for PyTorch, TensorFlow and Flux.jl:
 ![](../assets/literate_figures/l1_flux-vs-tensorflow.png)
 """
 
@@ -514,7 +515,7 @@ md"""
 Look up the docs for `?` (i.e. evaluate `??`)
 
 Re-write using `?`
-```
+```julia
 if a > 5
     "really big"
 else
@@ -534,7 +535,7 @@ Read [https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evalua
 
 Explain what this does
 
-```
+```julia
 a < 0 && error("Not valid input for `a`")
 ```
 """
@@ -573,7 +574,7 @@ md"""
 Functions can be defined in Julia in a number of ways.  In particular there is one variant
 more suited to longer definitions, and one for one-liners:
 
-```
+```julia
 function f(a, b)
    return a * b
 end
@@ -747,7 +748,7 @@ different name spaces.  We will not make much use of those, but if interested se
 
 **Packages** are the way people distribute code and we'll make use of them extensively.
 In the first example, the Lorenz ODE, you saw
-```
+```julia
 using Plots
 ```
 This statement loads the package `Plots` and makes its functions
@@ -766,17 +767,18 @@ md"""
 
 All public Julia packages are listed on [https://juliahub.com/ui/Packages](https://juliahub.com/ui/Packages).
 
-You can install a package, say `UnPack.jl` by
-```julia-repl
+You can install a package, say `Example.jl` (a tiny example package) by
+```julia
 using Pkg
-Pkg.add("UnPack.jl")
-using UnPack
+Pkg.add("Example")
+using Example
+hello("PDE on GPU class")
 ```
 
 In the REPL, there is also a package-mode (hit `]`) which is for interactive use.
 """
 
-## Install a package (maybe not a too big one, UnPack.jl is good that way),
+## Install a package (not a too big one, Example.jl is good that way),
 ## use it, query help on the package itself:
 
 #src #########################################################################
