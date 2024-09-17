@@ -165,5 +165,5 @@ combine(Rock(), Paper())
 using Plots
 plot( (1:10).^2 )
 
-# Install a package (maybe not a too big one, UnPack.jl is good that way),
+# Install a package (not a too big one, Example.jl is good that way),
 # use it, query help on the package itself:
