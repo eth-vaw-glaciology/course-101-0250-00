@@ -23,7 +23,7 @@ info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/)
 7. Coq, Brainfuck, ...
 
 ### Survery for you to fill in now (click or scan, 3min):
-[![survey](../assets/literate_figures/l1_survey_qr.png)](https://forms.gle/FRxEV3PU7iKx5q3L8)
+~~~ <img src="../assets/literate_figures/l1_survey_qr.png" alt="survey" style="width:200px;"/> ~~~
 
 ## The Julia programming language
 
