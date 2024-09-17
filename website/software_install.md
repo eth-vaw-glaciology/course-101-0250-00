@@ -38,7 +38,7 @@ Follow the instructions from the [Julia Download page](https://julialang.org/dow
 \note{_**For Windows users:**_ When installing Julia 1.10 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
 ### Terminal + external editor
-Ensure you have a text editor with syntax highlighting support for Julia. [Sublime Text](https://www.sublimetext.com/download) and [Atom](https://atom.io) can be recommended.
+Ensure you have a text editor with syntax highlighting support for Julia.  We recommend to use VSCode, see below. However, other editors are available too such as Sublime, Emacs, Vim, Helix, etc.
 
 From within the terminal, type
 ```sh
