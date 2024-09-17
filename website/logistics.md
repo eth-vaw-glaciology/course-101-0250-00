@@ -56,6 +56,11 @@ All homework assignments can be carried out by groups of two. However, **note th
 
 **Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub **and** you will have to submit the git commit hash (SHA) on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) in the related _git commit hash (SHA)_ submission activity.
 
+### Submission for Jupyter Hub to Moodle
+- on the Hub place all notebooks of an assignment into one folder called `assignments/lectureX_homework`
+  - note: maybe this folder magically already exists on your Hub with the notebooks added. If not, create it and download the notebooks yourself.
+- in Moodle during submission, select that folder as JupyterHub submission
+
 ### Private GitHub repository setup
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments:
 1. Create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
