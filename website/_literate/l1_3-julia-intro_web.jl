@@ -39,7 +39,11 @@ md"""
 ### Survery for you to fill in now (click or scan, 3min):
 """
 #nb # [![survey](../assets/literate_figures/l1_survey_qr.png)](https://forms.gle/FRxEV3PU7iKx5q3L8)
-#md # ~~~ <img src="../assets/literate_figures/l1_survey_qr.png" alt="survey" style="width:200px;"/> ~~~
+#md # ~~~
+#md # <a href="https://forms.gle/FRxEV3PU7iKx5q3L8">
+#md #   <img src="../assets/literate_figures/l1_survey_qr.png" alt="survey" style="width:200px;"/>
+#md # </a>
+#md # ~~~
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
