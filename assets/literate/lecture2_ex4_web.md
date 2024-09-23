@@ -11,7 +11,7 @@ As final homework task for this second lecture, you will have to
 
 ### Julia install
 Ensure you have access to
-- the latest version of Julia (>= v1.9)
+- the latest version of Julia (>= v1.10)
 - a fully functional REPL (command window)
 
 You should be able to visualise scripts' output graphically when, e.g., plotting something:
