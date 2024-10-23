@@ -142,15 +142,15 @@ version = "1.11.0"
 
 [[deps.Literate]]
 deps = ["Base64", "IOCapture", "JSON", "REPL"]
-git-tree-sha1 = "4319d0117713e6c91a26a52485d9b89cdbc364c5"
+git-tree-sha1 = "da046be6d63304f7ba9c1bb04820fb306ba1ab12"
 uuid = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
-version = "2.20.0"
+version = "2.20.1"
 
 [[deps.LiveServer]]
-deps = ["HTTP", "LoggingExtras", "MIMEs", "Pkg", "Sockets", "Test"]
-git-tree-sha1 = "1e46b873b8ef176e23ee43f96e72cd45c20bafb4"
+deps = ["HTTP", "LoggingExtras", "MIMEs", "Sockets", "Test"]
+git-tree-sha1 = "564a436267fb1fc768f815dad64c4386c46623f8"
 uuid = "16fef848-5104-11e9-1b77-fb7a48bbb589"
-version = "1.3.1"
+version = "1.4.0"
 
 [[deps.Logging]]
 uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
