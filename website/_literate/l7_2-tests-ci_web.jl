@@ -85,13 +85,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: ['1.9']
+        julia-version: ['1.10']
         julia-arch: [x64]
         os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
@@ -142,22 +142,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        julia-version: ['1.9']
+        julia-version: ['1.10']
         julia-arch: [x64]
         os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@latest
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@latest
-      - run: julia --color=yes -e 'cd("<subfolder-of-julia-project>");
-                                   import Pkg; Pkg.activate("."); Pkg.test()'
+      - uses: julia-actions/julia-runtest@latest
+        with: 
+          project: "subfolder"
 ```
-Note that you have to _**adjust**_ the bit: `cd("<subfolder-of-julia-project>")`.
+Note that you have to _**adjust**_ the bit: `project: "subfolder"` to reflect the subfolder you want to test.
 
 👉 The _**example**_ is in [course-101-0250-00-L6Testing-subfolder.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl).
 
