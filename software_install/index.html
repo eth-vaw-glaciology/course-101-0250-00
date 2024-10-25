@@ -1,4 +1,4 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Software install</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2024</a> <span style="opacity: 0.7;">| <a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item active" href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 – Solving elliptic PDEs</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – GPU computing</a> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – xPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 – Multi-xPU & Projects</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 – Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/final_proj/">Infos about final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=software_install ><a href="#software_install" class=header-anchor >Software install</a></h1> <div class=franklin-toc ><ol><li><a href="#software_install">Software install</a><ol><li><a href="#opening_and_running_the_jupyter_julia_notebook">Opening and running the Jupyter Julia notebook</a><li><a href="#jupyterhub">JupyterHub</a><li><a href="#installing_julia_v110_or_later">Installing Julia v1.10 &#40;or later&#41;</a><li><a href="#running_julia">Running Julia</a></ol></ol></div> <h2 id=opening_and_running_the_jupyter_julia_notebook ><a href="#opening_and_running_the_jupyter_julia_notebook" class=header-anchor >Opening and running the Jupyter Julia notebook</a></h2> <h3 id=course_slides_and_lecture_material ><a href="#course_slides_and_lecture_material" class=header-anchor >Course slides and lecture material</a></h3> <p>All the course slides are <a href="https://jupyter.org/">Jupyter notebooks</a>; browser-based computational notebooks.</p> <p>Code cells are executed by putting the cursor into the cell and hitting <code>shift &#43; enter</code>. For more info see the <a href="https://jupyter-notebook.readthedocs.io/en/stable/">documentation</a>.</p> <h3 id=exercises_and_homework ><a href="#exercises_and_homework" class=header-anchor >Exercises and homework</a></h3> <p>The first two lecture&#39;s homework assignments will be <a href="https://jupyter.org/">Jupyter notebooks</a>. You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076">JupyterHub</a> or download them and run them them locally if you&#39;re already set-up.</p> <p>For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should be able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See <a href="/logistics">Logistics</a> and <a href="/homework">Homework</a> for details.</p> <p>Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo &#40;shared with the teaching staff only&#41;. Details in <a href="/logistics/#submission">Logistics</a>.</p> <h2 id=jupyterhub ><a href="#jupyterhub" class=header-anchor >JupyterHub</a></h2> <p>You can access the JupyterHub from the <strong>General</strong> section in <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076">Moodle</a>, clicking on <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076"><img src="/assets/JHub2.png#badge" alt=JupyterHub  /></a></p> <p>Upon login to the server, you should see the following launcher environment, including a notebook &#40;file&#41; browser, ability to create a notebook, launch a Julia console &#40;REPL&#41;, or a regular terminal.</p> <p><img src="/assets/JHubLauncher.png" alt=JupyterHub  /></p> <div class=warning ><div class=title >⚠️ Warning&#33;</div> <div class=messg >It is recommended to download your work as back-up before leaving the session.</div></div> <h2 id=installing_julia_v110_or_later ><a href="#installing_julia_v110_or_later" class=header-anchor >Installing Julia v1.10 &#40;or later&#41;</a></h2> <h3 id=juliaup_installer ><a href="#juliaup_installer" class=header-anchor >Juliaup installer</a></h3> <p>Follow the instructions from the <a href="https://julialang.org/downloads/">Julia Download page</a> to install Julia v1.10 &#40;which is using the <a href="https://github.com/JuliaLang/juliaup"><strong>Juliaup</strong></a> Julia installer under the hood&#41;.</p> <div class=note ><div class=title >💡 Note</div> <div class=messg ><em><strong>For Windows users:</strong></em> When installing Julia 1.10 on Windows, make sure to check the &quot;Add PATH&quot; tick or ensure Julia is on PATH &#40;see <strong>&#91;help&#93;</strong>&#41;. Julia&#39;s REPL has a built-in shell mode you can access typing <code>;</code> that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing <code>Powershell</code> within the shell mode, and exit it typing <code>exit</code>, as described <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode">here</a>.</div></div> <h3 id=terminal_external_editor ><a href="#terminal_external_editor" class=header-anchor >Terminal &#43; external editor</a></h3> <p>Ensure you have a text editor with syntax highlighting support for Julia. We recommend to use VSCode, see below. However, other editors are available too such as Sublime, Emacs, Vim, Helix, etc.</p> <p>From within the terminal, type</p> <pre><code class="sh hljs">julia</code></pre>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Software install</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2024</a> <span style="opacity: 0.7;">| <a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en"> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1.2cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item active" href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Why Julia GPU</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/">Lecture 3 – Solving elliptic PDEs</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – GPU computing</a> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – xPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 – Multi-xPU & Projects</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 – Advanced optimisations</a> <div class=course-section >Final Projects</div> <a class="sidebar-nav-item " href="/final_proj/">Infos about final projects</a> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=software_install ><a href="#software_install" class=header-anchor >Software install</a></h1> <div class=franklin-toc ><ol><li><a href="#software_install">Software install</a><ol><li><a href="#opening_and_running_the_jupyter_julia_notebook">Opening and running the Jupyter Julia notebook</a><li><a href="#jupyterhub">JupyterHub</a><li><a href="#installing_julia_v110_or_later">Installing Julia v1.10 &#40;or later&#41;</a><li><a href="#running_julia">Running Julia</a><li><a href="#gpu_computing_on_piz_daint">GPU computing on Piz Daint</a></ol></ol></div> <h2 id=opening_and_running_the_jupyter_julia_notebook ><a href="#opening_and_running_the_jupyter_julia_notebook" class=header-anchor >Opening and running the Jupyter Julia notebook</a></h2> <h3 id=course_slides_and_lecture_material ><a href="#course_slides_and_lecture_material" class=header-anchor >Course slides and lecture material</a></h3> <p>All the course slides are <a href="https://jupyter.org/">Jupyter notebooks</a>; browser-based computational notebooks.</p> <p>Code cells are executed by putting the cursor into the cell and hitting <code>shift &#43; enter</code>. For more info see the <a href="https://jupyter-notebook.readthedocs.io/en/stable/">documentation</a>.</p> <h3 id=exercises_and_homework ><a href="#exercises_and_homework" class=header-anchor >Exercises and homework</a></h3> <p>The first two lecture&#39;s homework assignments will be <a href="https://jupyter.org/">Jupyter notebooks</a>. You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076">JupyterHub</a> or download them and run them them locally if you&#39;re already set-up.</p> <p>For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should be able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See <a href="/logistics">Logistics</a> and <a href="/homework">Homework</a> for details.</p> <p>Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo &#40;shared with the teaching staff only&#41;. Details in <a href="/logistics/#submission">Logistics</a>.</p> <h2 id=jupyterhub ><a href="#jupyterhub" class=header-anchor >JupyterHub</a></h2> <p>You can access the JupyterHub from the <strong>General</strong> section in <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076">Moodle</a>, clicking on <a href="https://moodle-app2.let.ethz.ch/mod/lti/view.php?id&#61;1105076"><img src="/assets/JHub2.png#badge" alt=JupyterHub  /></a></p> <p>Upon login to the server, you should see the following launcher environment, including a notebook &#40;file&#41; browser, ability to create a notebook, launch a Julia console &#40;REPL&#41;, or a regular terminal.</p> <p><img src="/assets/JHubLauncher.png" alt=JupyterHub  /></p> <div class=warning ><div class=title >⚠️ Warning&#33;</div> <div class=messg >It is recommended to download your work as back-up before leaving the session.</div></div> <h2 id=installing_julia_v110_or_later ><a href="#installing_julia_v110_or_later" class=header-anchor >Installing Julia v1.10 &#40;or later&#41;</a></h2> <h3 id=juliaup_installer ><a href="#juliaup_installer" class=header-anchor >Juliaup installer</a></h3> <p>Follow the instructions from the <a href="https://julialang.org/downloads/">Julia Download page</a> to install Julia v1.10 &#40;which is using the <a href="https://github.com/JuliaLang/juliaup"><strong>Juliaup</strong></a> Julia installer under the hood&#41;.</p> <div class=note ><div class=title >💡 Note</div> <div class=messg ><em><strong>For Windows users:</strong></em> When installing Julia 1.10 on Windows, make sure to check the &quot;Add PATH&quot; tick or ensure Julia is on PATH &#40;see <strong>&#91;help&#93;</strong>&#41;. Julia&#39;s REPL has a built-in shell mode you can access typing <code>;</code> that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing <code>Powershell</code> within the shell mode, and exit it typing <code>exit</code>, as described <a href="https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode">here</a>.</div></div> <h3 id=terminal_external_editor ><a href="#terminal_external_editor" class=header-anchor >Terminal &#43; external editor</a></h3> <p>Ensure you have a text editor with syntax highlighting support for Julia. We recommend to use VSCode, see below. However, other editors are available too such as Sublime, Emacs, Vim, Helix, etc.</p> <p>From within the terminal, type</p> <pre><code class="sh hljs">julia</code></pre>
 <p>to make sure that the Julia REPL &#40;aka terminal&#41; starts. Then you should be able to add <code>1&#43;1</code> and verify you get the expected result. Exit with <code>Ctrl-d</code>.</p>
 <p><img src="/assets/julia_terminal.png" alt="Julia from Terminal" /></p>
 <h3 id=vs_code ><a href="#vs_code" class=header-anchor >VS Code</a></h3>
@@ -100,10 +100,257 @@ julia</code></pre>
 <p>which will launch Julia with as many threads are there are cores on your machine &#40;including hyper-threaded cores&#41;. Alternatively set the environment variable <code>JULIA_NUM_THREADS</code>, e.g. <code>export JULIA_NUM_THREADS&#61;2</code> to enable 2 threads.</p>
 <h3 id=julia_on_gpus ><a href="#julia_on_gpus" class=header-anchor >Julia on GPUs</a></h3>
 <p>The <a href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a> module permits to launch compute kernels on Nvidia GPUs natively from within Julia. <a href="https://juliagpu.org">JuliaGPU</a> provides further reading and <a href="https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/">introductory material</a> about GPU ecosystems within Julia.</p>
+<h3 id=julia_mpi ><a href="#julia_mpi" class=header-anchor >Julia MPI</a></h3>
+<p>The following steps permit you to install <a href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a> on your machine and test it:</p>
+<ol>
+<li><p>If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the <code>instantiate</code> command from within the package manager <a href="#package_manager">see here</a>. If not, MPI.jl can be added from within the package manager &#40;typing <code>add MPI</code> in package mode&#41;.</p>
+
+<li><p>Install <code>mpiexecjl</code>:</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> MPI
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > MPI.install_mpiexecjl()
+</span>[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
+[ Info: Done!</code></pre>
+<ol start=3 >
+<li><p>Then, one should add <code>HOME/.julia/bin</code> to PATH in order to launch the Julia MPI wrapper <code>mpiexecjl</code>.</p>
+
+<li><p>Running a Julia MPI code <code>&lt;my_script.jl&gt;</code> on <code>np</code> MPI processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n np julia --project &lt;my_script.jl&gt;</code></pre>
+<ol start=5 >
+<li><p>To test the Julia MPI installation, launch the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>l8_hello_mpi.jl</code></a> using the Julia MPI wrapper <code>mpiexecjl</code> &#40;located in <code>~/.julia/bin</code>&#41; on, e.g., 4 processes:</p>
+
+</ol>
+<pre><code class="sh hljs">$ mpiexecjl -n 4 julia --project ./l8_hello_mpi.jl
+$ Hello world, I am 0 of 3
+$ Hello world, I am 1 of 3
+$ Hello world, I am 2 of 3
+$ Hello world, I am 3 of 3</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><p>On macOS, you may encounter <a href="https://github.com/JuliaParallel/MPI.jl/issues/407">this issue</a>. To fix it, define following <code>ENV</code> variable:</p>
+<pre><code class="sh hljs">$ <span class=hljs-built_in >export</span> MPICH_INTERFACE_HOSTNAME=localhost</code></pre>
+<p>and add <code>-host localhost</code> to the execution script:</p>
+<pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
+<h2 id=gpu_computing_on_piz_daint ><a href="#gpu_computing_on_piz_daint" class=header-anchor >GPU computing on Piz Daint</a></h2>
+<p>GPU computing on <a href="https://www.cscs.ch/computers/piz-daint/">Piz Daint</a> at <a href="https://www.cscs.ch">CSCS</a>. The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 6000 node hour allocation for our course on the system.</p>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue to our <strong>helpdesk</strong> room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.</div></div>
+<p>The login procedure is as follow. First a login to the front-end &#40;or login&#41; machine Ela &#40;hereafter referred to as &quot;ela&quot;&#41; is needed before one can log into Piz Daint. Login is performed using <code>ssh</code>. We will set-up a proxy-jump in order to simplify the procedure and directly access Piz Daint &#40;hereafter referred to as &quot;daint&quot;&#41;</p>
+<p>Both daint and ela share a <code>home</code> folder. However, the <code>scratch</code> folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint&#39;s scratch directly. We will use Julia module to have all Julia-related tools ready.</p>
+<p>Make sure to have the Remote-SSH extension installed in VS code <a href="#vs_code_remote_-_ssh_setup">&#40;see here for details on how-to&#41;</a>.</p>
+<p>Please follow the steps listed hereafter to get ready and set-up on daint.</p>
+<h3 id=account_setup ><a href="#account_setup" class=header-anchor >Account setup</a></h3>
+<ol>
+<li><p>Fetch your personal username and password credentials from Moodle.</p>
+
+<li><p>Open a terminal &#40;in Windows, use a tool as e.g. <a href="">PuTTY</a> or <a href="https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs&#61;gui">OpenSSH</a>&#41; and <code>ssh</code> to ela and enter the password:</p>
+
+</ol>
+<pre><code class="sh hljs">ssh &lt;username&gt;@ela.cscs.ch</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >👉 For Lecture 6, you can jump directly to the <a href="#jupyterlab_access_on_piz_daint">JupyterLab</a> setup.</div></div>
+<ol start=3 >
+<li><p>Generate a <code>ed25519</code> keypair as described in the <a href="https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor">CSCS user website</a>. On your local machine &#40;not ela&#41;, do <code>ssh-keygen</code> leaving the passphrase empty. Then copy your public key to the remote server &#40;ela&#41; using <code>ssh-copy-id</code>. Alternatively, you can copy the keys manually as described in the <a href="https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor">CSCS user website</a>.</p>
+
+</ol>
+<pre><code class="sh hljs">ssh-keygen -t ed25519
+ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
+<ol start=4 >
+<li><p>Edit your ssh config file located in <code>~/.ssh/config</code> and add following entries to it, making sure to replace <code>&lt;username&gt;</code> and key file with correct names, if needed:</p>
+
+</ol>
+<pre><code class="sh hljs">Host daint-xc
+  HostName daint.cscs.ch
+  User &lt;username&gt;
+  IdentityFile ~/.ssh/id_ed25519
+  ProxyJump &lt;username&gt;@ela.cscs.ch
+  AddKeysToAgent <span class=hljs-built_in >yes</span>
+  ForwardAgent <span class=hljs-built_in >yes</span></code></pre>
+<ol start=5 >
+<li><p>Now you should be able to perform password-less login to daint as following</p>
+
+</ol>
+<pre><code class="sh hljs">ssh daint-xc</code></pre>
+<p>Moreover, you will get the Julia related modules loaded as we add the <code>RemoteCommand</code></p>
+<blockquote>
+<p>At this stage, you are logged into daint, but still on a login node and not a compute node.</p>
+</blockquote>
+<p>You can reach your home folder upon typing <code>cd &#36;HOME</code>, and your scratch space upon typing <code>cd &#36;SCRATCH</code>. Always make sure to run and save files from scratch folder.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><p>To make things easier, you can create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code> as this will also be useful in a JupyterLab setting</p>
+<pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre></div></div>
+<p>Make sure to remove any folders you may find in your scratch as those are the empty remaining from last year&#39;s course.</p>
+<h3 id=setting_up_julia_on_piz_daint ><a href="#setting_up_julia_on_piz_daint" class=header-anchor >Setting up Julia on Piz Daint</a></h3>
+<p>The Julia setup on Piz Daint is handled by <a href="https://github.com/JuliaParallel/JUHPC">JUHPC</a>. Everything should be ready for use and the only step required is to activate the environment mostly each time before launching Julia. Also, <strong>only hte first time</strong>, <code>juliaup</code> needs to be installed &#40;these steps are explained hereafter&#41;.</p>
+<h3 id=running_julia_interactively_on_piz_daint ><a href="#running_julia_interactively_on_piz_daint" class=header-anchor >Running Julia interactively on Piz Daint</a></h3>
+<p>To access a GPU on Piz Daint.</p>
+<ol>
+<li><p>Open a terminal &#40;other than from within VS code&#41; and login to daint:</p>
+
+</ol>
+<pre><code class="sh hljs">ssh daint-xc</code></pre>
+<ol start=2 >
+<li><p>The next step is to secure an allocation using <code>salloc</code>, a functionality provided by the SLURM scheduler. Use <code>salloc</code> command to allocate one node &#40;<code>N1</code>&#41; and one process &#40;<code>n1</code>&#41; on the GPU partition <code>-C&#39;gpu&#39;</code> on the project <code>class04</code> for 1 hour:</p>
+
+</ol>
+<pre><code class="sh hljs">salloc -C<span class=hljs-string >&#x27;gpu&#x27;</span> -Aclass04 -N1 -n1 --time=01:00:00</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You can check the status of the allocation typing <code>squeue -u &lt;username&gt;</code>.</div></div>
+<p>👉 <em>Running <strong>remote job</strong> instead? <a href="#running_a_remote_job_on_piz_daint">Jump right there</a></em></p>
+<ol start=3 >
+<li><p>Once you have your allocation &#40;<code>salloc</code>&#41; and the node, you can access the compute node by using the following <code>srun</code> command:</p>
+
+</ol>
+<pre><code class="sh hljs">srun -n1 --pty /bin/bash -l</code></pre>
+<ol start=4 >
+<li><p>Then, to &quot;activate&quot; the Julia configuration previously prepared, enter the following &#40;do not miss the first dot <code>.</code>&#41;:</p>
+
+</ol>
+<pre><code class="sh hljs">. <span class=hljs-variable >$SCRATCH</span>/../julia/daint-gpu-nocudaaware/activate</code></pre>
+<p>This will activate the artifact-based config for CUDA.jl which works smoother on the rather old Nvidia P100 GPUs. The caveat is that it does not allow for CUDA-aware MPI. It exists also a CUDA-aware <code>daint-gpu</code> configuration one could try out at later stage but may not be totally stable.</p>
+<ol start=5 >
+<li><p>Then, <strong>only the first time</strong>, you need to install Julia using the <a href="https://github.com/JuliaLang/juliaup"><code>juliaup</code></a> command:</p>
+
+</ol>
+<pre><code class="sh hljs">juliaup</code></pre>
+<p>This will install latest Julia, upon JUHPC calling into juliaup.</p>
+<ol start=6 >
+<li><p>Next, go to the scratch and create a temporary test dir</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >cd</span> <span class=hljs-variable >$SCRATCH</span>
+<span class=hljs-built_in >mkdir</span> tmp-test
+<span class=hljs-built_in >cd</span> tmp-test
+<span class=hljs-built_in >touch</span> Project.toml</code></pre>
+<ol start=7 >
+<li><p>You should then be able to launch Julia in the <code>tmp-test</code> project environment</p>
+
+</ol>
+<pre><code class="sh hljs">julia --project=.</code></pre>
+<ol start=8 >
+<li><p>Within Julia, enter the package mode, check the status, and add any package you&#39;d like to be part of <code>tmp-test</code>. Let&#39;s here add <code>CUDA</code> and <code>MPI</code>, as these two packages will be mostly used in the course.</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
+</span>
+<span class=hljs-metap>(tmp-test) pkg&gt;</span> st
+  Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu-nocudaaware/juliaup/depot`
+       Added `General` registry to /scratch/snx3000/class230/../julia/class230/daint-gpu-nocudaaware/juliaup/depot/registries
+Status `/scratch/snx3000/class230/tmp-test/Project.toml` (empty project)
+
+<span class=hljs-metap>(tmp-test) pkg&gt;</span> add CUDA, MPI</code></pre>
+<ol start=9 >
+<li><p>Then load it and query version info</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> CUDA
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > CUDA.versioninfo()
+</span>CUDA runtime 11.8, artifact installation
+CUDA driver 12.6
+NVIDIA driver 470.57.2
+
+#[skipped lines]
+
+Preferences:
+- CUDA_Runtime_jll.version: 11.8
+- CUDA_Runtime_jll.local: false
+
+1 device:
+  0: Tesla P100-PCIE-16GB (sm_60, 15.897 GiB / 15.899 GiB available)</code></pre>
+<ol start=10 >
+<li><p>Try out your first calculation on the P100 GPU</p>
+
+</ol>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > a = CUDA.ones(<span class=hljs-number >3</span>,<span class=hljs-number >4</span>);
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > b = CUDA.rand(<span class=hljs-number >3</span>,<span class=hljs-number >4</span>);
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > c = CUDA.zeros(<span class=hljs-number >3</span>,<span class=hljs-number >4</span>);
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > c .= a .+ b</span></code></pre>
+<p>If you made it to here, you&#39;re all set 🚀</p>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg ><p>There is interactive visualisation on daint. Make sure to produce <code>png</code> or <code>gifs</code>. Also to avoid plotting to fail, make sure to set the following <code>ENV&#91;&quot;GKSwstype&quot;&#93;&#61;&quot;nul&quot;</code> in the code. Also, it may be good practice to define the animation directory to avoid filling a <code>tmp</code>, such as</p>
+<pre><code class="julia hljs"><span class=hljs-literal >ENV</span>[<span class=hljs-string >&quot;GKSwstype&quot;</span>]=<span class=hljs-string >&quot;nul&quot;</span>
+<span class=hljs-keyword >if</span> isdir(<span class=hljs-string >&quot;viz_out&quot;</span>)==<span class=hljs-literal >false</span> mkdir(<span class=hljs-string >&quot;viz_out&quot;</span>) <span class=hljs-keyword >end</span>
+loadpath = <span class=hljs-string >&quot;./viz_out/&quot;</span>; anim = Animation(loadpath,<span class=hljs-built_in >String</span>[])
+println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-subst >$(anim.dir)</span>&quot;</span>)</code></pre></div></div>
+<h4 id=monitoring_gpu_usage ><a href="#monitoring_gpu_usage" class=header-anchor >Monitoring GPU usage</a></h4>
+<p>You can use the <code>nvidia-smi</code> command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia&#39;s REPL &#40;in shell mode&#41;:</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metas>shell&gt;</span> nvidia-smi
+Fri Oct 25 22:32:26 2024
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
+| N/A   24C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You can also use VS code&#39;s integrated terminal to launch Julia on daint. However, you can&#39;t use the Julia extension and would have to use <code>srun -n1 --pty /bin/bash -l</code> and activate the environment.</div></div>
+<h3 id=running_a_remote_job_on_piz_daint ><a href="#running_a_remote_job_on_piz_daint" class=header-anchor >Running a remote job on Piz Daint</a></h3>
+<p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>submit.sh</code> you can launch &#40;without need of an allocation&#41; as <code>sbatch submit.sh</code>:</p>
+<pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
+<span class=hljs-comment >#SBATCH --job-name=&quot;my_gpu_run&quot;</span>
+<span class=hljs-comment >#SBATCH --output=my_gpu_run.%j.o</span>
+<span class=hljs-comment >#SBATCH --error=my_gpu_run.%j.e</span>
+<span class=hljs-comment >#SBATCH --time=00:30:00</span>
+<span class=hljs-comment >#SBATCH --nodes=1</span>
+<span class=hljs-comment >#SBATCH --ntasks-per-node=1</span>
+<span class=hljs-comment >#SBATCH --partition=normal</span>
+<span class=hljs-comment >#SBATCH --constraint=gpu</span>
+<span class=hljs-comment >#SBATCH --account class04</span>
+
+<span class=hljs-comment ># activate julia env</span>
+. <span class=hljs-variable >$SCRATCH</span>/../julia/daint-gpu-nocudaaware/activate
+
+srun julia &lt;my_julia_gpu_script.jl&gt;</code></pre>
+<h3 id=jupyterlab_access_on_piz_daint ><a href="#jupyterlab_access_on_piz_daint" class=header-anchor >JupyterLab access on Piz Daint</a></h3>
+<p>Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient <a href="https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup">JupyterLab access</a>.</p>
+<ol>
+<li><p>If possible, create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code> &#40;do this on daint&#41;:</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre>
+<ol start=2 >
+<li><p>Head to <a href="https://jupyter.cscs.ch/">https://jupyter.cscs.ch/</a>.</p>
+
+<li><p>Login with your username and password you&#39;ve set for in the <a href="#account_setup">Account setup</a> step</p>
+
+<li><p>Select <code>Node Type: GPU</code>, <code>Node: 1</code> and the duration you want and <strong>Launch JupyterLab</strong>.</p>
+
+<li><p>From with JupyterLab, upload the notebook to work on and get started&#33;</p>
+
+</ol>
+<h3 id=transferring_files_on_piz_daint ><a href="#transferring_files_on_piz_daint" class=header-anchor >Transferring files on Piz Daint</a></h3>
+<p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
+<p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
+<p>The next step should work out of the box. You should be able to select <code>daint</code> from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at <code>/scratch/snx3000/&lt;username&gt;/</code>. Just drag and drop files in there to transfer them.</p>
+<p>Another way is to use <code>sshfs</code> which lets you mount the file system on servers with ssh-access &#40;works on Linux, there are MacOS and Windows ports too&#41;.  After installing <code>sshfs</code> on your laptop, create a empty directory to mount &#40;<code>mkdir -p ~/mnt/daint</code>&#41;, you should be able to mount via</p>
+<pre><code class="julia hljs">sshfs &lt;your username on daint&gt;<span class=hljs-meta >@daint</span>.cscs.ch:/ /home/$USER/mnt_daint  -o compression=yes -o reconnect -o idmap=user -o gid=<span class=hljs-number >100</span> -o workaround=rename -o follow_symlinks -o ProxyJump=ela</code></pre>
+<p>and unmount via</p>
+<pre><code class="julia hljs">fusermount -u -z /home/$USER/mnt_daint</code></pre>
+<p>For convenience it is suggested to also symlink to the home-directory <code>ln -s ~/mnt/daint/users/&lt;your username on daint&gt; ~/mnt/daint_home</code>.  &#40;Note that we mount the root directory <code>/</code> with <code>sshfs</code> such that access to <code>/scratch</code> is possible.&#41;</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 23, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 25, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
