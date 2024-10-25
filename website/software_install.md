@@ -193,7 +193,7 @@ which will launch Julia with as many threads are there are cores on your machine
 ### Julia on GPUs
 The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch compute kernels on Nvidia GPUs natively from within Julia. [JuliaGPU](https://juliagpu.org) provides further reading and [introductory material](https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/) about GPU ecosystems within Julia.
 
-<!--
+
 ### Julia MPI
 The following steps permit you to install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your machine and test it:
 1. If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the `instantiate` command from within the package manager [see here](#package_manager). If not, MPI.jl can be added from within the package manager (typing `add MPI` in package mode).
@@ -229,10 +229,10 @@ and add `-host localhost` to the execution script:
 ```sh
 $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
-} -->
+}
 
-<!--
-For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section.
+
+<!-- For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section. -->
 
 ## GPU computing on Piz Daint
 
@@ -261,37 +261,23 @@ ssh <username>@ela.cscs.ch
 3. Generate a `ed25519` keypair as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor). On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`. Alternatively, you can copy the keys manually as described in the [CSCS user website](https://user.cscs.ch/access/auth/#generating-ssh-keys-if-not-required-to-provide-a-2nd-factor).
 ```sh
 ssh-keygen -t ed25519
-ssh-copy-id <username>@ela.cscs.ch
 ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
 ```
 
 4. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
 ```sh
-Host ela
-  HostName ela.cscs.ch
-  User <username>
-  IdentityFile ~/.ssh/id_ed25519
-
-Host daint
+Host daint-xc
   HostName daint.cscs.ch
   User <username>
   IdentityFile ~/.ssh/id_ed25519
-  ProxyJump ela
+  ProxyJump <username>@ela.cscs.ch
+  AddKeysToAgent yes
   ForwardAgent yes
-  RequestTTY yes
-
-Host nid*
-  HostName %h
-  User <username>
-  IdentityFile ~/.ssh/id_ed25519
-  ProxyJump daint
-  ForwardAgent yes
-  RequestTTY yes
 ```
 
 5. Now you should be able to perform password-less login to daint as following
 ```sh
-ssh daint
+ssh daint-xc
 ```
 Moreover, you will get the Julia related modules loaded as we add the `RemoteCommand`
 
@@ -305,21 +291,18 @@ ln -s $SCRATCH scratch
 ```
 }
 
-\warn{There is interactive visualisation on daint. Make sure to produce `png` or `gifs`. Also to avoid plotting to fail, make sure to set the following `ENV["GKSwstype"]="nul"` in the code. Also, it may be good practice to define the animation directory to avoid filling a `tmp`, such as
-```julia
-ENV["GKSwstype"]="nul"
-if isdir("viz_out")==false mkdir("viz_out") end
-loadpath = "./viz_out/"; anim = Animation(loadpath,String[])
-println("Animation directory: $(anim.dir)")
-```
-}
+Make sure to remove any folders you may find in your scratch as those are the empty remaining from last year's course.
+
+### Setting up Julia on Piz Daint
+
+The Julia setup on Piz Daint is handled by [JUHPC](https://github.com/JuliaParallel/JUHPC). Everything should be ready for use and the only step required is to activate the environment mostly each time before launching Julia. Also, **only hte first time**, `juliaup` needs to be installed (these steps are explained hereafter).
 
 ### Running Julia interactively on Piz Daint
-So now, how do we actually run some GPU Julia code on Piz Daint?
+To access a GPU on Piz Daint.
 
 1. Open a terminal (other than from within VS code) and login to daint:
 ```sh
-ssh daint
+ssh daint-xc
 ```
 
 2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) and one process (`n1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
@@ -331,45 +314,68 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 👉 *Running **remote job** instead? [Jump right there](#running_a_remote_job_on_piz_daint)*
 
-3. Make sure to remember the **node number** returned upon successful allocation, e.g., `salloc: Nodes nid02145 are ready for job`
-
-4. Once you have your allocation (`salloc`) and the node (here `nid02145`), you can access the compute node by using the following `srun` command followed by loading the required modules:
+3. Once you have your allocation (`salloc`) and the node, you can access the compute node by using the following `srun` command:
 ```sh
 srun -n1 --pty /bin/bash -l
-module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda
 ```
 
-- In the command bar of VS code (`cmd + shit + P` on macOS, `ctrl + shift + P` on Windows), type `Remote-SSH: Connect to Host...`. Accept what should be accepted and continue. Then type in the node and id (node number) as from previous step (here `nid02145`). Upon hitting enter, you should be on the node with Julia environment loaded.
-
-5. You should then be able to launch Julia
+4. Then, to "activate" the Julia configuration previously prepared, enter the following (do not miss the first dot `.`):
 ```sh
-julia
+. $SCRATCH/../julia/daint-gpu-nocudaaware/activate
+```
+This will activate the artifact-based config for CUDA.jl which works smoother on the rather old Nvidia P100 GPUs. The caveat is that it does not allow for CUDA-aware MPI. It exists also a CUDA-aware `daint-gpu` configuration one could try out at later stage but may not be totally stable.
+
+5. Then, **only the first time**, you need to install Julia using the [`juliaup`](https://github.com/JuliaLang/juliaup) command:
+```sh
+juliaup
+```
+This will install latest Julia, upon JUHPC calling into juliaup.
+
+6. Next, go to the scratch and create a temporary test dir
+```sh
+cd $SCRATCH
+mkdir tmp-test
+cd tmp-test
+touch Project.toml
 ```
 
-#### :eyes: ONLY the first time
-1. Assuming you are on a node and launched Julia. To finalise your install, enter the package manager and query status `] st` and `add CUDA@v4`.
+7. You should then be able to launch Julia in the `tmp-test` project environment
+```sh
+julia --project=.
+```
 
-\warn{Because some driver discovery compatibility issues, you need to add specifically version 4 of CUDA.jl, upon typing `add CUDA@v4` in the package mode.}
-
+8. Within Julia, enter the package mode, check the status, and add any package you'd like to be part of `tmp-test`. Let's here add `CUDA` and `MPI`, as these two packages will be mostly used in the course.
 ```julia-repl
-(@1.9-daint-gpu) pkg> st
-  Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu`
-      Status `/scratch/snx3000/julia/class230/daint-gpu/environments/1.9-daint-gpu/Project.toml` (empty project)
+julia> ]
 
-(@1.9-daint-gpu) pkg> add CUDA@v4
+(tmp-test) pkg> st
+  Installing known registries into `/scratch/snx3000/class230/../julia/class230/daint-gpu-nocudaaware/juliaup/depot`
+       Added `General` registry to /scratch/snx3000/class230/../julia/class230/daint-gpu-nocudaaware/juliaup/depot/registries
+Status `/scratch/snx3000/class230/tmp-test/Project.toml` (empty project)
+
+(tmp-test) pkg> add CUDA, MPI
 ```
 
-2. Then load it and query version info
+9. Then load it and query version info
 ```julia-repl
 julia> using CUDA
 
 julia> CUDA.versioninfo()
-CUDA runtime 11.0, local installation
-CUDA driver 12.1
-NVIDIA driver 470.57.2, originally for CUDA 11.4
+CUDA runtime 11.8, artifact installation
+CUDA driver 12.6
+NVIDIA driver 470.57.2
+
+#[skipped lines]
+
+Preferences:
+- CUDA_Runtime_jll.version: 11.8
+- CUDA_Runtime_jll.local: false
+
+1 device:
+  0: Tesla P100-PCIE-16GB (sm_60, 15.897 GiB / 15.899 GiB available)
 ```
 
-3. Try out your first calculation on the P100 GPU
+10. Try out your first calculation on the P100 GPU
 ```julia-repl
 julia> a = CUDA.ones(3,4);
 
@@ -382,11 +388,20 @@ julia> c .= a .+ b
 
 If you made it to here, you're all set 🚀
 
+\warn{There is interactive visualisation on daint. Make sure to produce `png` or `gifs`. Also to avoid plotting to fail, make sure to set the following `ENV["GKSwstype"]="nul"` in the code. Also, it may be good practice to define the animation directory to avoid filling a `tmp`, such as
+```julia
+ENV["GKSwstype"]="nul"
+if isdir("viz_out")==false mkdir("viz_out") end
+loadpath = "./viz_out/"; anim = Animation(loadpath,String[])
+println("Animation directory: $(anim.dir)")
+```
+}
+
 #### Monitoring GPU usage
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode):
 ```julia-repl
 shell> nvidia-smi
-Tue Oct 24 18:42:45 2023
+Fri Oct 25 22:32:26 2024
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 470.57.02    Driver Version: 470.57.02    CUDA Version: 11.4     |
 |-------------------------------+----------------------+----------------------+
@@ -395,7 +410,7 @@ Tue Oct 24 18:42:45 2023
 |                               |                      |               MIG M. |
 |===============================+======================+======================|
 |   0  Tesla P100-PCIE...  On   | 00000000:02:00.0 Off |                    0 |
-| N/A   21C    P0    25W / 250W |      2MiB / 16280MiB |      0%   E. Process |
+| N/A   24C    P0    25W / 250W |      0MiB / 16280MiB |      0%   E. Process |
 |                               |                      |                  N/A |
 +-------------------------------+----------------------+----------------------+
 
@@ -408,7 +423,7 @@ Tue Oct 24 18:42:45 2023
 +-----------------------------------------------------------------------------+
 ```
 
-\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension nor the direct node login and would have to use `srun -n1 --pty /bin/bash -l` and load the needed modules, namely `module load daint-gpu Julia/1.9.3-CrayGNU-21.09-cuda`.}
+\note{You can also use VS code's integrated terminal to launch Julia on daint. However, you can't use the Julia extension and would have to use `srun -n1 --pty /bin/bash -l` and activate the environment.}
 
 ### Running a remote job on Piz Daint
 If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `submit.sh` you can launch (without need of an allocation) as `sbatch submit.sh`:
@@ -424,10 +439,10 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --constraint=gpu
 #SBATCH --account class04
 
-module load daint-gpu
-module load Julia/1.9.3-CrayGNU-21.09-cuda
+# activate julia env
+. $SCRATCH/../julia/daint-gpu-nocudaaware/activate
 
-srun julia -O3 <my_julia_gpu_script.jl>
+srun julia <my_julia_gpu_script.jl>
 ```
 
 ### JupyterLab access on Piz Daint
@@ -463,6 +478,7 @@ fusermount -u -z /home/$USER/mnt_daint
 ```
 For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
 
+<!--
 ### Julia MPI GPU on Piz Daint
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
 1. Make sure to have the Julia GPU environment loaded
