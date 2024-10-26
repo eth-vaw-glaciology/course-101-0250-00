@@ -267,7 +267,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
 4. Once your key is added to ela, manually connect to daint to authorize your key for the first time, while making sure you are logged-in in ela. Execute:
 
 ```sh
-[classXXX@ela2 ~]$ ssh <username>@daint.cscs.ch
+[classXXX@ela2 ~]$ ssh daint
 ```
 
 This step shall prompt you to accept the daint server’s SSH key and enter the password you got from Moodle again.
