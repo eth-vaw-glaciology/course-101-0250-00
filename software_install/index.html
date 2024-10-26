@@ -159,6 +159,12 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">ssh-keygen -t ed25519
 ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
 <ol start=4 >
+<li><p>Once your key is added to ela, manually connect to daint to authorize your key for the first time, while making sure you are logged-in in ela. Execute:</p>
+
+</ol>
+<pre><code class="sh hljs">[classXXX@ela2 ~]$ ssh &lt;username&gt;@daint.cscs.ch</code></pre>
+<p>This step shall prompt you to accept the daint server’s SSH key and enter the password you got from Moodle again.</p>
+<ol start=5 >
 <li><p>Edit your ssh config file located in <code>~/.ssh/config</code> and add following entries to it, making sure to replace <code>&lt;username&gt;</code> and key file with correct names, if needed:</p>
 
 </ol>
@@ -169,7 +175,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
   ProxyJump &lt;username&gt;@ela.cscs.ch
   AddKeysToAgent <span class=hljs-built_in >yes</span>
   ForwardAgent <span class=hljs-built_in >yes</span></code></pre>
-<ol start=5 >
+<ol start=6 >
 <li><p>Now you should be able to perform password-less login to daint as following</p>
 
 </ol>
@@ -350,7 +356,7 @@ srun julia &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 25, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 26, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
