@@ -264,7 +264,15 @@ ssh-keygen -t ed25519
 ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
 ```
 
-4. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
+4. Once your key is added to ela, manually connect to daint to authorize your key for the first time, while making sure you are logged-in in ela. Execute:
+
+```sh
+[classXXX@ela2 ~]$ ssh <username>@daint.cscs.ch
+```
+
+This step shall prompt you to accept the daint server’s SSH key and enter the password you got from Moodle again.
+
+5. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
 ```sh
 Host daint-xc
   HostName daint.cscs.ch
@@ -275,7 +283,7 @@ Host daint-xc
   ForwardAgent yes
 ```
 
-5. Now you should be able to perform password-less login to daint as following
+6. Now you should be able to perform password-less login to daint as following
 ```sh
 ssh daint-xc
 ```
