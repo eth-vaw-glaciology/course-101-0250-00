@@ -134,6 +134,7 @@ $ Hello world, I am 3 of 3</code></pre>
 <pre><code class="sh hljs">$ <span class=hljs-built_in >export</span> MPICH_INTERFACE_HOSTNAME=localhost</code></pre>
 <p>and add <code>-host localhost</code> to the execution script:</p>
 <pre><code class="sh hljs">$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl</code></pre></div></div>
+<p>For running Julia at scale on Piz Daint, refer to the <a href="#julia_mpi_gpu_on_piz_daint">Julia MPI GPU on Piz Daint</a> section.</p>
 <h2 id=gpu_computing_on_piz_daint ><a href="#gpu_computing_on_piz_daint" class=header-anchor >GPU computing on Piz Daint</a></h2>
 <p>GPU computing on <a href="https://www.cscs.ch/computers/piz-daint/">Piz Daint</a> at <a href="https://www.cscs.ch">CSCS</a>. The supercomputer Piz Daint is composed of about 5700 compute nodes, each hosting a single Nvidia P100 16GB PCIe graphics card. We have a 6000 node hour allocation for our course on the system.</p>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
@@ -323,10 +324,12 @@ Fri Oct 25 22:32:26 2024
 <span class=hljs-comment >#SBATCH --constraint=gpu</span>
 <span class=hljs-comment >#SBATCH --account class04</span>
 
-<span class=hljs-comment ># activate julia env</span>
-. <span class=hljs-variable >$SCRATCH</span>/../julia/daint-gpu-nocudaaware/activate
+<span class=hljs-comment ># make sure to activate julia env before executing this script.</span>
+<span class=hljs-comment ># DO NOT add this `. $SCRATCH/../julia/daint-gpu-nocudaaware/activate` in here</span>
 
-srun julia &lt;my_julia_gpu_script.jl&gt;</code></pre>
+srun julia --project &lt;my_julia_gpu_script.jl&gt;</code></pre>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >Make sure to have activated Julia env &#40;<code>. &#36;SCRATCH/../julia/daint-gpu-nocudaaware/activate</code>&#41; <strong>before</strong> executing the <code>sbatch</code> command.</div></div>
 <h3 id=jupyterlab_access_on_piz_daint ><a href="#jupyterlab_access_on_piz_daint" class=header-anchor >JupyterLab access on Piz Daint</a></h3>
 <p>Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient <a href="https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup">JupyterLab access</a>.</p>
 <ol>
@@ -353,10 +356,32 @@ srun julia &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <p>and unmount via</p>
 <pre><code class="julia hljs">fusermount -u -z /home/$USER/mnt_daint</code></pre>
 <p>For convenience it is suggested to also symlink to the home-directory <code>ln -s ~/mnt/daint/users/&lt;your username on daint&gt; ~/mnt/daint_home</code>.  &#40;Note that we mount the root directory <code>/</code> with <code>sshfs</code> such that access to <code>/scratch</code> is possible.&#41;</p>
+<h3 id=julia_mpi_gpu_on_piz_daint ><a href="#julia_mpi_gpu_on_piz_daint" class=header-anchor >Julia MPI GPU on Piz Daint</a></h3>
+<p>The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.</p>
+<ol>
+<li><p>Make sure to have the Julia GPU environment loaded</p>
+
+</ol>
+<pre><code class="sh hljs">. <span class=hljs-variable >$SCRATCH</span>/../julia/daint-gpu-nocudaaware/activate</code></pre>
+<ol start=2 >
+<li><p>Then, you would need to allocate more than one node, let&#39;s say 4 nodes for 2 hours, using <code>salloc</code></p>
+
+</ol>
+<pre><code class="julia hljs">salloc -C&#x27;gpu&#x27; -Aclass04 -N4 -n4 --time=<span class=hljs-number >02</span>:<span class=hljs-number >00</span>:<span class=hljs-number >00</span></code></pre>
+<ol start=3 >
+<li><p>To launch a Julia &#40;GPU&#41; MPI script on 4 nodes &#40;GPUs&#41; using MPI, you can simply use <code>srun</code></p>
+
+</ol>
+<pre><code class="sh hljs">srun -n4 julia --project &lt;my_mpi_script.jl&gt;</code></pre>
+<h4 id=cuda-aware_mpi_on_piz_daint ><a href="#cuda-aware_mpi_on_piz_daint" class=header-anchor >CUDA-aware MPI on Piz Daint</a></h4>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure <strong>not to run</strong> with CUDA-aware MPI, i.e., having both <code>MPICH_RDMA_ENABLED_CUDA</code> and <code>IGG_CUDAAWARE_MPI</code> set to 0.</div></div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >The scripts above can be found in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/">scripts</a> folder.</div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 05, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 07, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
