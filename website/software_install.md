@@ -504,6 +504,25 @@ salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
 srun -n4 julia --project <my_mpi_script.jl>
 ```
 
+If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
+```sh
+#!/bin/bash -l
+#SBATCH --job-name="diff2D"
+#SBATCH --output=diff2D.%j.o
+#SBATCH --error=diff2D.%j.e
+#SBATCH --time=00:05:00
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=1
+#SBATCH --partition=normal
+#SBATCH --constraint=gpu
+#SBATCH --account class04
+
+srun -n4 bash -c 'julia --project <my_julia_mpi_gpu_script.jl>'
+```
+
+\note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
+
+
 #### CUDA-aware MPI on Piz Daint
 \warn{There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure **not to run** with CUDA-aware MPI, i.e., having both `MPICH_RDMA_ENABLED_CUDA` and `IGG_CUDAAWARE_MPI` set to 0.}
 
@@ -527,25 +546,4 @@ julia --project <my_script.jl>
 Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
 ```sh
 srun -n4 ./runme_mpi_daint.sh
-```
-
-If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
-```sh
-#!/bin/bash -l
-#SBATCH --job-name="diff2D"
-#SBATCH --output=diff2D.%j.o
-#SBATCH --error=diff2D.%j.e
-#SBATCH --time=00:05:00
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=1
-#SBATCH --partition=normal
-#SBATCH --constraint=gpu
-#SBATCH --account class04
-
-export MPICH_RDMA_ENABLED_CUDA=1
-export IGG_CUDAAWARE_MPI=1
-
-srun -n4 bash -c 'julia --project <my_julia_mpi_gpu_script.jl>'
-``` -->
-
-\note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
+```-->

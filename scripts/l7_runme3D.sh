@@ -9,7 +9,4 @@
 #SBATCH --constraint=gpu
 #SBATCH --account class04
 
-module load daint-gpu
-module load Julia/1.9.3-CrayGNU-21.09-cuda
-
-srun julia -O3 PorousConvection_3D_xpu.jl
+srun julia --project PorousConvection_3D_xpu.jl
