@@ -231,8 +231,7 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 ```
 }
 
-
-<!-- For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section. -->
+For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section.
 
 ## GPU computing on Piz Daint
 
@@ -447,11 +446,13 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --constraint=gpu
 #SBATCH --account class04
 
-# activate julia env
-. $SCRATCH/../julia/daint-gpu-nocudaaware/activate
+# make sure to activate julia env before executing this script.
+# DO NOT add this `. $SCRATCH/../julia/daint-gpu-nocudaaware/activate` in here
 
-srun julia <my_julia_gpu_script.jl>
+srun julia --project <my_julia_gpu_script.jl>
 ```
+
+\warn{Make sure to have activated Julia env (`. $SCRATCH/../julia/daint-gpu-nocudaaware/activate`) **before** executing the `sbatch` command.}
 
 ### JupyterLab access on Piz Daint
 Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup).
@@ -486,43 +487,41 @@ fusermount -u -z /home/$USER/mnt_daint
 ```
 For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
 
-<!--
 ### Julia MPI GPU on Piz Daint
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
 1. Make sure to have the Julia GPU environment loaded
 ```sh
-module load daint-gpu
-module load Julia/1.9.3-CrayGNU-21.09-cuda
+. $SCRATCH/../julia/daint-gpu-nocudaaware/activate
 ```
+
 2. Then, you would need to allocate more than one node, let's say 4 nodes for 2 hours, using `salloc`
 ```
 salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
 ```
+
 3. To launch a Julia (GPU) MPI script on 4 nodes (GPUs) using MPI, you can simply use `srun`
 ```sh
-srun -n4 julia -O3 <my_mpi_script.jl>
+srun -n4 julia --project <my_mpi_script.jl>
 ```
 
 #### CUDA-aware MPI on Piz Daint
 \warn{There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure **not to run** with CUDA-aware MPI, i.e., having both `MPICH_RDMA_ENABLED_CUDA` and `IGG_CUDAAWARE_MPI` set to 0.}
 
-You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
+<!-- You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 ```
+and to activate the Julia env on the login node
 
 In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via `srun`. You can create, e.g., a [`runme_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh) script containing:
 ```sh
 #!/bin/bash -l
 
-module load daint-gpu
-module load Julia/1.9.3-CrayGNU-21.09-cuda
-
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 
-julia -O3 <my_script.jl>
+julia --project <my_script.jl>
 ```
 
 Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
@@ -543,13 +542,10 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --constraint=gpu
 #SBATCH --account class04
 
-module load daint-gpu
-module load Julia/1.9.3-CrayGNU-21.09-cuda
-
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 
-srun -n4 bash -c 'julia -O3 <my_julia_mpi_gpu_script.jl>'
-```
+srun -n4 bash -c 'julia --project <my_julia_mpi_gpu_script.jl>'
+``` -->
 
-\note{The 2 scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.} -->
+\note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
