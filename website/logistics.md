@@ -138,7 +138,7 @@ Submission deadline for the project is **December 20, 2024 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
-Also, add the last commit SHA to [Moodle - Final project submission](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) as for the exercises.
+Also, add the last commit SHA to [Moodle - Final project submission](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1103859) as for the exercises.
 
 ### Final project grading
 Grading of the final project will contribute 35% of the final grade.
