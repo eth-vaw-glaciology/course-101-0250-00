@@ -2,13 +2,11 @@
 
 Final projects will provide 35% of the course grade. We recommend you work in teams of two, but being your own teammate is fine too.
 
-:construction: More infos to come in due time.
-
-<!-- **Project's due date is December 22, 2023 -- 23h59 CET (enforced by a "release tag v1.0.0").**
+**Project's due date is December 20, 2024 -- 23h59 CET (enforced by a "release tag v1.0.0").**
 
 _Note that a single GitHub repository is sufficient per project._
 
-\warn{The final project GitHub repository should **remain private** until submission on December 22, 2023 (unless you need it to be public for, e.g., deploying documentation.)}
+\warn{The final project GitHub repository should **remain private** until submission on December 20, 2024 (unless you need it to be public for, e.g., deploying documentation.)}
 
 Final projects should to be handed-in on a single GitHub repository, including scripts, documentation (and code documentation), unit and reference testing, Continuous Integration (CI - using e.g. GitHub Actions), instructions to run the software and reproduce the results, references.
 
@@ -41,4 +39,4 @@ Show your creativity by coming up with your own problem that could be modelled u
 
 ## Getting started with the final projects
 
-Head to [Logistics](/logistics/#final_project) in order to find infos on getting started and submission. -->
+Head to [Logistics](/logistics/#final_project) in order to find infos on getting started and submission.

@@ -88,9 +88,6 @@ We will try to correct your assignments before the lecture following the homewor
 
 Starting from lecture 7, and until lecture 9, homework assigments contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
-:construction: More infos to come in due time.
-
-<!--
 The exercises **in lecture 7** will serve as starting point for the first project:
 
 1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l7_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
@@ -98,7 +95,7 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 3. During lectures 7 and 9 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
-The project submission deadline is set to **01.12.2023 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) in the Lecture 9 section.
+The project submission deadline is set to **29.11.2024 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1103857) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
 - a `PorousConvection` folder containing the structure proposed in [Lecture 7](/lecture7/#preparing_the_project_folder_in_your_github_repo)
@@ -126,7 +123,7 @@ The following steps will get you started with the final projects:
 2. Select a topic of your choice
 4. Initiate a private GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`)
 5. Share the final project private repository on GitHub with the [teaching-bot (https://github.com/teaching-bot)](https://github.com/teaching-bot)
-6. Send and email to Ludovic (luraess@ethz.ch) and Ivan (iutkin@ethz.ch) by **Tuesday December 5, 2023**, with subject _**Final projects**_ including
+6. Send and email to Ivan (iutkin@ethz.ch) and Ludovic (luraess@ethz.ch) by **Tuesday December 3, 2024**, with subject _**Final projects**_ including
     - your project partner
     - a brief description of your choice
     - a link to your final project GitHub repository
@@ -137,7 +134,7 @@ The following steps will get you started with the final projects:
     - during class hours serving as helpdesk
 
 ### Final project submission
-Submission deadline for the project is **December 22, 2023 -- 23h59 CET**.
+Submission deadline for the project is **December 20, 2024 -- 23h59 CET**.
 
 Final submission timestamp is enforced upon tagging the v1.0.0 version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
@@ -155,15 +152,14 @@ For a successful outcome, final projects are expected to be handed-in as single 
 - unit and reference testing
 - Continuous Integration (CI - using e.g. GitHub Actions)
 - additional features if needed
--->
 
 ## Evaluation
 
-All homework assigments can be done alone or in groups of two.
+All homework assignments can be done alone or in groups of two.
 
 Enrolled ETHZ students will have to hand in on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=23586) and GitHub:
-1. Six weekly assignments during the course's Part 1 and Part 2 constitute 30% of the final grade. **The best five out of six homeworks will be counted**.
-2. A project developed during Part 3 of the course consitutes 35% of the final grade
-3. A final project consitutes 35% of the final grade
+1. Six weekly assignments during the course's Part 1 and Part 2 constitute 30% of the final grade. **The best five out of six homework will be counted**.
+2. A project developed during Part 3 of the course constitutes 35% of the final grade
+3. A final project constitutes 35% of the final grade
 
 **Project submission includes code in a Github repository and an automatically generated documentation**.
