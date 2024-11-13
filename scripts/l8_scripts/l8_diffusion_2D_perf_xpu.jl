@@ -13,9 +13,9 @@ using Plots, Printf
 macro qx(ix, iy) esc(:(-D_dx * (C[$ix+1, $iy+1] - C[$ix, $iy+1]))) end
 macro qy(ix, iy) esc(:(-D_dy * (C[$ix+1, $iy+1] - C[$ix+1, $iy]))) end
 
-@parallel_indices (ix, iy) function compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
+@parallel_indices (ix, iy) function compute!(C2, C, D_dx, D_dy, dt, size_C1_2, size_C2_2)
     if (ix <= size_C1_2 && iy <= size_C2_2)
-        C2[ix+1, iy+1] = C[ix+1, iy+1] - dt * ((@qx(ix + 1, iy) - @qx(ix, iy)) * _dx + (@qy(ix, iy + 1) - @qy(ix, iy)) * _dy)
+        C2[ix+1, iy+1] = C[ix+1, iy+1] - dt * ((@qx(ix + 1, iy) - @qx(ix, iy)) * D_dx + (@qy(ix, iy + 1) - @qy(ix, iy)) * D_dy)
     end
     return
 end
@@ -49,7 +49,7 @@ end
     # Time loop
     for it = 1:nt
         if (it == 11) t_tic = Base.time(); niter = 0 end
-        @parallel compute!(C2, C, D_dx, D_dy, dt, _dx, _dy, size_C1_2, size_C2_2)
+        @parallel compute!(C2, C, D_dx, D_dy, dt, size_C1_2, size_C2_2)
         C, C2 = C2, C # pointer swap
         niter += 1
         if do_visu && (it % nout == 0)
