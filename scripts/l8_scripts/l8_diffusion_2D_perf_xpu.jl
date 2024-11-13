@@ -35,7 +35,6 @@ end
     xc, yc = LinRange(dx / 2, Lx - dx / 2, nx), LinRange(dy / 2, Ly - dy / 2, ny)
     D_dx   = D / dx
     D_dy   = D / dy
-    _dx, _dy = 1.0 / dx, 1.0 / dy
     # Array initialisation
     C      = Data.Array(exp.(.-(xc .- Lx / 2) .^ 2 .- (yc' .- Ly / 2) .^ 2))
     C2     = copy(C)
