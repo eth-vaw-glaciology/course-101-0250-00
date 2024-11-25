@@ -101,7 +101,9 @@ julia> notebook(dir="/some/path")
 Adding support for RISE with JupyterLab (i.e. notebook > 6), assuming `IJulia` is already installed:
 ```julia-repl
 Pkg.add("Conda")
+
 Conda.pip_interop(true)
+
 Conda.pip("install", "jupyterlab-rise")
 ```
 
