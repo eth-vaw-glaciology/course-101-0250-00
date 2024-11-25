@@ -96,7 +96,14 @@ julia> notebook(dir="/some/path")
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide/subslide/fragment"}}
 ```
 
-2. To view the notebook as a slideshow, install the [RISE plugin](https://rise.readthedocs.io/en/stable/installation.html). _NOTE: if installing the plugin fails, one may need to follow [this procedure](https://github.com/JuliaPy/Conda.jl/issues/247#issuecomment-1713713961)._
+2. To view the notebook as a slideshow, install the [RISE plugin](https://rise.readthedocs.io/en/latest/index.html). _DISCLAIMER: the extension built from this repo is not compatible with JupyterLab and must be used with the classic notebook (i.e. notebook <= 6)._
+
+Adding support for RISE with JupyterLab (i.e. notebook > 6), assuming `IJulia` is already installed:
+```julia-repl
+Pkg.add("Conda")
+Conda.pip_interop(true)
+Conda.pip("install", "jupyterlab-rise")
+```
 
 3. Open the notebook as in [here](#launch-a-notebook-from-the-script)
 
