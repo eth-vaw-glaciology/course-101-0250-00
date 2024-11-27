@@ -95,7 +95,7 @@ The exercises **in lecture 7** will serve as starting point for the first projec
 3. During lectures 7 and 9 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
-The project submission deadline is set to **29.11.2024 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1103857) in the Lecture 9 section.
+The project submission deadline is set to **28.11.2024 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1103857) in the Lecture 9 section.
 
 Make sure to have following items in your private GitHub repository:
 - a `PorousConvection` folder containing the structure proposed in [Lecture 7](/lecture7/#preparing_the_project_folder_in_your_github_repo)
