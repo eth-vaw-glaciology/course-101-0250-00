@@ -66,7 +66,7 @@ import MPI
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-3. Also add global maximum computation using MPI reduction function
+3. Further, add global maximum computation using MPI reduction function to be used instead of `maximum()`
 """
 max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))
 
@@ -112,12 +112,7 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-7. Use the `max_g` function in the timestep `dt` definition (instead of `maximum`) as one now needs to gather the global maximum among all MPI processes.
-"""
-
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-8. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
+7. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
 """
 @hide_communication b_width begin
     @parallel compute_Dflux!(qDx, qDy, qDz, Pf, T, k_ηf, _dx, _dy, _dz, αρg, _1_θ_dτ_D)
@@ -127,7 +122,7 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-9. Apply a similar step to the temperature update, where you can also include boundary condition computation as following (⚠️ no other construct is currently allowed)
+8. Apply a similar step to the temperature update, where you can also include boundary condition computation as following (⚠️ no other construct is currently allowed)
 """
 @hide_communication b_width begin
     @parallel update_T!(T, qTx, qTy, qTz, dTdt, _dx, _dy, _dz, _1_dt_β_dτ_T)
@@ -139,7 +134,7 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-10. Use now the `max_g` function instead of `maximum` to collect the global maximum among all local arrays spanning all MPI processes.
+9. Use now the `max_g` function instead of `maximum` to collect the global maximum among all local arrays spanning all MPI processes. Use it in the timestep `dt` definition and in the error calculation (instead of `maximum`).
 """
 ## time step
 dt = if it == 1
@@ -151,12 +146,12 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-11. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
+10. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-12. Update the visualisation and output saving part
+11. Update the visualisation and output saving part
 """
 ## visualisation
 if do_viz && (it % nvis == 0)
@@ -172,7 +167,7 @@ end
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-13. Finalise the global grid before returning from the main function
+12. Finalise the global grid before returning from the main function
 """
 finalize_global_grid()
 return
