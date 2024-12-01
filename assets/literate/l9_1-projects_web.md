@@ -38,7 +38,7 @@ using ImplicitGlobalGrid
 import MPI
 ````
 
-3. Also add global maximum computation using MPI reduction function
+3. Further, add global maximum computation using MPI reduction function to be used instead of `maximum()`
 
 ````julia:ex2
 max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))
@@ -80,9 +80,7 @@ if do_viz
 end
 ````
 
-7. Use the `max_g` function in the timestep `dt` definition (instead of `maximum`) as one now needs to gather the global maximum among all MPI processes.
-
-8. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
+7. Moving to the time loop, add halo update function `update_halo!` after the kernel that computes the fluid fluxes. You can additionally wrap it in the `@hide_communication` block to enable communication/computation overlap (using `b_width` defined above)
 
 ````julia:ex6
 @hide_communication b_width begin
@@ -91,7 +89,7 @@ end
 end
 ````
 
-9. Apply a similar step to the temperature update, where you can also include boundary condition computation as following (⚠️ no other construct is currently allowed)
+8. Apply a similar step to the temperature update, where you can also include boundary condition computation as following (⚠️ no other construct is currently allowed)
 
 ````julia:ex7
 @hide_communication b_width begin
@@ -102,7 +100,7 @@ end
 end
 ````
 
-10. Use now the `max_g` function instead of `maximum` to collect the global maximum among all local arrays spanning all MPI processes.
+9. Use now the `max_g` function instead of `maximum` to collect the global maximum among all local arrays spanning all MPI processes. Use it in the timestep `dt` definition and in the error calculation (instead of `maximum`).
 
 ````julia:ex8
 # time step
@@ -113,9 +111,9 @@ else
 end
 ````
 
-11. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
+10. Make sure all printing statements are only executed by `me==0` in order to avoid each MPI process to print to screen, and use `nx_g()` instead of local `nx` in the printed statements when assessing the iteration per number of grid points.
 
-12. Update the visualisation and output saving part
+11. Update the visualisation and output saving part
 
 ````julia:ex9
 # visualisation
@@ -130,7 +128,7 @@ if do_viz && (it % nvis == 0)
 end
 ````
 
-13. Finalise the global grid before returning from the main function
+12. Finalise the global grid before returning from the main function
 
 ````julia:ex10
 finalize_global_grid()
