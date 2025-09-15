@@ -9,48 +9,48 @@ noeval = true
 # Lecture 6
 
 > **Agenda**\
-> :books: GPU computing & performance assessment (continued)\
-> :computer: Unit testing and reference tests\
+> :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
+> :computer: Unit testing in Julia\
 > :construction: Exercises:
-> - Data transfer optimisations on GPUs
-> - GPU codes for diffusion 2D
-> - Reference testing in Julia
+> - CPU perf. codes for 2D diffusion and memcopy
+> - Unit tests and testset implementation
 
----
+--- 
 
 \label{content}
 **Content**
 
 \toc
 
-[_👉 get started with exercises_](#exercises_-_lecture_6)
+[_👉 get started with exercises_](#exercises_-_lecture_5)
 
 ---
 
-\literate{/_literate/l6_1-gpu-memcopy_web.jl}
+\literate{/_literate/l5_1-cpu-parallel_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
-\literate{/_literate/l6_2-julia-tests_web.jl}
+\literate{/_literate/l5_2-unit-test_web.jl}
 
 [⤴ _**back to Content**_](#content)
+
 
 # Exercises - lecture 6
 
-\warn{Exercises (including the `.ipynb`) have to be uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
+\warn{Exercises have to be handed in as monolithic Julia scripts (one code per script) and uploaded to your private (shared) GitHub repository, in a **specific folder for each lecture**. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
-\literate{/_literate/lecture6_ex1_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture6_ex2_web.jl}
+\literate{/_literate/lecture5_ex1_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture6_ex3_web.jl}
+\literate{/_literate/lecture5_ex2_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture5_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)
