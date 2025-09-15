@@ -25,7 +25,7 @@ Terms:
 
 Let's look at a simple package: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
-![UnPack.jl](../assets/literate_figures/l6_UnPack.png)
+![UnPack.jl](../assets/literate_figures/l7_UnPack.png)
 
 - the CI-results are often displayed in form of _badges_
 - there are different CI-services, most used is GitHub-Actions

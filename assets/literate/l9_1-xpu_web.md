@@ -14,11 +14,11 @@ Combining CPU and GPU implementation within a single code.
 
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](../assets/literate_figures/l7_2lang_1.png)
+![two-lang problem](../assets/literate_figures/l9_2lang_1.png)
 
 Which may turn out into a costly cycle:
 
-![two-lang problem](../assets/literate_figures/l7_2lang_2.png)
+![two-lang problem](../assets/literate_figures/l9_2lang_2.png)
 
 This situation is referred to as the **_two-language problem_**.
 
@@ -32,7 +32,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 - **_fast_**, compiled just ahead of time (before one uses it for the first time)
 
 @@img-med
-![two-lang problem](../assets/literate_figures/l7_2lang_3.png)
+![two-lang problem](../assets/literate_figures/l9_2lang_3.png)
 @@
 
 Julia provides a **_portable_** solution in many aspects (beyond performance portability).
@@ -46,7 +46,7 @@ Wouldn't it be great to have **single code that both executes on CPU and GPU?**
 Wouldn't it be great? ... **YES**, and there is a Julia solution!
 
 @@img-med
-![ParallelStencil](../assets/literate_figures/l7_ps_logo.png)
+![ParallelStencil](../assets/literate_figures/l9_ps_logo.png)
 @@
 
 ## Backend portable xPU implementation

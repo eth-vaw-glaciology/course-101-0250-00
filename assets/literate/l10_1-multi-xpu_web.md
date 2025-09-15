@@ -50,7 +50,7 @@ defining first the optimal local problem size to resolve on a single GPU and the
 
 We can thus replicate a local problem multiple times in each dimension of the Cartesian space to obtain a global grid, which is therefore defined implicitly. Local problems define each others local boundary conditions by exchanging internal boundary values using intra-node communication (e.g., message passing interface - [MPI](https://en.wikipedia.org/wiki/Message_Passing_Interface)), as depicted on the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
-![IGG](../assets/literate_figures/l8_igg.png)
+![IGG](../assets/literate_figures/l10_igg.png)
 
 ### Distributing computations - challenges
 
@@ -60,7 +60,7 @@ The parallel efficiency defines as the speed-up divided by the number of process
 
 Ideally, the parallel efficiency should stay close to 1 while increasing the number of computing resources proportionally with the global problem size (i.e. keeping the constant local problem sizes), meaning no time is lost (no overhead) in due to, e.g., inter-process communication, network congestion, congestion of shared filesystem, etc... as shown in the [figure](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) hereafter:
 
-![Parallel scaling](../assets/literate_figures/l8_par_eff.png)
+![Parallel scaling](../assets/literate_figures/l10_par_eff.png)
 
 ---
 
@@ -78,7 +78,7 @@ As a first step, we will look at the below 1-D diffusion code which solves the l
 
 In this "fake parallelisation" code, the computations for the left and right domain are performed sequentially on one process, but they could be computed on two distinct processes if the needed boundary update (often referred to as halo update in literature) was done with MPI.
 
-![1D Global grid](../assets/literate_figures/l8_1D_global_grid.png)
+![1D Global grid](../assets/literate_figures/l10_1D_global_grid.png)
 
 The idea of this fake parallelisation approach is the following:
 ```julia
@@ -259,7 +259,7 @@ Run the code [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/co
 Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code (adapt the variable `nprocs`!). Describe what you see in the visualisation. Then, add the required boundary update in order make the code work properly and run it again. Note what has changed in the visualisation.
 
 @@img-med
-![diffusion 2D MPI](../assets/literate_figures/l8_diff_2D_mpi.png)
+![diffusion 2D MPI](../assets/literate_figures/l10_diff_2D_mpi.png)
 @@
 
 The last step is to create a multi-GPU solver out of the above multi-CPU solver. CUDA-aware MPI is of great help in this task, because it allows to directly pass GPU arrays to the MPI functions.
