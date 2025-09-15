@@ -32,7 +32,7 @@ md"""
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-- You Wu — _the teaching assistant_
+- Badie Taye — _the teaching assistant_
 """
 
 #src #########################################################################

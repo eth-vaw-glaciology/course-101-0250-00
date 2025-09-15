@@ -86,11 +86,9 @@ for fl in readdir()
 end
 
 # copy figures for ipynb
-rm("notebooks/figures"; force=true, recursive=true)
 mkpath("notebooks/figures")
 [cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
 
 # copy literate figures
-rm("../website/_assets/literate_figures"; force=true, recursive=true)
 mkpath("../website/_assets/literate_figures")
 [cp("figures/$fl", "../website/_assets/literate_figures/$fl", force=true) for fl in readdir("figures/")]
