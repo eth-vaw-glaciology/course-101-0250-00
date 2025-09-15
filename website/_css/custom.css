@@ -103,45 +103,38 @@ pre.code-output {
 }
 
 @media (min-width: 768px) {
-    .sidebar-nav {
-    }
 }
 .sidebar .container.sidebar-sticky {
     top: 1rem;
 }
+
+.sidebar-nav .sidebar-nav-item.under-construction {
+    color: #757575;
+}
+.sidebar-nav .sidebar-nav-item.under-construction::before {
+    content: "🚧";
+}
+
 .sidebar-nav .sidebar-nav-item.active {
     box-sizing: border-box;
     background: #f0f8ff40;
     margin-right: -1em;
     margin-left: -0.5em;
-    padding-left: 0.5em;
+    padding-left: 1em;
     color: white;
     font-weight: normal !important;
 }
 .sidebar-nav .sidebar-nav-item {
-    /*font-size: 0.97em;*/
     color: #cccccc;
     margin: 0.25em 0;
+    padding-left: 0.5em;
 }
 
 .sidebar-nav .course-section {
-    /*font-style: italic;*/
-    /*display: flex;*/
     align-items: center;
-    color: #ffff80; /*#d9a200;*/
+    color: #ffff80;
     margin-top: 1em;
-}
-.sidebar-nav .course-section::before,
-.sidebar-nav .course-section::after {
-    content: " ";
-    flex: 1;
-    border-bottom: 1px dashed #d9a200;
-}
-.sidebar-nav .course-section::before {
-    margin-right: 0.25em;
-}
-.sidebar-nav .course-section::after {
-    margin-left: 0.25em;
+    border-bottom: 2px dotted #ffff80;
 }
 
 .sidebar-nav .book-chapter {

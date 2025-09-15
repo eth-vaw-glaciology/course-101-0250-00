@@ -1,29 +1,49 @@
 md"""
-## Exercise 3 — **Unit and reference tests**
+## Exercise 3 — **Unit tests**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
 The goal of this exercise is to:
-- revisit the last part of the lecture
-- learn how testing works in Julia
+- Implement basic unit tests for the diffusion and acoustic 2D scripts
+- Group the tests in a test-set
 """
-
-#nb # > 💡 note: I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.
-#md # \note{I had some odd errors caused by `@views` which I couldn't get to the bottom of.  If you do too, just remove the `@views`.}
-
-#nb # > 💡 note: I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the blueprint for this exercise.
-#md # \note{I packaged the Demo of the lecture within the repo [course-101-0250-00-L6Testing.jl](https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl), which should be the blueprint for this exercise.}
 
 md"""
-Task:
-- Use the [`l2_diffusion_1D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l2_diffusion_1D.jl) script as a base and rename it `diffusion_1D_test.jl`.
-- Define your own `diff()` function as `@views Diff(A) = A[2:end].-A[1:end-1]`
-- Create a Julia project `L6TestingExercise` within the exercise submission folder `lecture6`.  Use the `generate` command of the REPL package-mode.
-- Add `l2_diffusion_1D.jl` to a `scripts/` folder
-- You should remove/disable the plotting. This will make the tests run faster. Remove the `@views` for the main function. Also return the final `C` and `qx` from the function.
-- Make two unit tests for `Diff(A)` function; wrap them in a `@testset`
-- Make a reference-test which tests the value at 20 random indices of `C` and `qx` against a truth.
-- Make sure that all tests run and pass when called via package-mode `test`
+For this exercise, you will implement a test set of basic unit tests using Julia's built-in testing infrastructure to verify the implementation of the diffusion and acoustic 2D solvers.
 """
+
+md"""
+### Task 1
+
+In the `Pf_diffusion_2D` folder, duplicate the `Pf_diffusion_2D_perf_loop_fun.jl` script and rename it `Pf_diffusion_2D_test.jl`.
+
+Implement a test set using `@testset` and `@test` macros from Test.jl in order to test `Pf[xtest, ytest]` and assess that the values returned are approximatively equal to the following ones for the given values of `nx = ny`. Make sure to set `do_check = false` i.e. to ensure the code to run 500 iterations.
+"""
+
+xtest = [5, Int(cld(0.6*lx, dx)), nx-10]
+ytest = Int(cld(0.5*ly, dy))
+
+md"""
+for
+"""
+
+nx = ny = 16 * 2 .^ (2:5) .- 1
+maxiter = 500
+
+md"""
+should match
+
+| `nx, ny` | `Pf[xtest, ytest]`                                                |
+|:--------:|:-----------------------------------------------------------------:|
+|  `63`    | `[0.00785398056115133 0.007853980637555755 0.007853978592411982]` |
+| `127`    | `[0.00787296974549236 0.007849556884184108 0.007847181374079883]` |
+| `255`    | `[0.00740912103848251 0.009143711648167267 0.007419533048751209]` |
+| `511`    | `[0.00566813765849919 0.004348785338575644 0.005618691590498087]` |
+
+Report the output of the test set as code block in a new section of the `README.md` in the `Pf_diffusion_2D` folder.
+"""
+
+#nb # > 💡 hint: Use triple backticks to generate code blocks in the `README.md` ([more](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks)).
+#md # \note{Use triple backticks to generate code blocks in the `README.md` ([more](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks)).}

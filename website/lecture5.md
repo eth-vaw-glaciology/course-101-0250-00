@@ -9,11 +9,11 @@ noeval = true
 # Lecture 5
 
 > **Agenda**\
-> :books: Parallel computing on CPUs & performance assessment, the $T_\mathrm{eff}$ metric\
-> :computer: Unit testing in Julia\
+> :books: Thermal porous convection (implicit and steady-state solution)\
+> :computer: Julia's `Project` environment\
 > :construction: Exercises:
-> - CPU perf. codes for 2D diffusion and memcopy
-> - Unit tests and testset implementation
+> - Porous convection in 2D
+> - Rayleigh's number
 
 --- 
 
@@ -26,11 +26,7 @@ noeval = true
 
 ---
 
-\literate{/_literate/l5_1-cpu-parallel_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
-\literate{/_literate/l5_2-unit-test_web.jl}
+\literate{/_literate/l5_1-porous-convect_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
@@ -46,11 +42,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture5_ex2_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture5_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)

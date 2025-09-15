@@ -1,6 +1,6 @@
 using Literate
 ## include Literate scripts starting with following 3 letters in the deploy
-incl = "l9_"
+incl = "l1_"
 ## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
 sol = true
 ##
@@ -86,9 +86,11 @@ for fl in readdir()
 end
 
 # copy figures for ipynb
+rm("notebooks/figures"; force=true, recursive=true)
 mkpath("notebooks/figures")
 [cp("figures/$fl", "notebooks/figures/$fl", force=true) for fl in readdir("figures/")]
 
 # copy literate figures
+rm("../website/_assets/literate_figures"; force=true, recursive=true)
 mkpath("../website/_assets/literate_figures")
 [cp("figures/$fl", "../website/_assets/literate_figures/$fl", force=true) for fl in readdir("figures/")]
