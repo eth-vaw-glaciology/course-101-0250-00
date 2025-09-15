@@ -22,7 +22,7 @@ julia> run(`sudo $(npm_cmd()) install highlight.js`)
 
 ## How-to
 
-#### Notebook deploy: make ipynb files and prepare for web-site upload
+### Make ipynb files and prepare for web-site upload
 
 Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-notebooks) and [exercise-notebooks](exercise-notebooks) folder will:
 - create `.ipynb` from the `.jl` script
@@ -40,7 +40,7 @@ sol = true
 
 You can populate lines beginning of Literate script with `#hint=` or `#sol=` which will permit to corresponding lines to be removed upon preprocessing (e.g. before / after the lecture).
 
-#### To deploy notebooks
+### Deploy notebooks
 
 1. Run the deploy script from its folder
 2. Include the correct `_web.jl` filename in e.g. `website/lectureXY.md` file
@@ -56,7 +56,7 @@ To embed YouTube videos, go to YouTube, click on the `Share` link and then `<Emb
 ~~~
 ```
 
-### Notebook, code, and markdown with Franklin
+## Notebook, code, and markdown with Franklin
 
 Using `Literate.jl` permit to write a single `.jl` source file that can contain Julia code and markdown comments and can be transformed into a markdown page, a notebook and notebook-based slides. The website build with `Franklin.jl` has native support to integrate `.jl` scripts ready to me processed by `Literate.jl` in markdown.
 
@@ -64,7 +64,7 @@ To allow `mdstring` to render correctly in Franklin, one need to set the page va
 
 To disable code execution but allow rendering on the website, one needs to set the page variable `noeval = true`. See [here](https://github.com/tlienart/Franklin.jl/commit/63d757f7eb7e96e7b9112f8a1dca7d1be54d487d) for details.
 
-#### Display Julia script as Markdown page on the website
+### Display Julia script as Markdown page on the website
 
 1. Create a Literate-ready `my_script.jl` script
 
@@ -81,7 +81,7 @@ Note that there are 2 pre-defined box environments to highlight **note** and **w
 #md # \warn{...}
 ```
 
-#### Launch a notebook from the script
+### Launch a notebook from the script
 
 1. In Julia, load Literate and export `my_script.jl` as a notebook:
 
@@ -100,7 +100,7 @@ julia> using IJulia
 julia> notebook(dir="/some/path")
 ```
 
-#### Transform the notebook into a presentation
+### Transform the notebook into a presentation
 
 1. To allow for slide rendering as _slide, subslide or fragment_, populate `my_script.jl` "source" code with
 
