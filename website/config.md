@@ -4,16 +4,20 @@ The website_* must be defined for the RSS to work
 -->
 @def website_title = "Solving partial differential equations in parallel on GPUs"
 @def website_descr = "Website for the Julia GPU course"
-<!-- @def website_url   = "https://eth-vaw-glaciology.github.io/course-101-0250-00/" -->
 @def website_url   = "https://pde-on-gpu.vaw.ethz.ch/"
+@def course_url    = "https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en"
 
-@def author = "ETHZ - VAW-GL"
+@def author   = "ETHZ - VAW-GL"
+@def year     = "2025"
+@def semester = "Fall"
+
+@def moodle_url     = "https://moodle-app2.let.ethz.ch/course/view.php?id=26390"
+@def zoom_url       = "https://moodle-app2.let.ethz.ch/mod/zoom/view.php?id=1275857"
+@def jupyterhub_url = ""
 
 @def mintoclevel = 1
 @def maxtoclevel = 2
 
-<!-- @def prepath = "course-101-0250-00" -->
-@def prepath = ""
 <!--
 Add here files or directories that should be ignored by Franklin, otherwise
 these files might be copied and, if markdown, processed by Franklin which
