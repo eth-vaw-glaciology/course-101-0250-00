@@ -1,81 +1,95 @@
 md"""
-## Exercise 2 — **Solving PDEs on GPUs**
+## Exercise 2 — **Performance evaluation**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
 
 md"""
 The goal of this exercise is to:
-- Port the 2D fluid diffusion CPU code from Lecture 5 to GPU
-- Assess the performance of the GPU solver
+- Create a script to assess $T_\mathrm{peak}$, using memory-copy
+- Assess $T_\mathrm{peak}$ of your CPU
+- Perform a strong-scaling test: assess $T_\mathrm{eff}$ for the fluid pressure diffusion 2D solver as function of number of grid points and implementation
+"""
+
+md"""
+For this exercise, you will write a code to assess the peak memory throughput of your CPU and run a strong scaling benchmark using the fluid pressure diffusion 2D solver and report performance.
 """
 
 md"""
 ### Task 1
 
-In there, place the `Pf_diffusion_2D_perf_loop_fun.jl` script you created for Lecture 5 homework (Exercise 1, Task 1). Duplicate the script and rename it `Pf_diffusion_2D_perf_gpu.jl`.
+In the `Pf_diffusion_2D` folder, create a new script named `memcopy.jl`. You can use as starting point the `diffusion_2D_loop_fun.jl` script from lecture 5 (or exercise 1).
 
-Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `Pf_diffusion_2D_perf_gpu.jl` code in order to enable it to execute on the Nvidia P100 GPU. For this task, _**use a kernel programming approach**_.
-
-Hereafter, a step-wise list of changes you'll need to perform starting from your `Pf_diffusion_2D_perf_loop_fun.jl` code.
-
-Add `using CUDA` at the top, in the packages.
-
-Define, in the `# Numerics` section, the parameters to set the block and grid size such that the number of threads per blocks are fixed to `threads = (32,4)` (or to a better layout you could figure out from running the performance assessment you did). Define then the number of blocks `blocks` to be computed such that `nx = threads[1]*blocks[1]` and similarly for `ny`.
-
-In the `# Array initialisation` section, make sure to now initialise CUDA arrays. You can use `CUDA.zeros(Float64,nx,ny)` as the GPU variant of `zeros(nx,ny)`. Also, you can use `CuArray()` to wrap and CPU array turning it into a GPU array; `CUDA.zeros(Float64,nx,ny)` would be equivalent to `CuArray(zeros(nx,ny))`. This may be useful to, e.g., define initial conditions using broadcasting operations on CPU arrays and wrapping them in a GPU array for further use.
-
-Going to the compute functions (or "kernels"), remove the nested loop(s) and replace them by the CUDA-related vectorised indices unique to each thread:
-```julia
-ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
-iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-```
-Pay attention that you need to enforce array bound checking (this was previously done by the loop bounds). A convenient way of doing so is using `if` conditions:
-```julia
-if (ix<=nx && iy<=ny)  Pf[ix,iy] = ...  end
-```
-
-Moving to the `# Time loop`, you'll now have to add information in order to allow a compute function (e.g. `my_kernel!`) to execute on the GPU. This can be achieved by adding `@cuda blocks threads` prior to the function call, turning, e.g.,
-```julia
-my_kernel!(...)
-```
-into
-```julia
-@cuda blocks blocks=blocks threads=threads my_kernel!(...)
-synchronize()
-```
-or alternatively
-```julia
-CUDA.@sync @cuda blocks=blocks threads=threads my_kernel!(...)
-```
+1. Rename the "main" function `memcopy()`
+2. Modify the script to only keep following in the initialisation:
 """
 
-#nb # > 💡 note: Don't forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.
-#md # \warn{Don't forget to synchronize the device to ensure all threads reached the barrier before the next iteration to avoid erroneous results.}
+## Numerics
+nx, ny  = 512, 512
+nt      = 2e4
+## array initialisation
+C       = rand(Float64, nx, ny)
+C2      = copy(C)
+A       = copy(C)
 
 md"""
-Finally, for visualisation, you'll need to "gather" information from the GPU array (`CuArray`) back to the CPU array (`Array`) in order to plot it. This can be achieved by calling `Array(Pf)` in your visualisation routine.
+3. Implement 2 compute functions to perform the following operation `C2 = C + A`, replacing the previous calculations:
+    - create an "array programming"-based function called `compute_ap!()` that includes a broadcasted version of the memory copy operation;
+    - create a second "kernel programming"-based function called `compute_kp!()` that uses a loop-based implementation with multi-threading.
+4. Update the `A_eff` formula accordingly.
+5. Implement a switch to monitor performance using either a manual approach or `BenchmarkTools` and pass the `bench` value as kwarg to the `memcopy()` main function including a default:
 """
 
-#nb # > 💡 note: `CuArray()` allows you to "transform" a CPU (or host) array to a GPU (or device) array, while `Array()` allows you to bring back the GPU (device) array to a CPU (host) array.
-#md # \note{`CuArray()` allows you to "transform" a CPU (or host) array to a GPU (or device) array, while `Array()` allows you to bring back the GPU (device) array to a CPU (host) array.}
+if bench == :loop
+    ## iteration loop
+    t_tic = 0.0
+    for iter=1:nt
+      ...
+    end
+    t_toc = Base.time() - t_tic
+elseif bench == :btool
+    t_toc = @belapsed ...
+end
+
+
+md"""
+Then, create a `README.md` file in the `Pf_diffusion_2D` folder to report the results for each of the following tasks (including a .png of the figure when instructed)
+"""
+
+#nb # > 💡 hint: Use `![fig_name](./<relative-path>/my_fig.png)` to insert a .png figure in the `README.md`.
+#md # \note{Use `![fig_name](./<relative-path>/my_fig.png)` to insert a .png figure in the `README.md`.}
 
 md"""
 ### Task 2
 
-Ensure the GPU code produces similar results as the reference CPU loop code for `nx = ny = 127` number of grid points. To assess this, save the output (pressure `Pf`) fields for both the CPU and GPU codes after e.g. 50 iterations, and make sure their difference is close to machine precision. You could use Julia's unit testing functionalities, e.g., `testset`, for this task as well.
+Report on a figure $T_\mathrm{eff}$ of your `memcopy.jl` code as function of number of grid points `nx × ny` for the array and kernel programming approaches, respectively, using the `BenchmarkTools` implementation. Vary `nx`and `ny` such that
+"""
+
+nx = ny = 16 * 2 .^ (1:8)
+
+md"""
+_($T_\mathrm{eff}$ of your `memcopy.jl` code represents $T_\mathrm{peak}$, the peak memory throughput you can achieve on your CPU for a given implementation.)_
+"""
+
+md"""
+On the same figure, report the best value of memcopy obtained using the manual loop-based approach (manual timer) to assess $T_\mathrm{peak}$.
+"""
+
+#nb # > 💡 hint: For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.
+#md # \note{For performance evaluation we only need the code to run a couple of seconds; adapt `nt` accordingly (you could also, e.g., make `nt` function of `nx, ny`). Ensure also to implement "warm-up" iterations.}
+
+md"""
+Add the above figure in a new section of the `Pf_diffusion_2D/README.md`, and provide a minimal description of 1) the performed test, and 2) a short description of the result. Figure out the vendor-announced peak memory bandwidth for your CPU, add it to the figure and use it to discuss your results.
 """
 
 md"""
 ### Task 3
 
-Assess $T_\mathrm{peak}$ of the Nvidia Tesla P100 GPU. To do so, embed the *triad* benchmark (kernel programming version) from lecture 6 in a Julia script and use it to assess $T_\mathrm{peak}$. Upload the script to your GitHub folder and save the $T_\mathrm{peak}$ value for next task.
-"""
+Repeat the strong scaling benchmark you just realised in Task 2 using the various fluid pressure diffusion 2D codes (`Pf_diffusion_2D_Teff.jl`; `Pf_diffusion_2D_perf.jl`; `Pf_diffusion_2D_loop_fun.jl` - with/without `Threads.@threads` for the latter).
 
-md"""
-### Task 4
+Report on a figure $T_\mathrm{eff}$ of the 4 diffusion solvers' implementations as function of number of grid points `nx × ny`. Vary `nx`and `ny` such that `nx = ny = 16 * 2 .^ (1:8)`. **Use the `BenchmarlTools`-based evaluation approach.**
 
-Report in a figure you will insert in the `README.md` the effective memory throughput $T_\mathrm{eff}$ for the 2D fluid pressure diffusion GPU code as function of number of grid points `nx = ny`. Realise a weak scaling benchmark varying `nx = ny = 32 .* 2 .^ (0:8) .- 1` (or until you run out of device memory). On the same figure, report as well $T_\mathrm{peak}$ from Task 3.
+On the same figure, report also the best memory copy value (as, e.g, dashed lines) and vendor announced values (if available - optional).
 
-Comment on the $T_\mathrm{eff}$ and $T_\mathrm{peak}$ values achieved on the Tesla P100.
+Add this second figure in a new section of the `Pf_diffusion_2D/README.md`, and provide a minimal description of 1) the performed test, and 2) a short description of the result.
 """
