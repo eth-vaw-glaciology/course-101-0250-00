@@ -22,30 +22,30 @@ noeval = true
 
 \toc
 
-[_👉 get started with exercises_](#exercises_-_lecture_9)
+[_👉 get started with exercises_](#exercises_-_lecture_11)
 
 ---
 
-\literate{/_literate/l9_1-projects_web.jl}
+\literate{/_literate/l11_1-projects_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
-\literate{/_literate/l9_2-doc_web.jl}
+\literate{/_literate/l11_2-doc_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
-# Exercises - lecture 12
+# Exercises - lecture 11
 
 \warn{**Exercise 1** is the final step of your project - scripts and results should be added to the `PorousConvection` subfolder in your private GitHub repo. The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).\
-From your `homework-7` branch, create a new git branch named `homework-9` in order to build upon work performed for homework 7.\
-The exercises from Lecture 9 are include the last steps towards the completion of the project. Hand-in information can be found in [Logistics](/logistics/#project).}
+From your `homework-9` branch, create a new git branch named `homework-11` in order to build upon work performed for homework 9.\
+The exercises from Lecture 11 include the last steps towards the completion of the project. Hand-in information can be found in [Logistics](/logistics/#project).}
 
-\literate{/_literate/lecture9_ex1_web.jl}
+\literate{/_literate/lecture11_ex1_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture9_ex2_web.jl}
+\literate{/_literate/lecture11_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)

@@ -20,15 +20,15 @@ noeval = true
 
 \toc
 
-[_👉 get started with exercises_](#exercises_-_lecture_10)
+[_👉 get started with exercises_](#exercises_-_lecture_12)
 
 ---
 
-\literate{/_literate/l10_1-perf-recap_web.jl}
+\literate{/_literate/l12_1-perf-recap_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
-\literate{/_literate/l10_2-onchip-memory_web.jl}
+\literate{/_literate/l12_2-onchip-memory_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
@@ -36,18 +36,18 @@ noeval = true
 
 \warn{The exercises from lecture 10 are optional and should serve as basis for final projects aiming at implementing advanced code optimisations as well as to anyone interested.}
 
-\literate{/_literate/lecture10_ex1_web.jl}
+\literate{/_literate/lecture12_ex1_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture10_ex2_web.jl}
+\literate{/_literate/lecture12_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture10_ex3_web.jl}
+\literate{/_literate/lecture12_ex3_web.jl}
 
 [⤴ _**back to Content**_](#content)

@@ -23,11 +23,11 @@ noeval = true
 
 \toc
 
-[_👉 get started with exercises_](#exercises_-_lecture_8)
+[_👉 get started with exercises_](#exercises_-_lecture_10)
 
 ---
 
-\literate{/_literate/l8_1-multi-xpu_web.jl}
+\literate{/_literate/l10_1-multi-xpu_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
@@ -35,12 +35,12 @@ noeval = true
 
 \warn{Exercises have to be handed in and uploaded to your private (shared) GitHub repository, in a _**newly created `lecture8`**_ folder (and _**not**_ in the `PorousConvection` folder). The git commit hash (or SHA) of the final push needs to be uploaded on Moodle ([more](/homework)).}
 
-\literate{/_literate/lecture8_ex1_web.jl}
+\literate{/_literate/lecture10_ex1_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
 ---
 
-\literate{/_literate/lecture8_ex2_web.jl}
+\literate{/_literate/lecture10_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)
