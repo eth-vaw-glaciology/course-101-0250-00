@@ -17,7 +17,7 @@ Code cells are executed by putting the cursor into the cell and hitting `shift +
 
 ### Exercises and homework
 
-The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076) or download them and run them them locally if you're already set-up.
+The first two lecture's homework assignments will be [Jupyter notebooks](https://jupyter.org/). You can import the notebooks from Moodle into your JupyterHub space. You can execute them on the [JupyterHub]({{jupyterhub_url}}) or download them and run them them locally if you're already set-up.
 
 For submission, you can directly submit the folder containing all notebooks of a lecture from within the JupyterHub/Moodle integration. From the homework task on Moodle, you should be able to launch the notebooks in your JupyterHub. Once the homework completed, you should be able to see the folders you have worked on from your JupyterHub within the submission steps on Moodle. See [Logistics](/logistics) and [Homework](/homework) for details.
 
@@ -25,7 +25,7 @@ Starting from lecture 3, exercise scripts will be mostly standalone regular Juli
 
 ## JupyterHub
 
-You can access the JupyterHub from the **General** section in [Moodle](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076), clicking on [![JupyterHub](/assets/JHub2.png#badge)](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076)
+You can access the JupyterHub from the **General** section in [Moodle]({{moodle_url}}), clicking on [![JupyterHub](/assets/JHub2.png#badge)]({{jupyterhub_url}})
 
 Upon login to the server, you should see the following launcher environment, including a notebook (file) browser, ability to create a notebook, launch a Julia console (REPL), or a regular terminal.
 
@@ -33,13 +33,13 @@ Upon login to the server, you should see the following launcher environment, inc
 
 \warn{It is recommended to download your work as back-up before leaving the session.}
 
-## Installing Julia v1.10 (or later)
+## Installing Julia v1.11 (or later)
 
 ### Juliaup installer
 
-Follow the instructions from the [Julia Download page](https://julialang.org/downloads/) to install Julia v1.10 (which is using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer under the hood).
+Follow the instructions from the [Julia Download page](https://julialang.org/downloads/) to install Julia v1.11 (which is using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer under the hood).
 
-\note{_**For Windows users:**_ When installing Julia 1.10 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
+\note{_**For Windows users:**_ When installing Julia 1.11 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).}
 
 ### Terminal + external editor
 
@@ -88,7 +88,7 @@ Welcome in the [Julia REPL](https://docs.julialang.org/en/v1/stdlib/REPL/) (comm
   (_)     | (_) (_)    |
    _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
   | | | | | | |/ _` |  |
-  | | |_| | | | (_| |  |  Version 1.10.5 (2024-08-27)
+  | | |_| | | | (_| |  |  Version 1.11.6 (2025-07-09)
  _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
 |__/                   |
 
@@ -104,7 +104,7 @@ shell>
 and the [Pkg mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Pkg-mode) (package manager) by hitting `]`, that will be used to add and manage packages, and environments,
 
 ```julia-repl
-(@v1.10) pkg>
+(@v1.11) pkg>
 ```
 
 You can interactively execute commands in the REPL, like adding two numbers
@@ -149,9 +149,9 @@ and activate it
 ```julia-repl
 julia> ]
 
-(@v1.10) pkg>
+(@v1.11) pkg>
 
-(@v1.10) pkg> activate .
+(@v1.11) pkg> activate .
   Activating new environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg>
@@ -207,14 +207,14 @@ and then,
 ```julia-repl
 julia> ]
 
-(@v1.10) pkg> activate .
+(@v1.11) pkg> activate .
   Activating environment at `~/my_cool_project/Project.toml`
 
 (my_cool_project) pkg>
 
 (my_cool_project) pkg> st
       Status `~/my_cool_project/Project.toml`
-  [91a5bcdd] Plots v1.22.3
+  [91a5bcdd] Plots v1.40.20
 ```
 
 Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environment 🙂
@@ -279,6 +279,11 @@ $ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
 
 }
 
+## GPU computing on Alps
+
+:construction: Under construction
+
+<!-- 
 For running Julia at scale on Piz Daint, refer to the [Julia MPI GPU on Piz Daint](#julia_mpi_gpu_on_piz_daint) section.
 
 ## GPU computing on Piz Daint
@@ -608,7 +613,7 @@ srun -n4 bash -c 'julia --project <my_julia_mpi_gpu_script.jl>'
 
 #### CUDA-aware MPI on Piz Daint
 
-\warn{There is currently an issue on the Daint software stack with CuDA-aware MPI. For now, make sure **not to run** with CUDA-aware MPI, i.e., having both `MPICH_RDMA_ENABLED_CUDA` and `IGG_CUDAAWARE_MPI` set to 0.}
+\warn{There is currently an issue on the Daint software stack with CUDA-aware MPI. For now, make sure **not to run** with CUDA-aware MPI, i.e., having both `MPICH_RDMA_ENABLED_CUDA` and `IGG_CUDAAWARE_MPI` set to 0.} -->
 
 <!-- You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
 ```sh
