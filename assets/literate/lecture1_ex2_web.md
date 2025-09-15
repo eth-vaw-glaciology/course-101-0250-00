@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 ## Exercise 2 — **Car travel in 2 dimensions**
 
-👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture1_ex2.ipynb)
+👉 [Download the notebook to get started with this exercise!](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture1_ex2.ipynb)
 
 \warn{Write a monolithic Julia script to solve this exercise in a Jupyter notebook and hand it in on Moodle ([more](/homework)).}
 
