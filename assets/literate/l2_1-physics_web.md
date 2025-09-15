@@ -102,7 +102,7 @@ In the `# array initialisation` section, we need to initialise one array to stor
 ```julia
 # array initialisation
 C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
-qx   = zeros(Float64, nx-1)
+qx   = zeros(Float64, nx) # won't work
 ```
 
 Wait... why it wouldn't work?
@@ -125,7 +125,7 @@ nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 # array initialisation
 C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
-qx   = zeros(Float64, nx-1)
+qx   = zeros(Float64, nx) # won't work
 ````
 
 Followed by the 3 physics computations (lines) in the time loop
@@ -133,8 +133,8 @@ Followed by the 3 physics computations (lines) in the time loop
 ````julia:ex2
 # time loop
 for it = 1:nt
-    qx          .= .-dc.*diff(C )./dx
-    C[2:end-1] .-=   dt.*diff(qx)./dx
+    #qx          .= # add solution
+    #C[2:end-1] .-= # add solution
     # visualisation
 end
 ````
@@ -163,8 +163,6 @@ Note: plotting and visualisation is slow. A convenient workaround is to only vis
     # plot(...)
 end every nvis
 ```
-
-👉 [Download the `l2_diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Hyperbolic PDEs - acoustic wave propagation
 
@@ -234,7 +232,7 @@ lx   = 20.0
 ρ,β  = 1.0,1.0
 
 # array initialisation
-Pr  =  @. exp(-(xc - lx/4)^2)
+#Pr  =  exp.(...)
 ```
 
 \note{The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`}
@@ -249,11 +247,9 @@ C[2:end-1] .-=   dt.*diff(qx)./dx
 Should be modified to account for pressure `Pr` instead of concentration `C`, the velocity update (`Vx`) added, and the coefficients modified:
 
 ```julia
-Vx          .-= dt./ρ.*diff(Pr)./dx
-Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
+Vx          .-= ...
+Pr[2:end-1] .-= ...
 ```
-
-👉 [Download the `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
 ### Compare the equations
 
@@ -300,7 +296,7 @@ dt   = dx/abs(vx)
 In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.4 l_x$.
 
 ```julia
-C = @. exp(-(xc - lx/4)^2)
+C = exp.( ... )
 ```
 
 \note{Gaussian distribution as function of coordinate $x_c$, $ C = \exp(-(x_c - c)^2) $}
@@ -323,8 +319,6 @@ Here we go, an upwind approach is needed to implement a stable advection algorit
 C[2:end]   .-= dt.*vx.*diff(C)./dx # if vx>0
 C[1:end-1] .-= dt.*vx.*diff(C)./dx # if vx<0
 ```
-
-👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 ## Nonlinear equations
 
