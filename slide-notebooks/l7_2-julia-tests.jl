@@ -41,7 +41,7 @@ md"""
 
 Let's look at a simple package: [UnPack.jl](https://github.com/mauro3/UnPack.jl)
 
-![UnPack.jl](./figures/l6_UnPack.png)
+![UnPack.jl](./figures/l7_UnPack.png)
 
 - the CI-results are often displayed in form of _badges_
 - there are different CI-services, most used is GitHub-Actions

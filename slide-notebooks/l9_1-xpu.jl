@@ -34,7 +34,7 @@ Combining CPU and GPU implementation within a single code.
 md"""
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](./figures/l7_2lang_1.png)
+![two-lang problem](./figures/l9_2lang_1.png)
 """
 
 #src #########################################################################
@@ -42,7 +42,7 @@ You may certainly be familiar with this situation in scientific computing:
 md"""
 Which may turn out into a costly cycle:
 
-![two-lang problem](./figures/l7_2lang_2.png)
+![two-lang problem](./figures/l9_2lang_2.png)
 
 """
 
@@ -69,7 +69,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 """
 
 #md # @@img-med
-# ![two-lang problem](./figures/l7_2lang_3.png)
+# ![two-lang problem](./figures/l9_2lang_3.png)
 #md # @@
 
 #src #########################################################################
@@ -100,7 +100,7 @@ Wouldn't it be great? ... **YES**, and there is a Julia solution!
 """
 
 #md # @@img-med
-# ![ParallelStencil](./figures/l7_ps_logo.png)
+# ![ParallelStencil](./figures/l9_ps_logo.png)
 #md # @@
 
 
@@ -110,7 +110,7 @@ md"""
 ## Backend portable xPU implementation
 """
 
-#nb # ![ParallelStencil](./figures/l7_ps_logo.png)
+#nb # ![ParallelStencil](./figures/l9_ps_logo.png)
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}

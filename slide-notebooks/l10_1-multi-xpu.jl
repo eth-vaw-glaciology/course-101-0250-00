@@ -107,7 +107,7 @@ We can thus replicate a local problem multiple times in each dimension of the Ca
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![IGG](./figures/l8_igg.png)
+![IGG](./figures/l10_igg.png)
 """
 
 #src #########################################################################
@@ -131,7 +131,7 @@ Ideally, the parallel efficiency should stay close to 1 while increasing the num
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![Parallel scaling](./figures/l8_par_eff.png)
+![Parallel scaling](./figures/l10_par_eff.png)
 """
 
 #md # ---
@@ -170,7 +170,7 @@ In this "fake parallelisation" code, the computations for the left and right dom
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-![1D Global grid](./figures/l8_1D_global_grid.png)
+![1D Global grid](./figures/l10_1D_global_grid.png)
 """
 
 #src #########################################################################
@@ -451,7 +451,7 @@ Visualise the results after each run with the [`l8_vizme2D_mpi.jl`](https://gith
 """
 
 #md # @@img-med
-#md # ![diffusion 2D MPI](./figures/l8_diff_2D_mpi.png)
+#md # ![diffusion 2D MPI](./figures/l10_diff_2D_mpi.png)
 #md # @@
 
 #src #########################################################################

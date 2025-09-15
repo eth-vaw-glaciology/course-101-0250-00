@@ -254,7 +254,7 @@ Recall that we are using conservative finite-differences and thus a _staggered g
 
 For 2D grids, we will have to handle scalar quantity and two fluxes as depicted below, taking care about correct staggering:
 
-![staggered-grid](./figures/l4_stagg_2D.png)
+![staggered-grid](./figures/l5_stagg_2D.png)
 """
 
 #src #########################################################################
