@@ -11,7 +11,7 @@
 
 - Ivan Utkin — _the talking head_
 
-- You Wu — _the teaching assistant_
+- Badie Taye — _the teaching assistant_
 
 ## Logistics
 

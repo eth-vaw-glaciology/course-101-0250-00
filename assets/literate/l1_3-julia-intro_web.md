@@ -24,7 +24,7 @@ info see the [documentation](https://jupyter-notebook.readthedocs.io/en/stable/)
 
 ### Survery for you to fill in now (click or scan, 3min):
 ~~~
-<a href="https://forms.gle/FRxEV3PU7iKx5q3L8">
+<a href="https://forms.gle/rdGKCcbmTmueBhTs6">
   <img src="../assets/literate_figures/l1_survey_qr.png" alt="survey" style="width:200px;"/>
 </a>
 ~~~
@@ -38,8 +38,8 @@ language with a bend on technical computing.
 
 - first released in 2012
 - reached version 1.0 in 2018
-- current version 1.10.5 (09.2024) [ETH's JupyterHub is on 1.10.2]
-- thriving community, for instance there are currently around 11000 [packages registered](https://juliahub.com/ui/Packages)
+- current version 1.11.6 (09.2025)
+- thriving community, for instance there are currently around 12000 [packages registered](https://juliahub.com/ui/Packages)
 
 ### What does Julia look like
 
@@ -78,7 +78,7 @@ plot(out[1,:], out[2,:], out[3,:])
 ![lorenz](../assets/literate_figures/l1_lorenz.png)
 
 ### Julia in brief
-Julia 1.0 released 2018, now at version 1.10
+Julia 1.0 released 2018, now at version 1.11
 
 Features:
 - general purpose language with a focus on technical computing

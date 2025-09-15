@@ -106,7 +106,7 @@ Interactive:
 
 - [ParallelStencil _miniapps_](https://github.com/omlins/ParallelStencil.jl#miniapp-content)
 - [Ice-flow modelling](https://github.com/luraess/julia-parallel-course-EGU21#greenlands-ice-cap-evolution)
-- [GPU4GEO - _Frontier GPU multi-physics solvers_](https://ptsolvers.github.io/GPU4GEO/software/)
+- [GPU4GEO - _Frontier GPU multi-physics solvers_](https://gpu4geo.org/software/)
 - [3D hydro-mechanical inversions](https://github.com/PTsolvers/PseudoTransientAdjoint.jl#3d-hydro-mechanically-constrained-inversion)
 - [3D Random fields](https://github.com/luraess/ParallelRandomFields.jl#parallelrandomfieldsjl)
 - more ...
