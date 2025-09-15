@@ -2,36 +2,46 @@
   <div class="container sidebar-sticky">
     <div class="sidebar-about">
       <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline">
-      <div style="font-weight: margin-bottom: 0.5em"><a href="/"> Fall 2024</a> <span style="opacity: 0.7;">| <a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2024W&ansicht=KATALOGDATEN&lerneinheitId=182481&lang=en"> ETHZ 101-0250-00</a></span></div>
+      <div style="margin-bottom: 0.5em"><a href="/"> {{semester}} {{year}}</a> <span style="opacity: 0.7;">| <a href={{course_url}}> ETHZ 101-0250-00</a></span></div>
       <br>
-      <h1><a href="/">Solving partial differential equations in parallel on GPUs</a></h1>
+      <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1>
       <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div>
     </div>
     <br>
     <style>
     </style>
-    <nav class="sidebar-nav" style="opacity: 0.9; margin-bottom: 1.2cm;">
-      <a class="sidebar-nav-item {{ispage index.html}}active{{end}}" href="/"><b>Welcome</b></a>
+    <nav class="sidebar-nav" style="opacity: 0.9; margin-bottom: 1cm;">
+      <a class="sidebar-nav-item {{ispage index}}active{{end}}" href="/"><b>Welcome</b></a>
       <a class="sidebar-nav-item {{ispage logistics/*}}active{{end}}" href="/logistics/">Logistics</a>
       <a class="sidebar-nav-item {{ispage homework/*}}active{{end}}" href="/homework/">Homeworks</a>
       <a class="sidebar-nav-item {{ispage software_install/*}}active{{end}}" href="/software_install/">Software install</a>
       <a class="sidebar-nav-item {{ispage extras/*}}active{{end}}" href="/extras/">Extras</a>
       <br>
       <div class="course-section">Part 1 – Introduction</div>
-      <a class="sidebar-nav-item {{ispage lecture1/*}}active{{end}}" href="/lecture1/">Lecture 1 – Why Julia GPU</a>
+      <a class="sidebar-nav-item {{ispage lecture1/*}}active{{end}}" href="/lecture1/">Lecture 1 – Introduction to Julia</a>
       <a class="sidebar-nav-item {{ispage lecture2/*}}active{{end}}" href="/lecture2/">Lecture 2 – PDEs & physical processes</a>
-      <a class="sidebar-nav-item {{ispage lecture3/*}}active{{end}}" href="/lecture3/">Lecture 3 – Solving elliptic PDEs</a>
+      <!-- <a class="sidebar-nav-item {{ispage lecture3/*}}active{{end}}" href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> -->
+      <!-- <a class="sidebar-nav-item {{ispage lecture4/*}}active{{end}}" href="/lecture4/">Lecture 4 – Coupled multi-physics</a> -->
+      <div class="sidebar-nav-item under-construction"> Lecture 3 – Solving elliptic PDEs</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 4 – Coupled multi-physics</div>
       <div class="course-section">Part 2 – Solving PDEs on GPUs</div>
-      <a class="sidebar-nav-item {{ispage lecture4/*}}active{{end}}" href="/lecture4/">Lecture 4 – Porous convection</a>
-      <a class="sidebar-nav-item {{ispage lecture5/*}}active{{end}}" href="/lecture5/">Lecture 5 – Parallel computing</a>
-      <a class="sidebar-nav-item {{ispage lecture6/*}}active{{end}}" href="/lecture6/">Lecture 6 – GPU computing</a>
+      <!-- <a class="sidebar-nav-item {{ispage lecture5/*}}active{{end}}" href="/lecture5/">Lecture 5 – Porous convection</a>
+      <a class="sidebar-nav-item {{ispage lecture6/*}}active{{end}}" href="/lecture6/">Lecture 6 – Parallel computing</a>
+      <a class="sidebar-nav-item {{ispage lecture7/*}}active{{end}}" href="/lecture7/">Lecture 7 – GPU computing I</a>
+      <a class="sidebar-nav-item {{ispage lecture8/*}}active{{end}}" href="/lecture8/">Lecture 8 – GPU computing II</a> -->
+      <div class="sidebar-nav-item under-construction"> Lecture 5 – Porous convection</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 6 – Parallel computing</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 7 – GPU computing I</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 8 – GPU computing II</div>
       <div class="course-section">Part 3 – Multi-GPU computing (projects)</div>
-      <a class="sidebar-nav-item {{ispage lecture7/*}}active{{end}}" href="/lecture7/">Lecture 7 – xPU computing</a>
-      <a class="sidebar-nav-item {{ispage lecture8/*}}active{{end}}" href="/lecture8/">Lecture 8 – Julia MPI & multi-xPU</a>
-      <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – Multi-xPU & Projects</a>
-      <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Advanced optimisations</a>
-      <div class="course-section">Final Projects</div>
-      <a class="sidebar-nav-item {{ispage final_proj/*}}active{{end}}" href="/final_proj/">Infos about final projects</a>
+      <!-- <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – xPU computing</a>
+      <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Julia MPI & multi-xPU</a>
+      <a class="sidebar-nav-item {{ispage lecture11/*}}active{{end}}" href="/lecture11/">Lecture 11 – Multi-xPU & Projects</a>
+      <a class="sidebar-nav-item {{ispage lecture12/*}}active{{end}}" href="/lecture12/">Lecture 12 – Advanced optimisations</a> -->
+      <div class="sidebar-nav-item under-construction"> Lecture 9 – xPU computing</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div>
+      <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div>
     </nav>
     <!-- <div style="line-height:18px; font-size: 15px; opacity: 0.7"><a>&copy; {{fill author}}.</a></div> -->
     <form id="lunrSearchForm" name="lunrSearchForm">
