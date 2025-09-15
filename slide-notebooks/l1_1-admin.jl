@@ -70,10 +70,9 @@ md"""
 
 All homework assignements can be done either alone or in groups of two. However, **note that every student has to hand in a personal version of the homework**.
 
-- 6 Weekly exercises in Part 1 and Part 2 of the course as homework — **30%**
-  - Best five out of six are graded
+- 8 weekly exercises in Part 1 and Part 2 of the course as homework — **65%**
+  - Best seven out of eight are graded
 - Consolidation project, developed during Part 3 of the course — **35%**
-- Final project — **35%**
 """
 
 #src #########################################################################
