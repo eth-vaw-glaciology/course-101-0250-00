@@ -4,9 +4,9 @@ title = "Solving PDEs in parallel on GPUs with Julia"
 
 # Solving PDEs in parallel on GPUs with Julia
 
-:tada: Welcome to ETH's [**course 101-0250-00L**](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en) on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/). This course is the first part of a two-part series, focusing on the fundamentals of GPU programming and parallel numerical methods. The second part, offered in the spring semester next year, is project-based: participants will design and implement their own GPU-accelerated applications.
+:tada: Welcome to ETH's [**course 101-0250-00L**]({{course_url}}) on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the [Julia programming language](http://www.julialang.org/). This course is the first part of a two-part series, focusing on the fundamentals of GPU programming and parallel numerical methods. The second part, offered in the spring semester next year, is project-based: participants will design and implement their own GPU-accelerated applications.
 
-\note{2025 edition starts Tuesday Sept. 16, 12h45}
+\note{ {{year}} edition starts Tuesday Sept. 16, 12h45}
 
 ## Course information
 
