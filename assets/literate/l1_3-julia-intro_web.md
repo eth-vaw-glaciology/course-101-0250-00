@@ -135,7 +135,7 @@ Code stats for PyTorch, TensorFlow and Flux.jl:
 
 ###  Let's get our hands dirty!
 
-Fire up your JupyterHub, either via the [Moodle page](https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1105076), or directly via [this link](https://jhub-let-04-23586.ethz.ch/hub/home).
+Fire up your JupyterHub, either via the [Moodle page]({{moodle_url}}), or directly via [this link]({{jupyterhub_url}}).
 
 [Brief explanation on JupyterHub]
 
