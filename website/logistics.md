@@ -104,7 +104,7 @@ The exercises **in lecture 9** will serve as starting point for the first projec
 
 ### Project hand-in checklist
 
-The project submission deadline is set to **19.12.2024 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle]({{moodle_url}}) in the Lecture 11 section.
+The project submission deadline is set to **19.12.{{year}} - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle]({{moodle_url}}) in the Lecture 11 section.
 
 Make sure to have following items in your private GitHub repository:
 
