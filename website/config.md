@@ -13,7 +13,7 @@ The website_* must be defined for the RSS to work
 
 @def moodle_url     = "https://moodle-app2.let.ethz.ch/course/view.php?id=26390"
 @def zoom_url       = "https://moodle-app2.let.ethz.ch/mod/zoom/view.php?id=1275857"
-@def jupyterhub_url = "https://jhub-let-04-26390.ethz.ch/hub/home"
+@def jupyterhub_url = "https://moodle-app2.let.ethz.ch/mod/lti/view.php?id=1275858"
 
 @def mintoclevel = 1
 @def maxtoclevel = 2
