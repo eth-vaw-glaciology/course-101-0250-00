@@ -3,7 +3,7 @@ title = "Homework"
 hascode = false
 +++
 
-@def hw1_url  = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1275860"
+@def hw1_url  = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1277034"
 @def hw2_url1 = ""
 @def hw2_url2 = ""
 @def hw3_url  = ""
