@@ -196,7 +196,7 @@ This notebook you can get onto your JupyterHub by
 - opening a terminal
 - pasting into the terminal:
 
-`wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/main/slide-notebooks/notebooks/l1_3-julia-intro.ipynb`
+`wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/refs/heads/main/notebooks/l1_3-julia-intro.ipynb`
 
 Open it by clicking on it in the sidebar.
 """
