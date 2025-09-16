@@ -139,15 +139,10 @@ Fire up your JupyterHub, either via the [Moodle page]({{moodle_url}}), or direct
 
 [Brief explanation on JupyterHub]
 
-This notebook you can get onto your JupyterHub by
+This notebook you can get onto your JupyterHub by copying the first assignment on Moodle.
 
-- opening the hub
-- opening a terminal
-- pasting into the terminal:
-
-`wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/refs/heads/main/notebooks/l1_3-julia-intro.ipynb`
-
-Open it by clicking on it in the sidebar.
+Alternatively, you can download it from
+[1_3-julia-intro.ipynb](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l1_3-julia-intro.ipynb).
 
 ###  Let's get our hands dirty!
 
