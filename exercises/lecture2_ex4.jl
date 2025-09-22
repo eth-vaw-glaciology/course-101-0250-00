@@ -37,7 +37,7 @@ Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_bri
     - create a new folder named `homework-X` to put the exercise codes into;
     - (don't forget to `git add` the code-files and `git commit` them);
     - push to GitHub and open a pull request (PR) on the `main` branch on GitHub;
-    - copy **the single git commit hash (or SHA) of the final push and the link to the PR** and submit **both** on [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) as the assignment hand-in (it will serve to control the material was pushed on time);
+    - copy **the single git commit hash (or SHA) of the final push and the link to the PR** and submit **both** on [Moodle]({{moodle_url}}) as the assignment hand-in (it will serve to control the material was pushed on time);
     - (do not merge the PR yet).
 
 👉 See [Logistics](/logistics/#submission) for details.
@@ -54,5 +54,5 @@ Second, an edit with a PR:
 - create a folder `homework-2` and a file inside that folder `homework-2/just-a-test` with content `This is to make a PR`;
 - push and create a PR.
 
-Copy the commit hash (or SHA) and paste it to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=20175) in the _git commit hash (SHA)_ activity as well as the link to the PR.
+Copy the commit hash (or SHA) and paste it to [Moodle]({{moodle_url}}) in the _git commit hash (SHA)_ activity as well as the link to the PR.
 """
