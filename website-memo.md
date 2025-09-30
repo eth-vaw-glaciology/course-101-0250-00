@@ -22,7 +22,7 @@ julia> run(`sudo $(npm_cmd()) install highlight.js`)
 
 ## How-to
 
-### Make ipynb files and prepare for web-site upload
+### Make ipynb files and prepare for website upload
 
 Running the `deploy_notebooks.jl` scripts located in [slide-notebooks](slide-notebooks) and [exercise-notebooks](exercise-notebooks) folder will:
 - create `.ipynb` from the `.jl` script
