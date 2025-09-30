@@ -9,13 +9,15 @@ noeval = true
 # Lecture 3
 
 > **Agenda**\
-> :books: Solving elliptic PDEs, 1D to 2D\
+> :books: Solving elliptic PDEs\
 > :computer: Personal Julia install, Julia's `Project` environment, Julia's package manager\
 > :construction: Exercises:
-> - Damped wave equation in 1D and 2D
-> - Port 1D codes to 2D
+>
+> - Implicit Euler timestepping for parabolic problems
+> - Optimal iteration parameters for the pseudo-transient method
+> - Creating packages
 
---- 
+---
 
 \label{content}
 **Content**
@@ -51,11 +53,5 @@ noeval = true
 ---
 
 \literate{/_literate/lecture3_ex3_web.jl}
-
-[⤴ _**back to Content**_](#content)
-
----
-
-\literate{/_literate/lecture3_ex4_web.jl}
 
 [⤴ _**back to Content**_](#content)
