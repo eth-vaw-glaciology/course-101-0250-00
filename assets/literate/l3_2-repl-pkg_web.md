@@ -46,20 +46,38 @@ Powerful package manager:
 - version conflicts and version bounds ([docs](https://pkgdocs.julialang.org/v1/managing-packages/#conflicts))
 - developing a "Package"
 
-**Take-home**: make a separate Project for each of your projects/assignments!
+## Essential packages for your global environment
 
-## Julia's Project environment
+Packages installed in your global environment are always available, thus useful for utility packages.
 
-On GitHub, make sure to create a new folder for each week's exercises.
+I have installed in my global environment:
+- [Revise.jl](https://github.com/timholy/Revise.jl) --
+  To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
+- [BenchmarkTools.jl](https://github.com/timholy/Revise.jl) --
+  Accurate timers for benchmarking, even quick fast running functions
+- [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
+  The Julia Jupyter kernel.  Needs to be installed globally.
+- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
+- [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
+  A debugger.  Pretty basic but works well without slowing down program execution (unlike Debugger.jl which has more features).
+- [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
+  To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
 
-Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
+## Julia Project environments: usage in this course
+
+You will make use of Julia environments to submit your homework:
+
+- In your project folder, which is push to GitHub, make sure to create a new folder for each week's exercises.
+- Each week's folder should be a Julia project, i.e. it should contain a `Project.toml` file.
+
+## Demo on how to do this
 
 This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
 
 ```julia-repl
 julia> ]
 
-(@v1.10) pkg> activate .
+(@v1.11) pkg> activate .
 
 (lectureXX) pkg> add Plots
 ```
@@ -77,21 +95,4 @@ In addition, it is recommended to have the following structure and content:
 Codes could be placed in the `scripts/` folder. Output material to be displayed in the `README.md` could be placed in the `docs/` folder.
 
 \note{The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`}
-
-## Essential packages for your global environment
-
-Packages installed in your global environment are always available, thus useful for utility packages.
-
-I have installed in my global environment:
-- [Revise.jl](https://github.com/timholy/Revise.jl) --
-  To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
-- [BenchmarkTools.jl](https://github.com/timholy/Revise.jl) --
-  Accurate timers for benchmarking, even quick fast running functions
-- [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
-  The Julia Jupyter kernel.  Needs to be installed globally.
-- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
-- [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
-  A debugger.  Pretty basic but works well without slowing down program execution (unlike Debugger.jl which has more features).
-- [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
-  To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
 
