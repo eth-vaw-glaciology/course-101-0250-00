@@ -1,11 +1,10 @@
 <!--This file was generated, do not modify it.-->
 # Solving elliptic PDEs
 
-### The goal of this lecture 3 is to familiarise (or refresh) with:
+### The goal of this lecture 3 is to familiarise with:
 - The damped wave equation
 - Spectral analysis of linear PDEs
 - Pseudo-transient method for solving elliptic PDEs
-- Spatial discretisation: 1D and 2D
 
 In the previous lecture, we established that the solution to the elliptic PDE could be obtained through integrating in time a corresponding parabolic PDE:
 
@@ -317,67 +316,9 @@ re      = π + sqrt(π^2 + da)
 ```
 👉 Verify that the number of iterations is indeed lower for the higher values of the Damköhler number.
 
-## Going 2D
-
-Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration.
-Firstly, we introduce the domain extent and the number of grid points in the y-direction:
-
-```julia
-# physics
-lx,ly   = 20.0,20.0
-...
-# numerics
-nx,ny   = 100,100
-```
-
-Then, we calculate the grid spacing, grid cell centers locations, and modify the time step to comply with the 2D stability criteria:
-
-```julia
-# derived numerics
-dx,dy   = lx/nx,ly/ny
-xc,yc   = LinRange(dx/2,lx-dx/2,nx),LinRange(dy/2,ly-dy/2,ny)
-dτ      = dx/sqrt(1/ρ)/sqrt(2)
-```
-
-We allocate 2D arrays for concentration and fluxes:
-
-```julia
-# array initialisation
-C       = @. 1.0 + exp(-(xc-lx/4)^2-(yc'-ly/4)^2) - xc/lx
-qx,qy   = zeros(nx-1,ny),zeros(nx,ny-1)
-```
-
-and add the physics for the second dimension:
-
-```julia
-while err >= ϵtol && iter <= maxiter
-    # qx                 .-= ...
-    # qy                 .-= ...
-    # C[2:end-1,2:end-1] .-= ...
-    ...
-end
-```
-
-\note{we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
-
-Last thing to fix is the visualisation, as now we want the top-down view of the computational domain:
-```julia
-p1 = heatmap(xc,yc,C';xlims=(0,lx),ylims=(0,ly),clims=(0,1),aspect_ratio=1,
-             xlabel="lx",ylabel="ly",title="iter/nx=$(round(iter/nx,sigdigits=3))")
-```
-
-Let's run the simulation:
-
-~~~
-<center>
-  <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_steady_diffusion_reaction_2D.mp4"/>
-</center>
-~~~
-
 ## Wrapping-up
 
 - Switching from parabolic to hyperbolic PDE allows to approach the steady-state in number of iterations, proportional to the number of grid points
 - Pseudo-transient (PT) method is the matrix-free iterative method to solve elliptic (and other) PDEs by utilising the analogy to transient physics
 - Using the optimal iteration parameters is essential to ensure the fast convergence of the PT method
-- Extending the codes to 2D and 3D is straightforward with explicit time integration
 

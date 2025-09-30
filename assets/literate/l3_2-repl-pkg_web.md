@@ -48,6 +48,36 @@ Powerful package manager:
 
 **Take-home**: make a separate Project for each of your projects/assignments!
 
+## Julia's Project environment
+
+On GitHub, make sure to create a new folder for each week's exercises.
+
+Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
+
+This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
+
+```julia-repl
+julia> ]
+
+(@v1.10) pkg> activate .
+
+(lectureXX) pkg> add Plots
+```
+
+and adding at least one package.
+
+In addition, it is recommended to have the following structure and content:
+- lectureXX
+  - `README.md`
+  - `Project.toml`
+  - `Manifest.toml`
+  - docs/
+  - scripts/
+
+Codes could be placed in the `scripts/` folder. Output material to be displayed in the `README.md` could be placed in the `docs/` folder.
+
+\note{The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`}
+
 ## Essential packages for your global environment
 
 Packages installed in your global environment are always available, thus useful for utility packages.
