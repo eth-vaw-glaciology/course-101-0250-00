@@ -73,34 +73,59 @@ md"""
 """
 
 #src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Essential packages for your global environment
+
+Packages installed in your global environment are always available, thus useful for utility packages.
+"""
+
+#src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-**Take-home**: make a separate Project for each of your projects/assignments!
+I have installed in my global environment:
+- [Revise.jl](https://github.com/timholy/Revise.jl) --
+  To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
+- [BenchmarkTools.jl](https://github.com/timholy/Revise.jl) --
+  Accurate timers for benchmarking, even quick fast running functions
+- [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
+  The Julia Jupyter kernel.  Needs to be installed globally.
+- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
+- [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
+  A debugger.  Pretty basic but works well without slowing down program execution (unlike Debugger.jl which has more features).
+- [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
+  To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 3_
 md"""
-## Julia's Project environment
+## Julia Project environments: usage in this course
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-On GitHub, make sure to create a new folder for each week's exercises.
+You will make use of Julia environments to submit your homework:
+"""
 
-Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+- In your project folder, which is push to GitHub, make sure to create a new folder for each week's exercises.
+- Each week's folder should be a Julia project, i.e. it should contain a `Project.toml` file.
+
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+## Demo on how to do this
+
 This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
 
 ```julia-repl
 julia> ]
 
-(@v1.10) pkg> activate .
+(@v1.11) pkg> activate .
 
 (lectureXX) pkg> add Plots
 ```
@@ -128,29 +153,5 @@ Codes could be placed in the `scripts/` folder. Output material to be displayed 
 #nb # > 💡 note: The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`.`
 #md # \note{The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`}
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-## Essential packages for your global environment
-
-Packages installed in your global environment are always available, thus useful for utility packages.
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-md"""
-I have installed in my global environment:
-- [Revise.jl](https://github.com/timholy/Revise.jl) --
-  To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
-- [BenchmarkTools.jl](https://github.com/timholy/Revise.jl) --
-  Accurate timers for benchmarking, even quick fast running functions
-- [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
-  The Julia Jupyter kernel.  Needs to be installed globally.
-- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
-- [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
-  A debugger.  Pretty basic but works well without slowing down program execution (unlike Debugger.jl which has more features).
-- [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
-  To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
-"""
 
 
