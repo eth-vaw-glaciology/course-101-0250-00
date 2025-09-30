@@ -100,7 +100,7 @@ This can be achieved by typing entering the Pkg mode from the Julia REPL in the 
 ```julia-repl
 julia> ]
 
-(@v1.10) pkg> activate .
+(@v1.11) pkg> activate .
 
 (lectureXX) pkg> add Plots
 ```
