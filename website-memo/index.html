@@ -1,0 +1,126 @@
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Website memo</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <div class="sidebar-nav-item under-construction"> Lecture 4 – Coupled multi-physics</div> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <!-- <a class="sidebar-nav-item {{ispage lecture5/*}}active{{end}}" href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item {{ispage lecture6/*}}active{{end}}" href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item {{ispage lecture7/*}}active{{end}}" href="/lecture7/">Lecture 7 – GPU computing I</a> <a class="sidebar-nav-item {{ispage lecture8/*}}active{{end}}" href="/lecture8/">Lecture 8 – GPU computing II</a> --> <div class="sidebar-nav-item under-construction"> Lecture 5 – Porous convection</div> <div class="sidebar-nav-item under-construction"> Lecture 6 – Parallel computing</div> <div class="sidebar-nav-item under-construction"> Lecture 7 – GPU computing I</div> <div class="sidebar-nav-item under-construction"> Lecture 8 – GPU computing II</div> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <!-- <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – xPU computing</a> <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item {{ispage lecture11/*}}active{{end}}" href="/lecture11/">Lecture 11 – Multi-xPU & Projects</a> <a class="sidebar-nav-item {{ispage lecture12/*}}active{{end}}" href="/lecture12/">Lecture 12 – Advanced optimisations</a> --> <div class="sidebar-nav-item under-construction"> Lecture 9 – xPU computing</div> <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU</div> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content ><h1 id=website_memo ><a href="#website_memo" class=header-anchor >Website memo</a></h1> <p>This document lists the basics on how to edit the course website accessible at https://pde-on-gpu.vaw.ethz.ch/.</p> <p>🚧 More to come soon.</p> <h2 id=franklin_static_website ><a href="#franklin_static_website" class=header-anchor >Franklin static website</a></h2> <p>To test the website locally &#40;or after making a pull from Git&#41;:</p> <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> Franklin, NodeJS
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > serve(clear=<span class=hljs-literal >true</span>)</span></code></pre> <blockquote> <p>Note the first time you are using <code>NodeJS</code>, you need to execute:</p> </blockquote> <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > run(<span class=hljs-string >`sudo <span class=hljs-subst >$(npm_cmd()</span>) install highlight.js`</span>)</span></code></pre>
+<h2 id=how-to ><a href="#how-to" class=header-anchor >How-to</a></h2>
+<h3 id=make_ipynb_files_and_prepare_for_website_upload ><a href="#make_ipynb_files_and_prepare_for_website_upload" class=header-anchor >Make ipynb files and prepare for website upload</a></h3>
+<p>Running the <code>deploy_notebooks.jl</code> scripts located in <a href=slide-notebooks >slide-notebooks</a> and <a href=exercise-notebooks >exercise-notebooks</a> folder will:</p>
+<ul>
+<li><p>create <code>.ipynb</code> from the <code>.jl</code> script</p>
+
+<li><p>move the <code>.ipynb</code> and figures to the <code>./notebook</code> folder &#40;and <code>./notebook/figures</code>&#41;</p>
+
+<li><p>create a <code>_web.jl</code> script and move it to <code>website/_literate</code> to be included in the website lecture pages. Figure links in the <code>_web.jl</code> files are changes from <code>./figures/</code> to <code>../website/_assets/literate_figures/</code> for correct rendering in html file.</p>
+
+<li><p>create, if needed, a figures folder in <code>website/_assets/literate_figures</code> folder to hold figures for Literate scripts</p>
+
+<li><p>💡 both deploy script contain a variable <code>incl::String</code> you can set to only include specific scripts &#40;e.g. <code>incl&#61;l2</code>, <code>incl&#61;lecture2</code>&#41;</p>
+
+</ul>
+<p><strong>Important note:</strong> The <code>deploy_notebooks.jl</code> script in <a href=slide-notebooks >slide-notebooks</a> makes it possible to preprocess the Literate script for <em>hints</em> and <em>solution</em> keywords:</p>
+<pre><code class="julia hljs"><span class=hljs-comment >## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.</span>
+sol = <span class=hljs-literal >true</span></code></pre>
+<p>You can populate lines beginning of Literate script with <code>#hint&#61;</code> or <code>#sol&#61;</code> which will permit to corresponding lines to be removed upon preprocessing &#40;e.g. before / after the lecture&#41;.</p>
+<h3 id=deploy_notebooks ><a href="#deploy_notebooks" class=header-anchor >Deploy notebooks</a></h3>
+<ol>
+<li><p>Run the deploy script from its folder</p>
+
+<li><p>Include the correct <code>_web.jl</code> filename in e.g. <code>website/lectureXY.md</code> file</p>
+
+<li><p>Push</p>
+
+</ol>
+<h3 id=add_youtube_video ><a href="#add_youtube_video" class=header-anchor >Add YouTube video</a></h3>
+<p>To embed YouTube videos, go to YouTube, click on the <code>Share</code> link and then <code>&lt;Embed&gt;</code>, and copy-paste the script into an html block:</p>
+<pre><code class="md hljs"><span class=hljs-code >~~~
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/DvlM0w6lYEY&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen&gt;&lt;/iframe&gt;
+~~~</span></code></pre>
+<h2 id=notebook_code_and_markdown_with_franklin ><a href="#notebook_code_and_markdown_with_franklin" class=header-anchor >Notebook, code, and markdown with Franklin</a></h2>
+<p>Using <code>Literate.jl</code> permit to write a single <code>.jl</code> source file that can contain Julia code and markdown comments and can be transformed into a markdown page, a notebook and notebook-based slides. The website build with <code>Franklin.jl</code> has native support to integrate <code>.jl</code> scripts ready to me processed by <code>Literate.jl</code> in markdown.</p>
+<p>To allow <code>mdstring</code> to render correctly in Franklin, one need to set the page variable <code>literate_mds &#61; true</code>. See <a href="https://github.com/tlienart/Franklin.jl/pull/882">here</a> for details.</p>
+<p>To disable code execution but allow rendering on the website, one needs to set the page variable <code>noeval &#61; true</code>. See <a href="https://github.com/tlienart/Franklin.jl/commit/63d757f7eb7e96e7b9112f8a1dca7d1be54d487d">here</a> for details.</p>
+<h3 id=display_julia_script_as_markdown_page_on_the_website ><a href="#display_julia_script_as_markdown_page_on_the_website" class=header-anchor >Display Julia script as Markdown page on the website</a></h3>
+<ol>
+<li><p>Create a Literate-ready <code>my_script.jl</code> script</p>
+
+<li><p>Place it in the <code>_literate</code> folder</p>
+
+<li><p>Add <code>\literate&#123;/_literate/my_script.jl&#125;</code> in the website page you want to include <code>my_script.jl</code> markdown rendering</p>
+
+<li><p>Done</p>
+
+</ol>
+<p>Note that there are 2 pre-defined box environments to highlight <strong>note</strong> and <strong>warning</strong>. Use them as following:</p>
+<pre><code class="md hljs"><span class=hljs-section >#md # \note{...}</span>
+<span class=hljs-section >#md # \warn{...}</span></code></pre>
+<h3 id=launch_a_notebook_from_the_script ><a href="#launch_a_notebook_from_the_script" class=header-anchor >Launch a notebook from the script</a></h3>
+<ol>
+<li><p>In Julia, load Literate and export <code>my_script.jl</code> as a notebook:</p>
+
+</ol>
+<pre><code class="julia hljs">julia&gt; <span class=hljs-keyword >using</span> Literate
+
+julia&gt; Literate.notebook(<span class=hljs-string >&quot;my_scritp.jl&quot;</span>, outputdir=pwd())</code></pre>
+<ol start=2 >
+<li><p>Then load IJulia and launch the notebook for the given path</p>
+
+</ol>
+<pre><code class="julia hljs">julia&gt; <span class=hljs-keyword >using</span> IJulia
+
+julia&gt; notebook(dir=<span class=hljs-string >&quot;/some/path&quot;</span>)</code></pre>
+<h3 id=transform_the_notebook_into_a_presentation ><a href="#transform_the_notebook_into_a_presentation" class=header-anchor >Transform the notebook into a presentation</a></h3>
+<ol>
+<li><p>To allow for slide rendering as <em>slide, subslide or fragment</em>, populate <code>my_script.jl</code> &quot;source&quot; code with</p>
+
+</ol>
+<pre><code class="julia hljs"><span class=hljs-comment >#nb # %% A slide [markdown] {&quot;slideshow&quot;: {&quot;slide_type&quot;: &quot;slide/subslide/fragment&quot;}}</span></code></pre>
+<ol start=2 >
+<li><p>To view the notebook as a slideshow, install the <a href="https://rise.readthedocs.io/en/latest/index.html">RISE plugin</a>. <em>DISCLAIMER: the extension built from this repo is not compatible with JupyterLab and must be used with the classic notebook &#40;i.e. notebook &lt;&#61; 6&#41;.</em></p>
+
+</ol>
+<p>Adding support for RISE with JupyterLab &#40;i.e. notebook &gt; 6&#41;, assuming <code>IJulia</code> is already installed:</p>
+<pre><code class="julia hljs">Pkg.add(<span class=hljs-string >&quot;Conda&quot;</span>)
+
+Conda.pip_interop(<span class=hljs-literal >true</span>)
+
+Conda.pip(<span class=hljs-string >&quot;install&quot;</span>, <span class=hljs-string >&quot;jupyterlab-rise&quot;</span>)</code></pre>
+<ol start=3 >
+<li><p>Open the notebook as in <a href="#launch-a-notebook-from-the-script">here</a></p>
+
+<li><p>Press <code>alt-r</code> to start. Use spacebar to advance.</p>
+
+</ol>
+<h3 id=generate_mp4_out_of_gif ><a href="#generate_mp4_out_of_gif" class=header-anchor >Generate <code>mp4</code> out of <code>gif</code></a></h3>
+<p>In the second edition, we prefer <code>mp4</code> instead of <code>gif</code>. Using FFMPEG, one can swiftly convert gifs into mp4:</p>
+<pre><code class="julia hljs">run(<span class=hljs-string >`ffmpeg -i input_anim.gif -c libx264 -pix_fmt yuv420p -vf &quot;pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white&quot; -y output_anim.mp4`</span>)</code></pre>
+<p>Or generate them from <code>png</code>s:</p>
+<pre><code class="julia hljs">run(<span class=hljs-string >`ffmpeg -framerate 30 -i %04d.png -c libx264 -pix_fmt yuv420p -vf &quot;pad=ceil(iw/2)*2:ceil(ih/2)*2:color=white&quot; -y output_anim.mp4`</span>)</code></pre>
+<p>The <code>mp4</code> animation can then be embedded as follow in <code>Literate.jl</code> scripts:</p>
+<pre><code class="julia hljs"><span class=hljs-comment >#md # ~~~</span>
+<span class=hljs-comment ># &lt;center&gt;</span>
+<span class=hljs-comment >#   &lt;video width=&quot;80%&quot; autoplay loop controls src=&quot;./path-to-anim/anim.mp4&quot;/&gt;</span>
+<span class=hljs-comment ># &lt;/center&gt;</span>
+<span class=hljs-comment >#md # ~~~</span></code></pre>
+<p>or directly into <code>.md</code> scripts as</p>
+<pre><code class="md hljs"><span class=language-xml ><span class=hljs-tag >&lt;<span class=hljs-name >center</span>&gt;</span></span>
+  <span class=language-xml ><span class=hljs-tag >&lt;<span class=hljs-name >video</span> <span class=hljs-attr >width</span>=<span class=hljs-string >&quot;80%&quot;</span> <span class=hljs-attr >autoplay</span> <span class=hljs-attr >loop</span> <span class=hljs-attr >controls</span> <span class=hljs-attr >src</span>=<span class=hljs-string >&quot;./path-to-anim/anim.mp4&quot;</span>/&gt;</span></span>
+<span class=language-xml ><span class=hljs-tag >&lt;/<span class=hljs-name >center</span>&gt;</span></span></code></pre>
+<h3 id=gif_and_loopcount ><a href="#gif_and_loopcount" class=header-anchor ><code>gif</code> and loopcount</a></h3>
+<p>You can use <a href="https://www.lcdf.org/gifsicle/">gifsicle</a> as command line tool to modify the loopcount for gifs to be included in the scripts &#40;tested on MacOS&#41;:</p>
+<pre><code class="sh hljs">gifsicle gif_loopcount_inf.gif --no-loopcount &gt; new_gif_no_loopcount.gif
+gifsicle gif_loopcount_inf.gif --loop=3 &gt; new_gif_loopcount_3.gif</code></pre>
+<h2 id=misc ><a href="#misc" class=header-anchor >Misc</a></h2>
+<h3 id=control_the_global_page_content_width ><a href="#control_the_global_page_content_width" class=header-anchor >Control the global page content width</a></h3>
+<p>Put in <code>_layout/head</code> the following, before the opening of the body and after the loading of the css:</p>
+<pre><code class="html hljs"><span class=hljs-tag >&lt;<span class=hljs-name >style</span>&gt;</span><span class=language-css >
+<span class=hljs-selector-class >.content</span> {<span class=hljs-attribute >max-width</span>: <span class=hljs-number >50rem</span>}
+</span><span class=hljs-tag >&lt;/<span class=hljs-name >style</span>&gt;</span></code></pre>
+<h3 id=html_color-picker ><a href="#html_color-picker" class=header-anchor >HTML color-picker</a></h3>
+<p>https://www.w3schools.com/colors/colors_picker.asp</p>
+<div class=page-foot >
+  <div class=copyright >
+    <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+    Last modified: September 30, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+    </div>
