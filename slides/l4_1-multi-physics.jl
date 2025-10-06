@@ -156,8 +156,24 @@ Let's run the simulation:
 md"""
 ## Coupled systems of PDEs
 
-:construction: TODO
+You've learned how to solve second-order partial differential equations with one independent variable. Cool!
+
+Now we'll consider more advanced example with two independent variables, which is a small step towards an actual application.
+
+Here's the system of equations:
+
+\begin{align*}
+q & = -k\left(\frac{\partial P}{\partial x} - \alpha T \right)~, \\[10pt]
+\frac{\partial q}{\partial x} &= 0~, \\[10pt]
+\frac{\partial T}{\partial t} + q \frac{\partial T}{\partial x} &= \frac{\partial}{\partial x}\left(\lambda \frac{\partial T}{\partial x}\right)
+\end{align*}
 """
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # > 💡 note: Despite the system containing three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated and is written explicitly only for better readability.
+#md # \note{Despite the system containing three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated and is written explicitly only for better readability.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
