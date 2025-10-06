@@ -152,9 +152,9 @@ Let's run the simulation:
 md"""
 ## Coupled systems of PDEs
 
-You've learned how to solve second-order partial differential equations with one independent variable. Cool!
+You’ve learned how to solve second-order partial differential equations with a single independent variable — nice work!
 
-Now we'll consider more advanced example with two independent variables, which is a small step towards an actual application.
+Now, let’s take a step further and look at a slightly more advanced example with two independent variables. This is a small but important move toward real-world applications.
 
 Here's the system of equations:
 
@@ -165,11 +165,22 @@ q & = -k\left(\frac{\partial P}{\partial x} - \alpha T \right)~, \\[10pt]
 \end{align*}
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # > 💡 note: Even though the system contains three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated. It’s written explicitly here only for better readability.
+#md # \note{Even though the system contains three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated. It’s written explicitly here only for better readability.}
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: Despite the system containing three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated and is written explicitly only for better readability.
-#md # \note{Despite the system containing three equations, we still consider it a system with two independent variables, since the flux $q$ can be eliminated and is written explicitly only for better readability.}
+md"""
+In this system, the two main variables are $P$ and $T$, which we interpret as the **pressure** and **temperature** of a fluid:
+
+1. The flux $q$ is defined so that the fluid flows from regions of higher pressure to lower pressure.
+2. The flow is enhanced by temperature perturbations — hotter fluid is more buoyant.
+3. The temperature changes due to thermal conduction, but heat is also transported by the moving fluid.
+"""
+
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
