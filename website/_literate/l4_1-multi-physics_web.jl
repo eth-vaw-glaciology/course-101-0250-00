@@ -120,13 +120,9 @@ and add the physics for the second dimension:
 
 ```julia
 while err >= ϵtol && iter <= maxiter
-    #hint=# qx                 .-= ...
-    #hint=# qy                 .-= ...
-    #hint=# C[2:end-1,2:end-1] .-= ...
-    #sol=qx                 .-= dτ./(ρ + dτ/dc).*(qx./dc .+ diff(C,dims=1)./dx)
-    #sol=qy                 .-= dτ./(ρ + dτ/dc).*(qy./dc .+ diff(C,dims=2)./dy)
-    #sol=C[2:end-1,2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1,2:end-1] .- C_eq)./ξ .+ diff(qx[:,2:end-1],dims=1)./dx .+
-    #sol=                                                                            diff(qy[2:end-1,:],dims=2)./dy)
+    # qx                 .-= ...
+    # qy                 .-= ...
+    # C[2:end-1,2:end-1] .-= ...
     ...
 end
 ```
@@ -153,7 +149,7 @@ Let's run the simulation:
 
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="./figures/l3_steady_diffusion_reaction_2D.mp4"/>
+#   <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_steady_diffusion_reaction_2D.mp4"/>
 # </center>
 #md # ~~~
 
@@ -162,3 +158,5 @@ Let's run the simulation:
 #nb # ### That's it for the "intro" part on iterative approaches to solve PDEs.
 #nb #
 #nb # 💻 Starting next week, we will port codes for (multi-) GPUs implementations
+
+

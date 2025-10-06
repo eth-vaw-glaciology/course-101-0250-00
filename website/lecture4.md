@@ -26,7 +26,13 @@ noeval = true
 
 ---
 
-\literate{/_literate/l4_1-multi-physics.jl}
+\literate{/_literate/l4_1-multi-physics_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/l4_2-plots_web.jl}
 
 [⤴ _**back to Content**_](#content)
 
