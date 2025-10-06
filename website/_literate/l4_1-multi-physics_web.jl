@@ -68,16 +68,10 @@ Observe how the PT iterations **converge** in the semi-implicit case with the _t
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Coupled systems of PDEs
+## Going 2D
 
-:construction: TODO
-"""
-
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration.
-Firstly, we introduce the domain extent and the number of grid points in the y-direction:
+Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration scheme.
+First, we define the domain size and the number of grid points in the y-direction:
 
 ```julia
 # physics
@@ -91,7 +85,7 @@ nx,ny   = 100,100
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-Then, we calculate the grid spacing, grid cell centers locations, and modify the time step to comply with the 2D stability criteria:
+Next, we compute the grid spacing, the coordinates of grid cell centers, and update the pseudo-time step to satisfy the 2D stability criterion:
 
 ```julia
 # derived numerics
@@ -104,7 +98,7 @@ dτ      = dx/sqrt(1/ρ)/sqrt(2)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-We allocate 2D arrays for concentration and fluxes:
+We now allocate 2D arrays for the concentration field and the fluxes:
 
 ```julia
 # array initialisation
@@ -116,7 +110,7 @@ qx,qy   = zeros(nx-1,ny),zeros(nx,ny-1)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-and add the physics for the second dimension:
+Finally, we add the update rules for the second dimension:
 
 ```julia
 while err >= ϵtol && iter <= maxiter
@@ -152,6 +146,14 @@ Let's run the simulation:
 #   <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_steady_diffusion_reaction_2D.mp4"/>
 # </center>
 #md # ~~~
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Coupled systems of PDEs
+
+:construction: TODO
+"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
