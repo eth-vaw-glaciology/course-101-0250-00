@@ -46,7 +46,7 @@ Let’s now implement the semi-implicit version!
 
 1. 👉 Use your script for the 1D steady diffusion problem from the previous lecture, or start from [this script](TODO);
 2. Create a new file called `steady_diffusion_implicit_flux_1d.jl` for this exercise;
-3. Think about how to compute the flux when using $q^{n+1}/D$ in the flux update rule.
+3. Think about how to compute the flux when using $q^{n+1}/D$ in the flux update rule, and implement the semi-implicit scheme.
 
 This script should produce the **same final result** as the explicit version. So why bother with another scheme?
 
