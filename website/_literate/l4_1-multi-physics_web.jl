@@ -34,7 +34,7 @@ $$
 \rho\frac{\partial q}{\partial t} \approx \rho\frac{q^{n+1} - q^n}{\Delta\tau}~.
 $$
 
-For the second term, $q/D$, there are two possible choices:
+For the second term in (1), $q/D$, there are two possible choices:
 
 1. Use the flux from the **current** pseudo-time layer $n$;
 2. Use the flux from the **next** pseudo-time layer $n+1$.
@@ -75,10 +75,10 @@ First, we define the domain size and the number of grid points in the y-directio
 
 ```julia
 # physics
-lx,ly   = 20.0,20.0
+lx, ly  = 20.0, 20.0
 ...
 # numerics
-nx,ny   = 100,100
+nx, ny  = 100, 100
 ```
 """
 
@@ -89,9 +89,9 @@ Next, we compute the grid spacing, the coordinates of grid cell centers, and upd
 
 ```julia
 # derived numerics
-dx,dy   = lx/nx,ly/ny
-xc,yc   = LinRange(dx/2,lx-dx/2,nx),LinRange(dy/2,ly-dy/2,ny)
-dτ      = dx/sqrt(1/ρ)/sqrt(2)
+dx, dy  = lx / nx, ly / ny
+xc, yc  = LinRange(dx / 2, lx - dx / 2, nx), LinRange(dy / 2, ly - dy / 2, ny)
+dτ      = dx / sqrt(1 / ρ) / sqrt(2)
 ```
 """
 
@@ -102,8 +102,8 @@ We now allocate 2D arrays for the concentration field and the fluxes:
 
 ```julia
 # array initialisation
-C       = @. 1.0 + exp(-(xc-lx/4)^2-(yc'-ly/4)^2) - xc/lx
-qx,qy   = zeros(nx-1,ny),zeros(nx,ny-1)
+C       = @. 1.0 + exp(-(xc - lx / 4)^2 - (yc' - ly / 4)^2) - xc / lx
+qx, qy  = zeros(nx-1, ny), zeros(nx, ny-1)
 ```
 """
 
@@ -122,16 +122,16 @@ end
 ```
 """
 
-#nb # > 💡 note: we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
-#md # \note{we have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
+#nb # > 💡 note: We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
+#md # \note{We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Last thing to fix is the visualisation, as now we want the top-down view of the computational domain:
 ```julia
-p1 = heatmap(xc,yc,C';xlims=(0,lx),ylims=(0,ly),clims=(0,1),aspect_ratio=1,
-             xlabel="lx",ylabel="ly",title="iter/nx=$(round(iter/nx,sigdigits=3))")
+p1 = heatmap(xc, yc, C'; xlims=(0, lx), ylims=(0, ly), clims=(0, 1), aspect_ratio=1,
+             xlabel="lx", ylabel="ly", title="iter/nx=$(round(iter / nx, sigdigits=3))")
 ```
 """
 
