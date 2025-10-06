@@ -1,8 +1,25 @@
+#src # This is needed to make this run as normal Julia file
+using Markdown #src
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # _Lecture 4_
+md"""
+# Coupled multi-physics in 2D
+"""
+
+
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## Going 2D
+## The goal of this lecture 4 is to:
+- Better understand the coupling between physical processes
+- Solve partial differential equations in 2D
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration.
 Firstly, we introduce the domain extent and the number of grid points in the y-direction:
 
