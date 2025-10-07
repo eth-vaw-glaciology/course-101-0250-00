@@ -339,7 +339,7 @@ Add temperature arrays; keep pressure and fluid flux zero:
 """
 
 ## temperature
-T   = @. exp(-(xc + lx/4)^2)
+T   = @. exp(-(xc - lx/4)^2)
 T_i = copy(T)
 ## pressure
 P   = zeros(nx)
@@ -360,7 +360,7 @@ dt  = min(dta, dtd)
 ## temperature
 #sol=T[2:end-1] .+= dt .* diff(λ .* diff(T) ./ dx) ./ dx
 #sol=T[2:end-1] .-= dt .* (max.(qDx[1:end-1], 0.0) .* diff(T[1:end-1]) ./ dx .+
-#sol=min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
+#sol=                      min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
 #hint=#T[2:end-1] .+= ...
 #hint=#T[2:end-1] .-= ...
 if it % nvis == 0
