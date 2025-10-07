@@ -73,15 +73,13 @@ md"""
 
 Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration scheme.
 First, we define the domain size and the number of grid points in the y-direction:
-
-```julia
-# physics
-lx, ly  = 20.0, 20.0
-...
-# numerics
-nx, ny  = 100, 100
-```
 """
+
+## physics
+lx, ly  = 20.0, 20.0
+## ...
+## numerics
+nx, ny  = 100, 100
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -100,32 +98,28 @@ dτ      = dx / sqrt(1 / ρ) / sqrt(2)
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 We now allocate 2D arrays for the concentration field and the fluxes:
+"""
 
-```julia
-# array initialisation
+## array initialisation
 C       = @. 1.0 + exp(-(xc - lx / 4)^2 - (yc' - ly / 4)^2) - xc / lx
 qx, qy  = zeros(nx-1, ny), zeros(nx, ny-1)
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Finally, we add the update rules for the second dimension:
+"""
 
-```julia
 while err >= ϵtol && iter <= maxiter
-    #hint=# qx                 .-= ...
-    #hint=# qy                 .-= ...
-    #hint=# C[2:end-1,2:end-1] .-= ...
+    #hint=#qx                 .-= ...
+    #hint=#qy                 .-= ...
+    #hint=#C[2:end-1,2:end-1] .-= ...
     #sol=qx                 .-= dτ./(ρ + dτ/dc).*(qx./dc .+ diff(C,dims=1)./dx)
     #sol=qy                 .-= dτ./(ρ + dτ/dc).*(qy./dc .+ diff(C,dims=2)./dy)
     #sol=C[2:end-1,2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1,2:end-1] .- C_eq)./ξ .+ diff(qx[:,2:end-1],dims=1)./dx .+
     #sol=                                                                            diff(qy[2:end-1,:],dims=2)./dy)
-    ...
+    ## ...
 end
-```
-"""
 
 #nb # > 💡 note: We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
 #md # \note{We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
@@ -134,11 +128,10 @@ end
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Last thing to fix is the visualisation, as now we want the top-down view of the computational domain:
-```julia
+"""
+
 p1 = heatmap(xc, yc, C'; xlims=(0, lx), ylims=(0, ly), clims=(0, 1), aspect_ratio=1,
              xlabel="lx", ylabel="ly", title="iter/nx=$(round(iter / nx, sigdigits=3))")
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -227,15 +220,13 @@ First, rename variables `C` and `qx` to `P` and `qDx`, respectively. Rename the 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Add new physical parameters:
+"""
 
-```julia
-# physics
+## physics
 lx      = 20.0
 λ       = 0.001
 k       = 1.0
 α       = 1.0
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -247,36 +238,30 @@ Next, we will streamline a bit the PT parameters (it will be helpful in the next
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Rename and replace the PT parameters:
+"""
 
-```julia
 qx         .-= dτ ./ (ρ * dc .+ dτ) .* (qx .+ dc .* diff(C) ./ dx)
 C[2:end-1] .-= dτ .* diff(qx) ./ dx
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
 with
+"""
 
-```julia
 qDx        .-= (qDx .+ k .* diff(P) ./ dx) ./ (θ_dτ_D + 1.0)
 P[2:end-1] .-= (diff(qDx) ./ dx) ./ β_dτ_D
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Use the following definitions for the new parameters in the `# derived numerics` section:
+"""
 
-```julia
 cfl     = 0.99
 re_D    = 2π
 θ_dτ_D  = lx / re_D / (cfl * dx)
 β_dτ_D  = k * re_D / (cfl * dx * lx)
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -301,42 +286,38 @@ nvis    = 5
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Remove the arrays storing the error evolution history, and wrap the iterative PT loop with the physical time loop:
+"""
 
-```julia
 for it in 1:nt
     @printf("it = %d\n", it)
     iter = 1; err = 2ϵtol
     while err >= ϵtol && iter <= maxiter
-        #hint=# qDx        .-= ...
+        #hint=#qDx        .-= ...
+        #hint=#P[2:end-1] .-= ...
         #sol=qDx         .-= (qDx .+ k .* diff(P) ./ dx) ./ (θ_dτ_D + 1.0)
-        #hint=# P[2:end-1] .-= ...
         #sol=P[2:end-1]  .-= (diff(qDx) ./ dx) ./ β_dτ_D
         if iter % ncheck == 0
-            hint=# err = ...
+            #hint=#err = ...
             #sol=err = maximum(abs.(diff(qDx) ./ dx))
             @printf("  iter = %.1f × N, err = %1.3e\n", iter / nx, err)
         end
         iter += 1
     end
-    # TODO
+    ## TODO
 end
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Add temperature arrays; keep pressure and fluid flux zero:
+"""
 
-```julia
-# temperature
+## temperature
 T   = @. exp(-(xc + lx/4)^2)
 T_i = copy(T)
-# pressure
+## pressure
 P   = zeros(nx)
 qDx = zeros(Float64, nx - 1)
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -347,27 +328,21 @@ After the iterative loop for the pressure:
 - Implement diffusion and advection of temperature as two separate substeps:
 """
 
-#src #########################################################################
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-md"""
-```julia
 #sol=dta = dx / maximum(abs.(qDx)) / 1.1
 #sol=dtd = dx^2 / λ / 2.1
 dt  = min(dta, dtd)
-# temperature
+## temperature
 #sol=T[2:end-1] .+= dt .* diff(λ .* diff(T) ./ dx) ./ dx
 #sol=T[2:end-1] .-= dt .* (max.(qDx[1:end-1], 0.0) .* diff(T[1:end-1]) ./ dx .+
-#sol=                      min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
-#hint=# T[2:end-1] .+= ...
-#hint=# T[2:end-1] .-= ...
+#sol=min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
+#hint=#T[2:end-1] .+= ...
+#hint=#T[2:end-1] .-= ...
 if it % nvis == 0
-    # visualisation
+    ## visualisation
     p1 = plot(xc, [T_i, T]; xlims=(0, lx), ylabel="Temperature", title="iter/nx=$(round(iter/nx,sigdigits=3))")
     p2 = plot(xc, P       ; xlims=(0, lx), xlabel="lx", ylabel="Pressure")
     display(plot(p1, p2; layout=(2, 1)))
 end
-```
-"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}

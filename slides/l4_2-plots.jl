@@ -5,11 +5,25 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 4_
 md"""
-# Julia plots ecosystem
+# Julia plots with Makie.jl
 """
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-:construction: TODO
+Until now, we used Plots.jl for visualisation.
+
+The cool thing about Plots.jl is how simple it is to plot something.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+For more control and advanced graphics there is Makie.jl
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+
 """
