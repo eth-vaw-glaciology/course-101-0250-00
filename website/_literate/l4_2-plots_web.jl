@@ -29,7 +29,7 @@ The docs are [here](https://docs.makie.org/stable/).
 md"""
 Like Plots.jl, Makie.jl supports multiple backends, e.g.:
 
-- GLMakie.jl for hardware-accelerated graphics, supports most features;
+- GLMakie.jl for hardware-accelerated graphics, supports most features, but requires dedicated GPU;
 - CairoMakie.jl for headless systems and publication ready vector graphics;
 - WGLMakie.jl for interactive graphics on the web.
 """
@@ -64,5 +64,38 @@ ax = Axis(f[2, 1]; xlabel="x", ylabel="y", title="subplot")
 lines!(ax, cumsum(randn(20)); label="line", linewidth=3, color=:red)
 scatter!(ax, cumsum(randn(20)); label="scatter", marker=:cross, markersize=rand(5:20, 20))
 axislegend(ax)
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Animations
+
+To create simple videos, you can use the [`record`](https://docs.makie.org/stable/api#Makie.record-Tuple{Any,%20Union{Figure,%20Makie.FigureAxisPlot,%20Scene},%20AbstractString}) function 
+"""
+
+f = Figure()
+ax = Axis(f[1, 1][1, 1]; aspect=DataAspect())
+hm = heatmap!(ax, rand(10, 10))
+cb = Colorbar(f[1, 1][1, 2], hm)
+
+record(f, "anim.mp4"; fps=30) do io
+    for i = 1:100
+        hm[1] = rand(10,10) # simple way to update the plot in-place
+        recordframe!(io)
+    end
+end
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+## Live "animation"
+
+To simply plot display figure in a computational loop like we did with Plots.jl, use `display` function:
+"""
+
+for i = 1:10
+    hm[1] = rand(10,10) # simple way to update the plot in-place
+    display(f)
+end
 
 
