@@ -178,7 +178,7 @@ In the `# array initialisation` section, we need to initialise one array to stor
 ```julia
 # array initialisation
 C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
-qx   = zeros(Float64, nx) # won't work
+qx   = zeros(Float64, nx-1)
 ```
 """
 
@@ -211,7 +211,7 @@ nt   = nx^2 ÷ 100
 xc   = LinRange(dx/2,lx-dx/2,nx)
 ## array initialisation
 C    = @. 0.5cos(9π*xc/lx)+0.5; C_i = copy(C)
-qx   = zeros(Float64, nx) # won't work
+qx   = zeros(Float64, nx-1)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -221,8 +221,8 @@ Followed by the 3 physics computations (lines) in the time loop
 
 ## time loop
 for it = 1:nt
-    #qx          .= # add solution
-    #C[2:end-1] .-= # add solution
+    qx          .= .-dc.*diff(C )./dx
+    C[2:end-1] .-=   dt.*diff(qx)./dx
     ## visualisation
 end
 
@@ -293,6 +293,7 @@ end every nvis
 ```
 """
 
+#md # 👉 [Download the `l2_diffusion_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -411,7 +412,7 @@ lx   = 20.0
 ρ,β  = 1.0,1.0
 
 # array initialisation
-#Pr  =  exp.(...)
+Pr  =  @. exp(-(xc - lx/4)^2)
 ```
 """
 
@@ -431,11 +432,12 @@ C[2:end-1] .-=   dt.*diff(qx)./dx
 Should be modified to account for pressure `Pr` instead of concentration `C`, the velocity update (`Vx`) added, and the coefficients modified:
 
 ```julia
-Vx          .-= ...
-Pr[2:end-1] .-= ...
+Vx          .-= dt./ρ.*diff(Pr)./dx
+Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
 ```
 """
 
+#md # 👉 [Download the `acoustic_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) for comparison.
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -519,7 +521,7 @@ md"""
 In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at $c = 0.4 l_x$.
 
 ```julia
-C = exp.( ... )
+C = @. exp(-(xc - lx/4)^2)
 ```
 """
 
@@ -566,14 +568,15 @@ There are at least three (naive) ways to solve the problem: update `C[1:end-1]`,
 #nb nt   = nx
 #nb xc   = LinRange(dx/2,lx-dx/2,nx)
 #nb ## array initialisation
-#nb #C    = @. exp(...); C_i = copy(C)
+#nb C    = @. exp(-(xc-lx/4)^2); C_i = copy(C)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # Execute the time loop
 #nb ## time loop
 #nb @gif for it = 1:nt
-#nb     #C .-= ...
+#nb     C[2:end  ] .-= dt.*max(vx,0.0).*diff(C)./dx
+#nb     C[1:end-1] .-= dt.*min(vx,0.0).*diff(C)./dx
 #nb     (it % (nt÷2) == 0) && (vx = -vx) # change the direction of wave propagation
 #nb     plot(xc,[C_i,C];xlims=(0,lx), ylims=(-0.1,1.1), 
 #nb                     xlabel="lx", ylabel="Concentration",
@@ -591,6 +594,7 @@ C[1:end-1] .-= dt.*vx.*diff(C)./dx # if vx<0
 ```
 """
 
+#md # 👉 [Download the `advection_1D.jl` script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}

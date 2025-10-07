@@ -5,7 +5,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 4_
 md"""
-# Julia plots with Makie.jl
+# Visualisation with Makie.jl
 """
 
 #src #########################################################################

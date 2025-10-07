@@ -12,8 +12,8 @@ noeval = true
 > :books: Multi-physics and going 2D\
 > :construction: Exercises:
 >
-> - Study regimes of advection-reaction-diffusion equation
-<!-- > - Implement nonlinear reaction-diffusion system -->
+> - Implement advection-diffusion solver in 2D
+> - Use Makie.jl for visualisation
 
 ---
 
@@ -39,5 +39,11 @@ noeval = true
 # Exercises - lecture 4
 
 \literate{/_literate/lecture4_ex1_web.jl}
+
+[⤴ _**back to Content**_](#content)
+
+---
+
+\literate{/_literate/lecture4_ex2_web.jl}
 
 [⤴ _**back to Content**_](#content)
