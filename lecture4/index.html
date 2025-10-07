@@ -8,12 +8,12 @@
 lx, ly  &#61; 20.0, 20.0
 # ...
 # numerics
-nx, ny  &#61; 100, 100</code></pre>
+nx, ny  &#61; 100, 101</code></pre>
 <p>Next, we compute the grid spacing, the coordinates of grid cell centers, and update the pseudo-time step to satisfy the 2D stability criterion:</p>
 <pre><code class=language-julia ># derived numerics
 dx, dy  &#61; lx / nx, ly / ny
 xc, yc  &#61; LinRange&#40;dx / 2, lx - dx / 2, nx&#41;, LinRange&#40;dy / 2, ly - dy / 2, ny&#41;
-dτ      &#61; dx / sqrt&#40;1 / ρ&#41; / sqrt&#40;2&#41;</code></pre>
+dτ      &#61; min&#40;dx, dy&#41; / sqrt&#40;1 / ρ&#41; / sqrt&#40;2&#41;</code></pre>
 <p>We now allocate 2D arrays for the concentration field and the fluxes:</p>
 <pre><code class=language-julia ># array initialisation
 C       &#61; @. 1.0 &#43; exp&#40;-&#40;xc - lx / 4&#41;^2 - &#40;yc&#39; - ly / 4&#41;^2&#41; - xc / lx

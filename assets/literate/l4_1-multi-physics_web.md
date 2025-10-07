@@ -62,7 +62,7 @@ First, we define the domain size and the number of grid points in the y-directio
 lx, ly  = 20.0, 20.0
 # ...
 # numerics
-nx, ny  = 100, 100
+nx, ny  = 100, 101
 ````
 
 Next, we compute the grid spacing, the coordinates of grid cell centers, and update the pseudo-time step to satisfy the 2D stability criterion:
@@ -71,7 +71,8 @@ Next, we compute the grid spacing, the coordinates of grid cell centers, and upd
 # derived numerics
 dx, dy  = lx / nx, ly / ny
 xc, yc  = LinRange(dx / 2, lx - dx / 2, nx), LinRange(dy / 2, ly - dy / 2, ny)
-dτ      = dx / sqrt(1 / ρ) / sqrt(2)
+dτ      = min(dx, dy) / sqrt(1 / ρ) / sqrt(2)
+
 ```
 
 We now allocate 2D arrays for the concentration field and the fluxes:

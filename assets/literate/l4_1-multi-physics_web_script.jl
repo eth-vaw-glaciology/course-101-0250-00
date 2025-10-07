@@ -4,7 +4,7 @@
 lx, ly  = 20.0, 20.0
 # ...
 # numerics
-nx, ny  = 100, 100
+nx, ny  = 100, 101
 
 # array initialisation
 C       = @. 1.0 + exp(-(xc - lx / 4)^2 - (yc' - ly / 4)^2) - xc / lx
