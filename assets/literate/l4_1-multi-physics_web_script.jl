@@ -53,7 +53,7 @@ for it in 1:nt
 end
 
 # temperature
-T   = @. exp(-(xc + lx/4)^2)
+T   = @. exp(-(xc - lx/4)^2)
 T_i = copy(T)
 # pressure
 P   = zeros(nx)

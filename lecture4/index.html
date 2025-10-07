@@ -66,7 +66,7 @@ q & = -k\left(\frac{\partial P}{\partial x} - \alpha T \right)~, \\[10pt]
 
 </ul>
 <p>👉 Start from making a copy of your own 1D steady diffusion script or use <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_1D.jl">this one</a></p>
-<p>Rename the file to <code>double_diffusion_1D.jl</code>, and the main functoin to <code>double_diffusion_1D&#40;&#41;</code> accordingly.</p>
+<p>Rename the file to <code>double_diffusion_1D.jl</code>, and the main function to <code>double_diffusion_1D&#40;&#41;</code> accordingly.</p>
 <p>First, rename variables <code>C</code> and <code>qx</code> to <code>P</code> and <code>qDx</code>, respectively. Rename the diffusion coefficient <code>dc</code> to <code>k</code>.</p>
 <p>Add new physical parameters:</p>
 <pre><code class=language-julia ># physics
@@ -110,7 +110,7 @@ nvis    &#61; 5</code></pre>
 end</code></pre>
 <p>Add temperature arrays; keep pressure and fluid flux zero:</p>
 <pre><code class=language-julia ># temperature
-T   &#61; @. exp&#40;-&#40;xc &#43; lx/4&#41;^2&#41;
+T   &#61; @. exp&#40;-&#40;xc - lx/4&#41;^2&#41;
 T_i &#61; copy&#40;T&#41;
 # pressure
 P   &#61; zeros&#40;nx&#41;

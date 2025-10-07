@@ -145,7 +145,7 @@ We’ll use an **operator splitting** approach, similar to [Exercise 2 from Lect
 👉 Start from making a copy of your own 1D steady diffusion script or use
 [this one](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_1D.jl)
 
-Rename the file to `double_diffusion_1D.jl`, and the main functoin to `double_diffusion_1D()` accordingly.
+Rename the file to `double_diffusion_1D.jl`, and the main function to `double_diffusion_1D()` accordingly.
 
 First, rename variables `C` and `qx` to `P` and `qDx`, respectively. Rename the diffusion coefficient `dc` to `k`.
 
@@ -218,7 +218,7 @@ Add temperature arrays; keep pressure and fluid flux zero:
 
 ````julia:ex10
 # temperature
-T   = @. exp(-(xc + lx/4)^2)
+T   = @. exp(-(xc - lx/4)^2)
 T_i = copy(T)
 # pressure
 P   = zeros(nx)
