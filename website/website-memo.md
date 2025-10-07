@@ -120,7 +120,7 @@ Conda.pip_interop(true)
 Conda.pip("install", "jupyterlab-rise")
 ```
 
-3. Open the notebook as in [here](#launch-a-notebook-from-the-script)
+3. Open the notebook as in [here](#launch-a-notebook-from-the-script). _Make sure to execute IJulia from the env where the Conda install was performed._
 
 4. Press `alt-r` to start. Use spacebar to advance.
 

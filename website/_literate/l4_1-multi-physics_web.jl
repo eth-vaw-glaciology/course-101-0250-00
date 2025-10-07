@@ -11,7 +11,8 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-## The goal of this lecture 4 is to:
+### The goal of this lecture 4 is to:
+
 - Learn the difference between different time integration schemes in the PT method
 - Solve partial differential equations in 2D
 - Better understand the coupling between physical processes
@@ -43,7 +44,7 @@ $$
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-For the second term in (1), $q/D$, there are two possible choices:
+For the second term in Eq. (1), $q/D$, there are two possible choices:
 
 1. Use the flux from the **current** pseudo-time layer $n$;
 2. Use the flux from the **next** pseudo-time layer $n+1$.
@@ -61,7 +62,7 @@ Let’s now implement the semi-implicit version!
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-1. 👉 Use your script for the 1D steady diffusion problem from the previous lecture, or start from [this script](TODO);
+1. 👉 Use your script for the 1D steady diffusion problem from the previous lecture, or start from [this script](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_explicit_flux_1D.jl);
 2. Create a new file called `steady_diffusion_implicit_flux_1d.jl` for this exercise;
 3. Think about how to compute the flux when using $q^{n+1}/D$ in the flux update rule, and implement the semi-implicit scheme.
 """
@@ -141,8 +142,8 @@ while err >= ϵtol && iter <= maxiter
     ## ...
 end
 
-#nb # > 💡 note: We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`
-#md # \note{We have to specify the direction for taking the partial derivatives: `diff(C,dims=1)./dx`, `diff(C,dims=2)./dy`}
+#nb # > 💡 note: We have to specify the direction for taking the partial derivatives: `diff(C, dims=1) ./ dx`, `diff(C, dims=2) ./ dy`
+#md # \note{We have to specify the direction for taking the partial derivatives: `diff(C, dims=1) ./ dx`, `diff(C, dims=2) ./ dy`}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -339,7 +340,7 @@ qDx = zeros(Float64, nx - 1)
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-After the iterative loop for the pressure: 
+After the iterative loop for the pressure:
 
 - Add the computation of the stable time step
 - Implement diffusion and advection of temperature as two separate substeps:
