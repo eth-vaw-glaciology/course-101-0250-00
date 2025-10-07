@@ -154,14 +154,20 @@ md"""
 
 You’ve learned how to solve second-order partial differential equations with a single independent variable — nice work!
 
-Now, let’s take a step further and look at a slightly more advanced example with two independent variables. This is a small but important move toward real-world applications.
+Now, let’s take a step further and look at a slightly more advanced example with two independent variables.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+This is a small but important move toward real-world applications.
 
 Here's the system of equations:
 
 \begin{align*}
 q & = -k\left(\frac{\partial P}{\partial x} - \alpha T \right)~, \\[10pt]
 \frac{\partial q}{\partial x} &= 0~, \\[10pt]
-\frac{\partial T}{\partial t} + q \frac{\partial T}{\partial x} &= \frac{\partial}{\partial x}\left(\lambda \frac{\partial T}{\partial x}\right)
+\frac{\partial T}{\partial t} + q \frac{\partial T}{\partial x} &= \frac{\partial}{\partial x}\left(\lambda \frac{\partial T}{\partial x}\right)~.
 \end{align*}
 """
 
@@ -181,6 +187,186 @@ In this system, the two main variables are $P$ and $T$, which we interpret as th
 3. The temperature changes due to thermal conduction, but heat is also transported by the moving fluid.
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+👉 If we ignore coupling terms, what PDE types are the equations for $P$ and $T$?
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+We’ll use an **operator splitting** approach, similar to [Exercise 2 from Lecture 3](/lecture3/#exercise_2_operator_splitting_for_advection-diffusion).
+
+- **Step 1:** Solve the elliptic equation for pressure $P$, assuming the temperature $T$ remains fixed.
+- **Step 2:** Update $T$ using the flux $q$ computed in Step 1.
+"""
+
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+👉 Start from making a copy of your own 1D steady diffusion script or use
+[this one](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_1D.jl)
+
+Rename the file to `double_diffusion_1D.jl`, and the main functoin to `double_diffusion_1D()` accordingly.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+First, rename variables `C` and `qx` to `P` and `qDx`, respectively. Rename the diffusion coefficient `dc` to `k`.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Add new physical parameters:
+
+```julia
+# physics
+lx      = 20.0
+λ       = 0.001
+k       = 1.0
+α       = 1.0
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+Next, we will streamline a bit the PT parameters (it will be helpful in the next lecture).
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Rename and replace the PT parameters:
+
+```julia
+qx         .-= dτ ./ (ρ * dc .+ dτ) .* (qx .+ dc .* diff(C) ./ dx)
+C[2:end-1] .-= dτ .* diff(qx) ./ dx
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+md"""
+with
+
+```julia
+qDx        .-= (qDx .+ k .* diff(P) ./ dx) ./ (θ_dτ_D + 1.0)
+P[2:end-1] .-= (diff(qDx) ./ dx) ./ β_dτ_D
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Use the following definitions for the new parameters in the `# derived numerics` section:
+
+```julia
+cfl     = 0.99
+re_D    = 2π
+θ_dτ_D  = lx / re_D / (cfl * dx)
+β_dτ_D  = k * re_D / (cfl * dx * lx)
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+#nb # > 💡 note: Verify that these definitions are indeed equivalent to the previous ones.
+#md # \note{Verify that these definitions are indeed equivalent to the previous ones.}
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+
+Implement the physical time stepping. Add the number of time steps and visualisation frequency into `# numerics` section of the script:
+
+```julia
+...
+ncheck  = ceil(Int, 0.25nx)
+nt      = 50
+nvis    = 5
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Remove the arrays storing the error evolution history, and wrap the iterative PT loop with the physical time loop:
+
+```julia
+for it in 1:nt
+    @printf("it = %d\n", it)
+    iter = 1; err = 2ϵtol
+    while err >= ϵtol && iter <= maxiter
+        # qDx        .-= ...
+        # P[2:end-1] .-= ...
+        if iter % ncheck == 0
+            hint=# err = ...
+            @printf("  iter = %.1f × N, err = %1.3e\n", iter / nx, err)
+        end
+        iter += 1
+    end
+    # TODO
+end
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Add temperature arrays; keep pressure and fluid flux zero:
+
+```julia
+# temperature
+T   = @. exp(-(xc + lx/4)^2)
+T_i = copy(T)
+# pressure
+P   = zeros(nx)
+qDx = zeros(Float64, nx - 1)
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+After the iterative loop for the pressure: 
+
+- Add the computation of the stable time step
+- Implement diffusion and advection of temperature as two separate substeps:
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+```julia
+dt  = min(dta, dtd)
+# temperature
+# T[2:end-1] .+= ...
+# T[2:end-1] .-= ...
+if it % nvis == 0
+    # visualisation
+    p1 = plot(xc, [T_i, T]; xlims=(0, lx), ylabel="Temperature", title="iter/nx=$(round(iter/nx,sigdigits=3))")
+    p2 = plot(xc, P       ; xlims=(0, lx), xlabel="lx", ylabel="Pressure")
+    display(plot(p1, p2; layout=(2, 1)))
+end
+```
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Finally, add the coupling between the fluid flux `qDx` and the temperature `T` in the form of the term $\alpha T$. Run the script.
+"""
+
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+Can you explain what you see?
+"""
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
