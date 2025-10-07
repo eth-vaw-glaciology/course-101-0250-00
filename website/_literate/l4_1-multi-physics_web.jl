@@ -28,27 +28,47 @@ In Lecture 3, you learned how to solve elliptic PDEs using the **pseudo-transien
 $$
 \rho\frac{\partial q}{\partial t} + \frac{q}{D} = -\frac{\partial C}{\partial x}~.
 $$
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 When discretising the first term on the left-hand side, we use first-order finite differences to approximate the pseudo-time derivative:
 
 $$
 \rho\frac{\partial q}{\partial t} \approx \rho\frac{q^{n+1} - q^n}{\Delta\tau}~.
 $$
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 For the second term in (1), $q/D$, there are two possible choices:
 
 1. Use the flux from the **current** pseudo-time layer $n$;
 2. Use the flux from the **next** pseudo-time layer $n+1$.
 
 In the first case, we use an **explicit** flux discretization; in the second case, we use a *semi-implicit* discretization.
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 In Lecture 3, we used the explicit discretization of fluxes.
 Let’s now implement the semi-implicit version!
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 1. 👉 Use your script for the 1D steady diffusion problem from the previous lecture, or start from [this script](TODO);
 2. Create a new file called `steady_diffusion_implicit_flux_1d.jl` for this exercise;
 3. Think about how to compute the flux when using $q^{n+1}/D$ in the flux update rule, and implement the semi-implicit scheme.
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 This script should produce the **same final result** as the explicit version. So why bother with another scheme?
 
 👉 Modify the definition of the pseudo-time step. Replace this line:
@@ -62,7 +82,11 @@ with
 ```julia
 dτ      = dx / sqrt(1 / ρ)
 ```
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Observe how the PT iterations **converge** in the semi-implicit case with the _theoretically maximal_ pseudo-time step, while the explicit flux discretization **diverges**.
 """
 
