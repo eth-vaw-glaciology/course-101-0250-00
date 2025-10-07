@@ -1,1 +1,328 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 4</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <div class="sidebar-nav-item under-construction"> Lecture 4 – Coupled multi-physics</div> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <!-- <a class="sidebar-nav-item {{ispage lecture5/*}}active{{end}}" href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item {{ispage lecture6/*}}active{{end}}" href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item {{ispage lecture7/*}}active{{end}}" href="/lecture7/">Lecture 7 – GPU computing I</a> <a class="sidebar-nav-item {{ispage lecture8/*}}active{{end}}" href="/lecture8/">Lecture 8 – GPU computing II</a> --> <div class="sidebar-nav-item under-construction"> Lecture 5 – Porous convection</div> <div class="sidebar-nav-item under-construction"> Lecture 6 – Parallel computing</div> <div class="sidebar-nav-item under-construction"> Lecture 7 – GPU computing I</div> <div class="sidebar-nav-item under-construction"> Lecture 8 – GPU computing II</div> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <!-- <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – xPU computing</a> <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item {{ispage lecture11/*}}active{{end}}" href="/lecture11/">Lecture 11 – Multi-xPU & Projects</a> <a class="sidebar-nav-item {{ispage lecture12/*}}active{{end}}" href="/lecture12/">Lecture 12 – Advanced optimisations</a> --> <div class="sidebar-nav-item under-construction"> Lecture 9 – xPU computing</div> <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU</div> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_4 ><a href="#lecture_4" class=header-anchor >Lecture 4</a></h1> <p>🚧 Under construction</p> <div class=page-foot > <div class=copyright > <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br> Last modified: September 30, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 4</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <a class="sidebar-nav-item active" href="/lecture4/">Lecture 4 – Coupled multi-physics</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <!-- <a class="sidebar-nav-item {{ispage lecture5/*}}active{{end}}" href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item {{ispage lecture6/*}}active{{end}}" href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item {{ispage lecture7/*}}active{{end}}" href="/lecture7/">Lecture 7 – GPU computing I</a> <a class="sidebar-nav-item {{ispage lecture8/*}}active{{end}}" href="/lecture8/">Lecture 8 – GPU computing II</a> --> <div class="sidebar-nav-item under-construction"> Lecture 5 – Porous convection</div> <div class="sidebar-nav-item under-construction"> Lecture 6 – Parallel computing</div> <div class="sidebar-nav-item under-construction"> Lecture 7 – GPU computing I</div> <div class="sidebar-nav-item under-construction"> Lecture 8 – GPU computing II</div> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <!-- <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – xPU computing</a> <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item {{ispage lecture11/*}}active{{end}}" href="/lecture11/">Lecture 11 – Multi-xPU & Projects</a> <a class="sidebar-nav-item {{ispage lecture12/*}}active{{end}}" href="/lecture12/">Lecture 12 – Advanced optimisations</a> --> <div class="sidebar-nav-item under-construction"> Lecture 9 – xPU computing</div> <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU</div> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_4 ><a href="#lecture_4" class=header-anchor >Lecture 4</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Multi-physics and going 2D<br />🚧 Exercises:</p> <ul> <li><p>Implement advection-diffusion solver in 2D</p> <li><p>Use Makie.jl for visualisation</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_4">Lecture 4</a><li><a href="#coupled_multi-physics_in_2d">Coupled multi-physics in 2D</a><ol><li><a href="#explicit_vs_semi-implicit_fluxes">Explicit vs semi-implicit fluxes</a><li><a href="#going_2d">Going 2D</a><li><a href="#coupled_systems_of_pdes">Coupled systems of PDEs</a></ol><li><a href="#visualisation_with_makiejl">Visualisation with Makie.jl</a><ol><li><a href="#basic_usage">Basic usage</a><li><a href="#advanced_usage">Advanced usage</a><li><a href="#animations">Animations</a><li><a href="#live_animation">Live &quot;animation&quot;</a></ol><li><a href="#exercises_-_lecture_4">Exercises - lecture 4</a><ol><li><a href="#exercise_1_advection-diffusion_in_2d">Exercise 1 — <strong>Advection-diffusion in 2D</strong></a><li><a href="#exercise_2_using_makiejl_for_visualisation">Exercise 2 — <strong>Using Makie.jl for visualisation</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_4"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=coupled_multi-physics_in_2d ><a href="#coupled_multi-physics_in_2d" class=header-anchor >Coupled multi-physics in 2D</a></h1> <h3 id=the_goal_of_this_lecture_4_is_to ><a href="#the_goal_of_this_lecture_4_is_to" class=header-anchor >The goal of this lecture 4 is to:</a></h3> <ul> <li><p>Learn the difference between different time integration schemes in the PT method</p> <li><p>Solve partial differential equations in 2D</p> <li><p>Better understand the coupling between physical processes</p> <li><p>Plot advanced graphics with Makie.jl</p> </ul> <h2 id=explicit_vs_semi-implicit_fluxes ><a href="#explicit_vs_semi-implicit_fluxes" class=header-anchor >Explicit vs semi-implicit fluxes</a></h2> <p>In Lecture 3, you learned how to solve elliptic PDEs using the <strong>pseudo-transient &#40;PT&#41; method</strong> by augmenting the definition of the diffusion flux with a pseudo-time derivative:</p> \[ \rho\frac{\partial q}{\partial t} + \frac{q}{D} = -\frac{\partial C}{\partial x}~. \] <p>When discretising the first term on the left-hand side, we use first-order finite differences to approximate the pseudo-time derivative:</p> \[ \rho\frac{\partial q}{\partial t} \approx \rho\frac{q^{n+1} - q^n}{\Delta\tau}~. \] <p>For the second term in Eq. &#40;1&#41;, \(q/D\), there are two possible choices:</p> <ol> <li><p>Use the flux from the <strong>current</strong> pseudo-time layer \(n\);</p> <li><p>Use the flux from the <strong>next</strong> pseudo-time layer \(n+1\).</p> </ol> <p>In the first case, we use an <strong>explicit</strong> flux discretization; in the second case, we use a <em>semi-implicit</em> discretization.</p> <p>In Lecture 3, we used the explicit discretization of fluxes. Let’s now implement the semi-implicit version&#33;</p> <ol> <li><p>👉 Use your script for the 1D steady diffusion problem from the previous lecture, or start from <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_explicit_flux_1D.jl">this script</a>;</p> <li><p>Create a new file called <code>steady_diffusion_implicit_flux_1d.jl</code> for this exercise;</p> <li><p>Think about how to compute the flux when using \(q^{n+1}/D\) in the flux update rule, and implement the semi-implicit scheme.</p> </ol> <p>This script should produce the <strong>same final result</strong> as the explicit version. So why bother with another scheme?</p> <p>👉 Modify the definition of the pseudo-time step. Replace this line:</p> <pre><code class=language-julia >dτ      &#61; dx / sqrt&#40;1 / ρ&#41; / 1.1</code></pre>
+<p>with</p>
+<pre><code class=language-julia >dτ      &#61; dx / sqrt&#40;1 / ρ&#41;</code></pre>
+<p>Observe how the PT iterations <strong>converge</strong> in the semi-implicit case with the <em>theoretically maximal</em> pseudo-time step, while the explicit flux discretization <strong>diverges</strong>.</p>
+<h2 id=going_2d ><a href="#going_2d" class=header-anchor >Going 2D</a></h2>
+<p>Converting the 1D code to higher dimensions is remarkably easy thanks to the explicit time integration scheme. First, we define the domain size and the number of grid points in the y-direction:</p>
+<pre><code class=language-julia ># physics
+lx, ly  &#61; 20.0, 20.0
+# ...
+# numerics
+nx, ny  &#61; 100, 100</code></pre>
+<p>Next, we compute the grid spacing, the coordinates of grid cell centers, and update the pseudo-time step to satisfy the 2D stability criterion:</p>
+<pre><code class=language-julia ># derived numerics
+dx, dy  &#61; lx / nx, ly / ny
+xc, yc  &#61; LinRange&#40;dx / 2, lx - dx / 2, nx&#41;, LinRange&#40;dy / 2, ly - dy / 2, ny&#41;
+dτ      &#61; dx / sqrt&#40;1 / ρ&#41; / sqrt&#40;2&#41;</code></pre>
+<p>We now allocate 2D arrays for the concentration field and the fluxes:</p>
+<pre><code class=language-julia ># array initialisation
+C       &#61; @. 1.0 &#43; exp&#40;-&#40;xc - lx / 4&#41;^2 - &#40;yc&#39; - ly / 4&#41;^2&#41; - xc / lx
+qx, qy  &#61; zeros&#40;nx-1, ny&#41;, zeros&#40;nx, ny-1&#41;</code></pre>
+<p>Finally, we add the update rules for the second dimension:</p>
+<pre><code class=language-julia >while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
+    #qx                 .-&#61; ...
+    #qy                 .-&#61; ...
+    #C&#91;2:end-1,2:end-1&#93; .-&#61; ...
+    # ...
+end</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >We have to specify the direction for taking the partial derivatives: <code>diff&#40;C, dims&#61;1&#41; ./ dx</code>, <code>diff&#40;C, dims&#61;2&#41; ./ dy</code></div></div>
+<p>Last thing to fix is the visualisation, as now we want the top-down view of the computational domain:</p>
+<pre><code class=language-julia >p1 &#61; heatmap&#40;xc, yc, C&#39;; xlims&#61;&#40;0, lx&#41;, ylims&#61;&#40;0, ly&#41;, clims&#61;&#40;0, 1&#41;, aspect_ratio&#61;1,
+             xlabel&#61;&quot;lx&quot;, ylabel&#61;&quot;ly&quot;, title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter / nx, sigdigits&#61;3&#41;&#41;&quot;&#41;</code></pre>
+<p>Let&#39;s run the simulation:</p>
+
+<center>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l3_steady_diffusion_reaction_2D.mp4"/>
+</center>
+
+<h2 id=coupled_systems_of_pdes ><a href="#coupled_systems_of_pdes" class=header-anchor >Coupled systems of PDEs</a></h2>
+<p>You’ve learned how to solve second-order partial differential equations with a single independent variable — nice work&#33;</p>
+<p>Now, let’s take a step further and look at a slightly more advanced example with two independent variables.</p>
+<p>This is a small but important move toward real-world applications.</p>
+<p>Here&#39;s the system of equations:</p>
+<div class=nonumber >\[\begin{aligned}
+q & = -k\left(\frac{\partial P}{\partial x} - \alpha T \right)~, \\[10pt]
+\frac{\partial q}{\partial x} &= 0~, \\[10pt]
+\frac{\partial T}{\partial t} + q \frac{\partial T}{\partial x} &= \frac{\partial}{\partial x}\left(\lambda \frac{\partial T}{\partial x}\right)~.
+\end{aligned}\]</div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Even though the system contains three equations, we still consider it a system with two independent variables, since the flux \(q\) can be eliminated. It’s written explicitly here only for better readability.</div></div>
+<p>In this system, the two main variables are \(P\) and \(T\), which we interpret as the <strong>pressure</strong> and <strong>temperature</strong> of a fluid:</p>
+<ol>
+<li><p>The flux \(q\) is defined so that the fluid flows from regions of higher pressure to lower pressure.</p>
+
+<li><p>The flow is enhanced by temperature perturbations — hotter fluid is more buoyant.</p>
+
+<li><p>The temperature changes due to thermal conduction, but heat is also transported by the moving fluid.</p>
+
+</ol>
+<p>👉 If we ignore coupling terms, what PDE types are the equations for \(P\) and \(T\)?</p>
+<p>We’ll use an <strong>operator splitting</strong> approach, similar to <a href="/lecture3/#exercise_2_operator_splitting_for_advection-diffusion">Exercise 2 from Lecture 3</a>.</p>
+<ul>
+<li><p><strong>Step 1:</strong> Solve the elliptic equation for pressure \(P\), assuming the temperature \(T\) remains fixed.</p>
+
+<li><p><strong>Step 2:</strong> Update \(T\) using the flux \(q\) computed in Step 1.</p>
+
+</ul>
+<p>👉 Start from making a copy of your own 1D steady diffusion script or use <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l3_steady_diffusion_1D.jl">this one</a></p>
+<p>Rename the file to <code>double_diffusion_1D.jl</code>, and the main functoin to <code>double_diffusion_1D&#40;&#41;</code> accordingly.</p>
+<p>First, rename variables <code>C</code> and <code>qx</code> to <code>P</code> and <code>qDx</code>, respectively. Rename the diffusion coefficient <code>dc</code> to <code>k</code>.</p>
+<p>Add new physical parameters:</p>
+<pre><code class=language-julia ># physics
+lx      &#61; 20.0
+λ       &#61; 0.001
+k       &#61; 1.0
+α       &#61; 1.0</code></pre>
+<p>Next, we will streamline a bit the PT parameters &#40;it will be helpful in the next lecture&#41;.</p>
+<p>Rename and replace the PT parameters:</p>
+<pre><code class=language-julia >qx         .-&#61; dτ ./ &#40;ρ * dc .&#43; dτ&#41; .* &#40;qx .&#43; dc .* diff&#40;C&#41; ./ dx&#41;
+C&#91;2:end-1&#93; .-&#61; dτ .* diff&#40;qx&#41; ./ dx</code></pre>
+<p>with</p>
+<pre><code class=language-julia >qDx        .-&#61; &#40;qDx .&#43; k .* diff&#40;P&#41; ./ dx&#41; ./ &#40;θ_dτ_D &#43; 1.0&#41;
+P&#91;2:end-1&#93; .-&#61; &#40;diff&#40;qDx&#41; ./ dx&#41; ./ β_dτ_D</code></pre>
+<p>Use the following definitions for the new parameters in the <code># derived numerics</code> section:</p>
+<pre><code class=language-julia >cfl     &#61; 0.99
+re_D    &#61; 2π
+θ_dτ_D  &#61; lx / re_D / &#40;cfl * dx&#41;
+β_dτ_D  &#61; k * re_D / &#40;cfl * dx * lx&#41;</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Verify that these definitions are indeed equivalent to the previous ones.</div></div>
+<p>Implement the physical time stepping. Add the number of time steps and visualisation frequency into <code># numerics</code> section of the script:</p>
+<pre><code class=language-julia >...
+ncheck  &#61; ceil&#40;Int, 0.25nx&#41;
+nt      &#61; 50
+nvis    &#61; 5</code></pre>
+<p>Remove the arrays storing the error evolution history, and wrap the iterative PT loop with the physical time loop:</p>
+<pre><code class=language-julia >for it in 1:nt
+    @printf&#40;&quot;it &#61; &#37;d\n&quot;, it&#41;
+    iter &#61; 1; err &#61; 2ϵtol
+    while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
+        #qDx        .-&#61; ...
+        #P&#91;2:end-1&#93; .-&#61; ...
+        if iter &#37; ncheck &#61;&#61; 0
+            #err &#61; ...
+            @printf&#40;&quot;  iter &#61; &#37;.1f × N, err &#61; &#37;1.3e\n&quot;, iter / nx, err&#41;
+        end
+        iter &#43;&#61; 1
+    end
+    # TODO
+end</code></pre>
+<p>Add temperature arrays; keep pressure and fluid flux zero:</p>
+<pre><code class=language-julia ># temperature
+T   &#61; @. exp&#40;-&#40;xc &#43; lx/4&#41;^2&#41;
+T_i &#61; copy&#40;T&#41;
+# pressure
+P   &#61; zeros&#40;nx&#41;
+qDx &#61; zeros&#40;Float64, nx - 1&#41;</code></pre>
+<p>After the iterative loop for the pressure:</p>
+<ul>
+<li><p>Add the computation of the stable time step</p>
+
+<li><p>Implement diffusion and advection of temperature as two separate substeps:</p>
+
+</ul>
+<pre><code class=language-julia >dt  &#61; min&#40;dta, dtd&#41;
+# temperature
+#T&#91;2:end-1&#93; .&#43;&#61; ...
+#T&#91;2:end-1&#93; .-&#61; ...
+if it &#37; nvis &#61;&#61; 0
+    # visualisation
+    p1 &#61; plot&#40;xc, &#91;T_i, T&#93;; xlims&#61;&#40;0, lx&#41;, ylabel&#61;&quot;Temperature&quot;, title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter/nx,sigdigits&#61;3&#41;&#41;&quot;&#41;
+    p2 &#61; plot&#40;xc, P       ; xlims&#61;&#40;0, lx&#41;, xlabel&#61;&quot;lx&quot;, ylabel&#61;&quot;Pressure&quot;&#41;
+    display&#40;plot&#40;p1, p2; layout&#61;&#40;2, 1&#41;&#41;&#41;
+end</code></pre>
+<p>Finally, add the coupling between the fluid flux <code>qDx</code> and the temperature <code>T</code> in the form of the term \(\alpha T\). Run the script.</p>
+<p>Can you explain what you see?</p>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<hr />
+<h1 id=visualisation_with_makiejl ><a href="#visualisation_with_makiejl" class=header-anchor >Visualisation with Makie.jl</a></h1>
+<p>Until now, we used Plots.jl for visualisation.</p>
+<p>The cool thing about Plots.jl is how simple it is to plot something.</p>
+<p>For more control and advanced graphics there is Makie.jl.</p>
+<p>The docs are <a href="https://docs.makie.org/stable/">here</a>.</p>
+<p>Like Plots.jl, Makie.jl supports multiple backends, e.g.:</p>
+<ul>
+<li><p>GLMakie.jl for hardware-accelerated graphics, supports most features, but requires dedicated GPU;</p>
+
+<li><p>CairoMakie.jl for headless systems and publication ready vector graphics;</p>
+
+<li><p>WGLMakie.jl for interactive graphics on the web.</p>
+
+</ul>
+<h2 id=basic_usage ><a href="#basic_usage" class=header-anchor >Basic usage</a></h2>
+<p>For basic usage, Makie.jl offers a simple high-level API:</p>
+<pre><code class=language-julia >using CairoMakie
+
+plot&#40;1:3&#41;  # a scatter plot, for a line use &#96;line&#96;
+A &#61; rand&#40;50, 50&#41;;
+#try heatmap</code></pre>
+<h2 id=advanced_usage ><a href="#advanced_usage" class=header-anchor >Advanced usage</a></h2>
+<p>For more control, you can create and manipulate figures, axes, plots etc. as separate objects.</p>
+<pre><code class=language-julia >f &#61; Figure&#40;&#41;
+scatter&#40;f&#91;1, 1&#93;, rand&#40;100, 2&#41;&#41;
+lines&#40;f&#91;1, 2&#93;, cumsum&#40;randn&#40;100&#41;&#41;&#41;
+
+ax &#61; Axis&#40;f&#91;2, 1&#93;; xlabel&#61;&quot;x&quot;, ylabel&#61;&quot;y&quot;, title&#61;&quot;subplot&quot;&#41;
+lines&#33;&#40;ax, cumsum&#40;randn&#40;20&#41;&#41;; label&#61;&quot;line&quot;, linewidth&#61;3, color&#61;:red&#41;
+scatter&#33;&#40;ax, cumsum&#40;randn&#40;20&#41;&#41;; label&#61;&quot;scatter&quot;, marker&#61;:cross, markersize&#61;rand&#40;5:20, 20&#41;&#41;
+axislegend&#40;ax&#41;</code></pre>
+<h2 id=animations ><a href="#animations" class=header-anchor >Animations</a></h2>
+<p>To create simple videos, you can use the <a href="https://docs.makie.org/stable/api#Makie.record-Tuple&#123;Any,&#37;20Union&#123;Figure,&#37;20Makie.FigureAxisPlot,&#37;20Scene&#125;,&#37;20AbstractString&#125;"><code>record</code></a> function</p>
+<pre><code class=language-julia >f &#61; Figure&#40;&#41;
+ax &#61; Axis&#40;f&#91;1, 1&#93;&#91;1, 1&#93;; aspect&#61;DataAspect&#40;&#41;&#41;
+hm &#61; heatmap&#33;&#40;ax, rand&#40;10, 10&#41;&#41;
+cb &#61; Colorbar&#40;f&#91;1, 1&#93;&#91;1, 2&#93;, hm&#41;
+
+record&#40;f, &quot;anim.mp4&quot;; fps&#61;30&#41; do io
+    for i &#61; 1:100
+        hm&#91;1&#93; &#61; rand&#40;10,10&#41; # simple way to update the plot in-place
+        recordframe&#33;&#40;io&#41;
+    end
+end</code></pre>
+<h2 id=live_animation ><a href="#live_animation" class=header-anchor >Live &quot;animation&quot;</a></h2>
+<p>To simply plot display figure in a computational loop like we did with Plots.jl, use <code>display</code> function:</p>
+<pre><code class=language-julia >for i &#61; 1:10
+    hm&#91;1&#93; &#61; rand&#40;10,10&#41; # simple way to update the plot in-place
+    display&#40;f&#41;
+end</code></pre>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<h1 id=exercises_-_lecture_4 ><a href="#exercises_-_lecture_4" class=header-anchor >Exercises - lecture 4</a></h1>
+<h2 id=exercise_1_advection-diffusion_in_2d ><a href="#exercise_1_advection-diffusion_in_2d" class=header-anchor >Exercise 1 — <strong>Advection-diffusion in 2D</strong></a></h2>
+<p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
+<p>The goal of this exercise is to</p>
+<ul>
+<li><p>Extend the advection-diffusion solver with implicit diffusion step from 1D to 2D</p>
+
+<li><p>Implement the upwind advection scheme in 2D</p>
+
+<li><p>Modify the problem configuration</p>
+
+</ul>
+<p>Create a code <code>implicit_advection_diffusion_2D.jl</code> for this exercise and add it to the <code>lecture4</code> folder in your private GitHub repo. Report the results of this exercise within a new section in the <code>README</code>.</p>
+<h3 id=getting_started ><a href="#getting_started" class=header-anchor >Getting started</a></h3>
+<ol>
+<li><p>Duplicate the the <code>implicit_diffusion_1D.jl</code> code you created in <a href="/lecture3/#exercise_1_implicit_transient_diffusion_using_dual_timestepping">Exercise 1 from Homework 3</a> and name it <code>implicit_advection_diffusion_2D.jl</code>.</p>
+
+<li><p>Extend the 1D calculations to 2D</p>
+
+<li><p>Add advection as in <a href="/lecture3/#exercise_2_operator_splitting_for_advection-diffusion">Exercise 2 from Homework 3</a> and name it <code>implicit_advection_diffusion_2D.jl</code>.</p>
+
+</ol>
+<p>Modify the initial conditions to include following parameters in the <code># physics</code> section:</p>
+<pre><code class=language-julia ># physics
+lx, ly  &#61; 10.0, 10.0
+dc      &#61; 1.0
+vx      &#61; 10.0
+vy      &#61; -10.0</code></pre>
+<p>and implement following initial condition</p>
+<pre><code class=language-julia ># array initialisation
+C       &#61; @. exp&#40;-&#40;xc - lx / 4&#41;^2 - &#40;yc&#39; - 3ly / 4&#41;^2&#41;
+C_old   &#61; copy&#40;C&#41;</code></pre>
+<p>Choose the time step according to the following &#40;stability&#41; criterion:</p>
+<pre><code class=language-julia >dt &#61; min&#40;dx / abs&#40;vx&#41;, dy / abs&#40;vy&#41;&#41; / 2</code></pre>
+<p>Also make sure to use the following numerical parameters &#40;in number of grid points <code>nx,ny</code>&#41;</p>
+<pre><code class=language-julia ># numerics
+nx, ny  &#61; 200, 201
+ϵtol    &#61; 1e-8
+maxiter &#61; 10nx
+ncheck  &#61; ceil&#40;Int, 0.02nx&#41;
+nt      &#61; 100</code></pre>
+<p>Note that the iterative pseudo-timestep limitation should be updated to</p>
+<pre><code class=language-julia >dτ &#61; min&#40;dx, dy&#41; / sqrt&#40;1 / ρ&#41; / sqrt&#40;2&#41;</code></pre>
+<p>for 2D configurations.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Make sure to update the flux array initialisation and include the flux in the y-direction <code>qy</code> and use now 2D arrays: <code>qx,qy &#61; zeros&#40;nx-1,??&#41;, zeros&#40;??,ny-1&#41;</code>.</div></div>
+<h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
+<p>Repeat the steps from the Exercise 1 in Homework 3 to create the implicit time-dependent diffusion solver but in 2D. <strong>Do not include advection yet.</strong> Pay attention to add information relative to the second dimension whenever it&#39;s needed.</p>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 100</code> physical time steps. The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field and the second the evolution of the by <code>nx</code> normalised iteration count:</p>
+<pre><code class=language-julia ># visualisation
+p1 &#61; heatmap&#40;xc, yc, C&#39;; xlims&#61;&#40;0, lx&#41;, ylims&#61;&#40;0, ly&#41;, clims&#61;&#40;0, 1&#41;, aspect_ratio&#61;1,
+             xlabel&#61;&quot;lx&quot;, ylabel&#61;&quot;ly&quot;, title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter/nx,sigdigits&#61;3&#41;&#41;&quot;&#41;
+p2 &#61; plot&#40;iter_evo, err_evo; xlabel&#61;&quot;iter/nx&quot;, ylabel&#61;&quot;err&quot;,
+          yscale&#61;:log10, grid&#61;true, markershape&#61;:circle, markersize&#61;10&#41;
+display&#40;plot&#40;p1, p2; layout&#61;&#40;2, 1&#41;&#41;&#41;</code></pre>
+<h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
+<p>Include now the advection step in a similar way as in the 1D case from the previous exercise, i.e., adding them after the iteration loop within the time loop. Use advection velocities and parameters listed above, taking care in implementing the &quot;upwind&quot; strategy discussed in Lecture 2.</p>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 50</code> physical time steps using the same figure layout as for Task 1.</p>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<hr />
+<h2 id=exercise_2_using_makiejl_for_visualisation ><a href="#exercise_2_using_makiejl_for_visualisation" class=header-anchor >Exercise 2 — <strong>Using Makie.jl for visualisation</strong></a></h2>
+<p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
+<p>The goals of this exercise are to:</p>
+<ul>
+<li><p>learn visualisation techniques in scientific computing;</p>
+
+<li><p>use Makie.jl to visualise the 2D simulation.</p>
+
+</ul>
+<p>Create a script <code>implicit_advection_diffusion_makie_2D.jl</code> for this exercise and add it to the <code>lecture4</code> folder in your private GitHub repository. Summarise your results in a new section of the <code>README</code>.</p>
+<h3 id=getting_started__2 ><a href="#getting_started__2" class=header-anchor >Getting started</a></h3>
+<ol>
+<li><p>Duplicate the <code>implicit_advection_diffusion_2D.jl</code> code you created in Exercise 1 and rename it to <code>implicit_advection_diffusion_makie_2D.jl</code>.</p>
+
+<li><p>Remove all visualisation that uses Plots.jl.</p>
+
+<li><p>Recreate the animation from Exercise 1 with Makie.jl, and add an <a href="https://docs.makie.org/stable/reference/plots/arrows#arrows"><strong>arrow &#40;quiver&#41; plot</strong></a> to visualise the flux vector field.</p>
+
+</ol>
+<p>Create the figure, two axes, a heatmap, a quiver plot, and a line plot with markers before the time loop:</p>
+<pre><code class=language-julia ># time loop
+fig &#61; Figure&#40;size&#61;&#40;400, 650&#41;&#41;
+ax1 &#61; Axis&#40;...&#41;
+ax2 &#61; Axis&#40;...&#41;
+hm  &#61; heatmap&#33;&#40;ax1, ...&#41;
+cb  &#61; Colorbar&#40;...&#41;
+ar  &#61; arrows2d&#33;&#40;ax1, ...&#41;
+plt &#61; scatterlines&#33;&#40;ax2, Float64&#91;&#93;, Float64&#91;&#93;&#41;
+record&#40;fig, &quot;heatmap_arrows.mp4&quot;; fps&#61;20&#41; do io
+    for it &#61; 1:nt
+        # ...
+        # visualisation
+        # update plots here
+        recordframe&#33;&#40;io&#41;
+    end
+end</code></pre>
+<p>In an arrow plot, showing one arrow per grid point would result in too much visual noise. Show an arrow to every 10th cell in x and y directions.</p>
+<h4 id=hints ><a href="#hints" class=header-anchor >Hints</a></h4>
+<ul>
+<li><p>Use the <code>colormap</code> and <code>colorrange</code> attributes to configure the heatmap.</p>
+
+<li><p>To update plot data, index into the plot’s arguments. For example, for a heatmap created with <code>hm &#61; heatmap&#33;&#40;ax, x, y, z&#41;</code>, update the field with <code>hm&#91;3&#93; &#61; z_new</code>. Here, <code>hm&#91;1&#93;</code> and <code>hm&#91;2&#93;</code> correspond to the <code>x</code> and <code>y</code> data, respectively.</p>
+
+<li><p>To get every nth value of a 2D array, use syntax <code>Q&#91;1:n:end, 1:n:end&#93;</code>. Same applies to 1D and 3D arrays.</p>
+
+</ul>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Make sure to update the flux array initialisation and include the flux in the y-direction <code>qy</code> and use now 2D arrays: <code>qx,qy &#61; zeros&#40;nx-1,??&#41;, zeros&#40;??,ny-1&#41;</code>.</div></div>
+<h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 100</code> physical time steps. The numerical algorithm should be the same as in Exercise 1.</p>
+<p>The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field with the &quot;roma&quot; colormap, and the quiver plot showing magnitude and direction of the flux vector <code>q</code>. The second subplot should show the evolution of the by <code>nx</code> normalised iteration count. In the time loop, only update the existing plot, don&#39;t create new figure every time step.</p>
+<p>You should get an animation like this:</p>
+
+<center>
+  <video width="50%" autoplay loop controls src="../assets/literate_figures/l4_heatmap_arrows.mp4"/>
+</center>
+
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<div class=page-foot >
+  <div class=copyright >
+    <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+    Last modified: October 07, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+    </div>  
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>

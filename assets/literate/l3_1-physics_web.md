@@ -110,7 +110,7 @@ Then we modify the time loop to incorporate the new physics:
 
 ```julia
 for it = 1:nt
-    #qx         .-= ...
+    qx         .-= dt./(ρ*dc + dt).*(qx + dc.*diff(C)./dx)
     C[2:end-1] .-= dt.*diff(qx)./dx
     ...
 end
@@ -290,7 +290,7 @@ da      = 10.0
 iter = 1; err = 2ϵtol; iter_evo = Float64[]; err_evo = Float64[]
 while err >= ϵtol && iter <= maxiter
     ...
-    # C[2:end-1] .-= ...
+    C[2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1] .- C_eq)./ξ .+ diff(qx)./dx)
     ...
 end
 ```
