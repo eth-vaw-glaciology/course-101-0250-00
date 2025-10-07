@@ -19,7 +19,9 @@ The cool thing about Plots.jl is how simple it is to plot something.
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-For more control and advanced graphics there is Makie.jl. The docs are [here](https://docs.makie.org/stable/).
+For more control and advanced graphics there is Makie.jl.
+
+The docs are [here](https://docs.makie.org/stable/).
 """
 
 #src #########################################################################
@@ -35,6 +37,8 @@ Like Plots.jl, Makie.jl supports multiple backends, e.g.:
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+## Basic usage
+
 For basic usage, Makie.jl offers a simple high-level API:
 """
 
@@ -48,6 +52,8 @@ A = rand(50, 50);
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+## Advanced usage
+
 For more control, you can create and manipulate figures, axes, plots etc. as separate objects.
 """
 
