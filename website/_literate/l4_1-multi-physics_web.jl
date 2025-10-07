@@ -13,8 +13,9 @@ md"""
 md"""
 ## The goal of this lecture 4 is to:
 - Learn the difference between different time integration schemes in the PT method
-- Better understand the coupling between physical processes
 - Solve partial differential equations in 2D
+- Better understand the coupling between physical processes
+- Plot advanced graphics with Makie.jl
 """
 
 #src #########################################################################
