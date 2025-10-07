@@ -10,13 +10,13 @@ The goal of this exercise is to
 - Implement the upwind advection scheme in 2D
 - Modify the problem configuration
 
-Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it to the `lecture3` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
+Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it to the `lecture4` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
 
 ### Getting started
 
-1. Duplicate the the `implicit_diffusion_1D.jl` code you created in Exercise 2 and name it `implicit_advection_diffusion_2D.jl`.
+1. Duplicate the the `implicit_diffusion_1D.jl` code you created in [Exercise 1 from Homework 3](/lecture3/#exercise_1_implicit_transient_diffusion_using_dual_timestepping) and name it `implicit_advection_diffusion_2D.jl`.
 2. Extend the 1D calculations to 2D
-3. Add advection as in Exercise 2
+3. Add advection as in [Exercise 2 from Homework 3](/lecture3/#exercise_2_operator_splitting_for_advection-diffusion) and name it `implicit_advection_diffusion_2D.jl`.
 
 Modify the initial conditions to include following parameters in the `# physics` section:
 ```julia
@@ -64,7 +64,7 @@ for 2D configurations.
 
 md"""
 ### Task 1
-Repeat the steps from the Exercise 1 to create the implicit time-dependent diffusion solver but in 2D. **Do not include advection yet.** Pay attention to add information relative to the second dimension whenever it's needed.
+Repeat the steps from the Exercise 1 in Homework 3 to create the implicit time-dependent diffusion solver but in 2D. **Do not include advection yet.** Pay attention to add information relative to the second dimension whenever it's needed.
 
 
 Make a short animation showing the time evolution of the concentration field `C` during `nt = 50` physical time steps. The figure should contain 2 subplots, the first displaying the `heatmap` of the `C` field and the second the evolution of the by `nx` normalised iteration count:
