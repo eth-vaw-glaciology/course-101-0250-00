@@ -12,7 +12,7 @@ You will make the systematic study of the convergence rate of the pseudo-transie
 ### Getting started
 
 1. 👉 Start from the script we did in class, or download the `l3_steady_diffusion_1D.jl` script [here](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) if needed (available after the course).
-2. Create a new code `steady_diffusion_parametric_1D.jl` for this exercise and add it to the `lecture3` folder in your private GitHub repo.
+2. Create a new code `steady_diffusion_parametric_1D.jl` for this exercise and add it to the `homework-3` folder in your private GitHub repo.
 3. Report the results of this exercise within a new section in the `README.md`.
 """
 

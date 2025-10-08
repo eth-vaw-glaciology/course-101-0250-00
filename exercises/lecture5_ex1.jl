@@ -14,7 +14,7 @@ md"""
 In this first exercise, you will finalise the thermal porous convection discussed and implemented in class. The following tasks combine the major steps needed to program 2D thermal porous convection starting from 1D steady state diffusion.
 
 ### Getting started
-Create a new folder named `lecture4` in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script named `porous_convection_2D.jl` for this homework. Take the 1D steady diffusion script `l3_steady_diffusion_1D.jl` as a basis.
+Create a new folder named `homework-5` in your GitHub repository for this week's (lecture 5) exercises. In there, create a new Julia script named `porous_convection_2D.jl` for this homework. Take the 1D steady diffusion script `l3_steady_diffusion_1D.jl` as a basis.
 
 ### Task 1
 Rename variables so that we solve it for the pressure:
@@ -148,7 +148,7 @@ Xc, Yc    = [x for x=xc, y=yc], [y for x=xc,y=yc]
 Xp, Yp    = Xc[1:st:end,1:st:end], Yc[1:st:end,1:st:end]
 ```
 
-Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
+Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `homework-5` folder.
 
 The final convection animation you produced should be similar to the one displayed hereafter (using the parameters listed above):
 """

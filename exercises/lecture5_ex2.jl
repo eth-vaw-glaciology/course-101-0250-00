@@ -122,12 +122,12 @@ if iter % ncheck == 0
 end
 ```
 
-Run the code, make sure that it works as expected, produce the animation and add it to the `README.md` within your `lecture4` folder. Well done! 🔥
+Run the code, make sure that it works as expected, produce the animation and add it to the `README.md` within your `homework-5` folder. Well done! 🔥
 
 Did the number of iterations required for convergence change compared to the version with the explicit temperature update? Try to come up with the explanation for why the number of iterations changed the way it changed and write a sentence about your thoughts on the topic.
 
 ### Task 3
-Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
+Using the newly developed implicit code, realise a numerical experiment varying the Rayleigh number. Theoretical critical value of `Ra` above which there is convection is approximately `40`. Confirm that `Ra < 40` results in no convection. Confirm that the values of `Ra > 40` result in the development of convection. Try the following range of values for `Ra`: `10`, `40`, `100`, `1000`. Produce the animation or the final figure after `nt=100` timesteps for each value. Add the produced gif or animation to the `README.md` within your `homework-5` folder.
 
 **Question:** What is the difference in the results for the different values of `Ra`, is there an observable trend? Write a comment explaining your observations.
 """

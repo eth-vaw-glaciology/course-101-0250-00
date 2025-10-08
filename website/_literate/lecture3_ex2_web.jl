@@ -10,7 +10,7 @@ The goal of this exercise is to implement the advection-diffusion with implicit 
 
 md"""
 ### Getting started
-1. Duplicate the file `implicit_diffusion_1D.jl` in the folder `lecture3` and name it `implicit_advection_diffusion_1D.jl`.
+1. Duplicate the file `implicit_diffusion_1D.jl` in the folder `homework-3` and name it `implicit_advection_diffusion_1D.jl`.
 4. Modify that script so that it includes the advection step as follows.
 """
 
