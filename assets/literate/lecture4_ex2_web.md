@@ -8,7 +8,7 @@ The goals of this exercise are to:
 - learn visualisation techniques in scientific computing;
 - use Makie.jl to visualise the 2D simulation.
 
-Create a script `implicit_advection_diffusion_makie_2D.jl` for this exercise and add it to the `lecture4` folder in your private GitHub repository. Summarise your results in a new section of the `README`.
+Create a script `implicit_advection_diffusion_makie_2D.jl` for this exercise and add it to the `homework-4` folder in your private GitHub repository. Summarise your results in a new section of the `README`.
 
 ### Getting started
 

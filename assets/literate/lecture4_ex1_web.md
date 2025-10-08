@@ -8,7 +8,7 @@ The goal of this exercise is to
 - Implement the upwind advection scheme in 2D
 - Modify the problem configuration
 
-Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it to the `lecture4` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
+Create a code `implicit_advection_diffusion_2D.jl` for this exercise and add it to the `homework-4` folder in your private GitHub repo. Report the results of this exercise within a new section in the `README`.
 
 ### Getting started
 
