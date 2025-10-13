@@ -37,7 +37,9 @@ An example of such fluids would be oil and water. In thermal convection, the den
 """
 
 #md # ~~~
-#md # <iframe width="560" height="315" src="https://www.youtube.com/embed/zbo6jUGrwdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+#md # <center>
+#md #  <iframe width="560" height="315" src="https://www.youtube.com/embed/zbo6jUGrwdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+#md # </center>
 #md # ~~~
 
 #nb # <center>
