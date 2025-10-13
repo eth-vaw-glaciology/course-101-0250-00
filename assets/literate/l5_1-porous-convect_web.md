@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # Modelling multi-physics
 
-### The goal of lecture 4 is to combine the acquired knowledge of numerical modelling and develop the first practical application: thermal porous convection in 2D.
+### The goal of lecture 5 is to combine the acquired knowledge of numerical modelling and develop the first practical application: thermal porous convection in 2D.
 
 ### Building upon:
 - The diffusion equation
@@ -21,7 +21,7 @@ An example of such fluids would be oil and water. In thermal convection, the den
 
 Fluid flows in porous materials such as rocks and soil could also be a result of convection.
 
-In this course, we only consider porous convection since it build on the already acquired knowledge of steady-state and transient diffusion processes.
+In this course, we only consider porous convection since it builds on the already acquired knowledge of steady-state and transient diffusion processes.
 
 Porous convection often arises in nature and geoengineering. For example, water circulation in hydrothermal systems is caused by thermal convection, and mixing of CO$_2$ with saline water during geological storage results from chemical convection.
 
@@ -168,49 +168,17 @@ For 2D grids, we will have to handle scalar quantity and two fluxes as depicted 
 
 #### 2D plotting
 
-You can use `heatmap()` function from `Plots.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`:
+You can use `heatmap()` function from `Makie.jl`, to plot e.g. `C` as function of the spatial coordinates `xc` and `yc`. Also, one could plot the arrows to show the direction of the flow using the `arrows2d` function:
 
 ```julia
-heatmap(xc, yc, C')
+# vis
+fig, ax, hm = heatmap(xc, yc, T; figure=(size=(600, 300),), axis=(aspect=DataAspect(), title="Temperature"), colormap=:turbo, colorrange=(-0.25ΔT, 0.25ΔT))
+st          = ceil(Int, nx / 25)
+ar          = arrows2d!(ax, xc[1:st:end], yc[1:st:end], qDx_c[1:st:end,1:st:end], qDy_c[1:st:end,1:st:end]; normalize=true, shaftwidth=0.5, tipwidth=7, tiplength=7)
+Colorbar(fig[:, end+1], hm)
+limits!(ax, -lx / 2, lx / 2, -ly, 0)
+display(fig)
 ```
-_note the transpose `'`_
 
 Use `display()` to force the display of the plot, e.g., in the time loop every `nout`.
-
-More advanced implementation, one can define the plotting options and apply them in the `heatmap()` call:
-
-```julia
-opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
-display(heatmap(xc, yc, C'; opts...))
-```
-
-# Julia's Project environment
-
-On GitHub, make sure to create a new folder for each week's exercises.
-
-Each week's folder should be a Julia project, i.e. contain a `Project.toml` file.
-
-This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
-
-```julia-repl
-julia> ]
-
-(@v1.10) pkg> activate .
-
-(lectureXX) pkg> add Plots
-```
-
-and adding at least one package.
-
-In addition, it is recommended to have the following structure and content:
-- lectureXX
-  - `README.md`
-  - `Project.toml`
-  - `Manifest.toml`
-  - docs/
-  - scripts/
-
-Codes could be placed in the `scripts/` folder. Output material to be displayed in the `README.md` could be placed in the `docs/` folder.
-
-\note{The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their `.gitignore`}
 
