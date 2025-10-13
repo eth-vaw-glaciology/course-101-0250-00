@@ -128,24 +128,13 @@ For visualisation, embed the plotting into a `nvis` statement setting `nvis=5`. 
 ```julia
 # visualisation
 if it % nvis == 0
-    qDxc  .= # average qDx in x
-    qDyc  .= # average qDy in y
-    qDmag .= sqrt.(qDxc.^2 .+ qDyc.^2)
-    qDxc  ./= qDmag
-    qDyc  ./= qDmag
-    qDx_p = qDxc[1:st:end,1:st:end]
-    qDy_p = qDyc[1:st:end,1:st:end]
-    heatmap(xc,yc,T';xlims=(xc[1],xc[end]),ylims=(yc[1],yc[end]),aspect_ratio=1,c=:turbo)
-    display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=0.5, c=:black))
+    qDx_c .= avx(qDx)
+    qDy_c .= avy(qDy)
+    ar[3] = qDx_c[1:st:end, 1:st:end]
+    ar[4] = qDy_c[1:st:end, 1:st:end]
+    hm[3] = T
+    display(fig)
 end
-```
-
-where `Xp` and `Yp` could be initialised as following before the time loop:
-```julia
-# visualisation init
-st        = ceil(Int,nx/25)
-Xc, Yc    = [x for x=xc, y=yc], [y for x=xc,y=yc]
-Xp, Yp    = Xc[1:st:end,1:st:end], Yc[1:st:end,1:st:end]
 ```
 
 Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `homework-5` folder.
@@ -154,6 +143,6 @@ The final convection animation you produced should be similar to the one display
 """
 #md # ~~~
 # <center>
-#   <video width="90%" autoplay loop controls src="./figures/l4_porous_convection_2D_ex1.mp4"/>
+#   <video width="90%" autoplay loop controls src="./figures/l5_porous_convection_2D_ex1.mp4"/>
 # </center>
 #md # ~~~

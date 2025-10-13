@@ -14,7 +14,7 @@ md"""
 In this first exercise, you will finalise the thermal porous convection discussed and implemented in class. The following tasks combine the major steps needed to program 2D thermal porous convection starting from 1D steady state diffusion.
 
 ### Getting started
-Create a new folder named `lecture4` in your GitHub repository for this week's (lecture 4) exercises. In there, create a new Julia script named `porous_convection_2D.jl` for this homework. Take the 1D steady diffusion script `l3_steady_diffusion_1D.jl` as a basis.
+Create a new folder named `homework-5` in your GitHub repository for this week's (lecture 5) exercises. In there, create a new Julia script named `porous_convection_2D.jl` for this homework. Take the 1D steady diffusion script `l3_steady_diffusion_1D.jl` as a basis.
 
 ### Task 1
 Rename variables so that we solve it for the pressure:
@@ -128,33 +128,22 @@ For visualisation, embed the plotting into a `nvis` statement setting `nvis=5`. 
 ```julia
 # visualisation
 if it % nvis == 0
-    qDxc  .= # average qDx in x
-    qDyc  .= # average qDy in y
-    qDmag .= sqrt.(qDxc.^2 .+ qDyc.^2)
-    qDxc  ./= qDmag
-    qDyc  ./= qDmag
-    qDx_p = qDxc[1:st:end,1:st:end]
-    qDy_p = qDyc[1:st:end,1:st:end]
-    heatmap(xc,yc,T';xlims=(xc[1],xc[end]),ylims=(yc[1],yc[end]),aspect_ratio=1,c=:turbo)
-    display(quiver!(Xp[:], Yp[:], quiver=(qDx_p[:], qDy_p[:]), lw=0.5, c=:black))
+    qDx_c .= avx(qDx)
+    qDy_c .= avy(qDy)
+    ar[3] = qDx_c[1:st:end, 1:st:end]
+    ar[4] = qDy_c[1:st:end, 1:st:end]
+    hm[3] = T
+    display(fig)
 end
 ```
 
-where `Xp` and `Yp` could be initialised as following before the time loop:
-```julia
-# visualisation init
-st        = ceil(Int,nx/25)
-Xc, Yc    = [x for x=xc, y=yc], [y for x=xc,y=yc]
-Xp, Yp    = Xc[1:st:end,1:st:end], Yc[1:st:end,1:st:end]
-```
-
-Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `lecture4` folder.
+Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `homework-5` folder.
 
 The final convection animation you produced should be similar to the one displayed hereafter (using the parameters listed above):
 """
 #md # ~~~
 # <center>
-#   <video width="90%" autoplay loop controls src="../assets/literate_figures/l4_porous_convection_2D_ex1.mp4"/>
+#   <video width="90%" autoplay loop controls src="../assets/literate_figures/l5_porous_convection_2D_ex1.mp4"/>
 # </center>
 #md # ~~~
 
