@@ -10,6 +10,7 @@ noeval = true
 
 > **Agenda**\
 > :books: Multi-physics and going 2D\
+> :computer: Visualisation with Makie.jl\
 > :construction: Exercises:
 >
 > - Implement advection-diffusion solver in 2D

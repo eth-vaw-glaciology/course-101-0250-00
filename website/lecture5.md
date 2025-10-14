@@ -10,12 +10,11 @@ noeval = true
 
 > **Agenda**\
 > :books: Thermal porous convection (implicit and steady-state solution)\
-> :computer: Julia's `Project` environment\
 > :construction: Exercises:
 > - Porous convection in 2D
 > - Rayleigh's number
 
---- 
+---
 
 \label{content}
 **Content**
