@@ -11,7 +11,7 @@
 
 - What are the key ingredients to understand performance?
 
-### The goal of this lecture 5 is to introduce:
+### The goal of this lecture 6 is to introduce:
 - Performance limiters
 - Effective memory throughput metric $T_\mathrm{eff}$
 
@@ -40,12 +40,14 @@ GPUs are massively parallel devices
 ![cpu_gpu_evo](../assets/literate_figures/l1_cpu_gpu_evo.png)
 
 Taking a look at a recent GPU and CPU:
-- Nvidia Tesla A100 GPU
+- Nvidia A100 GPU
+- Nvidia GH200 GPU
 - AMD EPYC "Rome" 7282 (16 cores) CPU
 
 | Device         | TFLOP/s (FP64) | Memory BW TB/s |
 | :------------: | :------------: | :------------: |
-| Tesla A100     | 9.7            | 1.55           |
+| Nvidia GH200   | 34             | 4              |
+| Nvidia A100    | 9.7            | 1.55           |
 | AMD EPYC 7282  | 0.7            | 0.085          |
 
 Current GPUs (and CPUs) can do many more computations in a given amount of time than they can access numbers from main memory.
@@ -60,13 +62,14 @@ Back to our hardware:
 
 | Device         | TFLOP/s (FP64) | Memory BW TB/s | Imbalance (FP64)     |
 | :------------: | :------------: | :------------: | :------------------: |
-| Tesla A100     | 9.7            | 1.55           | 9.7 / 1.55  × 8 = 50 |
+| Nvidia GH200   | 34             | 4              | 34  / 4     × 8 = 68 |
+| Nvidia A100    | 9.7            | 1.55           | 9.7 / 1.55  × 8 = 50 |
 | AMD EPYC 7282  | 0.7            | 0.085          | 0.7 / 0.085 × 8 = 66 |
 
 
 _(here computed with double precision values)_
 
-**Meaning:** we can do 50 (GPU) and 66 (CPU) floating point operations per number accessed from main memory. Floating point operations are "for free" when we work in memory-bounded regimes
+**Meaning:** we can do ≥ 50 (GPU) and 66 (CPU) floating point operations per number accessed from main memory. Floating point operations are "for free" when we work in memory-bounded regimes
 
 ➡ Requires to re-think the numerical implementation and solution strategies
 
@@ -128,10 +131,10 @@ Defining the $T_\mathrm{eff}$ metric, we assume that:
 
 As first task, we'll compute the $T_\mathrm{eff}$ for the 2D fluid pressure (diffusion) solver at the core of the porous convection algorithm from previous lecture.
 
-👉 Download the script [`l5_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get started.
+👉 Download the script [`l6_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get started.
 
 **To-do list:**
-- copy [`l5_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/), rename it to `Pf_diffusion_2D_Teff.jl`
+- copy [`l6_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/), rename it to `Pf_diffusion_2D_Teff.jl`
 - add a timer
 - include the performance metric formulas
 - deactivate visualisation
