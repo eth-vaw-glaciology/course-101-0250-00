@@ -18,7 +18,7 @@ For this exercise, you will write a code to assess the peak memory throughput of
 md"""
 ### Task 1
 
-In the `Pf_diffusion_2D` folder, create a new script named `memcopy.jl`. You can use as starting point the `diffusion_2D_loop_fun.jl` script from lecture 5 (or exercise 1).
+In the `Pf_diffusion_2D` folder, create a new script named `memcopy.jl`. You can use as starting point the `diffusion_2D_loop_fun.jl` script from lecture 6 (or exercise 1).
 
 1. Rename the "main" function `memcopy()`
 2. Modify the script to only keep following in the initialisation:

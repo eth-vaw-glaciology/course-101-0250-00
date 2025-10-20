@@ -14,7 +14,7 @@ In this first exercise, you will terminate the performance oriented implementati
 
 """
 
-#md # 👉 If needed, download the [`l5_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started.
+#md # 👉 If needed, download the [`l6_Pf_diffusion_2D.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) to get you started.
 
 md"""
 ### Task 1
