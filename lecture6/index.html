@@ -148,16 +148,20 @@ niter = ???</code></pre>
 <p>The number of threads can be queried within a Julia session as following: <code>Threads.nthreads&#40;&#41;</code></p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU &#40;hardware threads&#41;.</div></div>
-<h3 id=multi-threading_and_avx_currently_refactored ><a href="#multi-threading_and_avx_currently_refactored" class=header-anchor >Multi-threading and AVX &#40;🚧 currently refactored&#41;</a></h3>
-<p>Relying on Julia&#39;s <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> package, it is possible to combine multi-threading with <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">advanced vector extensions &#40;AVX&#41;</a> optimisations, leveraging extensions to the x86 instruction set architecture.</p>
-<p>To enable it:</p>
+<h3 id=multi-threading_avx_and_simd ><a href="#multi-threading_avx_and_simd" class=header-anchor >Multi-threading, AVX and SIMD</a></h3>
+<p>Julia&#39;s ecosystem offers various approaches to try supporting SIMD operations.</p>
+<p>Using <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a>, it is possible to combine multi-threading with <a href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">advanced vector extensions &#40;AVX&#41;</a> optimisations, leveraging extensions to the x86 instruction set architecture.</p>
+<p>Julia base also exposes <a href="https://docs.julialang.org/en/v1/base/base/#Base.SimdLoop.@simd"><code>@simd</code> macro</a> that would possibly enable the compiler to take extra liberties to allow loop re-ordering.</p>
+<p>To enable LoopVectorization:</p>
 <ol>
 <li><p>Add <code>using LoopVectorization</code> at the top of the script</p>
 
 <li><p>Replace <code>Threads.@threads</code> by <code>@tturbo</code></p>
 
 </ol>
-<p>And here we go 🚀</p>
+<p>To try making use of SIMD, decorate the <code>for</code> loop with <code>@simd for</code>.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >These features are still experimental and could change in future versions of Julia. Incorrect use of the @simd macro may cause unexpected results.</div></div>
 <h3 id=wrapping-up ><a href="#wrapping-up" class=header-anchor >Wrapping-up</a></h3>
 <ul>
 <li><p>We discussed main performance limiters</p>
@@ -399,7 +403,7 @@ maxiter = <span class=hljs-number >500</span></code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 20, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 21, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

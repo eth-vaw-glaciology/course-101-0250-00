@@ -337,15 +337,21 @@ The number of threads can be queried within a Julia session as following: `Threa
 
 \note{For optimal performance, the numbers of threads should be identical to the  number of physical cores of the target CPU (hardware threads).}
 
-### Multi-threading and AVX (🚧 currently refactored)
+### Multi-threading, AVX and SIMD
 
-Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
+Julia's ecosystem offers various approaches to try supporting SIMD operations.
 
-To enable it:
+Using [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl), it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
+
+Julia base also exposes [`@simd` macro](https://docs.julialang.org/en/v1/base/base/#Base.SimdLoop.@simd) that would possibly enable the compiler to take extra liberties to allow loop re-ordering.
+
+To enable LoopVectorization:
 1. Add `using LoopVectorization` at the top of the script
 2. Replace `Threads.@threads` by `@tturbo`
 
-And here we go 🚀
+To try making use of SIMD, decorate the `for` loop with `@simd for`.
+
+\note{These features are still experimental and could change in future versions of Julia. Incorrect use of the @simd macro may cause unexpected results.}
 
 ### Wrapping-up
 
