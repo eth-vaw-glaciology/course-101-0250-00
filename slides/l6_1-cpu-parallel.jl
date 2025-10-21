@@ -601,19 +601,29 @@ The number of threads can be queried within a Julia session as following: `Threa
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### Multi-threading and AVX (🚧 currently refactored)
+### Multi-threading, AVX and SIMD
 
-Relying on Julia's [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
+Julia's ecosystem offers various approaches to try supporting SIMD operations.
+
+Using [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl), it is possible to combine multi-threading with [advanced vector extensions (AVX)](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) optimisations, leveraging extensions to the x86 instruction set architecture.
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
 md"""
-To enable it:
+Julia base also exposes [`@simd` macro](https://docs.julialang.org/en/v1/base/base/#Base.SimdLoop.@simd) that would possibly enable the compiler to take extra liberties to allow loop re-ordering.
+"""
+
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
+To enable LoopVectorization:
 1. Add `using LoopVectorization` at the top of the script
 2. Replace `Threads.@threads` by `@tturbo`
 
-And here we go 🚀
+To try making use of SIMD, decorate the `for` loop with `@simd for`.
 """
+
+#nb # > 💡 note: These features are still experimental and could change in future versions of Julia. Incorrect use of the @simd macro may cause unexpected results.
+#md # \note{These features are still experimental and could change in future versions of Julia. Incorrect use of the @simd macro may cause unexpected results.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
