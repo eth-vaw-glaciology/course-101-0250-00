@@ -2,8 +2,6 @@
 
 This document lists the basics on how to edit the course website accessible at https://pde-on-gpu.vaw.ethz.ch/.
 
-🚧 More to come soon.
-
 ## Franklin static website
 
 To test the website locally (or after making a pull from Git):
