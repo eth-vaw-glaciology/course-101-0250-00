@@ -137,9 +137,10 @@ Finally, we add the update rules for the second dimension:
 """
 
 while err >= ϵtol && iter <= maxiter
-    #qx                 .-= ...
-    #qy                 .-= ...
-    #C[2:end-1,2:end-1] .-= ...
+    qx                 .-= dτ./(ρ + dτ/dc).*(qx./dc .+ diff(C,dims=1)./dx)
+    qy                 .-= dτ./(ρ + dτ/dc).*(qy./dc .+ diff(C,dims=2)./dy)
+    C[2:end-1,2:end-1] .-= dτ./(1 + dτ/ξ) .*((C[2:end-1,2:end-1] .- C_eq)./ξ .+ diff(qx[:,2:end-1],dims=1)./dx .+
+                                                                                diff(qy[2:end-1,:],dims=2)./dy)
     ## ...
 end
 
@@ -314,10 +315,10 @@ for it in 1:nt
     @printf("it = %d\n", it)
     iter = 1; err = 2ϵtol
     while err >= ϵtol && iter <= maxiter
-        #qDx        .-= ...
-        #P[2:end-1] .-= ...
+        qDx         .-= (qDx .+ k .* diff(P) ./ dx) ./ (θ_dτ_D + 1.0)
+        P[2:end-1]  .-= (diff(qDx) ./ dx) ./ β_dτ_D
         if iter % ncheck == 0
-            #err = ...
+            err = maximum(abs.(diff(qDx) ./ dx))
             @printf("  iter = %.1f × N, err = %1.3e\n", iter / nx, err)
         end
         iter += 1
@@ -347,10 +348,13 @@ After the iterative loop for the pressure:
 - Implement diffusion and advection of temperature as two separate substeps:
 """
 
+dta = dx / maximum(abs.(qDx)) / 1.1
+dtd = dx^2 / λ / 2.1
 dt  = min(dta, dtd)
 ## temperature
-#T[2:end-1] .+= ...
-#T[2:end-1] .-= ...
+T[2:end-1] .+= dt .* diff(λ .* diff(T) ./ dx) ./ dx
+T[2:end-1] .-= dt .* (max.(qDx[1:end-1], 0.0) .* diff(T[1:end-1]) ./ dx .+
+                      min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
 if it % nvis == 0
     ## visualisation
     p1 = plot(xc, [T_i, T]; xlims=(0, lx), ylabel="Temperature", title="iter/nx=$(round(iter/nx,sigdigits=3))")

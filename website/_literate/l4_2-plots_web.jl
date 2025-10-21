@@ -46,7 +46,7 @@ using CairoMakie
 
 plot(1:3)  # a scatter plot, for a line use `line`
 A = rand(50, 50);
-#try heatmap
+heatmap(A)
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
