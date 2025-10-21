@@ -4,7 +4,7 @@ using CairoMakie
 
 plot(1:3)  # a scatter plot, for a line use `line`
 A = rand(50, 50);
-#try heatmap
+heatmap(A)
 
 f = Figure()
 scatter(f[1, 1], rand(100, 2))

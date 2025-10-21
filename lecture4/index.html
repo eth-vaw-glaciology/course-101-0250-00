@@ -20,9 +20,10 @@ C       &#61; @. 1.0 &#43; exp&#40;-&#40;xc - lx / 4&#41;^2 - &#40;yc&#39; - ly 
 qx, qy  &#61; zeros&#40;nx-1, ny&#41;, zeros&#40;nx, ny-1&#41;</code></pre>
 <p>Finally, we add the update rules for the second dimension:</p>
 <pre><code class=language-julia >while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
-    #qx                 .-&#61; ...
-    #qy                 .-&#61; ...
-    #C&#91;2:end-1,2:end-1&#93; .-&#61; ...
+    qx                 .-&#61; dτ./&#40;ρ &#43; dτ/dc&#41;.*&#40;qx./dc .&#43; diff&#40;C,dims&#61;1&#41;./dx&#41;
+    qy                 .-&#61; dτ./&#40;ρ &#43; dτ/dc&#41;.*&#40;qy./dc .&#43; diff&#40;C,dims&#61;2&#41;./dy&#41;
+    C&#91;2:end-1,2:end-1&#93; .-&#61; dτ./&#40;1 &#43; dτ/ξ&#41; .*&#40;&#40;C&#91;2:end-1,2:end-1&#93; .- C_eq&#41;./ξ .&#43; diff&#40;qx&#91;:,2:end-1&#93;,dims&#61;1&#41;./dx .&#43;
+                                                                                diff&#40;qy&#91;2:end-1,:&#93;,dims&#61;2&#41;./dy&#41;
     # ...
 end</code></pre>
 <div class=note ><div class=title >💡 Note</div>
@@ -98,10 +99,10 @@ nvis    &#61; 5</code></pre>
     @printf&#40;&quot;it &#61; &#37;d\n&quot;, it&#41;
     iter &#61; 1; err &#61; 2ϵtol
     while err &gt;&#61; ϵtol &amp;&amp; iter &lt;&#61; maxiter
-        #qDx        .-&#61; ...
-        #P&#91;2:end-1&#93; .-&#61; ...
+        qDx         .-&#61; &#40;qDx .&#43; k .* diff&#40;P&#41; ./ dx&#41; ./ &#40;θ_dτ_D &#43; 1.0&#41;
+        P&#91;2:end-1&#93;  .-&#61; &#40;diff&#40;qDx&#41; ./ dx&#41; ./ β_dτ_D
         if iter &#37; ncheck &#61;&#61; 0
-            #err &#61; ...
+            err &#61; maximum&#40;abs.&#40;diff&#40;qDx&#41; ./ dx&#41;&#41;
             @printf&#40;&quot;  iter &#61; &#37;.1f × N, err &#61; &#37;1.3e\n&quot;, iter / nx, err&#41;
         end
         iter &#43;&#61; 1
@@ -122,10 +123,13 @@ qDx &#61; zeros&#40;Float64, nx - 1&#41;</code></pre>
 <li><p>Implement diffusion and advection of temperature as two separate substeps:</p>
 
 </ul>
-<pre><code class=language-julia >dt  &#61; min&#40;dta, dtd&#41;
+<pre><code class=language-julia >dta &#61; dx / maximum&#40;abs.&#40;qDx&#41;&#41; / 1.1
+dtd &#61; dx^2 / λ / 2.1
+dt  &#61; min&#40;dta, dtd&#41;
 # temperature
-#T&#91;2:end-1&#93; .&#43;&#61; ...
-#T&#91;2:end-1&#93; .-&#61; ...
+T&#91;2:end-1&#93; .&#43;&#61; dt .* diff&#40;λ .* diff&#40;T&#41; ./ dx&#41; ./ dx
+T&#91;2:end-1&#93; .-&#61; dt .* &#40;max.&#40;qDx&#91;1:end-1&#93;, 0.0&#41; .* diff&#40;T&#91;1:end-1&#93;&#41; ./ dx .&#43;
+                      min.&#40;qDx&#91;2:end  &#93;, 0.0&#41; .* diff&#40;T&#91;2:end  &#93;&#41; ./ dx&#41;
 if it &#37; nvis &#61;&#61; 0
     # visualisation
     p1 &#61; plot&#40;xc, &#91;T_i, T&#93;; xlims&#61;&#40;0, lx&#41;, ylabel&#61;&quot;Temperature&quot;, title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter/nx,sigdigits&#61;3&#41;&#41;&quot;&#41;
@@ -157,7 +161,7 @@ end</code></pre>
 
 plot&#40;1:3&#41;  # a scatter plot, for a line use &#96;line&#96;
 A &#61; rand&#40;50, 50&#41;;
-#try heatmap</code></pre>
+heatmap&#40;A&#41;</code></pre>
 <h2 id=advanced_usage ><a href="#advanced_usage" class=header-anchor >Advanced usage</a></h2>
 <p>For more control, you can create and manipulate figures, axes, plots etc. as separate objects.</p>
 <pre><code class=language-julia >f &#61; Figure&#40;&#41;
