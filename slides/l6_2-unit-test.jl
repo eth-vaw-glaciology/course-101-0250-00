@@ -2,7 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 5_
+#nb # _Lecture 6_
 md"""
 # Unit testing in Julia
 """
@@ -40,7 +40,8 @@ Or another example
 """
 @test [1, 2] + [2, 1] == [3, 3]
 
-#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 Testing an expression which is a call using infix syntax such as approximate comparisons (`\approx` + tab)
 """
@@ -110,7 +111,6 @@ md"""
 If we now introduce a bug
 """
 #nb square(x) = x^2
-#nb
 #nb @testset "Square Tests" begin
 #nb     @test square(5) == 25
 #nb     @test square("a") == "aa"
@@ -154,7 +154,11 @@ However, for bigger pieces of software, such as packages, this becomes unwieldly
 and also undesired (as we don't want tests to run all the time).  Then tests are put
 into `test/runtests.jl`.  If they are there they will be run when called from package
 mode or from automated test (CI).
+"""
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
+md"""
 Example for the package `Literate.jl` (we use that to generate the website):
 ```julia
 julia> using Pkg
