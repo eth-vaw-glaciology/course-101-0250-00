@@ -12,6 +12,7 @@ noeval = true
 > :books: GPU computing & performance assessment (continued)\
 > :computer: Unit testing and reference tests\
 > :construction: Exercises:
+>
 > - Data transfer optimisations on GPUs
 > - GPU codes for diffusion 2D
 > - Reference testing in Julia

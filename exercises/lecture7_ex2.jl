@@ -6,16 +6,16 @@ md"""
 
 md"""
 The goal of this exercise is to:
-- Port the 2D fluid diffusion CPU code from Lecture 5 to GPU
+- Port the 2D fluid diffusion CPU code from Lecture 6 to GPU
 - Assess the performance of the GPU solver
 """
 
 md"""
 ### Task 1
 
-In there, place the `Pf_diffusion_2D_perf_loop_fun.jl` script you created for Lecture 5 homework (Exercise 1, Task 1). Duplicate the script and rename it `Pf_diffusion_2D_perf_gpu.jl`.
+In there, place the `Pf_diffusion_2D_perf_loop_fun.jl` script you created for Lecture 6 homework (Exercise 1, Task 1). Duplicate the script and rename it `Pf_diffusion_2D_perf_gpu.jl`.
 
-Getting inspiration from the material presented in lecture 6 and exercise 1, work-out the necessary modifications in the `Pf_diffusion_2D_perf_gpu.jl` code in order to enable it to execute on the Nvidia P100 GPU. For this task, _**use a kernel programming approach**_.
+Getting inspiration from the material presented in lecture 7 and exercise 1, work-out the necessary modifications in the `Pf_diffusion_2D_perf_gpu.jl` code in order to enable it to execute on the Nvidia GH200 GPU. For this task, _**use a kernel programming approach**_.
 
 Hereafter, a step-wise list of changes you'll need to perform starting from your `Pf_diffusion_2D_perf_loop_fun.jl` code.
 
@@ -69,7 +69,7 @@ Ensure the GPU code produces similar results as the reference CPU loop code for 
 md"""
 ### Task 3
 
-Assess $T_\mathrm{peak}$ of the Nvidia Tesla P100 GPU. To do so, embed the *triad* benchmark (kernel programming version) from lecture 6 in a Julia script and use it to assess $T_\mathrm{peak}$. Upload the script to your GitHub folder and save the $T_\mathrm{peak}$ value for next task.
+Assess $T_\mathrm{peak}$ of the Nvidia GH200 GPU. To do so, embed the *triad* benchmark (kernel programming version) from lecture 7 in a Julia script and use it to assess $T_\mathrm{peak}$. Upload the script to your GitHub folder and save the $T_\mathrm{peak}$ value for next task.
 """
 
 md"""
@@ -77,5 +77,5 @@ md"""
 
 Report in a figure you will insert in the `README.md` the effective memory throughput $T_\mathrm{eff}$ for the 2D fluid pressure diffusion GPU code as function of number of grid points `nx = ny`. Realise a weak scaling benchmark varying `nx = ny = 32 .* 2 .^ (0:8) .- 1` (or until you run out of device memory). On the same figure, report as well $T_\mathrm{peak}$ from Task 3.
 
-Comment on the $T_\mathrm{eff}$ and $T_\mathrm{peak}$ values achieved on the Tesla P100.
+Comment on the $T_\mathrm{eff}$ and $T_\mathrm{peak}$ values achieved on the Nvidia GH200.
 """
