@@ -45,17 +45,19 @@ function diffusion2D()
     end
 end
 
-@inbounds @views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
-@inbounds @views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
-@inbounds @views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
-@inbounds @views macro d_yi(A) esc(:( ($A[2:end-1,2:end  ] .- $A[2:end-1,1:end-1]) )) end
-@inbounds @views macro  inn(A) esc(:( $A[2:end-1,2:end-1]                          )) end
+@views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
+@views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
+@views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
+@views macro d_yi(A) esc(:( ($A[2:end-1,2:end  ] .- $A[2:end-1,1:end-1]) )) end
+@views macro  inn(A) esc(:( $A[2:end-1,2:end-1]                          )) end
 
-@inbounds @views function diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy)
-    qTx     .= .-lam.*@d_xi(T).*_dx                              # Fourier's law of heat conduction: qT_x  = -λ ∂T/∂x
-    qTy     .= .-lam.*@d_yi(T).*_dy                              # ...                               qT_y  = -λ ∂T/∂y
-    dTdt    .= @inn(Ci).*(.-@d_xa(qTx).*_dx .- @d_ya(qTy).*_dy)  # Conservation of energy:           ∂T/∂t = 1/cp (-∂qT_x/∂x - ∂qT_y/∂y)
-    @inn(T) .= @inn(T) .+ dt.*dTdt                               # Update of temperature             T_new = T_old + ∂t ∂T/∂t
+@views function diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy)
+    @inbounds begin
+        qTx     .= .-lam.*@d_xi(T).*_dx                              # Fourier's law of heat conduction: qT_x  = -λ ∂T/∂x
+        qTy     .= .-lam.*@d_yi(T).*_dy                              # ...                               qT_y  = -λ ∂T/∂y
+        dTdt    .= @inn(Ci).*(.-@d_xa(qTx).*_dx .- @d_ya(qTy).*_dy)  # Conservation of energy:           ∂T/∂t = 1/cp (-∂qT_x/∂x - ∂qT_y/∂y)
+        @inn(T) .= @inn(T) .+ dt.*dTdt                               # Update of temperature             T_new = T_old + ∂t ∂T/∂t
+    end
 end
 
 diffusion2D()
@@ -116,8 +118,8 @@ function diffusion2D()
 end
 
 # solution
-@inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
+@views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    @inbounds T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
 end
 
 # solution
@@ -159,6 +161,6 @@ T_eff_task5 = .../t_it
 speedup_Teff_task3 = T_eff_task3/T_eff_task1
 speedup_Teff_task5 = T_eff_task5/T_eff_task1
 
-#solution for P100
-T_peak = ... # Peak memory throughput of the Tesla P100 GPU
+#solution for GH200
+T_peak = ... # Peak memory throughput of the Tesla GH200 GPU
 @show T_eff/T_peak

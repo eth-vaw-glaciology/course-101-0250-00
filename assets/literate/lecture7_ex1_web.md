@@ -10,19 +10,19 @@ The goal of this exercise is to:
 - learn about GPU array and kernel programming on the way.
 
 Prerequisites:
-- the lecture 6 *Benchmarking memory copy and establishing peak memory access performance* ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb))
+- the lecture 6 *Benchmarking memory copy and establishing peak memory access performance* ([`l7_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb))
 
 [*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md)
 
 ### Getting started
 
-👉 Download the [`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb) notebook and edit it.
+👉 Download the [`lecture7_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture7_ex1.ipynb) notebook and edit it.
 
-- Create a new folder in your GitHub repository for this week's (`lecture6`) exercises, including a `README.md` (as usual).
-- Hand-in the finalised notebook in your GitHub lectrue 6 folder and;
+- Create a new folder in your GitHub repository for this week's (`lecture7`) exercises, including a `README.md` (as usual).
+- Hand-in the finalised notebook in your GitHub lecture 7 folder and;
 - Report the output of Task 7 in the `README.md`.
 
-\note{Values reported in this exercise are for the Nvidia P100 16GB PCIe GPU.}
+\note{Values reported in this exercise are for the Nvidia GH200 96GB GPU.}
 
 We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
 
@@ -90,17 +90,19 @@ end
 The function to compute an actual time step is still missing to complete this solver. It can be written, e.g., as follows with finite differences using GPU *array programming* (AP):
 
 ````julia:ex4
-@inbounds @views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
-@inbounds @views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
-@inbounds @views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
-@inbounds @views macro d_yi(A) esc(:( ($A[2:end-1,2:end  ] .- $A[2:end-1,1:end-1]) )) end
-@inbounds @views macro  inn(A) esc(:( $A[2:end-1,2:end-1]                          )) end
+@views macro d_xa(A) esc(:( ($A[2:end  , :     ] .- $A[1:end-1, :     ]) )) end
+@views macro d_xi(A) esc(:( ($A[2:end  ,2:end-1] .- $A[1:end-1,2:end-1]) )) end
+@views macro d_ya(A) esc(:( ($A[ :     ,2:end  ] .- $A[ :     ,1:end-1]) )) end
+@views macro d_yi(A) esc(:( ($A[2:end-1,2:end  ] .- $A[2:end-1,1:end-1]) )) end
+@views macro  inn(A) esc(:( $A[2:end-1,2:end-1]                          )) end
 
-@inbounds @views function diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy)
-    qTx     .= .-lam.*@d_xi(T).*_dx                              # Fourier's law of heat conduction: qT_x  = -λ ∂T/∂x
-    qTy     .= .-lam.*@d_yi(T).*_dy                              # ...                               qT_y  = -λ ∂T/∂y
-    dTdt    .= @inn(Ci).*(.-@d_xa(qTx).*_dx .- @d_ya(qTy).*_dy)  # Conservation of energy:           ∂T/∂t = 1/cp (-∂qT_x/∂x - ∂qT_y/∂y)
-    @inn(T) .= @inn(T) .+ dt.*dTdt                               # Update of temperature             T_new = T_old + ∂t ∂T/∂t
+@views function diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy)
+    @inbounds begin
+        qTx     .= .-lam.*@d_xi(T).*_dx                              # Fourier's law of heat conduction: qT_x  = -λ ∂T/∂x
+        qTy     .= .-lam.*@d_yi(T).*_dy                              # ...                               qT_y  = -λ ∂T/∂y
+        dTdt    .= @inn(Ci).*(.-@d_xa(qTx).*_dx .- @d_ya(qTy).*_dy)  # Conservation of energy:           ∂T/∂t = 1/cp (-∂qT_x/∂x - ∂qT_y/∂y)
+        @inn(T) .= @inn(T) .+ dt.*dTdt                               # Update of temperature             T_new = T_old + ∂t ∂T/∂t
+    end
 end
 ````
 
@@ -120,7 +122,7 @@ diffusion2D()
 
 Benchmark the function `diffusion2D_step!` using BenchmarkTools and compute a straightforward *lower bound of the total memory throughput*, `T_tot_lb`; then, compare it to the *peak memory throughput*, `T_peak`. You can compute `T_tot_lb` considering only full array reads and writes and knowing that there is no data reuse between different GPU array computation statements as each statement is translated into a separate and independently launched kernel (note that to obtain the actual `T_tot`, one would need to use a profiler).
 
-Furthermore, use the `nx=ny` found best in the introduction notebook ([`1_memorycopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb)) to allocate the necessary arrays if the amount of memory of your GPU allows it (else divide this `nx` and `ny` by 2).
+Furthermore, use the `nx=ny` found best in the introduction notebook ([`l7_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb)) to allocate the necessary arrays if the amount of memory of your GPU allows it (else divide this `nx` and `ny` by 2).
 
 To help you, there is already some code below to initialize the required arrays and scalars for the benchmarking.
 \note{**hint**: Do not forget to interpolate these predefined variables into the benchmarking expression using `$` and note that you do not need to call the solver itself (`diffusion2D`)!}
@@ -219,8 +221,8 @@ Write the corresponding function `diffusion2D_step!` to compute a time step usin
 
 ````julia:ex10
 # solution
-@inbounds @views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
-    T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
+@views function diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)
+    @inbounds T2[2:end-1,2:end-1] .= T[2:end-1,2:end-1] .+ dt.* ...
 end
 ````
 
@@ -244,20 +246,20 @@ t_it_task3 = t_it
 T_tot_lb_task3 = T_tot_lb
 ````
 
-You should have observed a significant speedup (a speedup of factor 2 measured with the Tesla P100 GPU) even though `T_tot_lb` has probably decreased (to 214 GB/s with the Tesla P100 GPU, i.e about 56% of `T_tot_lb` measured in task 1). This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the **optimality** of an implementation.
+You should have observed a significant speedup even though `T_tot_lb` has probably decreased. This empirically confirms our earlier statement that `T_tot_lb` and consequently also `T_tot` (measured with a profiler) are often not good metrics to evaluate the **optimality** of an implementation.
 
 A good metric should certainly be tightly linked to observed runtime. We will now try to further speedup the function `diffusion2D_step!` using straightforward GPU kernel programming.
 
 ### Task 4 (GPU kernel programming)
 
-Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates the temperature using update rule (2) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introduction ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb)) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
+Rewrite the function `diffusion2D_step!` using GPU kernel programming: from within this function, call a GPU kernel, which updates the temperature using update rule (2) (you also need to write this kernel); for simplicity's sake, hardcode the kernel launch parameter `threads` found best in the introduction ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb)) into the function and compute `blocks` accordingly in order to have it work with the existing main function `diffusion2` (use the function `size` instead of `nx` and `ny` to compute `blocks`).
 \note{You can base yourself on the kernel `memcopy_triad_KP!` from the introdution notebook to help you remember the very basics of GPU kernel programming.}
 
 \note{In this kind of kernels, the computations are described for one array cell (here `T2[ix,iy]`) rather than for whole arrays - just like in a for loop; moreover, if-statements allow to ensure to remain within the array boundaries (in for loop this is achieved with the loop ranges).}
 
 \note{To verify that it does the right computations, you can launch `diffusion2D()` (as in task 2).}
 
-\note{Add the `@inbounds` macro direcly in front of the Temperature assignement (`T2[ix,iy]`) as else it does not propagate to the computations (more information on the propagation of `@inbounds` can be found [here](https://docs.julialang.org/en/v1/devdocs/boundscheck/); however, as noted earlier, outside of these exercises, it is often more convenient to activate and deactivate bounds-checking globally instead of using the `@inbounds` macro).}
+\note{Add the `@inbounds` macro direcly in front of the Temperature assignement (`T2[ix,iy]`) as else it does not propagate to the computations (more information on the propagation of `@inbounds` can be found [here](https://docs.julialang.org/en/v1/devdocs/boundscheck/)).}
 
 \note{Only add the `@inbounds` macro to the function once you have verified that it work as they should (as in task 2).}
 
@@ -291,7 +293,7 @@ T_tot_lb = .../1e9*nx*ny*sizeof(Float64)/t_it
 ratio_T_tot_lb = ...
 ````
 
-The runtime speedup is probably even higher (a speedup of factor 5 measured with the Tesla P100 GPU), even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1 (524 GB/s with the Tesla P100 GPU, i.e about 36% above `T_tot_lb` measured in task 1). We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
+The runtime speedup is probably even higher, even though `T_tot_lb` is probably somewhat similar to the one obtained in task 1. We will now define a better metric for the performance evaluation of solvers like the one above, which is always proportional to observed runtime.
 
 To this aim, let us recall first the reflections made after benchmarking the original GPU array programming code in Task 1:
 > three of the four arrays that are updated every iteration are not computed based on their values in the previous iteration and their individual values could therefore be computed on-the-fly when needed or stored in the much faster on-chip memory as intermediate results; these three arrays would never need to be stored in main memory and read from there. Only the temperature array (`T`) needs inevitably to be read from main memory and written to it at every iteration as is computed based on its values from the previous iteration (and the entire temperature array is orders of magnitudes bigger than the available on-chip memory). In addition, the heat capacity array (`Ci`) needs to be entirely read at every iteration. To sum up, all but three of eleven full array memory reads or writes can be avoided. If we avoid them, we reduce the main memory accesses by more than a factor three and can therefore expect the code to be at least three times faster.
@@ -330,10 +332,10 @@ Most importantly though, comparing a measured $T_\mathrm{eff}$ with $T_\mathrm{p
 Compute by how much percent you can improve the performance of the solver at most:
 
 ````julia:ex16
-#solution for P100
-T_peak = ... # Peak memory throughput of the Tesla P100 GPU
+#solution for GH200
+T_peak = ... # Peak memory throughput of the Tesla GH200 GPU
 @show T_eff/T_peak
 ````
 
-Report the value and potentially a short explanation in the `README.md` on GitHub, within lecture 6 folder (do not forget to upload this finalised notebook as well).
+Report the value and potentially a short explanation in the `README.md` on GitHub, within lecture 7 folder (do not forget to upload this finalised notebook as well).
 

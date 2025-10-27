@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # GPU computing and performance assessment
 
-### The goal of this lecture 6 is to tackle:
+### The goal of this lecture 7 is to tackle:
 
 - GPU architecture and kernel programming
 - GPU computing and performance assessment
@@ -97,11 +97,11 @@ Let's take some time to get started.
 👉 Getting started:
 - Fetch your login infos in the `daint_login.md` file within your personal Polybox folder.
 - Head to [Software install](/software_install/#gpu_computing_on_piz_daint) for the directions.
-- Finally, fetch the [`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb) notebook for this lecture and upload them to your `scratch` on Piz Daint.
+- Finally, fetch the [`l7_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb) notebook for this lecture and upload them to your `scratch` on Daint.Alps.
   Executing
-  `wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb` on Daint should work.
+  `wget https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/main/notebooks/l7_1-gpu-memcopy.ipynb` on Alps should work.
 
-\note{Values reported in this notebook are for the Nvidia P100 16GB PCIe GPU.}
+\note{Values reported in this notebook are for the Nvidia GH200 96GB GPU.}
 
 We will use the packages `CUDA` and `BenchmarkTools` to create a little performance laboratory:
 
@@ -117,13 +117,13 @@ The performance of most scientific applications nowadays is bound by memory acce
 
 The reason is that current GPUs (and CPUs) can do many more computations in a given amount of time than they can access numbers from main memory.
 
-This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the Tesla P100 GPU, it is:
+This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the Nvidia GH200 GPU, it is:
 
-$$ \frac{5300 ~\mathrm{[GFlop/s]}}{732 ~\mathrm{[GB/s]}}~×~8 = 58 $$
+$$ \frac{34000 ~\mathrm{[GFlop/s]}}{4000 ~\mathrm{[GB/s]}}~×~8 = 68 $$
 
-(here computed with double precision values taken from [the vendor's product specification sheet](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf)).
+(here computed with double precision values taken from [the vendor's product specification sheet](https://resources.nvidia.com/en-us-data-center-overview-mc/en-us-data-center-overview/grace-hopper-superchip-datasheet-partner)).
 
-So we can do 58 floating point operations per number read from main memory or written to it.
+So we can do 68 floating point operations per number read from main memory or written to it.
 
 As a consequence, we can consider **floating point operations be "for free"** when we work in the memory-bounded regime as in this lecture.
 
@@ -171,11 +171,11 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 \note{The factor `2` comes from the fact that the data is read and written (`2` operations).}
 
-Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia Tesla P100 GPUs, it is 559 GB/s, according to [this source](https://doi.org/10.1109/P3HPC51967.2020.00006).
+Compare now `T_tot` with the known peak memory throughput, `T_peak`, which is found e.g. in scientific or vendor publications (for the Nvidia GH200 GPUs, it is 4000 GB/s, according to [the datasheet](https://resources.nvidia.com/en-us-data-center-overview-mc/en-us-data-center-overview/grace-hopper-superchip-datasheet-partner).
 
-\note{Achievable peak memory throughput is usually significantly lower than the *theoretical peak bandwidth* announced by the vendor (for the [Tesla P100 GPUs](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf), the latter is 732 GB/s as noted already earlier).}
+\note{Achievable peak memory throughput is usually lower than the *theoretical peak bandwidth* announced by the vendor (for the [Nvidia GH200 GPUs](https://resources.nvidia.com/en-us-data-center-overview-mc/en-us-data-center-overview/grace-hopper-superchip-datasheet-partner), the latter is 4000 GB/s as noted already earlier).}
 
-\note{Here 1 GB is 1e9 Bytes as in the publication, where the peak memory throughput of the Tesla P100 GPU was obtained from.}
+\note{Here 1 GB is 1e9 Bytes as in the publication, where the peak memory throughput of the Nvidia GH200 GPU was obtained from.}
 
 You have surely found `T_tot` to be orders of magnitude below `T_peak`. This is to be expected when copying a small array.
 
@@ -199,7 +199,7 @@ for pow = 0:11
 end
 ````
 
-You can observe that the best performance is on pair with `T_peak` or a bit lower (measured 522 GB/s with the Tesla P100 GPU) as `copyto!` is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.
+You can observe that the best performance is on pair with `T_peak` or a bit lower as `copyto!` is a function that needs to work in all possible cases and it is not specifically optimised for a particular hardware.
 
 Furthermore, we note that best performance is obtained for large arrays (in the order of Gigabytes).
 
@@ -233,7 +233,7 @@ t_it = @belapsed begin memcopy_AP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 ````
 
-The performance you observe might be a little lower than with the `copyto!` function (measured 496 GB/s with the Tesla P100 GPU).
+The performance you observe might be a little lower than with the `copyto!` function (measured 3795 GB/s with the Nvidia GH200 GPU).
 
 The few experiments that we have done together so far have shown you already that performing memory copy with maximal possible performance (T_peak) is not a completely trivial task.
 
@@ -282,7 +282,7 @@ T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
 \note{For simplicity, the number of threads was set here explicitly to 32; more future proof would be to retrieve the warp size from the corresponding CUDA attribute by doing: `attribute(device(),CUDA.DEVICE_ATTRIBUTE_WARP_SIZE)`.}
 
-`T_tot` is now probably in the order of magnitude of `T_peak`, yet depending on the used GPU it can be still significantly below (measured 302 GB/s with the Tesla P100 GPU).
+`T_tot` is now probably in the order of magnitude of `T_peak`, yet depending on the used GPU it can be still significantly below.
 
 If `T_tot` is significantly below `T_peak`, then we need to set the numbers of threads per block closer to the maximum the GPU allows.
 
@@ -303,7 +303,7 @@ for pow = Int(log2(32)):Int(log2(max_threads))
 end
 ````
 
-You should observe now that beyond a certain minimum number of threads per block (64 with the Tesla P100 GPU), `T_tot` is quite close to `T_peak` (which exact thread/block configuration leads to the best `T_tot` depends on the used GPU architecture).
+You should observe now that beyond a certain minimum number of threads per block (64 with the Nvidia GH200 GPU), `T_tot` is quite close to `T_peak` (which exact thread/block configuration leads to the best `T_tot` depends on the used GPU architecture).
 
 Instead of increasing the number of threads only in the x dimension, we can also do so in the y dimension.
 
@@ -361,13 +361,7 @@ end
 
 \note{There is now a factor `3` instead of `2` in the computation of `T_tot`: `2` arrays are read and `1` written (`3` operations).}
 
-Compare now the best measured `T_tot` to the `T_peak` obtained from the publication and if it is higher, then it means we need to correct `T_peak` to take the value of the `T_tot` measured (`T_tot` measured with the Tesla P100 GPU is 561 GB/s, i.e., 2 GB/s higher than the `T_peak` obtained from the publication mentioned earlier).
-
-Note that the `T_peak` reported in the publication was obtained with a slightly different kernel which multiplies C with a scalar in addition; it is usually referred to as *triad*.
-
-For completeness, we will also quickly benchmark a *triad* kernel.
-
-To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:
+Let's also benchmark a so-called *triad* kernel. To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:
 
 ````julia:ex18
 @inbounds function memcopy_triad_KP!(A, B, C, s)
@@ -386,7 +380,7 @@ t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_triad_KP!($
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 ````
 
-There should be no significant difference between `T_tot` of this triad kernel and of the previous kernel (with the Tesla P100 GPU, it is 561 GB/s with both kernels).
+There should be no significant difference between `T_tot` of this triad kernel and of the previous kernel.
 
 Finally, let us also check the triad performance we obtain with GPU array programming:
 
