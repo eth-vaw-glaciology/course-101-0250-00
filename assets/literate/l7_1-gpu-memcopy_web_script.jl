@@ -55,15 +55,15 @@ nx = ny = array_sizes[index]
 A = CUDA.zeros(Float64, nx, ny);
 B = CUDA.rand(Float64, nx, ny);
 
-@inbounds memcopy_AP!(A, B) = (A .= B)
+memcopy_AP!(A, B) = (A .= B)
 
 t_it = @belapsed begin memcopy_AP!($A, $B); synchronize() end
 T_tot = 2*1/1e9*nx*ny*sizeof(Float64)/t_it
 
-@inbounds function memcopy_KP!(A, B)
+function memcopy_KP!(A, B)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy]
     return nothing
 end
 
@@ -102,10 +102,10 @@ for pow = 0:Int(log2(max_threads/32))
     println("(threads=$threads) T_tot = $(T_tot)")
 end
 
-@inbounds function memcopy2_KP!(A, B, C)
+function memcopy2_KP!(A, B, C)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + C[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy] + C[ix,iy]
     return nothing
 end
 
@@ -122,10 +122,10 @@ for pow = 0:Int(log2(max_threads/32))
     println("(threads=$threads) T_tot = $(T_tot)")
 end
 
-@inbounds function memcopy_triad_KP!(A, B, C, s)
+function memcopy_triad_KP!(A, B, C, s)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + s*C[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy] + s*C[ix,iy]
     return nothing
 end
 
@@ -137,7 +137,7 @@ blocks  = (nx÷threads[1], ny÷threads[2])
 t_it = @belapsed begin @cuda blocks=$blocks threads=$threads memcopy_triad_KP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it
 
-@inbounds memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
+memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
 
 t_it = @belapsed begin memcopy_triad_AP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it

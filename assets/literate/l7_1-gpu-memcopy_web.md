@@ -219,12 +219,8 @@ Let us now create our own memory copy function using GPU *Array Programming* (AP
 We can write a memory copy simply as `A .= B`; and wrap it in a function using Julia's concise notation, it looks as follows:
 
 ````julia:ex9
-@inbounds memcopy_AP!(A, B) = (A .= B)
+memcopy_AP!(A, B) = (A .= B)
 ````
-
-\note{We use `@inbounds` macro to make sure no array bounds checking is performed, which would slow down significantly.}
-
-\note{`A = B` would not do a memcopy, but make `A` an alias of `B`, i.e. make `A` point to the same data in memory as `B`.}
 
 We also benchmark it and compute `T_tot`:
 
@@ -244,13 +240,17 @@ We will now use GPU *Kernel Programming* (KP) to try to get closer to `T_peak`.
 A memory copy kernel can be written e.g. as follows:
 
 ````julia:ex11
-@inbounds function memcopy_KP!(A, B)
+function memcopy_KP!(A, B)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy]
     return nothing
 end
 ````
+
+\note{We use `@inbounds` macro to make sure no array bounds checking is performed, which would slow down significantly.}
+
+\note{`A = B` would not do a memcopy, but make `A` an alias of `B`, i.e. make `A` point to the same data in memory as `B`.}
 
 Then, in order to copy the (entire) array `B` to `A`, we need to launch the kernel such that the above indices `ix` and `iy` map exactly to each array cell.
 
@@ -334,10 +334,10 @@ We will therefore also do a few experiments on another commonly benchmarked case
 We modify therefore the previous kernel to take a third array `C` as input and add it to `B` (the rest is identical):
 
 ````julia:ex16
-@inbounds function memcopy2_KP!(A, B, C)
+function memcopy2_KP!(A, B, C)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + C[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy] + C[ix,iy]
     return nothing
 end
 ````
@@ -364,10 +364,10 @@ end
 Let's also benchmark a so-called *triad* kernel. To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:
 
 ````julia:ex18
-@inbounds function memcopy_triad_KP!(A, B, C, s)
+function memcopy_triad_KP!(A, B, C, s)
     ix = (blockIdx().x-1) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + s*C[ix,iy]
+    @inbounds A[ix,iy] = B[ix,iy] + s*C[ix,iy]
     return nothing
 end
 
@@ -385,7 +385,7 @@ There should be no significant difference between `T_tot` of this triad kernel a
 Finally, let us also check the triad performance we obtain with GPU array programming:
 
 ````julia:ex19
-@inbounds memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
+memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
 
 t_it = @belapsed begin memcopy_triad_AP!($A, $B, $C, $s); synchronize() end
 T_tot = 3*1/1e9*nx*ny*sizeof(Float64)/t_it

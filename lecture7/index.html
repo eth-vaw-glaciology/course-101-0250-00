@@ -58,11 +58,7 @@ B = CUDA.rand(<span class=hljs-built_in >Float64</span>, nx, ny);</code></pre>
 <h3 id=gpu_array_programming ><a href="#gpu_array_programming" class=header-anchor >GPU array programming</a></h3>
 <p>Let us now create our own memory copy function using GPU <em>Array Programming</em> &#40;AP&#41;.</p>
 <p>We can write a memory copy simply as <code>A .&#61; B</code>; and wrap it in a function using Julia&#39;s concise notation, it looks as follows:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> memcopy_AP!(A, B) = (A .= B)</code></pre>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg >We use <code>@inbounds</code> macro to make sure no array bounds checking is performed, which would slow down significantly.</div></div>
-<div class=note ><div class=title >💡 Note</div>
-<div class=messg ><code>A &#61; B</code> would not do a memcopy, but make <code>A</code> an alias of <code>B</code>, i.e. make <code>A</code> point to the same data in memory as <code>B</code>.</div></div>
+<pre><code class="julia hljs">memcopy_AP!(A, B) = (A .= B)</code></pre>
 <p>We also benchmark it and compute <code>T_tot</code>:</p>
 <pre><code class="julia hljs">t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> memcopy_AP!($A, $B); synchronize() <span class=hljs-keyword >end</span>
 T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
@@ -71,12 +67,16 @@ T_tot = <span class=hljs-number >2</span>*<span class=hljs-number >1</span>/<spa
 <h3 id=gpu_kernel_programming ><a href="#gpu_kernel_programming" class=header-anchor >GPU kernel programming</a></h3>
 <p>We will now use GPU <em>Kernel Programming</em> &#40;KP&#41; to try to get closer to <code>T_peak</code>.</p>
 <p>A memory copy kernel can be written e.g. as follows:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy_KP!(A, B)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy_KP!(A, B)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy]
+    <span class=hljs-meta >@inbounds</span> A[ix,iy] = B[ix,iy]
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span></code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >We use <code>@inbounds</code> macro to make sure no array bounds checking is performed, which would slow down significantly.</div></div>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><code>A &#61; B</code> would not do a memcopy, but make <code>A</code> an alias of <code>B</code>, i.e. make <code>A</code> point to the same data in memory as <code>B</code>.</div></div>
 <p>Then, in order to copy the &#40;entire&#41; array <code>B</code> to <code>A</code>, we need to launch the kernel such that the above indices <code>ix</code> and <code>iy</code> map exactly to each array cell.</p>
 <p>Therefore, we need to have <code>blocks&#91;1&#93;*threads&#91;1&#93; &#61;&#61; nx</code> and <code>blocks&#91;2&#93;*threads&#91;2&#93; &#61;&#61; ny</code>.</p>
 <p>We will try first with the simplest possible option using only one thread per block:</p>
@@ -128,10 +128,10 @@ throughputs  = []
 <p>So far, we experimented with memory copy in the strict sense: copy an array from one place to the other. When doing computations, we often read more data than we write.</p>
 <p>We will therefore also do a few experiments on another commonly benchmarked case: read two arrays and write only one.</p>
 <p>We modify therefore the previous kernel to take a third array <code>C</code> as input and add it to <code>B</code> &#40;the rest is identical&#41;:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy2_KP!(A, B, C)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy2_KP!(A, B, C)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + C[ix,iy]
+    <span class=hljs-meta >@inbounds</span> A[ix,iy] = B[ix,iy] + C[ix,iy]
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span></code></pre>
 <p>Then, we test exactly as for the previous kernel how <code>T_tot</code> behaves with an increasing number of threads per blocks in y dimension, keeping it fixed to 32 in x dimension:</p>
@@ -150,10 +150,10 @@ throughputs  = []
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >There is now a factor <code>3</code> instead of <code>2</code> in the computation of <code>T_tot</code>: <code>2</code> arrays are read and <code>1</code> written &#40;<code>3</code> operations&#41;.</div></div>
 <p>Let&#39;s also benchmark a so-called <em>triad</em> kernel. To this purpose, we will directly use the best thread/block configuration that we have found in the previous experiment:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >function</span> memcopy_triad_KP!(A, B, C, s)
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> memcopy_triad_KP!(A, B, C, s)
     ix = (blockIdx().x-<span class=hljs-number >1</span>) * blockDim().x + threadIdx().x
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
-    A[ix,iy] = B[ix,iy] + s*C[ix,iy]
+    <span class=hljs-meta >@inbounds</span> A[ix,iy] = B[ix,iy] + s*C[ix,iy]
     <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
 <span class=hljs-keyword >end</span>
 
@@ -166,7 +166,7 @@ t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</
 T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
 <p>There should be no significant difference between <code>T_tot</code> of this triad kernel and of the previous kernel.</p>
 <p>Finally, let us also check the triad performance we obtain with GPU array programming:</p>
-<pre><code class="julia hljs"><span class=hljs-meta >@inbounds</span> memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
+<pre><code class="julia hljs">memcopy_triad_AP!(A, B, C, s) = (A .= B.+ s.*C)
 
 t_it = <span class=hljs-meta >@belapsed</span> <span class=hljs-keyword >begin</span> memcopy_triad_AP!($A, $B, $C, $s); synchronize() <span class=hljs-keyword >end</span>
 T_tot = <span class=hljs-number >3</span>*<span class=hljs-number >1</span>/<span class=hljs-number >1e9</span>*nx*ny*sizeof(<span class=hljs-built_in >Float64</span>)/t_it</code></pre>
