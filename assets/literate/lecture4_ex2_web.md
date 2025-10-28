@@ -55,7 +55,7 @@ Show an arrow to every 10th cell in x and y directions.
 
 Make a short animation showing the time evolution of the concentration field `C` during `nt = 100` physical time steps. The numerical algorithm should be the same as in Exercise 1.
 
-The figure should contain 2 subplots, the first displaying the `heatmap` of the `C` field with the "roma" colormap, and the quiver plot showing magnitude and direction of the flux vector `q`. The second subplot should show the evolution of the by `nx` normalised iteration count.
+The figure should contain 2 subplots, the first displaying the `heatmap` of the `C` field with the "roma" colormap, and the quiver plot showing magnitude and direction of the flux vector `q`. The second subplot should show the evolution of the iteration count normalised by `nx`.
 In the time loop, only update the existing plot, don't create new figure every time step.
 
 You should get an animation like this:

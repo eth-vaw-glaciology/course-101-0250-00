@@ -241,7 +241,7 @@ nt      &#61; 100</code></pre>
 <div class=messg >Make sure to update the flux array initialisation and include the flux in the y-direction <code>qy</code> and use now 2D arrays: <code>qx,qy &#61; zeros&#40;nx-1,??&#41;, zeros&#40;??,ny-1&#41;</code>.</div></div>
 <h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
 <p>Repeat the steps from the Exercise 1 in Homework 3 to create the implicit time-dependent diffusion solver but in 2D. <strong>Do not include advection yet.</strong> Pay attention to add information relative to the second dimension whenever it&#39;s needed.</p>
-<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 100</code> physical time steps. The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field and the second the evolution of the by <code>nx</code> normalised iteration count:</p>
+<p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 100</code> physical time steps. The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field and the second the evolution of the iteration count normalised by <code>nx</code>:</p>
 <pre><code class=language-julia ># visualisation
 p1 &#61; heatmap&#40;xc, yc, C&#39;; xlims&#61;&#40;0, lx&#41;, ylims&#61;&#40;0, ly&#41;, clims&#61;&#40;0, 1&#41;, aspect_ratio&#61;1,
              xlabel&#61;&quot;lx&quot;, ylabel&#61;&quot;ly&quot;, title&#61;&quot;iter/nx&#61;&#36;&#40;round&#40;iter/nx,sigdigits&#61;3&#41;&#41;&quot;&#41;
@@ -304,7 +304,7 @@ end</code></pre>
 <div class=messg >Make sure to update the flux array initialisation and include the flux in the y-direction <code>qy</code> and use now 2D arrays: <code>qx,qy &#61; zeros&#40;nx-1,??&#41;, zeros&#40;??,ny-1&#41;</code>.</div></div>
 <h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
 <p>Make a short animation showing the time evolution of the concentration field <code>C</code> during <code>nt &#61; 100</code> physical time steps. The numerical algorithm should be the same as in Exercise 1.</p>
-<p>The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field with the &quot;roma&quot; colormap, and the quiver plot showing magnitude and direction of the flux vector <code>q</code>. The second subplot should show the evolution of the by <code>nx</code> normalised iteration count. In the time loop, only update the existing plot, don&#39;t create new figure every time step.</p>
+<p>The figure should contain 2 subplots, the first displaying the <code>heatmap</code> of the <code>C</code> field with the &quot;roma&quot; colormap, and the quiver plot showing magnitude and direction of the flux vector <code>q</code>. The second subplot should show the evolution of the iteration count normalised by <code>nx</code>. In the time loop, only update the existing plot, don&#39;t create new figure every time step.</p>
 <p>You should get an animation like this:</p>
 
 <center>
@@ -316,7 +316,7 @@ end</code></pre>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: October 27, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: October 28, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
