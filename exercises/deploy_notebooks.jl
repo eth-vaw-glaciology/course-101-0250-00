@@ -1,6 +1,6 @@
 using Literate
 ## include Literate scripts starting with following letters in the deploy
-incl = "lecture7_"
+incl = "lecture4_"
 ## Set `sol=true` to produce output with solutions contained and hints stripts. Otherwise the other way around.
 sol = false
 ##

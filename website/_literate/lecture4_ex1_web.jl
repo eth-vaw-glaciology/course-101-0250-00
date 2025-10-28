@@ -67,7 +67,7 @@ md"""
 Repeat the steps from the Exercise 1 in Homework 3 to create the implicit time-dependent diffusion solver but in 2D. **Do not include advection yet.** Pay attention to add information relative to the second dimension whenever it's needed.
 
 
-Make a short animation showing the time evolution of the concentration field `C` during `nt = 100` physical time steps. The figure should contain 2 subplots, the first displaying the `heatmap` of the `C` field and the second the evolution of the by `nx` normalised iteration count:
+Make a short animation showing the time evolution of the concentration field `C` during `nt = 100` physical time steps. The figure should contain 2 subplots, the first displaying the `heatmap` of the `C` field and the second the evolution of the iteration count normalised by `nx`:
 
 ```julia
 # visualisation
