@@ -314,6 +314,33 @@ println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-sub
 srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Make sure to have started the Julia uenv <strong>before</strong> executing the <code>sbatch</code> command or to include <code>--uenv julia/25.5:v1 --view&#61;juliaup</code> in the <code>srun</code> command.</div></div>
+<h3 id=jupyterlab_access_on_alps ><a href="#jupyterlab_access_on_alps" class=header-anchor >JupyterLab access on Alps</a></h3>
+<p>Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient <a href="https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter">JupyterLab access</a>.</p>
+<ol>
+<li><p>First, create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code> &#40;do this on daint&#41;:</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre>
+<ol start=2 >
+<li><p>Head to <a href="https://jupyter-daint.cscs.ch/">https://jupyter-daint.cscs.ch/</a>.</p>
+
+<li><p>Login with your username and password you&#39;ve set for in the <a href="#account_setup">Account setup</a> step.</p>
+
+<li><p>Follow the <a href="https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter">additional procedure to set up the Julia kernel in Jupyter</a>.</p>
+
+</ol>
+<ul>
+<li><p>In the <code>Advanced options</code>, provide as uenv <code>julia/25.5:v1</code> and <code>jupyter</code> as view.</p>
+
+<li><p>Select the duration you want and <strong>Launch JupyterLab</strong>.</p>
+
+<li><p><em>Only the first time</em> – open the console from the JupyterLab launcher and run <code>install_ijulia</code></p>
+
+</ul>
+<ol start=5 >
+<li><p>From within JupyterLab, upload the notebook to work on and get started&#33;</p>
+
+</ol>
 <h3 id=transferring_files_on_alps ><a href="#transferring_files_on_alps" class=header-anchor >Transferring files on Alps</a></h3>
 <p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
 <p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
