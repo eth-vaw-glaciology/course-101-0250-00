@@ -65,7 +65,7 @@ VS Code's [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vs
 
 1. To get started, follow [the install steps](https://code.visualstudio.com/docs/remote/ssh#_installation).
 2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
-3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#running_julia_interactively_on_piz_daint).
+3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#running_julia_interactively_on_alps).
 
 \note{This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.}
 
@@ -354,7 +354,7 @@ ln -s $SCRATCH scratch
 
 Make sure to remove any folders you may find in your scratch as those are the empty remaining from last year's course.
 
-### Setting up Julia on Daint
+### Setting up Julia on Alps
 
 The Julia setup on daint is handled by [uenv](https://docs.cscs.ch/software/uenv/), user environments that provide scientific applications, libraries and tools. The [Julia uenv](https://docs.cscs.ch/software/prgenv/julia/) provides a fully configured environment to run Julia at Scales on Nvidia GPUs, using MPI as communication library. Julia is installed and managed by [JUHPC](https://github.com/JuliaParallel/JUHPC) which wraps Juliaup and ensures it smoothly works on the supercomputer.
 
@@ -390,7 +390,7 @@ At this point, you should be able to launch Julia by typing `julia` in the termi
 
 \note{All Julia-related information can be found at [https://docs.cscs.ch/software/prgenv/julia/](https://docs.cscs.ch/software/prgenv/julia/)}
 
-### Running Julia interactively on Daint
+### Running Julia interactively on Alps
 
 Once the initial setup is completed, you can simply use Julia on daint by starting the Julia uenv, accessing a compute node (using SLURM), and launching Julia to add CUDA.jl package:
 
@@ -411,7 +411,7 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 \note{You can check the status of the allocation typing `squeue --me`.}
 
-👉 _Running **remote job** instead? [Jump right there](#running_a_remote_job_on_piz_daint)_
+👉 _Running **remote job** instead? [Jump right there](#running_a_remote_job_on_alps)_
 
 3. Once you have your allocation (`salloc`) and the node, you can access the compute node by using the following `srun` command:
 
@@ -430,9 +430,9 @@ julia
 ```julia-repl
 julia> ]
 
-(@v1.11) pkg> st
+(@v1.12) pkg> st
 
-(@v1.11) pkg> add CUDA, MPI
+(@v1.12) pkg> add CUDA, MPI
 ```
 
 6. Then load CUDA and query version info
@@ -441,6 +441,22 @@ julia> ]
 julia> using CUDA
 
 julia> CUDA.versioninfo()
+CUDA toolchain:
+- runtime 12.8, local installation
+- driver 550.54.15 for 13.0
+- compiler 12.9
+
+# [skipped lines]
+
+Preferences:
+- CUDA_Runtime_jll.version: 12.8
+- CUDA_Runtime_jll.local: true
+
+4 devices:
+  0: NVIDIA GH200 120GB (sm_90, 93.953 GiB / 95.577 GiB available)
+  1: NVIDIA GH200 120GB (sm_90, 93.951 GiB / 95.577 GiB available)
+  2: NVIDIA GH200 120GB (sm_90, 93.955 GiB / 95.577 GiB available)
+  3: NVIDIA GH200 120GB (sm_90, 93.954 GiB / 95.577 GiB available)
 ```
 
 7. Try out your first calculation on the GH200 GPU
@@ -476,7 +492,7 @@ You can use the `nvidia-smi` command to monitor GPU usage on a compute node on d
 
 VS code support to remote connect to daint is getting better and better. If feeling adventurous, try out the [Connecting with VS Code](https://docs.cscs.ch/access/vscode/) procedure. Any feedback welcome.
 
-### Running a remote job on Piz Daint
+### Running a remote job on Alps
 
 If you do not want to use an interactive session you can use the `sbatch` command to launch a job remotely on the machine. Example of a `submit.sh` you can launch (without need of an allocation) as `sbatch submit.sh`:
 
@@ -496,9 +512,9 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_gpu_script.jl
 
 \warn{Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/25.5:v1 --view=juliaup` in the `srun` command.}
 
-<!-- ### JupyterLab access on Piz Daint
+<!-- ### JupyterLab access on Alps
 
-Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://user.cscs.ch/tools/interactive/jupyterlab/#access-and-setup).
+Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
 
 1. If possible, create a soft link from your `$HOME` pointing to `$SCRATCH` (do this on daint):
 
@@ -510,15 +526,17 @@ Some tasks and homework, are prepared as Jupyter notebook and can easily be exec
 3. Login with your username and password you've set for in the [Account setup](#account_setup) step
 4. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
 5. From with JupyterLab, upload the notebook to work on and get started!
+-->
 
-### Transferring files on Piz Daint
+### Transferring files on Alps
 
 Given that daint's `scratch` is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.
 
 To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs_code_remote_-_ssh_setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
 
-The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/scratch/snx3000/<username>/`. Just drag and drop files in there to transfer them.
+The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/capstor/scratch/cscs/<username>/`. Just drag and drop files in there to transfer them.
 
+<!--
 Another way is to use `sshfs` which lets you mount the file system on servers with ssh-access (works on Linux, there are MacOS and Windows ports too).  After installing `sshfs` on your laptop, create a empty directory to mount (`mkdir -p ~/mnt/daint`), you should be able to mount via
 
 ```
@@ -532,15 +550,17 @@ fusermount -u -z /home/$USER/mnt_daint
 ```
 
 For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
+-->
 
-### Julia MPI GPU on Piz Daint
+<!--
+### Julia MPI GPU on Alps
 
-The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Piz Daint.
+The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Alps.
 
 1. Make sure to have the Julia GPU environment loaded
 
 ```sh
-. $SCRATCH/../julia/daint-gpu-nocudaaware/activate
+uenv start --view=juliaup,modules julia/25.5:v1
 ```
 
 2. Then, you would need to allocate more than one node, let's say 4 nodes for 2 hours, using `salloc`
@@ -552,7 +572,7 @@ salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
 3. To launch a Julia (GPU) MPI script on 4 nodes (GPUs) using MPI, you can simply use `srun`
 
 ```sh
-srun -n4 julia --project <my_mpi_script.jl>
+srun -n4 julia --project <my_julia_mpi_script.jl>
 ```
 
 If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
@@ -569,6 +589,8 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --gpus-per-task=4
 
 export MPICH_GPU_SUPPORT_ENABLED=1
+export IGG_CUDAAWARE_MPI=1 # IGG
+export JULIA_CUDA_USE_COMPAT=false # IGG
 
 srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_script.jl>
 ```
@@ -577,12 +599,11 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_scrip
 
 -->
 
-<!-- You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the appropriate `ENV` variables
+<!-- You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 ```
-and to activate the Julia env on the login node
 
 In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via `srun`. You can create, e.g., a [`runme_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh) script containing:
 ```sh
@@ -597,4 +618,5 @@ julia --project <my_script.jl>
 Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
 ```sh
 srun -n4 ./runme_mpi_daint.sh
-```-->
+```
+-->
