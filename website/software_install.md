@@ -512,21 +512,23 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_gpu_script.jl
 
 \warn{Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/25.5:v1 --view=juliaup` in the `srun` command.}
 
-<!-- ### JupyterLab access on Alps
+### JupyterLab access on Alps
 
 Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
 
-1. If possible, create a soft link from your `$HOME` pointing to `$SCRATCH` (do this on daint):
+1. First, create a soft link from your `$HOME` pointing to `$SCRATCH` (do this on daint):
 
 ```sh
-  ln -s $SCRATCH scratch
+ln -s $SCRATCH scratch
 ```
 
-2. Head to [https://jupyter.cscs.ch/](https://jupyter.cscs.ch/).
-3. Login with your username and password you've set for in the [Account setup](#account_setup) step
-4. Select `Node Type: GPU`, `Node: 1` and the duration you want and **Launch JupyterLab**.
-5. From with JupyterLab, upload the notebook to work on and get started!
--->
+2. Head to [https://jupyter-daint.cscs.ch/](https://jupyter-daint.cscs.ch/).
+3. Login with your username and password you've set for in the [Account setup](#account_setup) step.
+4. Follow the [additional procedure to set up the Julia kernel in Jupyter](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
+  - In the `Advanced options`, provide as uenv `julia/25.5:v1` and `jupyter` as view.
+  - Select the duration you want and **Launch JupyterLab**.
+  - _Only the first time_ -- open the console from the JupyterLab launcher and run `install_ijulia`
+5. From within JupyterLab, upload the notebook to work on and get started!
 
 ### Transferring files on Alps
 
