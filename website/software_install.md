@@ -555,6 +555,8 @@ For convenience it is suggested to also symlink to the home-directory `ln -s ~/m
 <!--
 ### Julia MPI GPU on Alps
 
+:construction: Scripts need to be updated for MPI runs on Alps
+
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Alps.
 
 1. Make sure to have the Julia GPU environment loaded
@@ -597,26 +599,9 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_scrip
 
 \note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
 
--->
-
-<!-- You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables
+You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
-```
-
-In the CUDA-aware MPI case, a more robust launch procedure may be to launch a shell script via `srun`. You can create, e.g., a [`runme_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_runme_mpi_daint.sh) script containing:
-```sh
-#!/bin/bash -l
-
-export MPICH_RDMA_ENABLED_CUDA=1
-export IGG_CUDAAWARE_MPI=1
-
-julia --project <my_script.jl>
-```
-
-Which you then launch using `srun` upon having made it executable (`chmod +x runme_mpi_daint.sh`)
-```sh
-srun -n4 ./runme_mpi_daint.sh
 ```
 -->
