@@ -525,9 +525,9 @@ ln -s $SCRATCH scratch
 2. Head to [https://jupyter-daint.cscs.ch/](https://jupyter-daint.cscs.ch/).
 3. Login with your username and password you've set for in the [Account setup](#account_setup) step.
 4. Follow the [additional procedure to set up the Julia kernel in Jupyter](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
-  - In the `Advanced options`, provide as uenv `julia/25.5:v1` and `jupyter` as view.
-  - Select the duration you want and **Launch JupyterLab**.
-  - _Only the first time_ -- open the console from the JupyterLab launcher and run `install_ijulia`
+    - In the `Advanced options`, provide as uenv `julia/25.5:v1` and `jupyter` as view.
+    - Select the duration you want and **Launch JupyterLab**.
+    - _Only the first time_ -- open the console from the JupyterLab launcher and run `install_ijulia`
 5. From within JupyterLab, upload the notebook to work on and get started!
 
 ### Transferring files on Alps
