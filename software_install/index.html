@@ -10,7 +10,7 @@
 
 <li><p>Then, you can <a href="https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host">connect to a remote host</a>, using <code>ssh user@hostname</code> and your password &#40;selecting <code>Remote-SSH: Connect to Host...</code> from the Command Palette&#41;.</p>
 
-<li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#running_julia_interactively_on_piz_daint">access a remote compute node from within VS Code</a>.</p>
+<li><p><a href="https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings">Advanced options</a> permit you to <a href="#running_julia_interactively_on_alps">access a remote compute node from within VS Code</a>.</p>
 
 </ol>
 <div class=note ><div class=title >💡 Note</div>
@@ -189,7 +189,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
 <div class=messg ><p>To make things easier, you can create a soft link from your <code>&#36;HOME</code> pointing to <code>&#36;SCRATCH</code></p>
 <pre><code class="sh hljs"><span class=hljs-built_in >ln</span> -s <span class=hljs-variable >$SCRATCH</span> scratch</code></pre></div></div>
 <p>Make sure to remove any folders you may find in your scratch as those are the empty remaining from last year&#39;s course.</p>
-<h3 id=setting_up_julia_on_daint ><a href="#setting_up_julia_on_daint" class=header-anchor >Setting up Julia on Daint</a></h3>
+<h3 id=setting_up_julia_on_alps ><a href="#setting_up_julia_on_alps" class=header-anchor >Setting up Julia on Alps</a></h3>
 <p>The Julia setup on daint is handled by <a href="https://docs.cscs.ch/software/uenv/">uenv</a>, user environments that provide scientific applications, libraries and tools. The <a href="https://docs.cscs.ch/software/prgenv/julia/">Julia uenv</a> provides a fully configured environment to run Julia at Scales on Nvidia GPUs, using MPI as communication library. Julia is installed and managed by <a href="https://github.com/JuliaParallel/JUHPC">JUHPC</a> which wraps Juliaup and ensures it smoothly works on the supercomputer.</p>
 <p><strong>Only the first time</strong> you will need to pull the Julia uenv on daint, and run Juliaup to install Julia.</p>
 <ol>
@@ -216,7 +216,7 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
 <p>At this point, you should be able to launch Julia by typing <code>julia</code> in the terminal.</p>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >All Julia-related information can be found at <a href="https://docs.cscs.ch/software/prgenv/julia/">https://docs.cscs.ch/software/prgenv/julia/</a></div></div>
-<h3 id=running_julia_interactively_on_daint ><a href="#running_julia_interactively_on_daint" class=header-anchor >Running Julia interactively on Daint</a></h3>
+<h3 id=running_julia_interactively_on_alps ><a href="#running_julia_interactively_on_alps" class=header-anchor >Running Julia interactively on Alps</a></h3>
 <p>Once the initial setup is completed, you can simply use Julia on daint by starting the Julia uenv, accessing a compute node &#40;using SLURM&#41;, and launching Julia to add CUDA.jl package:</p>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >To perform any computation, you need to access a compute node using the SLURM scheduler.</div></div>
@@ -234,7 +234,7 @@ uenv start --view=juliaup,modules julia/25.5:v1</code></pre>
 <pre><code class="sh hljs">salloc -C<span class=hljs-string >&#x27;gpu&#x27;</span> -Aclass04 -N1 -n1 --<span class=hljs-keyword >time</span>=01:00:00</code></pre>
 <div class=note ><div class=title >💡 Note</div>
 <div class=messg >You can check the status of the allocation typing <code>squeue --me</code>.</div></div>
-<p>👉 <em>Running <strong>remote job</strong> instead? &#91;Jump right there&#93;&#40;#running</em>a<em>remote</em>job<em>on</em>piz<em>daint&#41;</em></p>
+<p>👉 <em>Running <strong>remote job</strong> instead? &#91;Jump right there&#93;&#40;#running</em>a<em>remote</em>job<em>on</em>alps&#41;_</p>
 <ol start=3 >
 <li><p>Once you have your allocation &#40;<code>salloc</code>&#41; and the node, you can access the compute node by using the following <code>srun</code> command:</p>
 
@@ -251,16 +251,32 @@ uenv start --view=juliaup,modules julia/25.5:v1</code></pre>
 </ol>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > ]
 </span>
-<span class=hljs-metap>(@v1.11) pkg&gt;</span> st
+<span class=hljs-metap>(@v1.12) pkg&gt;</span> st
 
-<span class=hljs-metap>(@v1.11) pkg&gt;</span> add CUDA, MPI</code></pre>
+<span class=hljs-metap>(@v1.12) pkg&gt;</span> add CUDA, MPI</code></pre>
 <ol start=6 >
 <li><p>Then load CUDA and query version info</p>
 
 </ol>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> CUDA
 </span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > CUDA.versioninfo()</span></code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > CUDA.versioninfo()
+</span>CUDA toolchain:
+- runtime 12.8, local installation
+- driver 550.54.15 for 13.0
+- compiler 12.9
+
+# [skipped lines]
+
+Preferences:
+- CUDA_Runtime_jll.version: 12.8
+- CUDA_Runtime_jll.local: true
+
+4 devices:
+  0: NVIDIA GH200 120GB (sm_90, 93.953 GiB / 95.577 GiB available)
+  1: NVIDIA GH200 120GB (sm_90, 93.951 GiB / 95.577 GiB available)
+  2: NVIDIA GH200 120GB (sm_90, 93.955 GiB / 95.577 GiB available)
+  3: NVIDIA GH200 120GB (sm_90, 93.954 GiB / 95.577 GiB available)</code></pre>
 <ol start=7 >
 <li><p>Try out your first calculation on the GH200 GPU</p>
 
@@ -283,7 +299,7 @@ println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-sub
 <p>You can use the <code>nvidia-smi</code> command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia&#39;s REPL &#40;in shell mode&#41;.</p>
 <h4 id=using_vs_code_on_alps ><a href="#using_vs_code_on_alps" class=header-anchor >Using VS code on Alps</a></h4>
 <p>VS code support to remote connect to daint is getting better and better. If feeling adventurous, try out the <a href="https://docs.cscs.ch/access/vscode/">Connecting with VS Code</a> procedure. Any feedback welcome.</p>
-<h3 id=running_a_remote_job_on_piz_daint ><a href="#running_a_remote_job_on_piz_daint" class=header-anchor >Running a remote job on Piz Daint</a></h3>
+<h3 id=running_a_remote_job_on_alps ><a href="#running_a_remote_job_on_alps" class=header-anchor >Running a remote job on Alps</a></h3>
 <p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch a job remotely on the machine. Example of a <code>submit.sh</code> you can launch &#40;without need of an allocation&#41; as <code>sbatch submit.sh</code>:</p>
 <pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
 <span class=hljs-comment >#SBATCH --account=class04</span>
@@ -298,6 +314,10 @@ println(<span class=hljs-string >&quot;Animation directory: <span class=hljs-sub
 srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_gpu_script.jl&gt;</code></pre>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
 <div class=messg >Make sure to have started the Julia uenv <strong>before</strong> executing the <code>sbatch</code> command or to include <code>--uenv julia/25.5:v1 --view&#61;juliaup</code> in the <code>srun</code> command.</div></div>
+<h3 id=transferring_files_on_alps ><a href="#transferring_files_on_alps" class=header-anchor >Transferring files on Alps</a></h3>
+<p>Given that daint&#39;s <code>scratch</code> is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.</p>
+<p>To use VS code as development tool, make sure to have installed the <code>Remote-SSH</code> extension as described in the <a href="#vs_code_remote_-_ssh_setup">VS Code Remote - SSH setup</a> section. Then, in VS code Remote-SSH settings, make sure the <code>Remote Server Listen On Socket</code> is set to <code>true</code>.</p>
+<p>The next step should work out of the box. You should be able to select <code>daint</code> from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at <code>/capstor/scratch/cscs/&lt;username&gt;/</code>. Just drag and drop files in there to transfer them.</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
