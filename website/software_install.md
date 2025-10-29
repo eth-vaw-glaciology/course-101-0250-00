@@ -411,7 +411,7 @@ salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
 
 \note{You can check the status of the allocation typing `squeue --me`.}
 
-👉 _Running **remote job** instead? [Jump right there](#running_a_remote_job_on_alps)_
+👉 Running a **remote job** instead? [Jump right there](#running_a_remote_job_on_alps)
 
 3. Once you have your allocation (`salloc`) and the node, you can access the compute node by using the following `srun` command:
 
