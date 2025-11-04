@@ -403,10 +403,10 @@ ssh daint.alps
 uenv start --view=juliaup,modules julia/25.5:v1
 ```
 
-2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) and one process (`n1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
+2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
 
 ```sh
-salloc -C'gpu' -Aclass04 -N1 -n1 --time=01:00:00
+salloc -C'gpu' -Aclass04 -N1 --time=01:00:00
 ```
 
 \note{You can check the status of the allocation typing `squeue --me`.}
@@ -554,10 +554,7 @@ fusermount -u -z /home/$USER/mnt_daint
 For convenience it is suggested to also symlink to the home-directory `ln -s ~/mnt/daint/users/<your username on daint> ~/mnt/daint_home`.  (Note that we mount the root directory `/` with `sshfs` such that access to `/scratch` is possible.)
 -->
 
-<!--
 ### Julia MPI GPU on Alps
-
-:construction: Scripts need to be updated for MPI runs on Alps
 
 The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Alps.
 
@@ -567,16 +564,16 @@ The following step should allow you to run distributed memory parallelisation ap
 uenv start --view=juliaup,modules julia/25.5:v1
 ```
 
-2. Then, you would need to allocate more than one node, let's say 4 nodes for 2 hours, using `salloc`
-
-```
-salloc -C'gpu' -Aclass04 -N4 -n4 --time=02:00:00
-```
-
-3. To launch a Julia (GPU) MPI script on 4 nodes (GPUs) using MPI, you can simply use `srun`
+2. Then, you would need to allocate more than one node, let's say 2 nodes for 1 hours, using `salloc`
 
 ```sh
-srun -n4 julia --project <my_julia_mpi_script.jl>
+salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
+```
+
+3. To launch a Julia (GPU) MPI script on 2 nodes (and e.g. 8 GPUs) using MPI, you can simply use `srun`
+
+```sh
+MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=4 julia --project <my_julia_mpi_script.jl>
 ```
 
 If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
@@ -601,9 +598,8 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_scrip
 
 \note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
 
-You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables
+You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables:
 ```sh
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 ```
--->
