@@ -2,7 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 7_
+#nb # _Lecture 8_
 md"""
 # Julia xPU: the two-language solution
 """
@@ -10,7 +10,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The goal of this lecture 7:
+### The goal of this lecture 8:
 
 - Address the **_two-language problem_**
 - Backend portable xPU implementation
@@ -34,7 +34,7 @@ Combining CPU and GPU implementation within a single code.
 md"""
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](./figures/l9_2lang_1.png)
+![two-lang problem](../assets/literate_figures/l8_2lang_1.png)
 """
 
 #src #########################################################################
@@ -42,7 +42,7 @@ You may certainly be familiar with this situation in scientific computing:
 md"""
 Which may turn out into a costly cycle:
 
-![two-lang problem](./figures/l9_2lang_2.png)
+![two-lang problem](../assets/literate_figures/l8_2lang_2.png)
 
 """
 
@@ -69,7 +69,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 """
 
 #md # @@img-med
-# ![two-lang problem](./figures/l9_2lang_3.png)
+# ![two-lang problem](../assets/literate_figures/l8_2lang_3.png)
 #md # @@
 
 #src #########################################################################
@@ -100,7 +100,7 @@ Wouldn't it be great? ... **YES**, and there is a Julia solution!
 """
 
 #md # @@img-med
-# ![ParallelStencil](./figures/l9_ps_logo.png)
+# ![ParallelStencil](../assets/literate_figures/l8_ps_logo.png)
 #md # @@
 
 
@@ -110,7 +110,7 @@ md"""
 ## Backend portable xPU implementation
 """
 
-#nb # ![ParallelStencil](./figures/l9_ps_logo.png)
+#nb # ![ParallelStencil](../assets/literate_figures/l8_ps_logo.png)
 
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
@@ -167,7 +167,7 @@ md"""
 
 Let's get started with using the ParallelStencil.jl module and the `ParallelStencil.FiniteDifferences2D` submodule to enable math-close notation.
 
-💻 We'll start from the `Pf_diffusion_2D_perf_gpu.jl` (available later in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it from lecture 6) to create the `Pf_diffusion_2D_xpu.jl` script.
+💻 We'll start from the `Pf_diffusion_2D_perf_gpu.jl` (available later in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it from lecture 7) to create the `Pf_diffusion_2D_xpu.jl` script.
 """
 
 #src #########################################################################
@@ -231,8 +231,7 @@ Note that currently the shorthand `-=` notation is not supported and we need to 
 By analogy, update `update_Pf!`.
 """
 @parallel function update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
-#hint=    Pf = ...
-#sol=    @all(Pf) = @all(Pf) - (@d_xa(qDx) * _dx + @d_ya(qDy) * _dy) * _β_dτ
+    Pf = ...
     return nothing
 end
 
@@ -361,8 +360,8 @@ The `# physics` section remains unchanged, and the `# numerics section` is ident
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 note: ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 6, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.
-#md # \warn{ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 6, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.}
+#nb # > 💡 note: ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 7, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.
+#md # \warn{ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 7, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -459,5 +458,7 @@ And don't forget to update `A_eff` in the performance formula!
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
-#nb # > 💡 note: Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`.
-#md # \note{Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`.}
+#nb # > 💡 note: Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a GH200 GPU, we won't be able to squeeze much more than `928^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `448^3`.
+#md # \note{Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a GH200 GPU, we won't be able to squeeze much more than `928^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `448^3`.}
+
+

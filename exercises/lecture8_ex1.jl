@@ -13,7 +13,7 @@ The goal of this exercise is to:
 """
 
 md"""
-In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your 2D thermal porous convection code.
+In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 8 and use the new xPU scripts as starting point to port your 2D thermal porous convection code.
 """
 
 md"""
@@ -39,11 +39,11 @@ Finalise the `Pf_diffusion_2D_perf_xpu.jl` script from class.
 
 ### Task 3
 
-Starting from the `porous_convection_implicit_2D.jl` from Lecture 4, create a xPU version to run on GPUs. Copy and rename the `porous_convection_implicit_2D.jl` script to `PorousConvection_2D_xpu.jl` (if you do not have a working 2D implicit thermal porous convection, fetch a copy in the `solutions - lectrue 4` on Moodle).
+Starting from the `porous_convection_implicit_2D.jl` from Lecture 5, create a xPU version to run on GPUs. Copy and rename the `porous_convection_implicit_2D.jl` script to `PorousConvection_2D_xpu.jl` (if you do not have a working 2D implicit thermal porous convection, fetch a copy in the `solutions - lectrue 4` on Moodle).
 
 Implement similar changes as you did in the previous 2 tasks, preferring the `@parallel` (instead of `@parallel_indices`) whenever possible.
 
-Make sure to use following physical and numerical parameters and compare the xPU (CPU and GPU using ParallelStencil) implementations versus the reference code from lecture 4 using the following (slightly updated) parameters:
+Make sure to use following physical and numerical parameters and compare the xPU (CPU and GPU using ParallelStencil) implementations versus the reference code from lecture 5 using the following (slightly updated) parameters:
 """
 
 ## physics
@@ -74,13 +74,13 @@ else
 end
 
 md"""
-The code running with parameters set to 👆 should produces following output for the final stage:
+The code running with parameters set to 👆 should produce the following output for the final stage:
 
-![2D porous convection](./figures/l7_ex1_porous_convect.png)
+![2D porous convection](./figures/l8_ex1_porous_convect.png)
 
 ### Task 4
 
-Upon having verified the your code, run it with following parameters on Piz Daint, using one GPU:
+Upon having verified the your code, run it with following parameters on Daint.Alps, using one GPU:
 """
 
 Ra      = 1000
@@ -92,18 +92,18 @@ nvis    = 50
 ncheck  = ceil(2max(nx, ny))
 
 md"""
-The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme2D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
+The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l8_runme2D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
 
 Produce a final animation (as following) showing the evolution of temperature with velocity quiver and add it to a section titled `## Porous convection 2D` in the `PorousConvection` project subfolder `README`.
 """
 #md # ~~~
 # <center>
-#   <video width="80%" autoplay loop controls src="./figures/l7_ex1_porous_convect_final.mp4"/>
+#   <video width="80%" autoplay loop controls src="./figures/l8_ex1_porous_convect_final.mp4"/>
 # </center>
 #md # ~~~
 
 md"""
-\note{You should use the existing 2D visualisation routine to produce the final animation. On Piz Daint the easiest may be to save `png` every `nvis` and further assemble them into a `gif` or `mp4`. Ideally, the final animation size does not exceeds 2-3 MB.}
+\note{You should use the existing 2D visualisation routine to produce the final animation. On Daint.Alps the easiest may be to save `png` every `nvis` and further assemble them into a `gif` or `mp4`. Ideally, the final animation size does not exceeds 2-3 MB.}
 
 ### Some tips:
 

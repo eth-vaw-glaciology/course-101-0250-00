@@ -12,7 +12,7 @@ The goal of this exercise is to:
 """
 
 md"""
-In this exercise, you will finalise the 3D fluid diffusion solver started during lecture 7 and use the new xPU scripts as starting point to port your 3D thermal porous convection code.
+In this exercise, you will finalise the 3D fluid diffusion solver started during lecture 8 and use the new xPU scripts as starting point to port your 3D thermal porous convection code.
 """
 
 md"""
@@ -93,7 +93,7 @@ md"""
 
 ### Task 3
 
-Upon having verified your code, run it with following parameters on Piz Daint, using one GPU:
+Upon having verified your code, run it with following parameters on Daint.Alps, using one GPU:
 """
 
 Ra         = 1000
@@ -105,7 +105,7 @@ nvis       = 50
 ncheck     = ceil(2max(nx, ny, nz))
 
 md"""
-The run may take about three hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l7_runme3D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
+The run may take about three hours so make sure to allocate sufficiently resources and time on Daint.Alps. You can use a non-interactive `sbatch` submission script in such cases (see [here](https://user.cscs.ch/access/running/) for the "official" docs). _You can find a `l8_runme3D.sh` script in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder._
 
 Produce a figure showing the final stage of temperature distribution and add it to a new section titled `## Porous convection 3D` in the `PorousConvection` project subfolder's `README`.
 
@@ -141,7 +141,7 @@ function visualise()
     T  = zeros(Float32, nx, ny, nz)
     load_array("out_T", T)
     xc, yc, zc = LinRange(0, lx, nx), LinRange(0, ly, ny), LinRange(0, lz, nz)
-    fig = Figure(resolution=(1600, 1000), fontsize=24)
+    fig = Figure(size=(800, 500))
     ax  = Axis3(fig[1, 1]; aspect=(1, 1, 0.5), title="Temperature", xlabel="lx", ylabel="ly", zlabel="lz")
     surf_T = contour!(ax, xc, yc, zc, T; alpha=0.05, colormap=:turbo)
     save("T_3D.png", fig)
@@ -151,13 +151,13 @@ end
 visualise()
 
 md"""
-This figure you can further add to your `README.md`. Note that GLMakie will probably not run on Piz Daint as GL rendering is not enabled on the compute nodes.
+This figure you can further add to your `README.md`. Note that GLMakie will probably not run on Daint.Alps as GL rendering is not enabled on the compute nodes.
 
 For reference, the 3D figure produced could look as following
 
-![3D porous convection](./figures/l7_ex2_porous_convect.png)
+![3D porous convection](./figures/l8_ex2_porous_convect.png)
 
-And the 2D slice at `y/2` rendered using `Plots.jl` displays as
+And the 2D slice at `y/2` displays as
 
-![3D porous convection](./figures/l7_ex2_porous_convect_sl.png)
+![3D porous convection](./figures/l8_ex2_porous_convect_sl.png)
 """
