@@ -61,7 +61,7 @@ In the last lecture we've setup a [project](https://github.com/eth-vaw-glaciolog
 Let's now add CI to this:
 
 1. create a Julia project and add some tests **[done in last lecture]**
-2. make a suitable GitHub Actions scrip (that `.yml` file, typically `.github/workflows/ci.yml`)
+2. make a suitable GitHub Actions script (that `.yml` file, typically `.github/workflows/ci.yml`)
 3. pushing to GitHub will now run the tests (maybe you need to activate Actions in `Setting` -> `Actions` -> `Allow all actions`)
 
 For step 2 we follow the documentation on [https://github.com/julia-actions/julia-runtest](https://github.com/julia-actions/julia-runtest).
