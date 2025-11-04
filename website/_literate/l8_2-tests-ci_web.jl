@@ -45,7 +45,7 @@ md"""
 How do we use GitHub Actions for CI?
 
 1. create a Julia project and add some tests
-2. make a suitable GitHub Actions scrip (that `.yml` file)
+2. make a suitable GitHub Actions script (that `.yml` file)
 3. pushing to GitHub will now run the tests (maybe you need to activate Actions in `Setting` -> `Actions` -> `Allow all actions`)
 """
 
