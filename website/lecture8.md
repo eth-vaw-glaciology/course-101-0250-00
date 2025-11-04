@@ -60,7 +60,7 @@ For the project, you will have to create a `PorousConvection` folder **within** 
 
 7. Pushing any changes to your `PorousConvection` folder should now trigger CI and as for now no tests are executed the status should be green, i.e., passing.
 
-In lectures 9 and 11, we will populate the `scripts` folder with 2D and 3D porous convection applications, add tests and use the `README.md` as main "documentation".
+In lectures 9, 10, and 11, we will populate the `scripts` folder with 2D and 3D porous convection applications, add tests and use the `README.md` as main "documentation".
 
 You should now be all set and ready to get started 🚀
 
