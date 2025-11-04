@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # Julia xPU: the two-language solution
 
-### The goal of this lecture 7:
+### The goal of this lecture 8:
 
 - Address the **_two-language problem_**
 - Backend portable xPU implementation
@@ -14,11 +14,11 @@ Combining CPU and GPU implementation within a single code.
 
 You may certainly be familiar with this situation in scientific computing:
 
-![two-lang problem](../assets/literate_figures/l9_2lang_1.png)
+![two-lang problem](../assets/literate_figures/l8_2lang_1.png)
 
 Which may turn out into a costly cycle:
 
-![two-lang problem](../assets/literate_figures/l9_2lang_2.png)
+![two-lang problem](../assets/literate_figures/l8_2lang_2.png)
 
 This situation is referred to as the **_two-language problem_**.
 
@@ -32,7 +32,7 @@ Good news! Julia is a perfect candidate to solve the **_two-language problem_** 
 - **_fast_**, compiled just ahead of time (before one uses it for the first time)
 
 @@img-med
-![two-lang problem](../assets/literate_figures/l9_2lang_3.png)
+![two-lang problem](../assets/literate_figures/l8_2lang_3.png)
 @@
 
 Julia provides a **_portable_** solution in many aspects (beyond performance portability).
@@ -46,7 +46,7 @@ Wouldn't it be great to have **single code that both executes on CPU and GPU?**
 Wouldn't it be great? ... **YES**, and there is a Julia solution!
 
 @@img-med
-![ParallelStencil](../assets/literate_figures/l9_ps_logo.png)
+![ParallelStencil](../assets/literate_figures/l8_ps_logo.png)
 @@
 
 ## Backend portable xPU implementation
@@ -78,7 +78,7 @@ As first hands-on for this lecture, let's _**merge**_ the 2D fluid pressure diff
 
 Let's get started with using the ParallelStencil.jl module and the `ParallelStencil.FiniteDifferences2D` submodule to enable math-close notation.
 
-💻 We'll start from the `Pf_diffusion_2D_perf_gpu.jl` (available later in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it from lecture 6) to create the `Pf_diffusion_2D_xpu.jl` script.
+💻 We'll start from the `Pf_diffusion_2D_perf_gpu.jl` (available later in the [scripts/](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) folder in case you don't have it from lecture 7) to create the `Pf_diffusion_2D_xpu.jl` script.
 
 The first step is to handle the packages:
 
@@ -219,7 +219,7 @@ end
 
 The `# physics` section remains unchanged, and the `# numerics section` is identical to the previous `xpu` script, i.e., no need for explicit block and thread definition.
 
-\warn{ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 6, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.}
+\warn{ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 7, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.}
 
 We can then keep the scalar preprocessing in the `# derived numerics` section.
 
@@ -280,5 +280,5 @@ Pf = Data.Array([exp(-(xc[ix] - lx / 2)^2 - (yc[iy] - ly / 2)^2 - (zc[iz] - lz /
 
 And don't forget to update `A_eff` in the performance formula!
 
-\note{Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a P100 GPU, we won't be able to squeeze much more than `511^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `255^3` or `383^3`.}
+\note{Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a GH200 GPU, we won't be able to squeeze much more than `928^3` resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then `448^3`.}
 

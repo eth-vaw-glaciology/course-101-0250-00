@@ -1,1 +1,499 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 8</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Coupled multi-physics</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – GPU computing I</a> <div class="sidebar-nav-item under-construction"> Lecture 8 – GPU computing II</div> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <!-- <a class="sidebar-nav-item {{ispage lecture9/*}}active{{end}}" href="/lecture9/">Lecture 9 – xPU computing</a> <a class="sidebar-nav-item {{ispage lecture10/*}}active{{end}}" href="/lecture10/">Lecture 10 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item {{ispage lecture11/*}}active{{end}}" href="/lecture11/">Lecture 11 – Multi-xPU & Projects</a> <a class="sidebar-nav-item {{ispage lecture12/*}}active{{end}}" href="/lecture12/">Lecture 12 – Advanced optimisations</a> --> <div class="sidebar-nav-item under-construction"> Lecture 9 – xPU computing</div> <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU</div> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_8 ><a href="#lecture_8" class=header-anchor >Lecture 8</a></h1> <p>🚧 Under construction</p> <div class=page-foot > <div class=copyright > <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br> Last modified: November 04, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>. </div> </div> </div> </div>
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 8</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item " href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Coupled multi-physics</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – GPU computing</a> <a class="sidebar-nav-item active" href="/lecture8/">Lecture 8 – xPU computing</a> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <div class="sidebar-nav-item under-construction"> Lecture 9 – Julia MPI & multi-xPU I</div> <div class="sidebar-nav-item under-construction"> Lecture 10 – Julia MPI & multi-xPU II</div> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_8 ><a href="#lecture_8" class=header-anchor >Lecture 8</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 The &quot;two-language problem&quot;, <code>ParallelStencil.jl</code> xPU implementation<br />💻 Reference testing, GitHub CI and workflows<br />🚧 Exercises - &#40;Project 1&#41;:</p> <ul> <li><p>xPU codes for 2D thermal porous convection</p> <li><p>2D and 3D xPU implementation</p> <li><p>CI workflows</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_8">Lecture 8</a><li><a href="#julia_xpu_the_two-language_solution">Julia xPU: the two-language solution</a><ol><li><a href="#the_two-language_problem">The two-language problem</a><li><a href="#backend_portable_xpu_implementation">Backend portable xPU implementation</a><li><a href="#towards_3d_thermal_porous_convection">Towards 3D thermal porous convection</a></ol><li><a href="#continuous_integration_ci_and_github_actions">Continuous Integration &#40;CI&#41; and GitHub Actions</a><li><a href="#exercises_-_lecture_8">Exercises - lecture 8</a><ol><li><a href="#infos_about_projects">Infos about projects</a><li><a href="#exercise_1_2d_thermal_porous_convection_xpu_implementation">Exercise 1 — <strong>2D thermal porous convection xPU implementation</strong></a><li><a href="#exercise_2_3d_thermal_porous_convection_xpu_implementation">Exercise 2 — <strong>3D thermal porous convection xPU implementation</strong></a><li><a href="#exercise_3_ci_and_github_actions">Exercise 3 — <strong>CI and GitHub Actions</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_8"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=julia_xpu_the_two-language_solution ><a href="#julia_xpu_the_two-language_solution" class=header-anchor >Julia xPU: the two-language solution</a></h1> <h3 id=the_goal_of_this_lecture_8 ><a href="#the_goal_of_this_lecture_8" class=header-anchor >The goal of this lecture 8:</a></h3> <ul> <li><p>Address the <strong><em>two-language problem</em></strong></p> <li><p>Backend portable xPU implementation</p> <li><p>Towards 3D porous convection</p> <li><p>Reference testing, GitHub CI and workflows</p> </ul> <h2 id=the_two-language_problem ><a href="#the_two-language_problem" class=header-anchor >The two-language problem</a></h2> <p>Combining CPU and GPU implementation within a single code.</p> <p>You may certainly be familiar with this situation in scientific computing:</p> <p><img src="../assets/literate_figures/l8_2lang_1.png" alt="two-lang problem" /></p> <p>Which may turn out into a costly cycle:</p> <p><img src="../assets/literate_figures/l8_2lang_2.png" alt="two-lang problem" /></p> <p>This situation is referred to as the <strong><em>two-language problem</em></strong>.</p> <p>Multi-language/software environment leads to:</p> <ul> <li><p>Translation errors</p> <li><p>Large development time &#40;overhead&#41;</p> <li><p>Non-portable solutions</p> </ul> <p>Good news&#33; Julia is a perfect candidate to solve the <strong><em>two-language problem</em></strong> as Julia code is:</p> <ul> <li><p><strong><em>simple</em></strong>, high-level, interactive &#40;low development costs&#41;</p> <li><p><strong><em>fast</em></strong>, compiled just ahead of time &#40;before one uses it for the first time&#41;</p> </ul> <div class=img-med ><img src="../assets/literate_figures/l8_2lang_3.png" alt="two-lang problem" /></div> <p>Julia provides a <strong><em>portable</em></strong> solution in many aspects &#40;beyond performance portability&#41;.</p> <p>As you may have started to experience, GPUs deliver great performance but may not be present in every laptop or workstation. Also, powerful GPUs require to be hosted in servers, especially when multiple GPUs are needed to perform high-resolution calculations.</p> <p>Wouldn&#39;t it be great to have <strong>single code that both executes on CPU and GPU?</strong></p> <blockquote> <p>Using the CPU &quot;backend&quot; for prototyping and debugging, and switching to the GPU &quot;backend&quot; for production purpose.</p> </blockquote> <p>Wouldn&#39;t it be great? ... <strong>YES</strong>, and there is a Julia solution&#33;</p> <div class=img-med ><img src="../assets/literate_figures/l8_ps_logo.png" alt=ParallelStencil  /></div> <h2 id=backend_portable_xpu_implementation ><a href="#backend_portable_xpu_implementation" class=header-anchor >Backend portable xPU implementation</a></h2> <p>Let&#39;s get started with <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a></p> <h3 id=getting_started_with_parallelstencil ><a href="#getting_started_with_parallelstencil" class=header-anchor >Getting started with ParallelStencil</a></h3> <p>ParallelStencil enables to:</p> <ul> <li><p>Write architecture-agnostic high-level code</p> <li><p>Parallel high-performance stencil computations on GPUs and CPUs</p> </ul> <p>ParallelStencil relies on the native kernel programming capabilities of:</p> <ul> <li><p><a href="https://cuda.juliagpu.org/stable/">CUDA.jl</a> for high-performance computations on Nvidia GPUs</p> <li><p><a href="https://amdgpu.juliagpu.org/stable/">AMDGPU.jl</a> for high-performance computations on AMD GPUs</p> <li><p><a href="https://docs.julialang.org/en/v1/base/multi-threading/#Base.Threads">Base.Threads</a> for high-performance computations on CPUs</p> </ul> <h3 id=short_tour_of_parallelstencils_readme ><a href="#short_tour_of_parallelstencils_readme" class=header-anchor >Short tour of ParallelStencil&#39;s <code>README</code></a></h3> <p>Before we start our exercises, let&#39;s have a rapid tour of <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil</a>&#39;s repo and <a href="https://github.com/omlins/ParallelStencil.jl"><code>README</code></a>.</p> <p><em>So, how does it work?</em></p> <p>As first hands-on for this lecture, let&#39;s <em><strong>merge</strong></em> the 2D fluid pressure diffusion solvers <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>diffusion_2D_perf_loop_fun.jl</code></a> and the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>diffusion_2D_perf_gpu.jl</code></a> into a single <em><strong>xPU</strong></em> code using ParallelStencil.</p> <div class=note ><div class=title >💡 Note</div> <div class=messg >Two approaches are possible &#40;we&#39;ll implement both&#41;. Parallelisation using stencil computations with 1&#41; math-close notation; 2&#41; more explicit kernel programming approach.</div></div> <h3 id=stencil_computations_with_math-close_notation ><a href="#stencil_computations_with_math-close_notation" class=header-anchor >Stencil computations with math-close notation</a></h3> <p>Let&#39;s get started with using the ParallelStencil.jl module and the <code>ParallelStencil.FiniteDifferences2D</code> submodule to enable math-close notation.</p> <p>💻 We&#39;ll start from the <code>Pf_diffusion_2D_perf_gpu.jl</code> &#40;available later in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">scripts/</a> folder in case you don&#39;t have it from lecture 7&#41; to create the <code>Pf_diffusion_2D_xpu.jl</code> script.</p> <p>The first step is to handle the packages:</p> <pre><code class="julia hljs"><span class=hljs-keyword >const</span> USE_GPU = <span class=hljs-literal >false</span>
+<span class=hljs-keyword >using</span> ParallelStencil
+<span class=hljs-keyword >using</span> ParallelStencil.FiniteDifferences2D
+<span class=hljs-meta >@static</span> <span class=hljs-keyword >if</span> USE_GPU
+    <span class=hljs-meta >@init_parallel_stencil</span>(CUDA, <span class=hljs-built_in >Float64</span>, <span class=hljs-number >2</span>, inbounds=<span class=hljs-literal >false</span>)
+<span class=hljs-keyword >else</span>
+    <span class=hljs-meta >@init_parallel_stencil</span>(Threads, <span class=hljs-built_in >Float64</span>, <span class=hljs-number >2</span>, inbounds=<span class=hljs-literal >false</span>)
+<span class=hljs-keyword >end</span>
+<span class=hljs-keyword >using</span> Plots, Plots.Measures, Printf</code></pre> <p>Then, we need to update the two compute functions , <code>compute_flux&#33;</code> and <code>update_Pf&#33;</code>.</p> <p>Let&#39;s start with <code>compute_flux&#33;</code>.</p> <p>ParallelStencil&#39;s <code>FiniteDifferences2D</code> submodule provides macros we need: <code>@inn_x&#40;&#41;</code>, <code>@inn_y&#40;&#41;</code>, <code>@d_xa&#40;&#41;</code>, <code>@d_ya&#40;&#41;</code>.</p> <p>The macros used in this example are described in the Module documentation callable from the Julia REPL / IJulia:</p> <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia > <span class=hljs-keyword >using</span> ParallelStencil.FiniteDifferences2D
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class=language-julia >?
+</span>
+help?&gt; @inn_x
+  @inn_x(A): Select the inner elements of A in dimension x. Corresponds to A[2:end-1,:].</code></pre> <p>This would, e.g., give you more infos about the <code>@inn_x</code> macro.</p> <p>So, back to our compute function &#40;kernel&#41;. The <code>compute_flux&#33;</code> function gets the <code>@parallel</code> macro in its definition and returns nothing.</p> <p>Inside, we define the flux definition as following:</p> <pre><code class="julia hljs"><span class=hljs-meta >@parallel</span> <span class=hljs-keyword >function</span> compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    <span class=hljs-meta >@inn_x</span>(qDx) = <span class=hljs-meta >@inn_x</span>(qDx) - (<span class=hljs-meta >@inn_x</span>(qDx) + k_ηf_dx * <span class=hljs-meta >@d_xa</span>(Pf)) * _1_θ_dτ
+    <span class=hljs-meta >@inn_y</span>(qDy) = <span class=hljs-meta >@inn_y</span>(qDy) - (<span class=hljs-meta >@inn_y</span>(qDy) + k_ηf_dy * <span class=hljs-meta >@d_ya</span>(Pf)) * _1_θ_dτ
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre> <p>Note that currently the shorthand <code>-&#61;</code> notation is not supported and we need to explicitly write out the equality. Now that we&#39;re done with <code>compute_flux&#33;</code>, your turn&#33;</p> <p>By analogy, update <code>update_Pf&#33;</code>.</p> <pre><code class="julia hljs"><span class=hljs-meta >@parallel</span> <span class=hljs-keyword >function</span> update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
+    Pf = ...
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre> <p>So far so good. We are done with the kernels. Let&#39;s see what changes are needed in the main part of the script.</p> <p>In the <code># numerics</code> section, <code>threads</code> and <code>blocks</code> are no longer needed; the kernel launch parameters being now automatically adapted:</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> Pf_diffusion_2D(;do_check=<span class=hljs-literal >false</span>)
+    <span class=hljs-comment ># physics</span>
+    <span class=hljs-comment ># [...]</span>
+    <span class=hljs-comment ># numerics</span>
+    nx, ny  = <span class=hljs-number >16</span>*<span class=hljs-number >32</span>, <span class=hljs-number >16</span>*<span class=hljs-number >32</span> <span class=hljs-comment ># number of grid points</span>
+    maxiter = <span class=hljs-number >500</span>
+    <span class=hljs-comment ># [...]</span>
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span></code></pre> <p>In the <code># array initialisation</code> section, we need to wrap the Gaussian by <code>Data.Array</code> &#40;instead of <code>CuArray</code>&#41; and use the <code>@zeros</code> to initialise the other arrays:</p> <pre><code class="julia hljs"><span class=hljs-comment ># [...]</span>
+<span class=hljs-comment ># array initialisation</span>
+Pf      = Data.<span class=hljs-built_in >Array</span>(@. exp(-(xc - lx / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span> - (yc&#x27; - ly / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span>))
+qDx     = <span class=hljs-meta >@zeros</span>(nx + <span class=hljs-number >1</span>, ny    )
+qDy     = <span class=hljs-meta >@zeros</span>(nx    , ny + <span class=hljs-number >1</span>)
+r_Pf    = <span class=hljs-meta >@zeros</span>(nx    , ny    )
+<span class=hljs-comment ># [...]</span></code></pre> <p>In the <code># iteration loop</code>, only the kernel call needs to be worked out. We can here re-use the single <code>@parallel</code> macro which now serves to launch the computations on the chosen backend:</p> <pre><code class="julia hljs"><span class=hljs-comment ># [...]</span>
+<span class=hljs-comment ># iteration loop</span>
+iter = <span class=hljs-number >1</span>; err_Pf = <span class=hljs-number >2</span>ϵtol
+t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0</span>
+<span class=hljs-keyword >while</span> err_Pf &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
+    <span class=hljs-keyword >if</span> (iter==<span class=hljs-number >11</span>) t_tic = Base.time(); niter = <span class=hljs-number >0</span> <span class=hljs-keyword >end</span>
+    <span class=hljs-meta >@parallel</span> compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    <span class=hljs-meta >@parallel</span> update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
+    <span class=hljs-keyword >if</span> do_check &amp;&amp; (iter % ncheck == <span class=hljs-number >0</span>)
+        <span class=hljs-comment >#  [...]</span>
+    <span class=hljs-keyword >end</span>
+    iter += <span class=hljs-number >1</span>; niter += <span class=hljs-number >1</span>
+<span class=hljs-keyword >end</span>
+<span class=hljs-comment ># [...]</span></code></pre> <p>The performance evaluation section remaining unchanged, we are all set&#33;</p> <p><strong>Wrap-up tasks</strong></p> <ul> <li><p>Let&#39;s execute the code having the <code>USE_GPU &#61; false</code> flag set. We are running on multi-threading CPU backend with multi-threading enabled.</p> <li><p>Changing the <code>USE_GPU</code> flag to <code>true</code> &#40;having first relaunched a Julia session&#41; will make the application running on a GPU. On the GPU, you can reduce <code>ttot</code> and increase <code>nx, ny</code> in order achieve higher <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant=normal >e</mi><mi mathvariant=normal >f</mi><mi mathvariant=normal >f</mi></mrow></msub></mrow><annotation encoding="application/x-tex">T_\mathrm{eff}</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.83333em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathrm mtight">e</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span><span class="mord mathrm mtight" style="margin-right:0.07778em;">f</span></span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>.</p> <li><p>Changing the <code>inbounds&#61;false</code> flag to <code>inbounds&#61;true</code> will globally apply <code>@inbounds</code> in front of compute statements and deliver better performance. Beware to enable this option only once the code delivers epxected results.</p> </ul> <div class=note ><div class=title >💡 Note</div> <div class=messg >Curious to see how it works under the hood? Feel free to <a href="https://github.com/omlins/ParallelStencil.jl/blob/cd59a5b0d1fd32ceaecbf7fc922ab87a24257781/src/ParallelKernel/parallel.jl#L263">explore the source code</a>. Another nice bit of open source software &#40;and the fact that Julia&#39;s meta programming rocks 🚀&#41;.</div></div> <h3 id=stencil_computations_with_more_explicit_kernel_programming_approach ><a href="#stencil_computations_with_more_explicit_kernel_programming_approach" class=header-anchor >Stencil computations with more explicit kernel programming approach</a></h3> <p>ParallelStencil also allows for more explicit kernel programming, enabled by <code>@parallel_indices</code> kernel definitions. In style, the codes are closer to the initial plain GPU version we started from, <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/"><code>diffusion_2D_perf_gpu.jl</code></a>.</p> <p>As the macro name suggests, kernels defined using <code>@parallel_indices</code> allow for explicit indices handling within the kernel operations. This approach is <em><strong>currently</strong></em> slightly more performant than using <code>@parallel</code> kernel definitions.</p> <p>As second step, let&#39;s transform the <code>Pf_diffusion_2D_xpu.jl</code> into <code>Pf_diffusion_2D_perf_xpu.jl</code>.</p> <p>💻 We&#39;ll need bits from both <code>Pf_diffusion_2D_perf_gpu.jl</code> and <code>Pf_diffusion_2D_xpu.jl</code>.</p> <p>We can keep the package handling and initialisation identical to what we implemented in the <code>Pf_diffusion_2D_xpu.jl</code> script, but start again from the <code>Pf_diffusion_2D_perf_gpu.jl</code> script.</p> <p>Then, we can modify the <code>compute_flux&#33;</code> function definition from the <code>diffusion_2D_perf_gpu.jl</code> script, removing the <code>ix</code>, <code>iy</code> indices as those are now handled by ParallelStencil. The function definition takes however the <code>@parallel_indices</code> macro and the <code>&#40;ix,iy&#41;</code> tuple:</p> <pre><code class="julia hljs"><span class=hljs-meta >@parallel_indices</span> (ix, iy) <span class=hljs-keyword >function</span> compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    nx, ny = size(Pf)
+    <span class=hljs-keyword >if</span> (ix &lt;= nx - <span class=hljs-number >1</span> &amp;&amp; iy &lt;= ny) qDx[ix+<span class=hljs-number >1</span>, iy] -= (qDx[ix+<span class=hljs-number >1</span>, iy] + k_ηf_dx * <span class=hljs-meta >@d_xa</span>(Pf)) * _1_θ_dτ <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >if</span> (ix &lt;= nx &amp;&amp; iy &lt;= ny - <span class=hljs-number >1</span>) qDy[ix, iy+<span class=hljs-number >1</span>] -= (qDy[ix, iy+<span class=hljs-number >1</span>] + k_ηf_dy * <span class=hljs-meta >@d_ya</span>(Pf)) * _1_θ_dτ <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >return</span> <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre> <div class=note ><div class=title >💡 Note</div> <div class=messg >Using <code>@parallel_indices</code> one can specify to activate <code>inbounds&#61;true</code> on a per-kernel basis &#40;<code>@parallel_indices &#40;ix, iy&#41; inbounds&#61;true function</code>&#41;. This option can be globally overwrritten by <code>@init_parallel_stencil</code>.</div></div> <p>The <code># physics</code> section remains unchanged, and the <code># numerics section</code> is identical to the previous <code>xpu</code> script, i.e., no need for explicit block and thread definition.</p> <div class=warning ><div class=title >⚠️ Warning&#33;</div> <div class=messg >ParallelStencil computes the GPU kernel launch parameters based on optimal heuristics. Recalling lecture 7, multiple of 32 are most optimal; number of grid points should thus be chosen accordingly, i.e. as multiple of 32.</div></div> <p>We can then keep the scalar preprocessing in the <code># derived numerics</code> section.</p> <p>In the <code># array initialisation</code>, make sure to wrap the Gaussian by <code>Data.Array</code>, initialise zeros with the <code>@zeros</code> macro and remove information about precision &#40;<code>Float64</code>&#41;from there.</p> <p>The <code># iteration loop</code> remains concise; xPU kernels are launched here also with <code>@parallel</code> macro &#40;that implicitly includes <code>synchronize&#40;&#41;</code> statement&#41;:</p> <pre><code class="julia hljs"><span class=hljs-comment ># [...]</span>
+<span class=hljs-comment ># iteration loop</span>
+iter = <span class=hljs-number >1</span>; err_Pf = <span class=hljs-number >2</span>ϵtol
+t_tic = <span class=hljs-number >0.0</span>; niter = <span class=hljs-number >0</span>
+<span class=hljs-keyword >while</span> err_Pf &gt;= ϵtol &amp;&amp; iter &lt;= maxiter
+    <span class=hljs-keyword >if</span> (iter==<span class=hljs-number >11</span>) t_tic = Base.time(); niter = <span class=hljs-number >0</span> <span class=hljs-keyword >end</span>
+    <span class=hljs-meta >@parallel</span> compute_flux!(qDx, qDy, Pf, k_ηf_dx, k_ηf_dy, _1_θ_dτ)
+    <span class=hljs-meta >@parallel</span> update_Pf!(Pf, qDx, qDy, _dx, _dy, _β_dτ)
+    <span class=hljs-keyword >if</span> do_check &amp;&amp; (iter % ncheck == <span class=hljs-number >0</span>)
+        <span class=hljs-comment ># [...]</span>
+    <span class=hljs-keyword >end</span>
+    iter += <span class=hljs-number >1</span>; niter += <span class=hljs-number >1</span>
+<span class=hljs-keyword >end</span>
+<span class=hljs-comment ># [...]</span></code></pre> <p>Here we go 🚀 The <code>Pf_diffusion_2D_perf_xpu.jl</code> code is ready and should squeeze the performance out of your CPU or GPU, running as fast as the exclusive Julia multi-threaded or Julia GPU implementations, respectively.</p> <h3 id=multi-xpu_support ><a href="#multi-xpu_support" class=header-anchor >Multi-xPU support</a></h3> <p><em>What about multi-xPU support and distributed memory parallelisation?</em></p> <p>ParallelStencil is seamlessly interoperable with <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl"><code>ImplicitGlobalGrid.jl</code></a>, which enables distributed parallelisation of stencil-based xPU applications on a regular staggered grid and enables close to ideal weak scaling of real-world applications on thousands of GPUs.</p> <p>Moreover, ParallelStencil enables hiding communication behind computation with a simple macro call and without any particular restrictions on the package used for communication.</p> <p><em>This will be material for next lectures.</em></p> <div class=note ><div class=title >💡 Note</div> <div class=messg >Head to ParallelStencil&#39;s <a href="https://github.com/omlins/ParallelStencil.jl#concise-singlemulti-xpu-miniapps">miniapp section</a> if you are curious about various domain science applications featured there.</div></div> <h2 id=towards_3d_thermal_porous_convection ><a href="#towards_3d_thermal_porous_convection" class=header-anchor >Towards 3D thermal porous convection</a></h2> <p>The goal of the first project of the course is to have a thermal porous convection solver in 3D. Before using multiple GPUs in order to afford high numerical resolution in 3D, we will first have to create a 3D single xPU thermal porous convection solver.</p> <p>The first step is to port the <code>Pf_diffusion_2D_xpu.jl</code> script to 3D.</p> <p>These are the steps to follow in order to make the transition happen.</p> <ol> <li><p>Copy and rename the <code>Pf_diffusion_2D_xpu.jl</code> script to <code>Pf_diffusion_3D_xpu.jl</code></p> <li><p>Adapt the last argument of <code>@init_parallel_stencil</code> to <code>3</code></p> <li><p>Compute <code>qDz</code>, the flux in <code>z</code>-direction</p> <li><p>Add that flux to the divergence in the <code>Pf</code> update</p> <li><p>Modify the <code>CFL</code> to <code>cfl &#61; 1.0/sqrt&#40;3.1&#41;</code> as for 3D</p> <li><p>Consistently add the <code>z</code>-direction in the code</p> </ol> <p>The initialisation can be done as following:</p> <pre><code class="julia hljs">Pf = Data.<span class=hljs-built_in >Array</span>([exp(-(xc[ix] - lx / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span> - (yc[iy] - ly / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span> - (zc[iz] - lz / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span>) <span class=hljs-keyword >for</span> ix = <span class=hljs-number >1</span>:nx, iy = <span class=hljs-number >1</span>:ny, iz = <span class=hljs-number >1</span>:nz])</code></pre>
+<p>And don&#39;t forget to update <code>A_eff</code> in the performance formula&#33;</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >Note that 3D simulations are expensive so make sure to adapt the number of grid points accordingly. As example, on a GH200 GPU, we won&#39;t be able to squeeze much more than <code>928^3</code> resolution for a diffusion solver, and the entire porous convection code will certainly not execute at more then <code>448^3</code>.</div></div>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<h1 id=continuous_integration_ci_and_github_actions ><a href="#continuous_integration_ci_and_github_actions" class=header-anchor >Continuous Integration &#40;CI&#41; and GitHub Actions</a></h1>
+<p>Last lecture we learned how to make and run tests for a Julia project.</p>
+<p>This lecture we will learn how to run those tests on GitHub automatically after you push to it. This will make sure that</p>
+<ul>
+<li><p>tests are always run</p>
+
+<li><p>you will be alerted by email when a test fails</p>
+
+</ul>
+<p><em>You may start to wonder why we&#39;re doing all of these tooling shenanigans...</em></p>
+<p>One requirement for the final project will be that it contains tests, which are run via GitHub Actions CI.  Additionally, you&#39;ll have to write your project report as &quot;documentation&quot; for the package which could be deployed to its website, via GitHub Actions.</p>
+<p><strong>These days it is expected of good numerical software that it is well tested and documented.</strong></p>
+<h3 id=github_actions ><a href="#github_actions" class=header-anchor >GitHub Actions</a></h3>
+<p>GitHub Actions are a generic way to run computations when you interact with the repository. There is extensive <a href="https://docs.github.com/en/actions">documentation</a> for it &#40;no need for you to read it&#41;.</p>
+<p>For instance the course&#39;s <a href="https://pde-on-gpu.vaw.ethz.ch">website</a> is generated from the markdown input files upon pushing to the repo:</p>
+<ul>
+<li><p><a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website">https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/website</a> contains the source</p>
+
+<li><p>the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml">https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/.github/workflows/Deploy.yml</a> is the GitHub Actions script which tells it to run Franklin.jl to</p>
+
+<li><p>create the website and deploy it on a specific URL <a href="https://pde-on-gpu.vaw.ethz.ch">https://pde-on-gpu.vaw.ethz.ch</a></p>
+
+</ul>
+<h3 id=github_actions_for_ci ><a href="#github_actions_for_ci" class=header-anchor >GitHub Actions for CI</a></h3>
+<p>How do we use GitHub Actions for CI?</p>
+<ol>
+<li><p>create a Julia project and add some tests</p>
+
+<li><p>make a suitable GitHub Actions scrip &#40;that <code>.yml</code> file&#41;</p>
+
+<li><p>pushing to GitHub will now run the tests &#40;maybe you need to activate Actions in <code>Setting</code> -&gt; <code>Actions</code> -&gt; <code>Allow all actions</code>&#41;</p>
+
+</ol>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >There are other providers of CI, e.g. Travis, Appveyor, etc. Here we&#39;ll only look at GitHub actions.</div></div>
+<h4 id=example_from_last_lecture_continued ><a href="#example_from_last_lecture_continued" class=header-anchor >Example from last lecture continued</a></h4>
+<p>In the last lecture we&#39;ve setup a <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">project</a> to illustrate how unit-testing works.</p>
+<p>Let&#39;s now add CI to this:</p>
+<ol>
+<li><p>create a Julia project and add some tests <strong>&#91;done in last lecture&#93;</strong></p>
+
+<li><p>make a suitable GitHub Actions scrip &#40;that <code>.yml</code> file, typically <code>.github/workflows/ci.yml</code>&#41;</p>
+
+<li><p>pushing to GitHub will now run the tests &#40;maybe you need to activate Actions in <code>Setting</code> -&gt; <code>Actions</code> -&gt; <code>Allow all actions</code>&#41;</p>
+
+</ol>
+<p>For step 2 we follow the documentation on <a href="https://github.com/julia-actions/julia-runtest">https://github.com/julia-actions/julia-runtest</a>.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg ><a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> is a handy package, which can generate a suitable GitHub Actions file.</div></div>
+<h4 id=example_from_last_lecture_continued_yml_magic ><a href="#example_from_last_lecture_continued_yml_magic" class=header-anchor >Example from last lecture continued: YML magic</a></h4>
+<p>The <code>.github/workflows/ci.yml</code> file, adapted from the <code>README</code> of <a href="https://github.com/julia-actions/julia-runtest">julia-runtest</a>:</p>
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >tests</span>
+
+<span class=hljs-attr >on:</span> [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
+
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >test:</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
+    <span class=hljs-attr >strategy:</span>
+      <span class=hljs-attr >matrix:</span>
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.11&#x27;</span>]
+        <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
+        <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
+
+    <span class=hljs-attr >steps:</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v5</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@latest</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@latest</span></code></pre>
+<h4 id=see_it_running ><a href="#see_it_running" class=header-anchor >See it running</a></h4>
+<ul>
+<li><p>add, commit and push to GitHub</p>
+
+<li><p>click on the &quot;Actions&quot; tab on the project&#39;s website</p>
+
+</ul>
+<h4 id=where_is_my_badge ><a href="#where_is_my_badge" class=header-anchor >Where is my BADGE&#33;&#33;&#33;</a></h4>
+<p>The CI will create a badge &#40;a small picture&#41; which reflects the status of the Action. Typically added to the <code>README.md</code>:</p>
+<p><img src="../assets/literate_figures/l9_ci-badge.png" alt=ci-badge  /></p>
+<p>It can be found under</p>
+<pre><code class="julia hljs">https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg</code></pre>
+<p>and should be added to the near the top of <code>README</code> like so:</p>
+<pre><code class="julia hljs">[![CI action](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml)</code></pre>
+<p>&#40;this also sets the link to the Actions which gets open upon clicking on it&#41;</p>
+<p>👉 <em><strong>See code</strong></em> on <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing.jl</a></p>
+<h4 id=wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo ><a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo" class=header-anchor >Wait a second, we submit our homework as subfolders of our GitHub repo...</a></h4>
+<p>This makes the <code>.yml</code> a bit more complicated:</p>
+<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >tests</span>
+<span class=hljs-attr >on:</span> [<span class=hljs-string >push</span>, <span class=hljs-string >pull_request</span>]
+<span class=hljs-attr >jobs:</span>
+  <span class=hljs-attr >test:</span>
+    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.os</span> <span class=hljs-string >}}</span>
+    <span class=hljs-attr >strategy:</span>
+      <span class=hljs-attr >matrix:</span>
+        <span class=hljs-attr >julia-version:</span> [<span class=hljs-string >&#x27;1.11&#x27;</span>]
+        <span class=hljs-attr >julia-arch:</span> [<span class=hljs-string >x64</span>]
+        <span class=hljs-attr >os:</span> [<span class=hljs-string >ubuntu-latest</span>]
+
+    <span class=hljs-attr >steps:</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v5</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@latest</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >version:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-version</span> <span class=hljs-string >}}</span>
+          <span class=hljs-attr >arch:</span> <span class=hljs-string >${{</span> <span class=hljs-string >matrix.julia-arch</span> <span class=hljs-string >}}</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/cache@v1</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
+      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-runtest@latest</span>
+        <span class=hljs-attr >with:</span>
+          <span class=hljs-attr >project:</span> <span class=hljs-string >&quot;subfolder&quot;</span></code></pre>
+<p>Note that you have to <em><strong>adjust</strong></em> the bit: <code>project: &quot;subfolder&quot;</code> to reflect the subfolder you want to test.</p>
+<p>👉 The <em><strong>example</strong></em> is in <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">course-101-0250-00-L6Testing-subfolder.jl</a>.</p>
+<p>👉 As you go along in the course you&#39;ll want to test different subfolders, thus just change the line in the <code>ci.yml</code> file.</p>
+<h4 id=a_final_note ><a href="#a_final_note" class=header-anchor >A final note</a></h4>
+<p>GitHub Actions are limited to 2000min per month per user for private repositories.</p>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<h1 id=exercises_-_lecture_8 ><a href="#exercises_-_lecture_8" class=header-anchor >Exercises - lecture 8</a></h1>
+<h2 id=infos_about_projects ><a href="#infos_about_projects" class=header-anchor >Infos about projects</a></h2>
+<p>Starting from this lecture &#40;and until to lecture 11&#41;, homework will contribute to the course&#39;s final project. Make sure to carefully follow the instructions from the Project section in <a href="/logistics#project">Logistics</a> as well as the specific steps listed hereafter.</p>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg >This project being identical to all students. We ask you to strictly follow the demanded structure and steps as this will be part of the evaluation criteria, besides running 3D codes.</div></div>
+<h3 id=preparing_the_project_folder_in_your_github_repos ><a href="#preparing_the_project_folder_in_your_github_repos" class=header-anchor >Preparing the project folder in your GitHub repos</a></h3>
+<p>For the project, you will have to create a <code>PorousConvection</code> folder <strong>within</strong> your <code>pde-on-gpu-&lt;moodleprofilename&gt;</code> shared private GitHub repo. To do so, you can follow these steps:</p>
+<ol>
+<li><p>Within your <code>pde-on-gpu-&lt;moodleprofilename&gt;</code> folder, copy over the <code>PorousConvection</code> you can find in the <code>l8_project_template</code> folder within the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts">scripts</a> folder. Make sure to copy the entire folder as not to loose the hidden files.</p>
+
+<li><p>Also, make sure the hidden file <code>.gitignore</code> includes <code>Manifest.toml</code>.</p>
+
+<li><p>At the root of your <code>pde-on-gpu-&lt;moodleprofilename&gt;</code> folder, create a &#40;hidden&#41; <code>.github/workflows/</code> folder and add in there the remaining <code>CI.yml</code> file from the <code>l8_project_template</code> &#40;which is the same as from the lecture - see <a href="#wait_a_second_we_submit_our_homework_as_subfolders_of_our_github_repo">here</a>&#41;.</p>
+
+<li><p>Now, you&#39;ll need to edit the <code>Project.toml</code> file to add your full name and email address &#40;the ones you are using for GitHub&#41;, and add a UUID as well.</p>
+
+<li><p>To add a UUID, execute in Julia <code>using UUIDs</code> and then <code>uuid1&#40;&#41;</code>. Copy the returned UUID &#40;including the <code>&quot;</code>&#41; to the <code>Project.toml</code> file.</p>
+
+<li><p>The last part is to update the badge URL in the <code>README</code> within the <code>PorousConvection</code> folder. Replace the <code>&lt;USER&gt;/&lt;REPO&gt;</code> with your username and the name of your repo:</p>
+
+</ol>
+<pre><code class="julia hljs">[![Build Status](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/&lt;USER&gt;/&lt;REPO&gt;/actions/workflows/CI.yml?query=branch%<span class=hljs-number >3</span>Amain)</code></pre>
+<ol start=7 >
+<li><p>Pushing any changes to your <code>PorousConvection</code> folder should now trigger CI and as for now no tests are executed the status should be green, i.e., passing.</p>
+
+</ol>
+<p>In lectures 9 and 11, we will populate the <code>scripts</code> folder with 2D and 3D porous convection applications, add tests and use the <code>README.md</code> as main &quot;documentation&quot;.</p>
+<p>You should now be all set and ready to get started 🚀</p>
+<h2 id=exercise_1_2d_thermal_porous_convection_xpu_implementation ><a href="#exercise_1_2d_thermal_porous_convection_xpu_implementation" class=header-anchor >Exercise 1 — <strong>2D thermal porous convection xPU implementation</strong></a></h2>
+<p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
+<p>The goal of this exercise is to:</p>
+<ul>
+<li><p>Finalise the xPU implementation of the 2D fluid diffusion solvers started in class</p>
+
+<li><p>Familiarise with xPU programming, <code>@parallel</code> and <code>@parallel_indices</code></p>
+
+<li><p>Port your 2D thermal porous convection code to xPU implementation</p>
+
+<li><p>Start populating the <code>PorousConvection</code> project folder</p>
+
+</ul>
+<p>In this exercise, you will finalise the 2D fluid diffusion solver started during lecture 8 and use the new xPU scripts as starting point to port your 2D thermal porous convection code.</p>
+<p>For this first exercise, we will finalise and add to the <code>scripts</code> folder within the <code>PorousConvection</code> folder following scripts:</p>
+<ul>
+<li><p><code>Pf_diffusion_2D_xpu.jl</code></p>
+
+<li><p><code>Pf_diffusion_2D_perf_xpu.jl</code></p>
+
+<li><p><code>PorousConvection_2D_xpu.jl</code></p>
+
+</ul>
+<h3 id=task_1 ><a href="#task_1" class=header-anchor >Task 1</a></h3>
+<p>Finalise the <code>Pf_diffusion_2D_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel</code> approach together with using <code>ParallelStencil.FiniteDifferences2D</code> submodule.</p>
+
+<li><p>Include the kwarg <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_2 ><a href="#task_2" class=header-anchor >Task 2</a></h3>
+<p>Finalise the <code>Pf_diffusion_2D_perf_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel_indices</code> approach.</p>
+
+<li><p>You can keep using <code>ParallelStencil.FiniteDifferences2D</code> submodule macros for the derivative definition.</p>
+
+<li><p>Include the kwarg <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_3 ><a href="#task_3" class=header-anchor >Task 3</a></h3>
+<p>Starting from the <code>porous_convection_implicit_2D.jl</code> from Lecture 5, create a xPU version to run on GPUs. Copy and rename the <code>porous_convection_implicit_2D.jl</code> script to <code>PorousConvection_2D_xpu.jl</code> &#40;if you do not have a working 2D implicit thermal porous convection, fetch a copy in the <code>solutions - lectrue 4</code> on Moodle&#41;.</p>
+<p>Implement similar changes as you did in the previous 2 tasks, preferring the <code>@parallel</code> &#40;instead of <code>@parallel_indices</code>&#41; whenever possible.</p>
+<p>Make sure to use following physical and numerical parameters and compare the xPU &#40;CPU and GPU using ParallelStencil&#41; implementations versus the reference code from lecture 5 using the following &#40;slightly updated&#41; parameters:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
+lx, ly     = <span class=hljs-number >40.0</span>, <span class=hljs-number >20.0</span>
+k_ηf       = <span class=hljs-number >1.0</span>
+αρgx, αρgy = <span class=hljs-number >0.0</span>, <span class=hljs-number >1.0</span>
+αρg        = sqrt(αρgx^<span class=hljs-number >2</span> + αρgy^<span class=hljs-number >2</span>)
+ΔT         = <span class=hljs-number >200.0</span>
+ϕ          = <span class=hljs-number >0.1</span>
+Ra         = <span class=hljs-number >1000</span>
+λ_ρCp      = <span class=hljs-number >1</span> / Ra * (αρg * k_ηf * ΔT * ly / ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*ly/λ_ρCp/ϕ</span>
+<span class=hljs-comment ># numerics</span>
+ny         = <span class=hljs-number >63</span>
+nx         = <span class=hljs-number >2</span> * (ny + <span class=hljs-number >1</span>) - <span class=hljs-number >1</span>
+nt         = <span class=hljs-number >500</span>
+re_D       = <span class=hljs-number >4</span><span class=hljs-literal >π</span>
+cfl        = <span class=hljs-number >1.0</span> / sqrt(<span class=hljs-number >2.1</span>)
+maxiter    = <span class=hljs-number >10</span>max(nx, ny)
+ϵtol       = <span class=hljs-number >1e-6</span>
+nvis       = <span class=hljs-number >20</span>
+ncheck     = ceil(max(nx, ny))
+<span class=hljs-comment ># [...]</span>
+<span class=hljs-comment ># time step</span>
+dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
+    <span class=hljs-number >0.1</span> * min(dx, dy) / (αρg * ΔT * k_ηf)
+<span class=hljs-keyword >else</span>
+    min(<span class=hljs-number >5.0</span> * min(dx, dy) / (αρg * ΔT * k_ηf), ϕ * min(dx / maximum(abs.(qDx)), dy / maximum(abs.(qDy))) / <span class=hljs-number >2.1</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<p>The code running with parameters set to 👆 should produce the following output for the final stage:</p>
+<p><img src="../assets/literate_figures/l8_ex1_porous_convect.png" alt="2D porous convection" /></p>
+<h3 id=task_4 ><a href="#task_4" class=header-anchor >Task 4</a></h3>
+<p>Upon having verified the your code, run it with following parameters on Daint.Alps, using one GPU:</p>
+<pre><code class="julia hljs">Ra      = <span class=hljs-number >1000</span>
+<span class=hljs-comment ># [...]</span>
+nx,ny   = <span class=hljs-number >1023</span>, <span class=hljs-number >511</span>
+nt      = <span class=hljs-number >4000</span>
+ϵtol    = <span class=hljs-number >1e-6</span>
+nvis    = <span class=hljs-number >50</span>
+ncheck  = ceil(<span class=hljs-number >2</span>max(nx, ny))</code></pre>
+<p>The run may take about one to two hours so make sure to allocate sufficiently resources and time on daint. You can use a non-interactive <code>sbatch</code> submission script in such cases &#40;see <a href="https://user.cscs.ch/access/running/">here</a> for the &quot;official&quot; docs&#41;. <em>You can find a <code>l8_runme2D.sh</code> script in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">scripts</a> folder.</em></p>
+<p>Produce a final animation &#40;as following&#41; showing the evolution of temperature with velocity quiver and add it to a section titled <code>## Porous convection 2D</code> in the <code>PorousConvection</code> project subfolder <code>README</code>. 
+<center>
+  <video width="80%" autoplay loop controls src="../assets/literate_figures/l8_ex1_porous_convect_final.mp4"/>
+</center>
+</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >You should use the existing 2D visualisation routine to produce the final animation. On Daint.Alps the easiest may be to save <code>png</code> every <code>nvis</code> and further assemble them into a <code>gif</code> or <code>mp4</code>. Ideally, the final animation size does not exceeds 2-3 MB.</div></div>
+<h3 id=some_tips ><a href="#some_tips" class=header-anchor >Some tips:</a></h3>
+<ul>
+<li><p>Array&#40;s&#41; can be initialised on the CPU and then made xPU ready upon wrapping them around <code>Data.Array</code> statement &#40;use <code>Array</code> to gather them back on CPU host&#41;.</p>
+
+<li><p>Visualisation happens on the CPU; all visualisation arrays can be CPU only and GPU data could be gathered for visualisation as, e.g., following <code>Array&#40;T&#41;&#39;</code> or <code>qDx_c .&#61; avx&#40;Array&#40;qDx&#41;&#41;</code>.</p>
+
+<li><p>Boundary condition kernel to replace <code>T&#91;&#91;1, end&#93;, :&#93; .&#61; T&#91;&#91;2, end-1&#93;, :&#93;</code> can be implemented and called as following:</p>
+
+</ul>
+<pre><code class="julia hljs"><span class=hljs-meta >@parallel_indices</span> (iy) <span class=hljs-keyword >function</span> bc_x!(A)
+    A[<span class=hljs-number >1</span>  , iy] = A[<span class=hljs-number >2</span>    , iy]
+    A[<span class=hljs-keyword >end</span>, iy] = A[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>, iy]
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T,<span class=hljs-number >2</span>)) bc_x!(T)</code></pre>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<hr />
+<h2 id=exercise_2_3d_thermal_porous_convection_xpu_implementation ><a href="#exercise_2_3d_thermal_porous_convection_xpu_implementation" class=header-anchor >Exercise 2 — <strong>3D thermal porous convection xPU implementation</strong></a></h2>
+<p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
+<p>The goal of this exercise is to:</p>
+<ul>
+<li><p>Create a 3D xPU implementation of the 2D thermal porous convection code</p>
+
+<li><p>Familiarise with 3D and xPU programming, <code>@parallel</code> and <code>@parallel_indices</code></p>
+
+<li><p>Include 3D visualisation using <a href="https://docs.makie.org/stable/"><code>Makie.jl</code></a></p>
+
+</ul>
+<p>In this exercise, you will finalise the 3D fluid diffusion solver started during lecture 8 and use the new xPU scripts as starting point to port your 3D thermal porous convection code.</p>
+<p>For this first exercise, we will finalise and add to the <code>scripts</code> folder within the <code>PorousConvection</code> folder following scripts:</p>
+<ul>
+<li><p><code>Pf_diffusion_3D_xpu.jl</code></p>
+
+<li><p><code>PorousConvection_3D_xpu.jl</code></p>
+
+</ul>
+<h3 id=task_1__2 ><a href="#task_1__2" class=header-anchor >Task 1</a></h3>
+<p>Finalise the <code>Pf_diffusion_3D_xpu.jl</code> script from class.</p>
+<ul>
+<li><p>This version should contain compute functions &#40;kernels&#41; definitions using <code>@parallel</code> approach together with using <code>ParallelStencil.FiniteDifferences3D</code> submodule.</p>
+
+<li><p>Include the <code>kwargs</code> <code>do_visu</code> &#40;or <code>do_check</code>&#41; to allow disabling plotting/error-checking when assessing performance.</p>
+
+<li><p>Also, make sure to include and update the performance evaluation section at the end of the script.</p>
+
+</ul>
+<h3 id=task_2__2 ><a href="#task_2__2" class=header-anchor >Task 2</a></h3>
+<p>Merge the <code>PorousConvection_2D_xpu.jl</code> from Exercise 1 and the <code>Pf_diffusion_3D_xpu.jl</code> script from previous task to create a 3D single xPU <code>PorousConvection_3D_xpu.jl</code> version to run on GPUs.</p>
+<p>Implement similar changes as you did for the 2D script in Exercise 1, preferring the <code>@parallel</code> &#40;instead of <code>@parallel_indices</code>&#41; whenever possible.</p>
+<p>Make sure to use the <code>z</code>-direction as the vertical coordinate changing all relevant expressions in the code, and assume <code>αρg</code> to be the gravity acceleration acting only in the <code>z</code>-direction. Implement following domain extend and numerical resolution &#40;ratio&#41;:</p>
+<pre><code class="julia hljs"><span class=hljs-comment ># physics</span>
+lx, ly, lz = <span class=hljs-number >40.0</span>, <span class=hljs-number >20.0</span>, <span class=hljs-number >20.0</span>
+αρg        = <span class=hljs-number >1.0</span>
+Ra         = <span class=hljs-number >1000</span>
+λ_ρCp      = <span class=hljs-number >1</span> / Ra * (αρg * k_ηf * ΔT * lz / ϕ) <span class=hljs-comment ># Ra = αρg*k_ηf*ΔT*lz/λ_ρCp/ϕ</span>
+<span class=hljs-comment ># numerics</span>
+nz         = <span class=hljs-number >63</span>
+ny         = nz
+nx         = <span class=hljs-number >2</span> * (nz + <span class=hljs-number >1</span>) - <span class=hljs-number >1</span>
+nt         = <span class=hljs-number >500</span>
+cfl        = <span class=hljs-number >1.0</span> / sqrt(<span class=hljs-number >3.1</span>)</code></pre>
+<p>Also, modify the physical time-step definition accordingly:</p>
+<pre><code class="julia hljs">dt = <span class=hljs-keyword >if</span> it == <span class=hljs-number >1</span>
+    <span class=hljs-number >0.1</span> * min(dx, dy, dz) / (αρg * ΔT * k_ηf)
+<span class=hljs-keyword >else</span>
+    min(<span class=hljs-number >5.0</span> * min(dx, dy, dz) / (αρg * ΔT * k_ηf), ϕ * min(dx / maximum(abs.(qDx)), dy / maximum(abs.(qDy)), dz / maximum(abs.(qDz))) / <span class=hljs-number >3.1</span>)
+<span class=hljs-keyword >end</span></code></pre>
+<p>Initial conditions for temperature can be done by analogy to the 2D case, but using the iterative approach presented in class &#40;see <a href="#towards_3d_thermal_porous_convection">here</a>&#41;.</p>
+<pre><code class="julia hljs">T = [ΔT * exp(-xc[ix]^<span class=hljs-number >2</span> - yc[iy]^<span class=hljs-number >2</span> - (zc[iz] + lz / <span class=hljs-number >2</span>)^<span class=hljs-number >2</span>) <span class=hljs-keyword >for</span> ix = <span class=hljs-number >1</span>:nx, iy = <span class=hljs-number >1</span>:ny, iz = <span class=hljs-number >1</span>:nz]</code></pre>
+<p>Make sure to have <code>yc</code> defined using extends similar to <code>xc</code>, and <code>zc</code> being the vertical dimension.</p>
+<p>For boundary conditions, apply heating from the bottom &#40;zc&#61;-lz&#41; and cooling from top <code>zc&#61;0</code> in the vertical <code>z</code>-direction. Extend the adiabatic condition for the walls to the <code>xz</code> and <code>yz</code> planes. The <code>yz</code> BC kernel could be defined and called as following:</p>
+<pre><code class="julia hljs"><span class=hljs-meta >@parallel_indices</span> (iy, iz) <span class=hljs-keyword >function</span> bc_x!(A)
+    A[<span class=hljs-number >1</span>  , iy, iz] = A[<span class=hljs-number >2</span>    , iy, iz]
+    A[<span class=hljs-keyword >end</span>, iy, iz] = A[<span class=hljs-keyword >end</span>-<span class=hljs-number >1</span>, iy, iz]
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-meta >@parallel</span> (<span class=hljs-number >1</span>:size(T, <span class=hljs-number >2</span>), <span class=hljs-number >1</span>:size(T, <span class=hljs-number >3</span>)) bc_x!(T)</code></pre>
+<p>Verify that the code runs using the above low-resolution configuration and produces sensible output. To this end, you can recycle the 2D visualisation &#40;removing the quiver plotting&#41; in order to visualise a 2D slice of your 3D data, e.g., at <code>ly/2</code>:</p>
+<pre><code class="julia hljs">iframe = <span class=hljs-number >0</span>
+<span class=hljs-keyword >if</span> do_viz &amp;&amp; (it % nvis == <span class=hljs-number >0</span>)
+    p1 = heatmap(xc, zc, <span class=hljs-built_in >Array</span>(T)[:, ceil(<span class=hljs-built_in >Int</span>, ny / <span class=hljs-number >2</span>), :]&#x27;; xlims=(xc[<span class=hljs-number >1</span>], xc[<span class=hljs-keyword >end</span>]), ylims=(zc[<span class=hljs-number >1</span>], zc[<span class=hljs-keyword >end</span>]), aspect_ratio=<span class=hljs-number >1</span>, c=:turbo)
+    png(p1, <span class=hljs-meta >@sprintf</span>(<span class=hljs-string >&quot;viz3D_out/%04d.png&quot;</span>, iframe += <span class=hljs-number >1</span>))
+<span class=hljs-keyword >end</span></code></pre>
+<h3 id=task_3__2 ><a href="#task_3__2" class=header-anchor >Task 3</a></h3>
+<p>Upon having verified your code, run it with following parameters on Daint.Alps, using one GPU:</p>
+<pre><code class="julia hljs">Ra         = <span class=hljs-number >1000</span>
+<span class=hljs-comment ># [...]</span>
+nx, ny, nz = <span class=hljs-number >255</span>, <span class=hljs-number >127</span>, <span class=hljs-number >127</span>
+nt         = <span class=hljs-number >2000</span>
+ϵtol       = <span class=hljs-number >1e-6</span>
+nvis       = <span class=hljs-number >50</span>
+ncheck     = ceil(<span class=hljs-number >2</span>max(nx, ny, nz))</code></pre>
+<p>The run may take about three hours so make sure to allocate sufficiently resources and time on Daint.Alps. You can use a non-interactive <code>sbatch</code> submission script in such cases &#40;see <a href="https://user.cscs.ch/access/running/">here</a> for the &quot;official&quot; docs&#41;. <em>You can find a <code>l8_runme3D.sh</code> script in the <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/">scripts</a> folder.</em></p>
+<p>Produce a figure showing the final stage of temperature distribution and add it to a new section titled <code>## Porous convection 3D</code> in the <code>PorousConvection</code> project subfolder&#39;s <code>README</code>.</p>
+<p>For the figure, you can use <code>GLMakie</code> to produce some isocontours visualisation; add the following binary dump function to your code</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> save_array(Aname,A)
+    fname = string(Aname, <span class=hljs-string >&quot;.bin&quot;</span>)
+    out = open(fname, <span class=hljs-string >&quot;w&quot;</span>); write(out, A); close(out)
+<span class=hljs-keyword >end</span></code></pre>
+<p>which you can call as following at the end of your simulation</p>
+<pre><code class="julia hljs">save_array(<span class=hljs-string >&quot;out_T&quot;</span>, convert.(<span class=hljs-built_in >Float32</span>, <span class=hljs-built_in >Array</span>(T)))</code></pre>
+<p>Then, once you&#39;ve created the <code>out_T.bin</code> file, read it in using the following code and produce a figure</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> GLMakie
+
+<span class=hljs-keyword >function</span> load_array(Aname, A)
+    fname = string(Aname, <span class=hljs-string >&quot;.bin&quot;</span>)
+    fid=open(fname, <span class=hljs-string >&quot;r&quot;</span>); read!(fid, A); close(fid)
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-keyword >function</span> visualise()
+    lx, ly, lz = <span class=hljs-number >40.0</span>, <span class=hljs-number >20.0</span>, <span class=hljs-number >20.0</span>
+    nx = <span class=hljs-number >255</span>
+    ny = nz = <span class=hljs-number >127</span>
+    T  = zeros(<span class=hljs-built_in >Float32</span>, nx, ny, nz)
+    load_array(<span class=hljs-string >&quot;out_T&quot;</span>, T)
+    xc, yc, zc = <span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>, lx, nx), <span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>, ly, ny), <span class=hljs-built_in >LinRange</span>(<span class=hljs-number >0</span>, lz, nz)
+    fig = Figure(size=(<span class=hljs-number >800</span>, <span class=hljs-number >500</span>))
+    ax  = Axis3(fig[<span class=hljs-number >1</span>, <span class=hljs-number >1</span>]; aspect=(<span class=hljs-number >1</span>, <span class=hljs-number >1</span>, <span class=hljs-number >0.5</span>), title=<span class=hljs-string >&quot;Temperature&quot;</span>, xlabel=<span class=hljs-string >&quot;lx&quot;</span>, ylabel=<span class=hljs-string >&quot;ly&quot;</span>, zlabel=<span class=hljs-string >&quot;lz&quot;</span>)
+    surf_T = contour!(ax, xc, yc, zc, T; alpha=<span class=hljs-number >0.05</span>, colormap=:turbo)
+    save(<span class=hljs-string >&quot;T_3D.png&quot;</span>, fig)
+    <span class=hljs-keyword >return</span> fig
+<span class=hljs-keyword >end</span>
+
+visualise()</code></pre>
+<p>This figure you can further add to your <code>README.md</code>. Note that GLMakie will probably not run on Daint.Alps as GL rendering is not enabled on the compute nodes.</p>
+<p>For reference, the 3D figure produced could look as following</p>
+<p><img src="../assets/literate_figures/l8_ex2_porous_convect.png" alt="3D porous convection" /></p>
+<p>And the 2D slice at <code>y/2</code> displays as</p>
+<p><img src="../assets/literate_figures/l8_ex2_porous_convect_sl.png" alt="3D porous convection" /></p>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<hr />
+<h2 id=exercise_3_ci_and_github_actions ><a href="#exercise_3_ci_and_github_actions" class=header-anchor >Exercise 3 — <strong>CI and GitHub Actions</strong></a></h2>
+<p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
+<p>The goal of this exercise is to:</p>
+<ul>
+<li><p>setup Continuous Integration with GitHub Actions</p>
+
+</ul>
+<h3 id=tasks ><a href="#tasks" class=header-anchor >Tasks</a></h3>
+<ol>
+<li><p>Add CI setup to your <code>PorousConvection</code> project to run <strong>one unit and one reference test</strong> for both the 2D and 3D thermal porous convection scripts.</p>
+<ul>
+<li><p>👉 make sure that the reference test runs on a very small grid &#40;without producing NaNs&#41;.  It should complete in less than, say, 10-20 seconds.</p>
+
+</ul>
+
+<li><p>Follow/revisit the lecture and in particular look at the example at <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl">https://github.com/eth-vaw-glaciology/course-101-0250-00-L6Testing-subfolder.jl</a> to setup CI for a folder that is part of another Git repo &#40;your <code>PorousConvection</code> folder is part of your <code>pde-on-gpu-&lt;username&gt;</code> git repo&#41;.</p>
+
+<li><p>Push to GitHub and make sure the CI runs and passes</p>
+
+<li><p>Add the CI-badge to the <code>README.md</code> file from your <code>PorousConvection</code> folder, right below the title &#40;as it is commonly done&#41;.</p>
+
+</ol>
+<p>You may realise that you can&#39;t initialise ParallelStencil for 2D and 3D configurations within the same test script. A good practice is to place one test2D.jl and another test3D.jl scripts within the <code>test</code> folder and call these scripts from the <code>runtests.jl</code> mains script, which could contain following:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> Test
+<span class=hljs-keyword >using</span> PorousConvection
+
+<span class=hljs-keyword >function</span> runtests()
+    exename = joinpath(Sys.BINDIR, Base.julia_exename())
+    testdir = pwd()
+
+    printstyled(<span class=hljs-string >&quot;Testing PorousConvection.jl\n&quot;</span>; bold=<span class=hljs-literal >true</span>, color=:white)
+
+    run(<span class=hljs-string >`<span class=hljs-variable >$exename</span> -O3 --startup-file=no <span class=hljs-subst >$(joinpath(testdir, <span class=hljs-string >&quot;test2D.jl&quot;</span>)</span>)`</span>)
+    run(<span class=hljs-string >`<span class=hljs-variable >$exename</span> -O3 --startup-file=no <span class=hljs-subst >$(joinpath(testdir, <span class=hljs-string >&quot;test3D.jl&quot;</span>)</span>)`</span>)
+
+    <span class=hljs-keyword >return</span>
+<span class=hljs-keyword >end</span>
+
+exit(runtests())</code></pre>
+<p>Each sub-test file would then contain all what&#39;s needed to run the 2D or 3D tests. You can find an example of this approach in <code>ParallelStencil</code>&#39;s own test suite <a href="https://github.com/omlins/ParallelStencil.jl/tree/main/test">here</a>, or in the <a href="https://github.com/PTsolvers/PseudoTransientDiffusion.jl/tree/main/test">GitHub repository</a> related to the pseudo-transient solver publication discussed in <a href="/lecture3/#pseudo-transient_method">Lecture 3</a>.</p>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >If your CI setup fails, check-out again the procedure at the top of the exercise section <a href="#infos_about_projects">here</a>. Secondly, make sure to run the CPU version of the scripts as there is <strong>no GPU support</strong> in GitHub Actions&#33;</div></div>
+
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<div class=page-foot >
+  <div class=copyright >
+    <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+    Last modified: November 04, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+  </div>
+</div>
+</div>
+    </div>
