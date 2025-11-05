@@ -372,7 +372,13 @@ ssh daint.alps
 uenv image pull julia/25.5:v1
 ```
 
-3. Once the download complete, start the uenv:
+3. Work-around a current limitations of Juliaup
+
+```sh
+export TMPDIR="$SCRATCH/tmp"
+```
+
+4. Once the download complete, start the uenv:
 
 ```sh
 uenv start --view=juliaup,modules julia/25.5:v1
@@ -380,7 +386,7 @@ uenv start --view=juliaup,modules julia/25.5:v1
 
 Adding a view (`--view=juliaup,modules`) gives you explicit access to Juliaup and to modules.
 
-4. Only the first time, call into juliaup in order to install latest Julia
+5. Only the first time, call into juliaup in order to install latest Julia
 
 ```sh
 juliaup
