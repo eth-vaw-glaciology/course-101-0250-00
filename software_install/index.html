@@ -203,12 +203,17 @@ ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;username&gt;@ela.cscs.ch</code></pre>
 </ol>
 <pre><code class="sh hljs">uenv image pull julia/25.5:v1</code></pre>
 <ol start=3 >
+<li><p>Work-around a current limitations of Juliaup</p>
+
+</ol>
+<pre><code class="sh hljs"><span class=hljs-built_in >export</span> TMPDIR=<span class=hljs-string >&quot;<span class=hljs-variable >$SCRATCH</span>/tmp&quot;</span></code></pre>
+<ol start=4 >
 <li><p>Once the download complete, start the uenv:</p>
 
 </ol>
 <pre><code class="sh hljs">uenv start --view=juliaup,modules julia/25.5:v1</code></pre>
 <p>Adding a view &#40;<code>--view&#61;juliaup,modules</code>&#41; gives you explicit access to Juliaup and to modules.</p>
-<ol start=4 >
+<ol start=5 >
 <li><p>Only the first time, call into juliaup in order to install latest Julia</p>
 
 </ol>
@@ -384,7 +389,7 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_mpi_gpu_sc
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 04, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 05, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
