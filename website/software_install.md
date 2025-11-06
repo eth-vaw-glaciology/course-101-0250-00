@@ -372,9 +372,11 @@ ssh daint.alps
 uenv image pull julia/25.5:v1
 ```
 
-3. Work-around a current limitations of Juliaup
+3. Work-around a current limitations of Juliaup on Alps
 
 ```sh
+mkdir $SCRATCH/tmp
+
 export TMPDIR="$SCRATCH/tmp"
 ```
 
