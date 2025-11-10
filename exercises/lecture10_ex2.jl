@@ -17,13 +17,13 @@ In this exercise, you will:
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-Start by fetching the [`l8_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code from the `scripts/l8_scripts` folder and copy it to your `lectrue_8` folder.
+Start by fetching the [`l9_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) code from the `scripts/l9_scripts` folder and copy it to your `lecture_10` folder.
 
 Make a copy and rename it `diffusion_2D_perf_multixpu.jl`.
 
 ### Task 1
 
-Follow the steps listed in the section from lecture 8 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code. 
+Follow the steps listed in the section from lecture 10 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code. 
 
 The 5 steps you'll need to implement are summarised hereafter:
 1. Initialise the implicit global grid

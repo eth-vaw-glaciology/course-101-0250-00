@@ -52,5 +52,3 @@ The steps to realise this task summarise as following:
 
 In a new (3rd) section of your lecture's 9 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
 """
-
-
