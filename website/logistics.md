@@ -94,13 +94,13 @@ We will try to correct your assignments before the lecture following the homewor
 
 ## Project
 
-Starting from lecture 9, and until lecture 11, homework assigments contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
+Starting from lecture 8, and until lecture 11, homework assigments contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
 
-The exercises **in lecture 9** will serve as starting point for the first project:
+The exercises **in lecture 8** will serve as starting point for the first project:
 
 1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l9_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
-2. Follow the specific instructions given in [Lecture 9 - infos about projects](/lecture9/#infos_about_projects).
-3. During lectures 9 and 11 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+2. Follow the specific instructions given in [Lecture 8 - infos about projects](/lecture8/#infos_about_projects).
+3. During lectures 8 and 11 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
 
 ### Project hand-in checklist
 
@@ -108,10 +108,10 @@ The project submission deadline is set to **19.12.{{year}} - 23h59 CET** (see al
 
 Make sure to have following items in your private GitHub repository:
 
-- a `PorousConvection` folder containing the structure proposed in [Lecture 9](/lecture9/#preparing_the_project_folder_in_your_github_repo)
-- the 2D and 3D scripts from Lecture 9
+- a `PorousConvection` folder containing the structure proposed in [Lecture 8](/lecture8/#preparing_the_project_folder_in_your_github_repo)
+- the 2D and 3D scripts from Lecture 8
 - the CI set-up to test the 2D and 3D porous convection scripts
-- a `lecture_10` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 10](/lecture10/#exercises_-_lecture_10)
+- a `lecture_9` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 9](/lecture9/#exercises_-_lecture_9)
 - the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 11](/lecture11/#exercises_-_lecture_11).
 
 **In addition** enhance the `README.md` within the `PorousConvection` folder to include:
@@ -130,7 +130,7 @@ All homework assignments can be done alone or in groups of two.
 
 Enrolled ETHZ students will have to hand in on [Moodle]({{moodle_url}}) and [GitHub](https://github.com):
 
-1. Eight weekly assignments during the course's Part 1 and Part 2 constitute 65% of the final grade. **The best seven out of eight homeworks will be counted**.
+1. Seven weekly assignments during the course's Part 1 and Part 2 constitute 65% of the final grade. **The best six out of seven homeworks will be counted**.
 2. A project developed during Part 3 of the course constitutes 35% of the final grade
 
 **Project submission includes code in a Github repository and an automatically generated documentation**.
