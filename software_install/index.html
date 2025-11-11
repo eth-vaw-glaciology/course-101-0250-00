@@ -366,7 +366,7 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_gpu_script
 <li><p>To launch a Julia &#40;GPU&#41; MPI script on 2 nodes &#40;and e.g. 8 GPUs&#41; using MPI, you can simply use <code>srun</code></p>
 
 </ol>
-<pre><code class="sh hljs">MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=<span class=hljs-literal >false</span> srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=4 julia --project &lt;my_julia_mpi_script.jl&gt;</code></pre>
+<pre><code class="sh hljs">MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=<span class=hljs-literal >false</span> srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 julia --project &lt;my_julia_mpi_script.jl&gt;</code></pre>
 <p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch an MPI job remotely on daint. Example of a <code>sbatch_mpi_daint.sh</code> you can launch &#40;without need of an allocation&#41; as <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh"><code>sbatch sbatch_mpi_daint.sh</code></a>:</p>
 <pre><code class="sh hljs"><span class=hljs-meta >#!/bin/bash -l</span>
 <span class=hljs-comment >#SBATCH --account=class04</span>
@@ -376,7 +376,7 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_gpu_script
 <span class=hljs-comment >#SBATCH --time=00:05:00</span>
 <span class=hljs-comment >#SBATCH --nodes=1</span>
 <span class=hljs-comment >#SBATCH --ntasks-per-node=4</span>
-<span class=hljs-comment >#SBATCH --gpus-per-task=4</span>
+<span class=hljs-comment >#SBATCH --gpus-per-task=1</span>
 
 <span class=hljs-built_in >export</span> MPICH_GPU_SUPPORT_ENABLED=1
 <span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1 <span class=hljs-comment ># IGG</span>
@@ -388,10 +388,15 @@ srun --uenv julia/25.5:v1 --view=juliaup julia --project &lt;my_julia_mpi_gpu_sc
 <p>You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following <code>ENV</code> variables:</p>
 <pre><code class="sh hljs"><span class=hljs-built_in >export</span> MPICH_RDMA_ENABLED_CUDA=1
 <span class=hljs-built_in >export</span> IGG_CUDAAWARE_MPI=1</code></pre>
+<div class=note ><div class=title >💡 Note</div>
+<div class=messg >On daint, each MPI process &#40;SLURM task&#41; sees a single GPU with <code>ID &#61; 0</code> as we request <code>--gpus-per-task&#61;1</code>. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection.</div></div>
+<div class=warning ><div class=title >⚠️ Warning&#33;</div>
+<div class=messg ><p>Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set <code>select_device &#61; false</code> in the <code>init_global_grid</code> kwarg:</p>
+<pre><code class="julia hljs">init_global_grid(...; select_device = <span class=hljs-literal >false</span>)</code></pre></div></div>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 10, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 11, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>
