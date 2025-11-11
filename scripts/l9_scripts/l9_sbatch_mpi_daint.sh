@@ -6,7 +6,7 @@
 #SBATCH --time=00:05:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
-#SBATCH --gpus-per-task=4
+#SBATCH --gpus-per-task=1
 
 export MPICH_GPU_SUPPORT_ENABLED=1
 export IGG_CUDAAWARE_MPI=1 # IGG
