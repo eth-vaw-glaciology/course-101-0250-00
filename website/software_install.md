@@ -612,7 +612,7 @@ You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly thr
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 ```
-\note{On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection.}
+\note{On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection ([more about this the in CSCS doc](https://docs.cscs.ch/running/slurm/#one-rank-per-gpu)).}
 
 \warn{Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set `select_device = false` in the `init_global_grid` kwarg:
 
