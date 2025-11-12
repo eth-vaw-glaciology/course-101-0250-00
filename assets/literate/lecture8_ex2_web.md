@@ -59,7 +59,7 @@ Initial conditions for temperature can be done by analogy to the 2D case, but us
 T = [ΔT * exp(-xc[ix]^2 - yc[iy]^2 - (zc[iz] + lz / 2)^2) for ix = 1:nx, iy = 1:ny, iz = 1:nz]
 ````
 
-Make sure to have `yc` defined using extends similar to `xc`, and `zc` being the vertical dimension.
+Make sure to have `yc` defined using extents similar to `xc` (with the center at zero), and `zc` being the vertical dimension.
 
 For boundary conditions, apply heating from the bottom (zc=-lz) and cooling from top `zc=0` in the vertical `z`-direction. Extend the adiabatic condition for the walls to the `xz` and `yz` planes. The `yz` BC kernel could be defined and called as following:
 
