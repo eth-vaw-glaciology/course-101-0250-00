@@ -171,3 +171,5 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # > 💡 note: We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.
 #md # \note{We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
+
+

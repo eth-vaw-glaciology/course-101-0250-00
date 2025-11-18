@@ -13,7 +13,7 @@ hascode = false
 @def hw7_url  = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1275881"
 @def hw8_url  = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1275884"
 @def hw9_url  = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1275887"
-@def hw10_url = ""
+@def hw10_url = "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1306520"
 @def hw11_url = ""
 @def hw12_url = ""
 
@@ -30,6 +30,6 @@ hascode = false
 | Lect. 7      | 12.11.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw7_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-7` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. |
 | Lect. 8      | 19.11.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw8_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-8` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. Make sure that the project is contained inside the `PorousConvection` folder. |
 | Lect. 9      | 26.11.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw9_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-9` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. |
-<!-- | Lect. 10      | 03.12.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw10_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-9` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. | -->
+| Lect. 10     | 03.12.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw10_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-10` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. |
 <!-- | Lect. 11      | 10.11.{{year}} - 23h59 CET | [Moodle (commit hash + PR)]({{hw11_url}}) | For the submission, copy the git commit hash (SHA) of the final push on the branch `homework-9` and open a pull request on the `main` branch. Paste both the SHA and the PR link on Moodle. | -->
 <!-- | Final project hand in | 20.12.{{year}} - 23h59 CET | [Moodle (commit hash + PR)](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1103859) | For the submission, copy the git commit hash (SHA) of the commit on the private GitHub repository used for project development. This commit needs to be **tagged** with the v1.0.0 version release tag. More information on final project setup and submission on [Logistics](/logistics/#final_project). | -->
