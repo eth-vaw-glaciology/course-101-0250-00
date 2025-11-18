@@ -1,5 +1,5 @@
 # 1D linear diffusion Julia MPI solver
-# run: ~/.julia/bin/mpiexecjl -n 4 julia --project l8_diffusion_1D_mpi.jl
+# run: ~/.julia/bin/mpiexecjl -n 4 julia --project l9_diffusion_1D_mpi.jl
 using Plots, Printf, MAT
 import MPI
 

@@ -1,6 +1,6 @@
 # Julia MPI "Hello world" code
 # from: https://juliaparallel.github.io/MPI.jl/stable/examples/01-hello/
-# run: ~/.julia/bin/mpiexecjl -n 4 julia --project scripts/l8_hello_mpi.jl
+# run: ~/.julia/bin/mpiexecjl -n 4 julia --project scripts/l9_hello_mpi.jl
 using MPI
 MPI.Init()
 
