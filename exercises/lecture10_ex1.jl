@@ -1,5 +1,5 @@
 md"""
-## Exercise 2 — **Multi-xPU computing**
+## Exercise 1 — **Multi-xPU computing**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -36,7 +36,7 @@ Once the above steps are implemented, head to Piz Daint and configure either an 
 
 ### Task 2
 
-Run the single xPU `l8_diffusion_2D_perf_xpu.jl` code on a single CPU and single GPU (changing the `USE_GPU` flag accordingly) for following parameters
+Run the single xPU `l9_diffusion_2D_perf_xpu.jl` code on a single CPU and single GPU (changing the `USE_GPU` flag accordingly) for following parameters
 """
 
 ## Physics
@@ -48,7 +48,7 @@ nx, ny  = 126, 126
 nout    = 20
 
 md"""
-and save output `C` data. Confirm that the difference between CPU and GPU implementation is negligible, reporting it in a new section of the `README.md` for this exercise 2 within the `lecture_8` folder in your shared private GitHub repo.
+and save output `C` data. Confirm that the difference between CPU and GPU implementation is negligible, reporting it in a new section of the `README.md` for this exercise 2 within the `lecture_10` folder in your shared private GitHub repo.
 
 ### Task 3
 

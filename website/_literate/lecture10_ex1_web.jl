@@ -1,5 +1,5 @@
 md"""
-## Exercise 1 — **Towards distributed memory computing on GPUs**
+## Exercise 1 — **Multi-xPU computing**
 """
 
 #md # 👉 See [Logistics](/logistics/#submission) for submission details.
@@ -7,50 +7,103 @@ md"""
 md"""
 The goal of this exercise is to:
 - Familiarise with distributed computing
-- Learn about MPI on the way
+- Combine [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl) and [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
+- Learn about GPU MPI on the way
 """
 
 md"""
 In this exercise, you will:
-- Finalise the fake parallelisation scripts discussed in lecture 8 (2 procs and `n` procs)
-- Finalise the 2D Julia MPI script
-- Create a Julia MPI GPU version of the 2D Julia MPI script discussed [here](#task_5_multi-gpu_homework)
+- Create a multi-xPU version of your the 2D xPU diffusion solver
+- Keep it xPU compatible using `ParallelStencil.jl`
+- Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
-Create a new `lectrue_8` folder for this first exercise in your shared private GitHub repository for this week's exercises.
+Start by fetching the [`l9_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) code from the `scripts/l9_scripts` folder and copy it to your `lecture_10` folder.
+
+Make a copy and rename it `diffusion_2D_perf_multixpu.jl`.
 
 ### Task 1
 
-Finalise the [`l8_diffusion_1D_2procs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) and [`l8_diffusion_1D_nprocs.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) scripts discussed during lecture 8. Make sure to correctly implement the halo update in order to exchange the internal boundaries among the fake parallel processes (left and right and `ip` in the "2procs" and "nprocs" codes, respectively). See [here](#fake_parallelisation) for details.
+Follow the steps listed in the section from lecture 10 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code. 
 
-Report in two separate figures the final distribution of concentration `C` for both fake parallel codes. Include these figure in a first section of your lecture's 8 `README.md` adding a description sentence to each. 
+The 5 steps you'll need to implement are summarised hereafter:
+1. Initialise the implicit global grid
+2. Use global coordinates to compute the initial condition
+3. Update halo (and overlap communication with computation)
+4. Finalise the global grid
+5. Tune visualisation
+
+Once the above steps are implemented, head to Piz Daint and configure either an `salloc` or prepare a `sbatch` script to access 4 nodes.
 
 ### Task 2
 
-Finalise the [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) script discussed during lecture 8. In particular, finalise the `update_halo` functions to allow for correct internal boundary exchange among the distributed parallel MPI processes. Add the final code to your GitHub lecture 8 folder.
+Run the single xPU `l9_diffusion_2D_perf_xpu.jl` code on a single CPU and single GPU (changing the `USE_GPU` flag accordingly) for following parameters
+"""
 
-For each of the (4) neighbour exchanges:
-1. Start by defining a sendbuffer `sendbuf` to hold the vector you need to send
-2. Initialise a receive buffer `recvbuf` to later hold the vector received from the corresponding neighbouring process
-3. Use `MPI.Send` and `MPI.Recv!` functions to perform the boundary exchange
-4. Assign the values within the receive buffer to the corresponding row or column of the array `A`
+## Physics
+Lx, Ly  = 10.0, 10.0
+D       = 1.0
+ttot    = 1.0
+## Numerics
+nx, ny  = 126, 126
+nout    = 20
 
-\note{Apply similar overlap and halo update as in the fake parallelisation examples. Look-up [MPI.Send](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Send) and [MPI.recv!](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Recv!) for further details.}
-
-In a new section of your lecture's 8 `README.md`, add a .gif animation showing the diffusion of the quantity `C`, **running on 4 MPI processes**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well.
+md"""
+and save output `C` data. Confirm that the difference between CPU and GPU implementation is negligible, reporting it in a new section of the `README.md` for this exercise 2 within the `lecture_10` folder in your shared private GitHub repo.
 
 ### Task 3
 
-Create a multi-GPU implementation of the [`l8_diffusion_2D_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) script as suggested [here](#task_5_multi-gpu_homework). To this end, create a new script `l8_diffusion_2D_mpi_gpu.jl` that you will upload to your lecture 8 GitHub repository upon completion.
+Then run the newly created `diffusion_2D_perf_multixpu.jl` script with following parameters on **4 MPI processes** having set `USE_GPU = true`: 
+"""
 
-Translate the `l8_diffusion_2D_mpi.jl` code from exercise 1 (task 3) to GPU using GPU array programming. You can use a similar approach as in the CPU code to perform the boundary updates. You should use `copyto!` function in order to copy the data from the GPU memory into the send buffers (CPU memory) or to copy the receive buffer data to the GPU array.
+## Physics
+Lx, Ly  = 10.0, 10.0
+D       = 1.0
+ttot    = 1e0
+## Numerics
+nx, ny  = 64, 64 # number of grid points
+nout    = 20
+## Derived numerics
+me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
 
-The steps to realise this task summarise as following:
-1. Select the GPU based on node-local MPI infos (see the [`l8_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) code to get started.)
-2. Use GPU array initialisation (`CUDA.zeros`, `CuArray()`, ...)
-3. Gather the GPU arrays back on the host memory for visualisation or saving (using `Array()`)
-4. Modify the `update_halo` function; use `copyto!` to copy device data to the host into the send buffer or to copy host data to the device from the receive buffer
+md"""
+Save the global `C_v` output array. Ensure its size matches the inner points of the single xPU produced output (`C[2:end-1,2:end-1]`) and then compare the results to the existing 2 outputs produced in Task 2
 
-In a new (3rd) section of your lecture's 8 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
+### Task 4
+
+Now that we are confident the xPU and multi-xPU codes produce correct physical output, we will asses performance.
+
+Use the code `diffusion_2D_perf_multixpu.jl` and make sure to deactivate visualisation, saving or any other operation that would save to disk or slow the code down.
+
+**Strong scaling:** Using a single GPU, gather the effective memory throughput `T_eff` varying `nx, ny` as following
+"""
+ nx = ny = 16 * 2 .^ (1:10)
+
+md"""
+\warn{Make sur the code only spends about 1-2 seconds in the time loop, adapting `ttot` or `nt` accordingly.}
+
+In a new figure you'll add to the `README.md`, report `T_eff` as function of `nx`, and include a short comment on what you see.
+
+### Task 5
+
+**Weak scaling:** Select the smallest `nx,ny` values from previous step (2.) for which you've gotten the best `T_eff`. Run now the same code using this optimal local resolution varying the number of MPI process as following `np = 1,4,16,25,64`.
+
+\warn{Make sure the code only executes a couple of seconds each time otherwise we will run out of node hours for the rest of the course.}
+
+In a new figure, report the execution time for the various runs **normalising them with the execution time of the single process run**. Comment in one sentence on what you see.
+
+### Task 6
+
+Finally, let's assess the impact of hiding communication behind computation achieved using the `@hide_communication` macro in the multi-xPU code.
+
+Using the 64 MPI processes configuration, run the multi-xPU code changing the values of the tuple after `@hide_communication` such that
+"""
+
+@hide_communication (2,2)
+@hide_communication (16,4)
+@hide_communication (16,16)
+
+md"""
+Then, you should also run once the code commenting both `@hide_communication` and corresponding `end` statements. On a figure report the execution time as function of `[no-hidecomm, (2,2), (8,2), (16,4), (16,16)]` (note that the `(8,2)` case you should have from Task 4 and/or 5) making sure to **normalise it by the single process execution time** (from Task 5). Add a short comment related to your results.
 """
 
 

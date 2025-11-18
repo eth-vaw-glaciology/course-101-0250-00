@@ -12,6 +12,7 @@ noeval = true
 > :books: The "two-language problem", `ParallelStencil.jl` xPU implementation\
 > :computer: Reference testing, GitHub CI and workflows\
 > :construction: Exercises - (Project 1):
+>
 > - xPU codes for 2D thermal porous convection
 > - 2D and 3D xPU implementation
 > - CI workflows

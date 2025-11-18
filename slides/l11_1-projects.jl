@@ -2,7 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 9_
+#nb # _Lecture 11_
 md"""
 # Projects - 3D thermal porous convection on multi-xPU
 """
@@ -10,7 +10,7 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-### The goal of this lecture 9:
+### The goal of this lecture 11:
 
 - Projects
     - Create a multi-xPU version of the 3D thermal porous convection xPU code

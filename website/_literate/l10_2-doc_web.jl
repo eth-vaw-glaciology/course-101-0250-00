@@ -2,7 +2,7 @@
 using Markdown #src
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 9_
+#nb # _Lecture 10_
 md"""
 # Documenting your code
 
@@ -19,7 +19,7 @@ This lecture we will learn:
 """
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # _Lecture 8_
+#nb # _Lecture 10_
 md"""
 ![comic](https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg)
 """
@@ -161,11 +161,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout the branch
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@latest
         with:
-          version: '1.9'
+          version: '1.12'
           arch: x64
 
       - uses: julia-actions/cache@v1
@@ -208,3 +208,5 @@ _**Notes:**_
   which will generate the Documenter-setup for you.
 - **we don't use it in this course**
 """
+
+
