@@ -405,8 +405,8 @@ ml cuda</code></pre>
 <pre><code class="sh hljs">MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=<span class=hljs-literal >false</span> srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 \
 nsys profile --force-overwrite=<span class=hljs-literal >true</span> --start-later=<span class=hljs-literal >true</span> --capture-range=cudaProfilerApi --capture-range-end=stop -t nvtx,cuda,mpi --mpi-impl=mpich -o prof_hidecomm.%q{SLURM_PROCID}.%q{SLURM_JOBID} \
 julia --project diff_3d_hidecomm.jl</code></pre>
-<p>This will launch the code on 2 nodes, 8 GPUs &#40;4 tasks per node&#41;. <code>srun</code> will then call into <code>nsys profile</code> launched to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH implementation and produce output files named after each global MPi rank. The <code>julia --project</code> call will as such be wrapped by the profiler.</p>
-<p>The produced output files &#40;<code>.nsys-rep</code> extension&#41; can be analysed using the NVIDIA Nsight Systems GUI application that you can download from NVIDIA website and run locally.</p>
+<p>This will launch the code on 2 nodes, 8 GPUs &#40;4 tasks per node&#41;. <code>srun</code> will call into <code>nsys profile</code> to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH MPI implementation. The produced output files are named after each global MPI rank. This procedure wraps the <code>julia --project</code> call by the profiler.</p>
+<p>The produced output files &#40;<code>.nsys-rep</code> extension&#41; can be analysed using the <a href="https://developer.nvidia.com/nsight-systems">NVIDIA Nsight Systems GUI application</a> that you can download from NVIDIA website and run locally.</p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
