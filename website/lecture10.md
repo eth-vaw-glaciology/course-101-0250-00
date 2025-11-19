@@ -9,8 +9,8 @@ noeval = true
 # Lecture 10
 
 > **Agenda**\
-> :books: Distributed multi-xPU computing with ImplicitGlobalGrid.jl \
-> :computer: Documenting your code
+> :books: Distributed multi-xPU computing with ImplicitGlobalGrid.jl\
+> :computer: Documenting your code\
 > :construction: Exercises:
 >
 > - 2D diffusion with multi-xPU

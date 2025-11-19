@@ -4,7 +4,7 @@ using Markdown #src
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #nb # _Lecture 10_
 md"""
-# Using `ImplicitGlobalGrid.jl`
+# Using ImplicitGlobalGrid.jl
 """
 
 #src #########################################################################
@@ -12,9 +12,9 @@ md"""
 md"""
 ### The goal of this lecture 10:
 
-- Distributed computing
-  - learn about hiding MPI communication behind computations using asynchronous MPI calls
-  - combine ImplicitGlobalGrid.jl and ParallelStencil.jl together
+Distributed computing
+- learn about hiding MPI communication behind computations using asynchronous MPI calls
+- combine ImplicitGlobalGrid.jl and ParallelStencil.jl together
 """
 
 #src #########################################################################
@@ -33,6 +33,8 @@ Finally, the cool part: using both packages together enables to [hide communicat
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
+### Getting started with ImplicitGlobalGrid
+
 For this development, we'll start from the [`l9_diffusion_2D_perf_xpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) code.
 
 Only a few changes are required to enable multi-xPU execution, namely:
@@ -71,8 +73,8 @@ dx, dy  = Lx/nx_g(), Ly/ny_g()
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
-#nb # > 💡 note: The function `init_global_grid` takes care of MPI GPU mapping based on node-local MPI infos. Have a look at the [`l9_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) code to get an idea about the process.
-#md # \note{The function `init_global_grid` takes care of MPI GPU mapping based on node-local MPI infos. Have a look at the [`l9_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) code to get an idea about the process.}
+#nb # > 💡 note: On Alps, SLURM makes device with ID=0 visible to each MPI rank, which requires to disable device selection in the call to `init_global_grid(...; select_device = false)`.
+#md # \note{On Alps, SLURM makes device with ID=0 visible to each MPI rank, which requires to disable device selection in the call to `init_global_grid(...; select_device = false)`.}
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -177,13 +179,13 @@ if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 md"""
 ### Hiding communication
 
-Hiding communication behind computation is a well-known optimisation technique in distributed stencil computing.
+Hiding communication behind computation is a common optimisation technique in distributed stencil computing.
 
 You can think about it as each MPI rank being a watermelon.
 1. We first want to compute the updates for the crust region (green), and then directly start the MPI non-blocking communication (Isend/Irecv).
 2. In the meantime, we asychronously compute the updates of the inner region (red) of the watermelon.
 
-The aim is to hide the (1.) while computing (2.).
+The aim is to hide step (1.) while computing step (2.).
 """
 
 #src #########################################################################
@@ -191,10 +193,10 @@ The aim is to hide the (1.) while computing (2.).
 md"""
 We can examine the effect of hiding communication looking at the profiler trace produced running a 3D diffusion code under NVIDIA Nsight System profiler (see the [Profiling on Alps](/software_install/#profiling_on_alps) section about how to launch the profiler).
 
-- Profiling trace with hide communication enabled
+- Profiling trace with hide communication enabled:
 ![hidecomm](../assets/literate_figures/l10_alps_hidecomm.png)
 
-- Profiling trace with naive implementaiton having hide communication disabled
+- Profiling trace with naive implementation and hide communication disabled:
 ![no hidecomm](../assets/literate_figures/l10_alps_nohidecomm.png)
 """
 

@@ -647,6 +647,6 @@ nsys profile --force-overwrite=true --start-later=true --capture-range=cudaProfi
 julia --project diff_3d_hidecomm.jl
 ```
 
-This will launch the code on 2 nodes, 8 GPUs (4 tasks per node). `srun` will then call into `nsys profile` launched to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH implementation and produce output files named after each global MPi rank. The `julia --project` call will as such be wrapped by the profiler.
+This will launch the code on 2 nodes, 8 GPUs (4 tasks per node). `srun` will call into `nsys profile` to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH MPI implementation. The produced output files are named after each global MPI rank. This procedure wraps the `julia --project` call by the profiler.
 
-The produced output files (`.nsys-rep` extension) can be analysed using the NVIDIA Nsight Systems GUI application that you can download from NVIDIA website and run locally.
+The produced output files (`.nsys-rep` extension) can be analysed using the [NVIDIA Nsight Systems GUI application](https://developer.nvidia.com/nsight-systems) that you can download from NVIDIA website and run locally.
