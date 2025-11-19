@@ -16,7 +16,7 @@ ttot    = 1e0
 nx, ny  = 64, 64 # number of grid points
 nout    = 20
 # Derived numerics
-me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
+me, dims = init_global_grid(nx, ny, 1; select_device = false)  # Initialization of MPI and more...
 
  nx = ny = 16 * 2 .^ (1:10)
 

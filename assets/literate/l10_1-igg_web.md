@@ -22,12 +22,12 @@ Only a few changes are required to enable multi-xPU execution, namely:
 4. Finalise the global grid
 5. Tune visualisation
 
-But before we start programming the multi-xPU implementation, let's get setup with GPU MPI on Daint.Alps. Follow steps are needed:
-- Launch a `salloc` on 4 nodes
+But before we start programming the multi-xPU implementation, let's get setup with GPU MPI on daint.alps. Follow steps are needed:
+- Launch a `salloc` on 2 nodes
 - Install the required MPI-related packages
-- Test your setup running [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) and [`l9_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) scripts on 1-4 nodes
+- Test your setup running [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) and [`l9_hello_mpi_gpu.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) scripts on 1-2 nodes
 
-\note{See [GPU computing on Alps](/software_install/#gpu_computing_on_alps) for detailed information on how to run MPI GPU (multi-GPU) applications on Daint.Alps.}
+\note{See [GPU computing on Alps](/software_install/#gpu_computing_on_alps) for detailed information on how to run MPI GPU (multi-GPU) applications on daint.alps.}
 
 To (**1.**) initialise the global grid, one first needs to use the package
 ```julia
@@ -35,7 +35,7 @@ using ImplicitGlobalGrid
 ```
 Then, one can add the global grid initialisation in the `# Derived numerics` section
 ```julia
-me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
+me, dims = init_global_grid(nx, ny, 1; select_device = false)  # Initialization of MPI and more...
 dx, dy  = Lx/nx_g(), Ly/ny_g()
 ```
 
@@ -103,5 +103,23 @@ To finally generate the `gif`, one needs to place the following after the time l
 if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
 ```
 
-\note{We here did not rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging CUDA streams.}
+\note{We here did rely on CUDA-aware MPI. To use this feature set (and export) `IGG_CUDAAWARE_MPI=1`. Note that the examples using ImplicitGlobalGrid.jl would also work if `USE_GPU = false`; however, the communication and computation overlap feature is then currently not yet available as its implementation relies at present on leveraging GPU streams.}
+
+### Hiding communication
+
+Hiding communication behind computation is a well-known optimisation technique in distributed stencil computing.
+
+You can think about it as each MPI rank being a watermelon.
+1. We first want to compute the updates for the crust region (green), and then directly start the MPI non-blocking communication (Isend/Irecv).
+2. In the meantime, we asychronously compute the updates of the inner region (red) of the watermelon.
+
+The aim is to hide the (1.) while computing (2.).
+
+We can examine the effect of hiding communication looking at the profiler trace produced running a 3D diffusion code under NVIDIA Nsight System profiler (see the [Profiling on Alps](/software_install/#profiling_on_alps) section about how to launch the profiler).
+
+- Profiling trace with hide communication enabled
+![hidecomm](../assets/literate_figures/l10_alps_hidecomm.png)
+
+- Profiling trace with naive implementaiton having hide communication disabled
+![no hidecomm](../assets/literate_figures/l10_alps_nohidecomm.png)
 
