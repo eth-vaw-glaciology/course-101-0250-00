@@ -23,7 +23,7 @@ Make a copy and rename it `diffusion_2D_perf_multixpu.jl`.
 
 ### Task 1
 
-Follow the steps listed in the section from lecture 10 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code. 
+Follow the steps listed in the section from lecture 10 about [using `ImplicitGlobalGrid.jl`](#using_implicitglobalgridjl) to add multi-xPU support to the 2D diffusion code.
 
 The 5 steps you'll need to implement are summarised hereafter:
 1. Initialise the implicit global grid
@@ -32,7 +32,7 @@ The 5 steps you'll need to implement are summarised hereafter:
 4. Finalise the global grid
 5. Tune visualisation
 
-Once the above steps are implemented, head to Piz Daint and configure either an `salloc` or prepare a `sbatch` script to access 4 nodes.
+Once the above steps are implemented, head to daint.alps and configure either an `salloc` or prepare a `sbatch` script to access 1 node.
 
 ### Task 2
 
@@ -52,7 +52,7 @@ and save output `C` data. Confirm that the difference between CPU and GPU implem
 
 ### Task 3
 
-Then run the newly created `diffusion_2D_perf_multixpu.jl` script with following parameters on **4 MPI processes** having set `USE_GPU = true`: 
+Then run the newly created `diffusion_2D_perf_multixpu.jl` script with following parameters on **4 MPI processes** having set `USE_GPU = true`:
 """
 
 ## Physics
@@ -63,7 +63,7 @@ ttot    = 1e0
 nx, ny  = 64, 64 # number of grid points
 nout    = 20
 ## Derived numerics
-me, dims = init_global_grid(nx, ny, 1)  # Initialization of MPI and more...
+me, dims = init_global_grid(nx, ny, 1; select_device = false)  # Initialization of MPI and more...
 
 md"""
 Save the global `C_v` output array. Ensure its size matches the inner points of the single xPU produced output (`C[2:end-1,2:end-1]`) and then compare the results to the existing 2 outputs produced in Task 2

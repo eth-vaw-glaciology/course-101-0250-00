@@ -612,12 +612,41 @@ You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly thr
 export MPICH_RDMA_ENABLED_CUDA=1
 export IGG_CUDAAWARE_MPI=1
 ```
+
 \note{On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection ([more about this the in CSCS doc](https://docs.cscs.ch/running/slurm/#one-rank-per-gpu)).}
 
 \warn{Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set `select_device = false` in the `init_global_grid` kwarg:
-
 ```
 init_global_grid(...; select_device = false)
 ```
-
 }
+
+### Profiling on Alps
+
+Profiling using the [NVIDIA Nsight Systems](https://docs.cscs.ch/software/devtools/nvidia-nsight/) is available with any uenv that comes with a CUDA compiler, including the Julia uenv. As a sampling profiler, it can be used to profile applications written in Julia by wrapping the application with the Nsight Systems profiler executable.
+
+The profiler is triggered by using the `nsys profile` command, available upon loading the CUDA module. On daint prepare the working environment as following
+
+```sh
+uenv start --view=juliaup,modules julia/25.5:v1
+
+ml cuda
+```
+
+Then, for example, request an allocation for 2 nodes in order to have access to 8 GH200 GPUs:
+
+```sh
+salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
+```
+
+To then profile an application (e.g. the [3D diffusion code](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l10_diff_3d_hidecomm.jl)), launch `srun` with the following parameters:
+
+```sh
+MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 \
+nsys profile --force-overwrite=true --start-later=true --capture-range=cudaProfilerApi --capture-range-end=stop -t nvtx,cuda,mpi --mpi-impl=mpich -o prof_hidecomm.%q{SLURM_PROCID}.%q{SLURM_JOBID} \
+julia --project diff_3d_hidecomm.jl
+```
+
+This will launch the code on 2 nodes, 8 GPUs (4 tasks per node). `srun` will then call into `nsys profile` launched to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH implementation and produce output files named after each global MPi rank. The `julia --project` call will as such be wrapped by the profiler.
+
+The produced output files (`.nsys-rep` extension) can be analysed using the NVIDIA Nsight Systems GUI application that you can download from NVIDIA website and run locally.
