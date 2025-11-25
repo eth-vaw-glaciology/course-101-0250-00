@@ -211,7 +211,7 @@ Running the code at higher resolution (`508x252x252` grid points) and for 6000 t
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 #md # ~~~
 # <center>
-#   <video width="90%" autoplay loop controls src="../assets/literate_figures/l9_porous_convection_mxpu.mp4"/>
+#   <video width="90%" autoplay loop controls src="../assets/literate_figures/l11_porous_convection_mxpu.mp4"/>
 # </center>
 #md # ~~~
 
