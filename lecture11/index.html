@@ -1,4 +1,4 @@
-<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 11</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item active" href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Coupled multi-physics</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – GPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 – xPU computing</a> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 – ImplicitGlobalGrid.jl</a> <div class="sidebar-nav-item under-construction"> Lecture 11 – Multi-xPU & Projects</div> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_11 ><a href="#lecture_11" class=header-anchor >Lecture 11</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Multi-xPU thermal porous convection 3D<br />💻 Automatic documentation an CI<br />🚧 Project:</p> <ul> <li><p>Multi-xPU thermal porous convection 3D</p> <li><p>Automatic documentation and CI</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_11">Lecture 11</a><li><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu">Projects - 3D thermal porous convection on multi-xPU</a><ol><li><a href="#using_implicitglobalgridjl_continued">Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a><li><a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a></ol><li><a href="#documenting_your_code">Documenting your code</a><li><a href="#exercises_-_lecture_11">Exercises - lecture 11</a><ol><li><a href="#exercise_1_multi-xpu_computing_projects">Exercise 1 — <strong>Multi-xPU computing projects</strong></a><li><a href="#exercise_2_automatic_documentation_in_julia">Exercise 2 — <strong>Automatic documentation in Julia</strong></a></ol></ol></div> <p><a href="#exercises_-_lecture_11"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=projects_-_3d_thermal_porous_convection_on_multi-xpu ><a href="#projects_-_3d_thermal_porous_convection_on_multi-xpu" class=header-anchor >Projects - 3D thermal porous convection on multi-xPU</a></h1> <h3 id=the_goal_of_this_lecture_9 ><a href="#the_goal_of_this_lecture_9" class=header-anchor >The goal of this lecture 9:</a></h3> <ul> <li><p>Projects</p> <ul> <li><p>Create a multi-xPU version of the 3D thermal porous convection xPU code</p> <li><p>Combine <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a> and <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a></p> <li><p>Finalise the documentation of your project</p> </ul> <li><p>Automatic documentation and CI</p> </ul> <h2 id=using_implicitglobalgridjl_continued ><a href="#using_implicitglobalgridjl_continued" class=header-anchor >Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a></h2> <p>In previous Lecture 8, we introduced <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>, which renders distributed parallelisation with GPU and CPU for HPC a very simple task.</p> <p>Also, ImplicitGlobalGrid.jl elegantly combines with <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a> to, e.g., hide communication behind computation.</p> <p>Let&#39;s have a rapid tour of <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>&#39;s&#39; documentation before using it to turn the 3D thermal porous diffusion solver into a multi-xPU solver.</p> <h2 id=multi-xpu_3d_thermal_porous_convection ><a href="#multi-xpu_3d_thermal_porous_convection" class=header-anchor >Multi-xPU 3D thermal porous convection</a></h2> <p>Let&#39;s step through the following content:</p> <ul> <li><p>Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 7</p> <li><p>Keep it xPU compatible using <code>ParallelStencil.jl</code></p> <li><p>Deploy it on multiple xPUs using <code>ImplicitGlobalGrid.jl</code></p> </ul> <p>👉 You&#39;ll find a version of the <code>PorousConvection_3D_xpu.jl</code> code in the solutions folder on Moodle after exercises deadline if needed to get you started.</p> <h3 id=enable_multi-xpu_support ><a href="#enable_multi-xpu_support" class=header-anchor >Enable multi-xPU support</a></h3> <p>Only a few changes are required to enable multi-xPU support, namely:</p> <ol> <li><p>Copy your working <code>PorousConvection_3D_xpu.jl</code> code developed for the exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p> <li><p>Add at the beginning of the code</p> </ol> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid
+<!doctype html> <html lang=en > <meta charset=UTF-8 > <meta name=viewport  content="width=device-width, initial-scale=1"> <script src="/libs/lunr/lunr.min.js"></script> <script src="/libs/lunr/lunr_index.js"></script> <script src="/libs/lunr/lunrclient.min.js"></script> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <link rel=stylesheet  href="/css/franklin.css"> <link rel=stylesheet  href="/css/poole_hyde.css"> <link rel=stylesheet  href="/css/custom.css"> <style> html {font-size: 17px;} .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;} @media (min-width: 940px) { .franklin-content {width: 100%; margin-left: auto; margin-right: auto;} } @media (max-width: 768px) { .franklin-content {padding-left: 6%; padding-right: 6%;} } </style> <link rel=icon  href="/assets/favicon.png"> <title>Lecture 11</title> <style> .content {max-width: 50rem} </style> <div class=sidebar > <div class="container sidebar-sticky"> <div class=sidebar-about > <img src="/assets/vaw_logo.png" style="width: 180px; height: auto; display: inline"> <div style="margin-bottom: 0.5em"><a href="/"> Fall 2025</a> <span style="opacity: 0.7;">| <a href=https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2025W&ansicht=KATALOGDATEN&lerneinheitId=193496&lang=en> ETHZ 101-0250-00</a></span></div> <br> <h1><a href="/">Solving partial differential equations in parallel on GPUs I</a></h1> <div style="line-height:18px; font-size: 15px; opacity: 0.85">by &nbsp; <a href="https://vaw.ethz.ch/en/people/person-detail.MjcwOTYw.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ludovic Räss</a>, &nbsp; <a href="https://vaw.ethz.ch/en/personen/person-detail.html?persid=124402">Mauro Werder</a>, &nbsp; <a href="https://www.cscs.ch/about/staff/">Samuel Omlin</a> & <br> <a href="https://vaw.ethz.ch/en/people/person-detail.MzAwMjIy.TGlzdC8xOTYxLDE1MTczNjI1ODA=.html">Ivan Utkin</a> </div> </div> <br> <style> </style> <nav class=sidebar-nav  style="opacity: 0.9; margin-bottom: 1cm;"> <a class="sidebar-nav-item " href="/"><b>Welcome</b></a> <a class="sidebar-nav-item " href="/logistics/">Logistics</a> <a class="sidebar-nav-item " href="/homework/">Homeworks</a> <a class="sidebar-nav-item " href="/software_install/">Software install</a> <a class="sidebar-nav-item " href="/extras/">Extras</a> <br> <div class=course-section >Part 1 – Introduction</div> <a class="sidebar-nav-item active" href="/lecture1/">Lecture 1 – Introduction to Julia</a> <a class="sidebar-nav-item " href="/lecture2/">Lecture 2 – PDEs & physical processes</a> <a class="sidebar-nav-item " href="/lecture3/"> Lecture 3 – Solving elliptic PDEs</a> <a class="sidebar-nav-item " href="/lecture4/">Lecture 4 – Coupled multi-physics</a> <div class=course-section >Part 2 – Solving PDEs on GPUs</div> <a class="sidebar-nav-item " href="/lecture5/">Lecture 5 – Porous convection</a> <a class="sidebar-nav-item " href="/lecture6/">Lecture 6 – Parallel computing</a> <a class="sidebar-nav-item " href="/lecture7/">Lecture 7 – GPU computing</a> <a class="sidebar-nav-item " href="/lecture8/">Lecture 8 – xPU computing</a> <div class=course-section >Part 3 – Multi-GPU computing (projects)</div> <a class="sidebar-nav-item " href="/lecture9/">Lecture 9 – Julia MPI & multi-xPU</a> <a class="sidebar-nav-item " href="/lecture10/">Lecture 10 – ImplicitGlobalGrid.jl</a> <a class="sidebar-nav-item active" href="/lecture11/">Lecture 11 – Multi-xPU & final project</a> <div class="sidebar-nav-item under-construction"> Lecture 12 – Advanced optimisations</div> </nav> <form id=lunrSearchForm  name=lunrSearchForm > <input class=search-input  name=q  placeholder="Enter search term" type=text > <input type=submit  value=Search  formaction="/search/index.html"> </form> <br> <br> </div> </div> <div class="content container"> <div class=franklin-content > <h1 id=lecture_11 ><a href="#lecture_11" class=header-anchor >Lecture 11</a></h1> <blockquote> <p><strong>Agenda</strong><br />📚 Multi-xPU thermal porous convection 3D<br />💻 Automatic documentation and CI<br />🚧 Project:</p> <ul> <li><p>Multi-xPU thermal porous convection 3D</p> <li><p>Automatic documentation and CI</p> </ul> </blockquote> <hr /> <p><a id=content  class=anchor ></a> <strong>Content</strong></p> <div class=franklin-toc ><ol><li><a href="#lecture_11">Lecture 11</a><li><a href="#project_-_3d_thermal_porous_convection_on_multi-xpu">Project - 3D thermal porous convection on multi-xPU</a><ol><li><a href="#using_implicitglobalgridjl_continued">Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a><li><a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a></ol><li><a href="#exercises_-_lecture_11">Exercises - lecture 11</a><ol><li><a href="#exercise_1_multi-xpu_computing_projects">Exercise 1 — <strong>Multi-xPU computing projects</strong></a><li><a href="#exercise_2_automatic_documentation_in_julia">Exercise 2 — <strong>Automatic documentation in Julia</strong></a></ol><li><a href="#solving_partial_differential_equations_in_parallel_on_gpus_ii">Solving Partial Differential Equations in Parallel on GPUs II</a><ol><li><a href="#a_solving_one_of_the_proposed_pdes">A. Solving One of the Proposed PDEs</a><li><a href="#b_solving_a_pde_of_your_interest">B. Solving a PDE of Your Interest</a><li><a href="#c_advanced_optimisations">C. Advanced Optimisations</a></ol></ol></div> <p><a href="#exercises_-_lecture_11"><em>👉 get started with exercises</em></a></p> <hr /> <h1 id=project_-_3d_thermal_porous_convection_on_multi-xpu ><a href="#project_-_3d_thermal_porous_convection_on_multi-xpu" class=header-anchor >Project - 3D thermal porous convection on multi-xPU</a></h1> <h3 id=the_goal_of_this_lecture_11 ><a href="#the_goal_of_this_lecture_11" class=header-anchor >The goal of this lecture 11:</a></h3> <ul> <li><p>Projects</p> <ul> <li><p>Create a multi-xPU version of the 3D thermal porous convection xPU code</p> <li><p>Combine <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a> and <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a></p> <li><p>Finalise the documentation of your project</p> </ul> <li><p>Automatic documentation and CI</p> </ul> <h2 id=using_implicitglobalgridjl_continued ><a href="#using_implicitglobalgridjl_continued" class=header-anchor >Using <code>ImplicitGlobalGrid.jl</code> &#40;continued&#41;</a></h2> <p>In previous Lecture 10, we introduced <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>, which renders distributed parallelisation with GPU and CPU for HPC a very simple task.</p> <p>Also, ImplicitGlobalGrid.jl elegantly combines with <a href="https://github.com/omlins/ParallelStencil.jl">ParallelStencil.jl</a> to, e.g., hide communication behind computation.</p> <h2 id=multi-xpu_3d_thermal_porous_convection ><a href="#multi-xpu_3d_thermal_porous_convection" class=header-anchor >Multi-xPU 3D thermal porous convection</a></h2> <p>Let&#39;s step through the following content:</p> <ul> <li><p>Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 8</p> <li><p>Keep it xPU compatible using <code>ParallelStencil.jl</code></p> <li><p>Deploy it on multiple xPUs using <code>ImplicitGlobalGrid.jl</code></p> </ul> <p>👉 You&#39;ll find a version of the <code>PorousConvection_3D_xpu.jl</code> code in the solutions folder on Moodle after exercises deadline if needed to get you started.</p> <h3 id=enable_multi-xpu_support ><a href="#enable_multi-xpu_support" class=header-anchor >Enable multi-xPU support</a></h3> <p>Only a few changes are required to enable multi-xPU support, namely:</p> <ol> <li><p>Copy your working <code>PorousConvection_3D_xpu.jl</code> code developed for the exercises in Lecture 8 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p> <li><p>Add at the beginning of the code</p> </ol> <pre><code class="julia hljs"><span class=hljs-keyword >using</span> ImplicitGlobalGrid
 <span class=hljs-keyword >import</span> MPI</code></pre> <ol start=3 > <li><p>Further, add global maximum computation using MPI reduction function to be used instead of <code>maximum&#40;&#41;</code></p> </ol> <pre><code class="julia hljs">max_g(A) = (max_l = maximum(A); MPI.Allreduce(max_l, MPI.MAX, MPI.COMM_WORLD))</code></pre>
 <ol start=4 >
 <li><p>In the <code># numerics</code> section, initialise the global grid right after defining <code>nx,ny,nz</code> and use now global grid <code>nx_g&#40;&#41;</code>,<code>ny_g&#40;&#41;</code> and <code>nz_g&#40;&#41;</code> for defining <code>maxiter</code> and <code>ncheck</code>, as well as in any other places when needed.</p>
@@ -105,200 +105,9 @@ nvis        = <span class=hljs-number >50</span></code></pre>
 
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
-<h1 id=documenting_your_code ><a href="#documenting_your_code" class=header-anchor >Documenting your code</a></h1>
-<p>This lecture we will learn:</p>
-<ul>
-<li><p>documentation vs code-comments</p>
-
-<li><p>why to write documentation</p>
-
-<li><p>GitHub tools:</p>
-<ul>
-<li><p>rendering of markdown files</p>
-
-<li><p>gh-pages</p>
-
-</ul>
-
-<li><p>some Julia tools:</p>
-<ul>
-<li><p>docstrings</p>
-
-<li><p><a href="https://github.com/fredrikekre/Literate.jl">https://github.com/fredrikekre/Literate.jl</a></p>
-
-<li><p><a href="https://github.com/JuliaDocs/Documenter.jl">https://github.com/JuliaDocs/Documenter.jl</a></p>
-
-</ul>
-
-</ul>
-<p><img src="https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg" alt=comic  /></p>
-<h3 id=why_should_i_document_my_code ><a href="#why_should_i_document_my_code" class=header-anchor >Why should I document my code?</a></h3>
-<p>Why should I write code comments?</p>
-<ul>
-<li><p><a href="https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/">&quot;Code Tells You How, Comments Tell You Why&quot;</a></p>
-<ul>
-<li><p>code should be made understandable by itself, as much as possible</p>
-
-<li><p>comments then should be to tell the &quot;why&quot; you&#39;re doing something</p>
-
-</ul>
-
-<li><p><em>but</em> I do a lot of structuring comments as well</p>
-
-<li><p>math-y variables tend to be short and need a comment as well</p>
-
-</ul>
-<p>Why should I write documentation?</p>
-<ul>
-<li><p>documentation should give a bigger overview of what your code does</p>
-<ul>
-<li><p>at the function-level &#40;doc-strings&#41;</p>
-
-<li><p>at the package-level &#40;README, full-fledged documentation&#41;</p>
-
-</ul>
-
-<li><p>to let other people and your future self &#40;probably most importantly&#41; understand what your code is about</p>
-
-</ul>
-<h3 id=documentation_easily_rots ><a href="#documentation_easily_rots" class=header-anchor >Documentation easily rots...</a></h3>
-<p>Worse than no documentation/code comments is documentation which is outdated.</p>
-<p>I find the best way to keep documentation up to date is:</p>
-<ul>
-<li><p>have documentation visible to you, e.g. GitHub README</p>
-
-<li><p>document what you need yourself</p>
-
-<li><p>use examples and run them as part of CI &#40;doc-tests, example-scripts&#41;</p>
-
-</ul>
-<h3 id=documentation_tools_doc-strings ><a href="#documentation_tools_doc-strings" class=header-anchor >Documentation tools: doc-strings</a></h3>
-<p>A Julia doc-string &#40;<a href="https://docs.julialang.org/en/v1/manual/documentation/">Julia manual</a>&#41;:</p>
-<ul>
-<li><p>is just a string before the object &#40;no blank-line inbetween&#41;; interpreted as markdown-string</p>
-
-<li><p>can be attached to most things &#40;functions, variables, modules, macros, types&#41;</p>
-
-<li><p>can be queried with <code>?</code></p>
-
-</ul>
-<pre><code class="julia hljs"><span class=hljs-string >&quot;Typical size of a beer crate&quot;</span>
-<span class=hljs-keyword >const</span> BEERBOX = <span class=hljs-number >12</span></code></pre>
-<pre><code class="julia hljs">?BEERBOX</code></pre>
-<h3 id=documentation_tools_doc-strings_with_examples ><a href="#documentation_tools_doc-strings_with_examples" class=header-anchor >Documentation tools: doc-strings with examples</a></h3>
-<p>One can add examples to doc-strings &#40;they can even be part of testing: <a href="https://juliadocs.github.io/Documenter.jl/stable/man/doctests/">doc-tests</a>&#41;.</p>
-<p>&#40;Run it in the REPL and copy paste to the docstring.&#41;</p>
-<pre><code class="julia hljs"><span class=hljs-string >&quot;&quot;&quot;
-    transform(r, θ)
-
-Transform polar `(r,θ)` to cartesian coordinates `(x,y)`.
-
-# Example
-```jldoctest
-julia&gt; transform(4.5, pi/5)
-(3.6405764746872635, 2.6450336353161292)
-```
-&quot;&quot;&quot;</span>
-transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
-<pre><code class="julia hljs">?transform</code></pre>
-<h3 id=documentation_tools_github_markdown_rendering ><a href="#documentation_tools_github_markdown_rendering" class=header-anchor >Documentation tools: GitHub markdown rendering</a></h3>
-<p>The easiest way to write long-form documentation is to just use GitHub&#39;s markdown rendering.</p>
-<p>A nice example is <a href="https://github.com/luraess/parallel-gpu-workshop-JuliaCon21">this short course</a> by Ludovic &#40;incidentally about solving PDEs on GPUs 🙂&#41;.</p>
-<ul>
-<li><p>images are rendered</p>
-
-<li><p>in-page links are easy, e.g. <code>&#91;_back to workshop material_&#93;&#40;#workshop-material&#41;</code></p>
-
-<li><p>top-left has a burger-menu for page navigation</p>
-
-<li><p>can be edited within the web-page &#40;pencil-icon&#41;</p>
-
-</ul>
-<p>👉 this is a good and low-overhead way to produce pretty nice documentation</p>
-<h3 id=documentation_tools_literatejl ><a href="#documentation_tools_literatejl" class=header-anchor >Documentation tools: Literate.jl</a></h3>
-<p>There are several tools which render .jl files &#40;with special formatting&#41; into markdown files.  These files can then be added to GitHub and will be rendered there.</p>
-<ul>
-<li><p>we&#39;re using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a></p>
-
-<li><p>format is described <a href="https://fredrikekre.github.io/Literate.jl/v2/fileformat/">here</a></p>
-
-<li><p>files stay valid Julia scripts, i.e. they can be executed without Literate.jl</p>
-
-</ul>
-<p>Example</p>
-<ul>
-<li><p>input julia-code in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.jl">course-101-0250-00-L8Documentation.jl: scripts/car_travels.jl</a></p>
-
-<li><p>output markdown in: <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl/blob/4bbeb3ddda046490847f050b02d3fc5d9308695b/scripts/car_travels.md">course-101-0250-00-L8Documentation.jl: scripts/car_travels.md</a> created with:</p>
-
-</ul>
-<pre><code class="julia hljs">Literate.markdown(<span class=hljs-string >&quot;car_travels.jl&quot;</span>, directory_of_this_file, execute=<span class=hljs-literal >true</span>, documenter=<span class=hljs-literal >false</span>, credit=<span class=hljs-literal >false</span>)</code></pre>
-<p>But this is not automatic&#33;  Manual steps: run Literate, add files, commit and push...</p>
-<p>or use GitHub Actions...</p>
-<h3 id=documentation_tools_automating_literatejl ><a href="#documentation_tools_automating_literatejl" class=header-anchor >Documentation tools: Automating Literate.jl</a></h3>
-<p>Demonstrated in the repo <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00-L8Documentation.jl">course-101-0250-00-L8Documentation.jl</a></p>
-<pre><code class="yml hljs"><span class=hljs-attr >name:</span> <span class=hljs-string >Run</span> <span class=hljs-string >Literate.jl</span>
-<span class=hljs-comment ># adapted from https://lannonbr.com/blog/2019-12-09-git-commit-in-actions</span>
-
-<span class=hljs-attr >on:</span> <span class=hljs-string >push</span>
-
-<span class=hljs-attr >jobs:</span>
-  <span class=hljs-attr >lit:</span>
-    <span class=hljs-attr >runs-on:</span> <span class=hljs-string >ubuntu-latest</span>
-    <span class=hljs-attr >steps:</span>
-      <span class=hljs-comment ># Checkout the branch</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >actions/checkout@v2</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/setup-julia@v1</span>
-        <span class=hljs-attr >with:</span>
-          <span class=hljs-attr >version:</span> <span class=hljs-string >&#x27;1.9&#x27;</span>
-          <span class=hljs-attr >arch:</span> <span class=hljs-string >x64</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/cache@v1</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >uses:</span> <span class=hljs-string >julia-actions/julia-buildpkg@latest</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >run</span> <span class=hljs-string >Literate</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >QT_QPA_PLATFORM=offscreen</span> <span class=hljs-string >julia</span> <span class=hljs-string >--color=yes</span> <span class=hljs-string >--project</span> <span class=hljs-string >-e</span> <span class=hljs-string >&#x27;cd(&quot;scripts&quot;); include(&quot;literate-script.jl&quot;)&#x27;</span>
-
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >setup</span> <span class=hljs-string >git</span> <span class=hljs-string >config</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >|
-          # setup the username and email. I tend to use &#x27;GitHub Actions Bot&#x27; with no email by default
-          git config user.name &quot;GitHub Actions Bot&quot;
-          git config user.email &quot;&lt;&gt;&quot;
-</span>
-      <span class=hljs-bullet >-</span> <span class=hljs-attr >name:</span> <span class=hljs-string >commit</span>
-        <span class=hljs-attr >run:</span> <span class=hljs-string >|
-          # Stage the file, commit and push
-          git add scripts/md/*
-          git commit -m &quot;Commit markdown files fom Literate&quot;
-          git push origin master</span></code></pre>
-<h3 id=documentation_tools_documenterjl ><a href="#documentation_tools_documenterjl" class=header-anchor >Documentation tools: Documenter.jl</a></h3>
-<p>If you want to have full-blown documentation, including, e.g., automatic API documentation generation, versioning, then use <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>.</p>
-<p>Examples:</p>
-<ul>
-<li><p><a href="https://docs.julialang.org/en/v1/">https://docs.julialang.org/en/v1/</a></p>
-
-<li><p><a href="https://mauro3.github.io/Parameters.jl/stable/">https://mauro3.github.io/Parameters.jl/stable/</a></p>
-
-</ul>
-<p><em><strong>Notes:</strong></em></p>
-<ul>
-<li><p>it&#39;s geared towards Julia-packages, less for a bunch-of-scripts as in our lecture</p>
-
-<li><p>Documenter.jl also integrates with Literate.jl.</p>
-
-<li><p>for more free-form websites, use <a href="https://github.com/tlienart/Franklin.jl">https://github.com/tlienart/Franklin.jl</a> &#40;as the course website does&#41;</p>
-
-<li><p>if you want to use it, it&#39;s easiest to generate your package with <a href="https://github.com/invenia/PkgTemplates.jl">PkgTemplates.jl</a> which will generate the Documenter-setup for you.</p>
-
-<li><p><strong>we don&#39;t use it in this course</strong></p>
-
-</ul>
-
-<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <h1 id=exercises_-_lecture_11 ><a href="#exercises_-_lecture_11" class=header-anchor >Exercises - lecture 11</a></h1>
 <div class=warning ><div class=title >⚠️ Warning&#33;</div>
-<div class=messg ><strong>Exercise 1</strong> is the final step of your project - scripts and results should be added to the <code>PorousConvection</code> subfolder in your private GitHub repo. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/homework">more</a>&#41;.<br />From your <code>homework-9</code> branch, create a new git branch named <code>homework-11</code> in order to build upon work performed for homework 9.<br />The exercises from Lecture 11 include the last steps towards the completion of the project. Hand-in information can be found in <a href="/logistics/#project">Logistics</a>.</div></div>
+<div class=messg ><strong>Exercise 1</strong> is the final step of your project - scripts and results should be added to the <code>PorousConvection</code> subfolder in your private GitHub repo. The git commit hash &#40;or SHA&#41; of the final push needs to be uploaded on Moodle &#40;<a href="/homework">more</a>&#41;.<br />From your <code>homework-8</code> branch, create a new git branch named <code>homework-11</code> in order to build upon work performed for homework 8.<br />The exercises from Lecture 11 include the last steps towards the completion of the project. Hand-in information can be found in <a href="/logistics/#project">Logistics</a>.</div></div>
 <h2 id=exercise_1_multi-xpu_computing_projects ><a href="#exercise_1_multi-xpu_computing_projects" class=header-anchor >Exercise 1 — <strong>Multi-xPU computing projects</strong></a></h2>
 <p>👉 See <a href="/logistics/#submission">Logistics</a> for submission details.</p>
 <p>The goal of this exercise is to:</p>
@@ -312,7 +121,7 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <p>In this exercise, you will:</p>
 <ul>
-<li><p>Create a multi-xPU version of the 3D thermal porous convection code from lecture 7</p>
+<li><p>Create a multi-xPU version of the 3D thermal porous convection code from lecture 8</p>
 
 <li><p>Keep it xPU compatible using <code>ParallelStencil.jl</code></p>
 
@@ -321,9 +130,9 @@ transform(r, θ) = (r*cos(θ), r*sin(θ))</code></pre>
 </ul>
 <p>👉 You&#39;ll find a version of the <code>PorousConvection_3D_xpu.jl</code> code on Moodle after exercises deadline if needed to get you started.</p>
 <ol>
-<li><p>Copy the <code>PorousConvection_3D_xpu.jl</code> code from exercises in Lecture 7 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p>
+<li><p>Copy the <code>PorousConvection_3D_xpu.jl</code> code from exercises in Lecture 8 and rename it <code>PorousConvection_3D_multixpu.jl</code>.</p>
 
-<li><p>Refer to the steps outlined in the <a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a> section from Lecture 9 to implement the changes needed to port the 3D single xPU code &#40;from Lecture 7&#41; to multi-xPU.</p>
+<li><p>Refer to the steps outlined in the <a href="#multi-xpu_3d_thermal_porous_convection">Multi-xPU 3D thermal porous convection</a> section from the lecture to implement the changes needed to port the 3D single xPU code &#40;from Lecture 8&#41; to multi-xPU.</p>
 
 <li><p>Upon completion, verify the script converges and produces expected output for following parameters:</p>
 
@@ -335,8 +144,8 @@ nx,ny       = <span class=hljs-number >2</span> * (nz + <span class=hljs-number 
 b_width     = (<span class=hljs-number >8</span>, <span class=hljs-number >8</span>, <span class=hljs-number >4</span>) <span class=hljs-comment ># for comm / comp overlap</span>
 nt          = <span class=hljs-number >500</span>
 nvis        = <span class=hljs-number >50</span></code></pre>
-<p>Use 8 GPUs on Piz Daint adapting the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; to use CUDA-aware MPI 🚀</p>
-<p>The final 2D slice &#40;at <code>ny_g&#40;&#41;/2</code>&#41; produced should look similar as the figure depicted in <a href="#benchmark_run">Lecture 9</a>.</p>
+<p>Use 8 GPUs on Daint.Alps adapting the <code>runme_mpi_daint.sh</code> or <code>sbatch sbatch_mpi_daint.sh</code> scripts &#40;see <a href="/software_install/#cuda-aware_mpi_on_piz_daint">here</a>&#41; to use CUDA-aware MPI 🚀</p>
+<p>The final 2D slice &#40;at <code>ny_g&#40;&#41;/2</code>&#41; produced should look similar as the figure depicted in <a href="#benchmark_run">Lecture 11</a>.</p>
 <h3 id=task ><a href="#task" class=header-anchor >Task</a></h3>
 <p>Now that you made sure the code runs as expected, launch <code>PorousConvection_3D_multixpu.jl</code> for 2000 steps on 8 GPUs at higher resolution &#40;global grid of <code>508x252x252</code>&#41; setting:</p>
 <pre><code class="julia hljs">nz          = <span class=hljs-number >127</span>
@@ -345,7 +154,7 @@ nt          = <span class=hljs-number >2000</span>
 nvis        = <span class=hljs-number >100</span></code></pre>
 <p>and keeping other parameters unchanged.</p>
 <p>Use <code>sbtach</code> command to launch a non-interactive job which may take about 5h30-6h to execute.</p>
-<p>Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled <code>## Porous convection 3D MPI</code> in the <code>PorousConvection</code> project subfolder&#39;s <code>README.md</code>. You can use the Makie visualisation helper script from Lecture 7 for this purpose &#40;making sure to adapt the resolution and other input params if needed&#41;.</p>
+<p>Produce a figure or animation showing the final stage of temperature distribution in 3D and add it to a new section titled <code>## Porous convection 3D MPI</code> in the <code>PorousConvection</code> project subfolder&#39;s <code>README.md</code>. You can use the Makie visualisation helper script from Lecture 8 for this purpose &#40;making sure to adapt the resolution and other input params if needed&#41;.</p>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <hr />
@@ -411,15 +220,48 @@ heatmap(B)</code></pre>
 <ol start=3 >
 <li><p>Make the Literate-based workflow to automatically build on GitHub using GitHub Actions. For this, you need to add to the <code>.github/workflow</code> folder &#40;the one containing your <code>CI.yml</code> for testing&#41; the <code>Literate.yml</code> script which we saw in this lecture&#39;s section <a href="#documentation_tools_automating_literatejl">Documentation tools: Automating Literate.jl</a>.</p>
 
-<li><p>That&#39;s all&#33; Head to the <a href="/logistics/#project">Project section in Logistics</a> for a check-list about what you should hand in for this first project.</p>
+<li><p>That&#39;s all&#33; Head to the <a href="/logistics/#project">Project section in Logistics</a> for a check-list about what you should hand in for this project.</p>
 
 </ol>
 
 <p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
+<hr />
+<h1 id=solving_partial_differential_equations_in_parallel_on_gpus_ii ><a href="#solving_partial_differential_equations_in_parallel_on_gpus_ii" class=header-anchor >Solving Partial Differential Equations in Parallel on GPUs II</a></h1>
+<p>Enjoyed the course and want more? In the upcoming Spring Semester, we will offer Part II, in which your task will be to develop a new numerical code <strong>from scratch</strong>, using the knowledge acquired in this course. You will choose one project from three possible directions &#40;A, B, or C&#41;:</p>
+<h2 id=a_solving_one_of_the_proposed_pdes ><a href="#a_solving_one_of_the_proposed_pdes" class=header-anchor >A. Solving One of the Proposed PDEs</a></h2>
+<h3 id=multi-gpu_navierstokes_in_3d ><a href="#multi-gpu_navierstokes_in_3d" class=header-anchor ><ol>
+<li><p>Multi-GPU Navier–Stokes in 3D</p>
+
+</ol>
+</a></h3>
+<p>Implement a simple Navier–Stokes solver using Chorin’s projection method and an advection scheme based on the method of characteristics. For the projection step, you will implement a Poisson solver for the pressure. You may reuse the pseudo-transient solver from class or implement your own &#40;e.g., a multigrid solver or a Fourier-transform-based spectral solver&#41;. The only requirement is that your solver must run on GPUs and scale well. Feel free to take inspiration from the <a href="https://github.com/utkinis/NavierStokes.jl">2D reference implementation</a>.</p>
+<h3 id=ol_start2_free_convection_simulation ><a href="#ol_start2_free_convection_simulation" class=header-anchor ><ol start=2 >
+<li><p>Free Convection Simulation</p>
+
+</ol>
+</a></h3>
+<p>Use the <a href="https://github.com/omlins/ParallelStencil.jl#thermo-mechanical-convection-2-d-app"><code>ParallelStencil.jl</code> miniapp</a> as a starting point to implement your own <strong>3D multi-GPU mantle convection solver</strong>.</p>
+<h3 id=ol_start3_hydro-mechanical_flow_localisation ><a href="#ol_start3_hydro-mechanical_flow_localisation" class=header-anchor ><ol start=3 >
+<li><p>Hydro-Mechanical Flow Localisation</p>
+
+</ol>
+</a></h3>
+<p>Use the <a href="https://github.com/omlins/ParallelStencil.jl#hydro-mechanical-porosity-waves-2-d-app"><code>ParallelStencil.jl</code> miniapp</a> as a starting point to implement your own <strong>3D multi-GPU hydro-mechanical “two-phase flow” solver</strong> capable of capturing the formation and propagation of solitary porosity waves.</p>
+<h3 id=ol_start4_wave_physics ><a href="#ol_start4_wave_physics" class=header-anchor ><ol start=4 >
+<li><p>Wave Physics</p>
+
+</ol>
+</a></h3>
+<p>Elastic wave propagation is central to computational seismology, as it enables imaging of the subsurface, and it also has applications far beyond geosciences. Implement your 3D elastic wave solver, using the acoustic wave solver from the <a href="https://github.com/omlins/ParallelStencil.jl#acoustic-wave-3-d-app"><code>ParallelStencil.jl</code> miniapp</a> as a starting point. Alternatively, you may implement Maxwell’s equations to simulate the propagation of electromagnetic fields.</p>
+<h2 id=b_solving_a_pde_of_your_interest ><a href="#b_solving_a_pde_of_your_interest" class=header-anchor >B. Solving a PDE of Your Interest</a></h2>
+<p>Show your creativity by proposing your own PDE-based problem—perhaps related to another project or to a future research direction. We’ll do our best to help you implement it. Relativistic MHD? Phase separation in alloys? Electromagnetic wave propagation? Spectral methods for PDEs? Name your topic&#33; Ideally, bring relevant papers and equations.</p>
+<h2 id=c_advanced_optimisations ><a href="#c_advanced_optimisations" class=header-anchor >C. Advanced Optimisations</a></h2>
+<p>If you are interested in GPU code optimisation, you can work through the advanced optimisation material &#40;Lecture 12&#41; and, for example, add shared-memory support and manual register queuing to accelerate the 3D thermal porous convection solver from class. Alternatively, pick one of the <a href="https://github.com/omlins/ParallelStencil.jl#acoustic-wave-3-d-app"><code>ParallelStencil.jl</code> miniapps</a> and optimise it further.</p>
+<p><a href="#content">⤴ <em><strong>back to Content</strong></em></a></p>
 <div class=page-foot >
   <div class=copyright >
     <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00/"><b>Edit this page on <img class=github-logo  src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
-    Last modified: November 19, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+    Last modified: November 25, 2025. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
   </div>
 </div>
 </div>

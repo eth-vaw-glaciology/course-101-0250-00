@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
-# Projects - 3D thermal porous convection on multi-xPU
+# Project - 3D thermal porous convection on multi-xPU
 
-### The goal of this lecture 9:
+### The goal of this lecture 11:
 
 - Projects
     - Create a multi-xPU version of the 3D thermal porous convection xPU code
@@ -11,16 +11,14 @@
 
 ## Using `ImplicitGlobalGrid.jl` (continued)
 
-In previous Lecture 8, we introduced [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl), which renders distributed parallelisation with GPU and CPU for HPC a very simple task.
+In previous Lecture 10, we introduced [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl), which renders distributed parallelisation with GPU and CPU for HPC a very simple task.
 
 Also, ImplicitGlobalGrid.jl elegantly combines with [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl) to, e.g., hide communication behind computation.
-
-Let's have a rapid tour of [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl)'s' documentation before using it to turn the 3D thermal porous diffusion solver into a multi-xPU solver.
 
 ## Multi-xPU 3D thermal porous convection
 
 Let's step through the following content:
-- Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 7
+- Create a multi-xPU version of your thermal porous convection 3D xPU code you finalised in lecture 8
 - Keep it xPU compatible using `ParallelStencil.jl`
 - Deploy it on multiple xPUs using `ImplicitGlobalGrid.jl`
 
@@ -29,7 +27,7 @@ Let's step through the following content:
 ### Enable multi-xPU support
 Only a few changes are required to enable multi-xPU support, namely:
 
-1. Copy your working `PorousConvection_3D_xpu.jl` code developed for the exercises in Lecture 7 and rename it `PorousConvection_3D_multixpu.jl`.
+1. Copy your working `PorousConvection_3D_xpu.jl` code developed for the exercises in Lecture 8 and rename it `PorousConvection_3D_multixpu.jl`.
 
 2. Add at the beginning of the code
 
