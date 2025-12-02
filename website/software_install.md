@@ -255,10 +255,10 @@ julia> MPI.install_mpiexecjl()
 $ mpiexecjl -n np julia --project <my_script.jl>
 ```
 
-5. To test the Julia MPI installation, launch the [`l8_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
+5. To test the Julia MPI installation, launch the [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/l9_scripts) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
 
 ```sh
-$ mpiexecjl -n 4 julia --project ./l8_hello_mpi.jl
+$ mpiexecjl -n 4 julia --project ./l9_hello_mpi.jl
 $ Hello world, I am 0 of 3
 $ Hello world, I am 1 of 3
 $ Hello world, I am 2 of 3
@@ -584,7 +584,7 @@ salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
 MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 julia --project <my_julia_mpi_script.jl>
 ```
 
-If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/l8_sbatch_mpi_daint.sh):
+If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_sbatch_mpi_daint.sh):
 
 ```sh
 #!/bin/bash -l
@@ -594,6 +594,7 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --error=diff2D.%j.e
 #SBATCH --time=00:05:00
 #SBATCH --nodes=1
+#SBATCH --ntasks=4
 #SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-task=1
 
@@ -604,7 +605,9 @@ export JULIA_CUDA_USE_COMPAT=false # IGG
 srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_script.jl>
 ```
 
-\note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l8_scripts/) folder.}
+**Make sure that the total number of tasks set with `--ntasks` is equal to `--nodes` times `--ntasks-per-node`.**
+
+\note{The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) folder.}
 
 You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables:
 
