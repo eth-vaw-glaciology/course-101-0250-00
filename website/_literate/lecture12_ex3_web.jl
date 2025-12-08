@@ -10,9 +10,9 @@ The goal of this exercise is to:
 - learn how to use shared memory (on-chip) to communicate between threads.
 
 Prerequisites:
-- the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb))
-- the *Data transfer optimisation notebook* ([`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb))
-- the second *Data transfer optimisation notebook* (Exercise 2 [`lecture10_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex2.ipynb))
+- the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* ([`l7_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb))
+- the *Data transfer optimisation notebook* ([`lecture7_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture7_ex1.ipynb))
+- the second *Data transfer optimisation notebook* (Exercise 2 [`lecture12_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture12_ex2.ipynb))
 
 [*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md)
 """
@@ -20,7 +20,7 @@ Prerequisites:
 md"""
 ### Getting started
 
-👉 Download the [`lecture10_ex3.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex3.ipynb) notebook and edit it.
+👉 Download the [`lecture12_ex3.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture12_ex3.ipynb) notebook and edit it.
 """
 
 md"""
@@ -38,7 +38,7 @@ using BenchmarkTools
 using Plots
 
 md"""
-In the previous notebook ([`lecture10_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex2.ipynb)), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
+In the previous notebook ([`lecture12_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture12_ex2.ipynb)), you learned how to explicitly control part of the the on-chip memory usage, using so called "shared memory". We will learn now how to control a second kind of fast memory on-chip: registers. To this purpose we will implement the `cumsum!` function on GPU - for the sake of simplicity, we will only write it for 3-D arrays.
 
 Here is the documentation of the function `cumsum!`
 ```julia-repl

@@ -9,8 +9,8 @@ The goal of this exercise is to:
 - learn how to use shared memory (on-chip) to avoid main memory accesses.
 
 Prerequisites:
-- the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* ([`l6_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/slide-notebooks/notebooks/l6_1-gpu-memcopy.ipynb))
-- the *Data transfer optimisation notebook* ([`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb))
+- the introduction notebook *Benchmarking memory copy and establishing peak memory access performance* ([`l7_1-gpu-memcopy.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/l7_1-gpu-memcopy.ipynb))
+- the *Data transfer optimisation notebook* ([`lecture7_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture7_ex1.ipynb))
 
 [*This content is distributed under MIT licence. Authors: S. Omlin (CSCS), L. Räss (ETHZ).*](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/LICENSE.md)
 """
@@ -18,7 +18,7 @@ Prerequisites:
 md"""
 ### Getting started
 
-👉 Download the [`lecture10_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture10_ex2.ipynb) notebook and edit it.
+👉 Download the [`lecture12_ex2.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture12_ex2.ipynb) notebook and edit it.
 """
 
 md"""
@@ -36,7 +36,7 @@ using BenchmarkTools
 using Plots
 
 md"""
-Let us consider the same 2-D heat diffusion solver as in the second part of the first *Data transfer optimisation notebook* ([`lecture6_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/exercise-notebooks/notebooks/lecture6_ex1.ipynb)):
+Let us consider the same 2-D heat diffusion solver as in the second part of the first *Data transfer optimisation notebook* ([`lecture7_ex1.ipynb`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/notebooks/lecture7_ex1.ipynb)):
 """
 function diffusion2D()
     ## Physics
@@ -421,7 +421,7 @@ Compute by how much percent you can improve the performance of the solver at mos
 """
 #-
 ## solution
-#sol=T_peak = 561 # Peak memory throughput of the Tesla P100 GPU
+#sol=T_peak = 3673 # Peak memory throughput of the NVidia GH200 GPU
 #sol=T_eff/T_peak
 
 md"""
