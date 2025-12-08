@@ -1,7 +1,7 @@
 <!--This file was generated, do not modify it.-->
 # GPU computing and performance assessment
 
-### The goal of this lecture 10 is to:
+### The goal of this lecture 12 is to:
 
 - learn how to use shared memory (on-chip) to avoid main memory accesses and communicate between threads; and
 - learn how to control registers for storing intermediate results on-chip.
@@ -20,13 +20,13 @@ This situation is the result of a much faster increase of computation speed with
 *Source: John McCalpin, Texas Advanced Computing Center (modified)*
 \note{The position of the memory wall is to be considered very approximative.}
 
-This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the Tesla P100 GPU, it is:
+This imbalance can be quantified by dividing the computation peak performance [GFLOP/s] by the memory access peak performance [GB/s] and multiplied by the size of a number in Bytes (for simplicity, theoretical peak performance values as specified by the vendors can be used). For example for the NVidia H100 NVL GPU, it is:
 
-$$ \frac{5300 ~\mathrm{[GFlop/s]}}{732 ~\mathrm{[GB/s]}}~×~8 = 58 $$
+$$ \frac{30000 ~\mathrm{[GFlop/s]}}{3900 ~\mathrm{[GB/s]}}~×~8 = 62 $$
 
-(here computed with double precision values taken from [the vendor's product specification sheet](https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf)).
+(here computed with double precision values taken from [the vendor's product specification website](https://www.nvidia.com/en-us/data-center/h100/?ncid=no-ncid)).
 
-So we can do 58 floating point operations per number read from main memory or written to it.
+So we can do 62 floating point operations per number read from main memory or written to it.
 
 As a consequence, we can consider **floating point operations be "for free"** when we work in the memory-bounded regime as in this lecture.
 
