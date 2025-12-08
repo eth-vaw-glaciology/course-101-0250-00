@@ -421,7 +421,7 @@ Compute by how much percent you can improve the performance of the solver at mos
 """
 #-
 ## solution
-#sol=T_peak = 561 # Peak memory throughput of the Tesla P100 GPU
+#sol=T_peak = 3673 # Peak memory throughput of the NVidia GH200 GPU
 #sol=T_eff/T_peak
 
 md"""
