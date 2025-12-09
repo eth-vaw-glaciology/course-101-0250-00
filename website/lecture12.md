@@ -34,7 +34,7 @@ noeval = true
 
 # Exercises - lecture 12
 
-\warn{The exercises from lecture 10 are optional and should serve as basis for final projects aiming at implementing advanced code optimisations as well as to anyone interested.}
+\warn{The exercises from lecture 12 are optional and should serve as basis for final projects aiming at implementing advanced code optimisations as well as to anyone interested.}
 
 \literate{/_literate/lecture12_ex1_web.jl}
 
