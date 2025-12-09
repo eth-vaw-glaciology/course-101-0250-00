@@ -59,7 +59,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     return
 end
 
-nx = ny = 512*32
+nx = ny = 49152
 T    = CUDA.rand(Float64, nx, ny);
 T2   = CUDA.rand(Float64, nx, ny);
 Ci   = CUDA.rand(Float64, nx, ny);

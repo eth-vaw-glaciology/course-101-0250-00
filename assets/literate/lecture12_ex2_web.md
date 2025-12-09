@@ -94,7 +94,7 @@ end
 Moreover, for benchmarking activities, we will require again the following arrays and scalars (use again the `nx=ny` found best in the introduction notebook; you can modify the value if it is not right for you):
 
 ````julia:ex7
-nx = ny = 512*32
+nx = ny = 49152
 T    = CUDA.rand(Float64, nx, ny);
 T2   = CUDA.rand(Float64, nx, ny);
 Ci   = CUDA.rand(Float64, nx, ny);

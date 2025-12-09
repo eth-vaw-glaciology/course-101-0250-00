@@ -38,7 +38,12 @@ array_sizes = []
 throughputs = []
 for pow = 0:11
     nx = ny = 32*2^pow
-    if (3*nx*ny*sizeof(Float64) > CUDA.available_memory()) break; end
+    required_memory = 3*nx*ny*sizeof(Float64)
+    if required_memory > CUDA.available_memory()
+        nx = ny = 32*2^(pow-1) + 32*2^(pow-2)
+        required_memory = 3*nx*ny*sizeof(Float64)
+        if (required_memory > CUDA.available_memory()) break; end
+    end
     A = CUDA.zeros(Float64, nx, ny);
     B = CUDA.rand(Float64, nx, ny);
     t_it = @belapsed begin copyto!($A, $B); synchronize() end
