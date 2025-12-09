@@ -170,13 +170,13 @@ md"""
 Modify the above `update_temperature!` kernel (which now does just triad memory copy) as follows: read the values of the temperature array `T` into shared memory; then, subsequently, read the temperature values from there when updating `T2`.
 To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
 """
-#nb # > 💡 Hint: use [`@cuDynamicSharedMem`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem) to allocate the required shared memory
+#nb # > 💡 Hint: use [`CuDynamicSharedArray`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.CuDynamicSharedArray) to allocate the required shared memory
 #nb # >
 #nb # > 💡 Hint: shared memory is block-local, i.e., shared between the threads of a same block.
 #nb # >
 #nb # > 💡 Note that shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [`maxthreads`](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).
 
-#md # \note{Use [`@cuDynamicSharedMem`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem) to allocate the required shared memory}
+#md # \note{Use [`CuDynamicSharedArray`](https://cuda.juliagpu.org/stable/api/kernel/#CUDA.CuDynamicSharedArray) to allocate the required shared memory}
 #md # \note{Shared memory is block-local, i.e., shared between the threads of a same block.}
 #md # \note{Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device (attribute `CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK`). The CUDA occupancy API lets query the maximum number of threads possible for a given kernel (see [`maxthreads`](https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads)).}
 
@@ -255,7 +255,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     tx = threadIdx().x+1
     ty = threadIdx().y+1
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+2, blockDim().y+2)
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
         @inbounds if (threadIdx().x == 1)            #=read the required values to the left halo of `T_l`=# end
@@ -289,7 +289,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     tx = threadIdx().x+1
     ty = threadIdx().y+1
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+2, blockDim().y+2)
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
         @inbounds if (threadIdx().x == 1)            T_l[tx-1,ty] = T[ix-1,iy] end
