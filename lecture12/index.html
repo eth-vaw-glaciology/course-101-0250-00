@@ -98,7 +98,7 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
 <h3 id=task_2_shared_memory_basics ><a href="#task_2_shared_memory_basics" class=header-anchor >Task 2 &#40;Shared memory basics&#41;</a></h3>
 <p>Modify the above <code>update_temperature&#33;</code> kernel &#40;which now does just triad memory copy&#41; as follows: read the values of the temperature array <code>T</code> into shared memory; then, subsequently, read the temperature values from there when updating <code>T2</code>. To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.</p>
 <p><div class=note ><div class=title >💡 Note</div>
-<div class=messg >Use <a href="https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.@cuDynamicSharedMem"><code>@cuDynamicSharedMem</code></a> to allocate the required shared memory</div></div> <div class=note ><div class=title >💡 Note</div>
+<div class=messg >Use <a href="https://cuda.juliagpu.org/stable/api/kernel/#CUDA.CuDynamicSharedArray"><code>CuDynamicSharedArray</code></a> to allocate the required shared memory</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Shared memory is block-local, i.e., shared between the threads of a same block.</div></div> <div class=note ><div class=title >💡 Note</div>
 <div class=messg >Shared memory as well as registers are a very limited resource and the amount a kernel needs increases normally with the number of threads launched per block. As a result, the maximum number of threads launchable per block can be restricted by the needed on-chip resources to a value less than the general limit of the device &#40;attribute <code>CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK</code>&#41;. The CUDA occupancy API lets query the maximum number of threads possible for a given kernel &#40;see <a href="https://cuda.juliagpu.org/stable/api/compiler/#CUDA.maxthreads"><code>maxthreads</code></a>&#41;.</div></div></p>
 <pre><code class="julia hljs"><span class=hljs-comment ># hint</span>
@@ -147,7 +147,7 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
     tx = threadIdx().x+<span class=hljs-number >1</span>
     ty = threadIdx().y+<span class=hljs-number >1</span>
-    T_l = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(T), (blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>)
     <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
     <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
         <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == <span class=hljs-number >1</span>)            <span class=hljs-comment >#=read the required values to the left halo of `T_l`=#</span> <span class=hljs-keyword >end</span>
@@ -171,7 +171,7 @@ T_eff = (<span class=hljs-number >2</span>*<span class=hljs-number >1</span>+<sp
     iy = (blockIdx().y-<span class=hljs-number >1</span>) * blockDim().y + threadIdx().y
     tx = threadIdx().x+<span class=hljs-number >1</span>
     ty = threadIdx().y+<span class=hljs-number >1</span>
-    T_l = <span class=hljs-meta >@cuDynamicSharedMem</span>(eltype(T), (blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+<span class=hljs-number >2</span>, blockDim().y+<span class=hljs-number >2</span>)
     <span class=hljs-meta >@inbounds</span> T_l[tx,ty] = T[ix,iy]
     <span class=hljs-keyword >if</span> (ix&gt;<span class=hljs-number >1</span> &amp;&amp; ix&lt;size(T2,<span class=hljs-number >1</span>) &amp;&amp; iy&gt;<span class=hljs-number >1</span> &amp;&amp; iy&lt;size(T2,<span class=hljs-number >2</span>))
         <span class=hljs-meta >@inbounds</span> <span class=hljs-keyword >if</span> (threadIdx().x == <span class=hljs-number >1</span>)            T_l[tx-<span class=hljs-number >1</span>,ty] = T[ix-<span class=hljs-number >1</span>,iy] <span class=hljs-keyword >end</span>

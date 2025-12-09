@@ -134,7 +134,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     tx = threadIdx().x+1
     ty = threadIdx().y+1
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+2, blockDim().y+2)
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
         @inbounds if (threadIdx().x == 1)            #=read the required values to the left halo of `T_l`=# end
@@ -155,7 +155,7 @@ function update_temperature!(T2, T, Ci, lam, dt, _dx, _dy)
     iy = (blockIdx().y-1) * blockDim().y + threadIdx().y
     tx = threadIdx().x+1
     ty = threadIdx().y+1
-    T_l = @cuDynamicSharedMem(eltype(T), (blockDim().x+2, blockDim().y+2))
+    T_l = CuDynamicSharedArray(eltype(T), blockDim().x+2, blockDim().y+2)
     @inbounds T_l[tx,ty] = T[ix,iy]
     if (ix>1 && ix<size(T2,1) && iy>1 && iy<size(T2,2))
         @inbounds if (threadIdx().x == 1)            T_l[tx-1,ty] = T[ix-1,iy] end
