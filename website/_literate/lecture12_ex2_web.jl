@@ -170,7 +170,7 @@ md"""
 Modify the above `update_temperature!` kernel (which now does just triad memory copy) as follows: read the values of the temperature array `T` into shared memory; then, subsequently, read the temperature values from there when updating `T2`.
 To help you, the structure of the kernel is already given; you only need to complete the unfinished lines.
 """
-#nb # > 💡 Hint: use [`CuDynamicSharedArray`](https://juliagpu.gitlab.io/CUDA.jl/api/kernel/#CUDA.CuDynamicSharedArray) to allocate the required shared memory
+#nb # > 💡 Hint: use [`CuDynamicSharedArray`](https://cuda.juliagpu.org/stable/api/kernel/#CUDA.CuDynamicSharedArray) to allocate the required shared memory
 #nb # >
 #nb # > 💡 Hint: shared memory is block-local, i.e., shared between the threads of a same block.
 #nb # >
