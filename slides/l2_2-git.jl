@@ -12,6 +12,11 @@ Git is a version control software, useful to
 - to distribute code, to onself (on other computers) and others
 """
 
+#src #########################################################################
+#nb # %% A slide [markdown] {"slideshow": {"slide_type": "fragment"}}
+#nb # > 💡 note: Do not put big binary (or other big files) into git. Anything bigger than 1MB should probably go elsewhere.
+#md # \note{Do not put big binary (or other big files) into git. Anything bigger than 1MB should probably go elsewhere.}
+
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
 ## Previous experience
