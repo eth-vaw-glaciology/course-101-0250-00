@@ -5,6 +5,7 @@ title = "Solving PDEs in parallel on GPUs with Julia II"
 # Solving PDEs in parallel on GPUs with Julia II
 
 [![Element chat](/assets/element_chat.svg#badge)](https://chat.ethz.ch)
+[![Zoom Meeting](/assets/zoom_logo.svg#badge)](https://moodle-app2.let.ethz.ch/mod/zoom/view.php?id=1360748)
 [![ETHZ Moodle](/assets/moodle.png#badge)]({{moodle_url}})
 
 :tada: Welcome to **Part II** of *Solving PDEs in Parallel on GPUs*.
