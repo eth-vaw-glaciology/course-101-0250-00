@@ -31,12 +31,12 @@ md"""
 #md # \note{Values reported in this exercise are for the Nvidia GH200 96GB GPU.}
 
 md"""
-We will again use the packages `CUDA`, `BenchmarkTools` and `Plots` to create a little performance laboratory:
+We will again use the packages `CUDA`, `BenchmarkTools` and `CairoMakie` to create a little performance laboratory:
 """
 using IJulia
 using CUDA
 using BenchmarkTools
-using Plots
+using CairoMakie
 
 md"""
 Before we go further, make sure we select the GPU we want to run on (if running on a multi-GPU node). In the terminal or Julia REPL in shell mode (typing `;`), type `nvidia-smi` command to list visible GPUs. Remember the GPU_ID you want to use.
