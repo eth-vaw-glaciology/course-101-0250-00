@@ -103,7 +103,7 @@ Produce a final animation (as following) showing the evolution of temperature wi
 #md # ~~~
 
 md"""
-\note{You should use the existing 2D visualisation routine to produce the final animation. On Daint.Alps the easiest may be to save `png` every `nvis` and further assemble them into a `gif` or `mp4`. Ideally, the final animation size does not exceeds 2-3 MB.}
+\note{You should use the existing 2D visualisation routine to produce the final animation. On Daint.Alps the easiest may be to collect the frames every `nvis` using Makie's `VideoStream` and `recordframe!`, then `save` the resulting `mp4` after the time loop. Ideally, the final animation size does not exceeds 2-3 MB.}
 
 ### Some tips:
 
