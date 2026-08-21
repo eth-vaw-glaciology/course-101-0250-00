@@ -7,7 +7,7 @@ using ParallelStencil.FiniteDifferences2D
 else
     @init_parallel_stencil(Threads, Float64, 2)
 end
-using Plots, Printf
+using CairoMakie, Printf
 
 # macros to avoid array allocation
 macro qx(ix,iy)  esc(:( -D_dx*(C[$ix+1,$iy+1] - C[$ix,$iy+1]) )) end
@@ -41,7 +41,12 @@ end
     C2      = copy(C)
     size_C1_2, size_C2_2 = size(C,1)-2, size(C,2)-2
     t_tic = 0.0; niter = 0
-    if do_visu ENV["GKSwstype"]="nul"; if isdir("viz2D_xpu_out")==false mkdir("viz2D_xpu_out") end; loadpath = "./viz2D_xpu_out/"; anim = Animation(loadpath,String[]); println("Animation directory: $(anim.dir)") end
+    if do_visu
+        fig, ax, plt = heatmap(xc, yc, Array(C); axis=(; aspect=DataAspect(), xlabel="Lx", ylabel="Ly"),
+                               colormap=:turbo, colorrange=(0.0, 1.0))
+        Colorbar(fig[1, 2], plt)
+        io = VideoStream(fig; framerate=5) # `io` collects the frames
+    end
     # Time loop
     for it = 1:nt
         if (it==11) t_tic = Base.time(); niter = 0 end
@@ -49,8 +54,9 @@ end
         C, C2 = C2, C # pointer swap
         niter += 1
         if do_visu && (it % nout == 0)
-            opts = (aspect_ratio=1, xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
-            heatmap(xc, yc, Array(C)'; opts...); frame(anim)
+            ax.title = "time = $(round(it*dt, sigdigits=3))"
+            plt[3] = Array(C)
+            recordframe!(io)
         end
     end
     t_toc = Base.time() - t_tic
@@ -58,7 +64,7 @@ end
     t_it  = t_toc/niter                  # Execution time per iteration [s]
     T_eff = A_eff/t_it                   # Effective memory throughput [GB/s]
     @printf("Time = %1.3f sec, T_eff = %1.2f GB/s (niter = %d)\n", t_toc, round(T_eff, sigdigits=3), niter)
-    if do_visu gif(anim, "diffusion_2D_xpu.gif", fps = 5)  end
+    if do_visu save("diffusion_2D_xpu.mp4", io) end
     return
 end
 

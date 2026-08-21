@@ -1,5 +1,5 @@
 # Visualisation script for the 2D MPI solver
-using Plots, MAT
+using CairoMakie, MAT
 
 nprocs = (2, 2) # nprocs (x, y) dim
 
@@ -16,11 +16,12 @@ nprocs = (2, 2) # nprocs (x, y) dim
             ip += 1
         end
     end
-    fontsize = 12
-    opts = (aspect_ratio=1, yaxis=font(fontsize, "Courier"), xaxis=font(fontsize, "Courier"),
-            ticks=nothing, framestyle=:box, titlefontsize=fontsize, titlefont="Courier",
-            xlabel="Lx", ylabel="Ly", xlims=(1, size(C, 1)), ylims=(1, size(C, 2)))
-    display(heatmap(C'; c=:turbo, title="diffusion 2D MPI", opts...))
+    fig, ax, plt = heatmap(C; figure=(; fontsize=12),
+                           axis=(; aspect=DataAspect(), xlabel="Lx", ylabel="Ly",
+                                 title="diffusion 2D MPI"), colormap=:turbo)
+    hidedecorations!(ax; label=false)
+    Colorbar(fig[1, 2], plt)
+    display(fig)
     return
 end
 

@@ -1,5 +1,5 @@
 # Linear 1D diffusion with n fake mpi processes
-using Plots
+using CairoMakie
 
 @views function diffusion_1D_nprocs(; do_visu=true)
     # Physics
@@ -29,6 +29,14 @@ using Plots
         xt[i1:i1+nx-2] .= x[1:end-1, ip]; if (ip == np) xt[i1+nx-1] = x[end, ip] end
         Ct[i1:i1+nx-2] .= C[1:end-1, ip]; if (ip == np) Ct[i1+nx-1] = C[end, ip] end
     end
+    # Visualisation
+    if do_visu
+        fig  = Figure(; fontsize=12)
+        ax   = Axis(fig[1, 1]; xlabel="Lx", ylabel="H")
+        scatterlines!(ax, xt, Ct; linewidth=1, markersize=4) # global initial condition
+        ## pltg = lines!(ax, xt, Cg; linewidth=3)            # global reference
+        plts = [lines!(ax, x[:, ip], C[:, ip]; linewidth=5) for ip = 1:np]
+    end
     # Time loop
     for it = 1:nt
         for ip = 1:np # compute physics locally
@@ -43,12 +51,12 @@ using Plots
         end
         # Visualise
         if do_visu
-            fontsize = 12
-            plot(xt, Ct, legend=false, linewidth=1, markershape=:circle, markersize=3, yaxis=font(fontsize, "Courier"), xaxis=font(fontsize, "Courier"), titlefontsize=fontsize, titlefont="Courier")
-            # display(plot!(xt, Cg, legend=false, linewidth=3, framestyle=:box, xlabel="Lx", ylabel="H", title="diffusion (it=$(it))"))
+            ax.title = "diffusion (it=$(it))"
+            ## pltg[2] = Cg
             for ip = 1:np
-                display(plot!(x[:, ip], C[:, ip], legend=false, linewidth=5, framestyle=:box, xlabel="Lx", ylabel="H", title="diffusion (it=$(it))"))
+                plts[ip][2] = C[:, ip]
             end
+            display(fig)
         end
     end
     return

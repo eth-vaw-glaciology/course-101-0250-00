@@ -1,5 +1,5 @@
 # Linear 1D diffusion with 2 fake mpi processes
-using Plots
+using CairoMakie
 
 @views function diffusion_1D_2procs(; do_visu=false)
     # Physics
@@ -17,6 +17,13 @@ using Plots
     CR  = Cr * ones(nx)
     C   = [CL[1:end-1]; CR[2:end]]
     Cg  = copy(C)
+    # Visualisation
+    if do_visu
+        fig  = Figure(; fontsize=12)
+        ax   = Axis(fig[1, 1]; xlabel="Lx", ylabel="C")
+        pltg = scatter!(ax, Cg; markersize=10)  # global reference
+        pltc = lines!(ax, C; linewidth=3)       # "MPI" result
+    end
     # Time loop
     for it = 1:nt
         # Compute physics locally
@@ -31,9 +38,10 @@ using Plots
         Cg[2:end-1] .= Cg[2:end-1] .+ dt * D * diff(diff(Cg) / dx) / dx
         # Visualise
         if do_visu
-            fontsize = 12
-            plot(Cg, legend=false, linewidth=0, markershape=:circle, markersize=5, yaxis=font(fontsize, "Courier"), xaxis=font(fontsize, "Courier"), titlefontsize=fontsize, titlefont="Courier")
-            display(plot!(C, legend=false, linewidth=3, framestyle=:box, xlabel="Lx", ylabel="C", title="diffusion (it=$(it))"))
+            ax.title = "diffusion (it=$(it))"
+            pltg[1] = Cg
+            pltc[1] = C
+            display(fig)
         end
     end
     return
