@@ -189,7 +189,7 @@ import Pkg; Pkg.add("BenchmarkTools");
 using CUDA
 using BenchmarkTools
 #src #using IJulia
-#src #using Plots
+#src #using CairoMakie
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
@@ -334,7 +334,7 @@ for pow = 0:11
     push!(throughputs, T_tot)
     println("(nx=ny=$nx) T_tot = $(T_tot)")
 #src     #IJulia.clear_output(true)  # Pass wait=True to wait until new output before clearing
-#src     #display(plot(array_sizes, throughputs))
+#src     #display(lines(array_sizes, throughputs))
     CUDA.unsafe_free!(A)
     CUDA.unsafe_free!(B)
 end
@@ -494,7 +494,7 @@ for pow = Int(log2(32)):Int(log2(max_threads))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 #src     #IJulia.clear_output(true)
-#src     #display(plot(thread_count, throughputs))
+#src     #display(lines(thread_count, throughputs))
 end
 
 #src #########################################################################
@@ -524,7 +524,7 @@ for pow = 0:Int(log2(max_threads/32))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 #src     #IJulia.clear_output(true)
-#src     #display(plot(thread_count, throughputs))
+#src     #display(lines(thread_count, throughputs))
 end
 
 #src #########################################################################
@@ -572,7 +572,7 @@ for pow = 0:Int(log2(max_threads/32))
     push!(throughputs, T_tot)
     println("(threads=$threads) T_tot = $(T_tot)")
 #src     #IJulia.clear_output(true)
-#src     #display(plot(thread_count, throughputs))
+#src     #display(lines(thread_count, throughputs))
 end
 
 #src #########################################################################

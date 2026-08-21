@@ -78,12 +78,15 @@ function diffusion2D()
 
     ## Time loop
     dt  = min(dx^2,dy^2)/lam/maximum(Ci)/4.1                # Time step for 2D Heat diffusion
-    opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
+    fig, ax, plt = heatmap(Array(T); axis=(; aspect=DataAspect(), xlabel="Lx", ylabel="Ly"),
+                           colormap=:davos, colorrange=(0.0, 10.0))  # visualisation setup
+    Colorbar(fig[1, 2], plt)
     for it = 1:nt
         diffusion2D_step!(T, Ci, qTx, qTy, dTdt, lam, dt, _dx, _dy) # Diffusion time step.
         if it % 10 == 0
             IJulia.clear_output(true)
-            display(heatmap(Array(T)'; opts...))            # Visualization
+            plt[1] = Array(T)                               # Visualization
+            display(fig)
             sleep(0.1)
         end
     end
@@ -209,12 +212,15 @@ function diffusion2D()
 
     ## Time loop
     dt  = min(dx^2,dy^2)/lam/maximum(Ci)/4.1                # Time step for 2D Heat diffusion
-    opts = (aspect_ratio=1, xlims=(1, nx), ylims=(1, ny), clims=(0.0, 10.0), c=:davos, xlabel="Lx", ylabel="Ly") # plotting options
+    fig, ax, plt = heatmap(Array(T); axis=(; aspect=DataAspect(), xlabel="Lx", ylabel="Ly"),
+                           colormap=:davos, colorrange=(0.0, 10.0))  # visualisation setup
+    Colorbar(fig[1, 2], plt)
     for it = 1:nt
         diffusion2D_step!(T2, T, Ci, lam, dt, _dx, _dy)     # Diffusion time step.
         if it % 10 == 0
             IJulia.clear_output(true)
-            display(heatmap(Array(T)'; opts...))            # Visualization
+            plt[1] = Array(T)                               # Visualization
+            display(fig)
             sleep(0.1)
         end
         T, T2 = T2, T                                       # Swap the aliases T and T2 (does not perform any array copy)

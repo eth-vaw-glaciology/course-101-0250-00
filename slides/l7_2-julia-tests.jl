@@ -115,7 +115,7 @@ Another day:
 md"""
 ### Write your own tests: demo with "car_travel.jl" from Lecture 1
 """
-using Plots
+using CairoMakie
 
 function car_travel_1D()
     ## Physical parameters
@@ -140,7 +140,7 @@ function car_travel_1D()
         end
     end
     ## Visualisation
-    ## display(scatter(T, X, markersize=5, xlabel="time, hrs", ylabel="distance, km", framestyle=:box, legend=:none))
+    ## display(scatter(T, X; markersize=12, axis=(; xlabel="time, hrs", ylabel="distance, km")))
     return T, X
 end
 
