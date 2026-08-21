@@ -157,10 +157,10 @@ julia> ]
 (my_cool_project) pkg>
 ```
 
-Then, let's install the `Plots.jl` package
+Then, let's install the `CairoMakie.jl` package
 
 ```julia-repl
-(my_cool_project) pkg> add Plots
+(my_cool_project) pkg> add CairoMakie
 ```
 
 and check the status
@@ -168,7 +168,7 @@ and check the status
 ```julia-repl
 (my_cool_project) pkg> st
       Status `~/my_cool_project/Project.toml`
-  [91a5bcdd] Plots v1.22.3
+  [13f3f980] CairoMakie v0.15.13
 ```
 
 as well as the `.toml` files
@@ -180,10 +180,10 @@ shell> ls
 Manifest.toml Project.toml
 ```
 
-We can now load `Plots.jl` and plot some random noise
+We can now load `CairoMakie.jl` and plot some random noise
 
 ```julia-repl
-julia> using Plots
+julia> using CairoMakie
 
 julia> heatmap(rand(10,10))
 ```
@@ -214,7 +214,7 @@ julia> ]
 
 (my_cool_project) pkg> st
       Status `~/my_cool_project/Project.toml`
-  [91a5bcdd] Plots v1.40.20
+  [13f3f980] CairoMakie v0.15.13
 ```
 
 Here we go, you can now share that folder with colleagues or with yourself on another machine and have a reproducible environment 🙂
@@ -481,13 +481,19 @@ julia> c .= a .+ b
 
 If you made it to here, you're most likely all set 🚀
 
-\warn{There is no interactive visualisation on daint. Make sure to produce `png` or `gifs`. Also to avoid plotting to fail, make sure to set the following `ENV["GKSwstype"]="nul"` in the code. Also, it may be good practice to define the animation directory to avoid filling a `tmp`, such as
+\warn{There is no interactive visualisation on daint. Make sure to save `png` figures or `mp4` animations to disk instead of displaying them. `CairoMakie.jl` renders headless, so no further setup is needed. Build the figure once, collect the frames within the time loop and save the animation after it, such as
 
 ```julia
-ENV["GKSwstype"]="nul"
+fig, ax, plt = heatmap(xc, yc, C; axis=(; aspect=DataAspect()), colormap=:turbo)
+io = VideoStream(fig; framerate=5) # `io` collects the frames
+
+## within the time loop
+plt[3] = C # update the plot in-place
+recordframe!(io)
+
+## after the time loop
 if isdir("viz_out")==false mkdir("viz_out") end
-loadpath = "./viz_out/"; anim = Animation(loadpath,String[])
-println("Animation directory: $(anim.dir)")
+save("viz_out/anim.mp4", io)
 ```
 
 }
