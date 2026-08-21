@@ -83,11 +83,22 @@ md"""
 Verify that the code runs using the above low-resolution configuration and produces sensible output. To this end, you can recycle the 2D visualisation (removing the quiver plotting) in order to visualise a 2D slice of your 3D data, e.g., at `ly/2`:
 """
 
-iframe = 0
+## before the time loop
+fig, ax, plt = heatmap(xc, zc, Array(T)[:, ceil(Int, ny / 2), :];
+                       axis=(; aspect=DataAspect(), xlabel="lx", ylabel="lz", title="Temperature"),
+                       colormap=:turbo)
+Colorbar(fig[1, 2], plt)
+io = VideoStream(fig; framerate=5) # `io` collects the frames
+
+## within the time loop
 if do_viz && (it % nvis == 0)
-    p1 = heatmap(xc, zc, Array(T)[:, ceil(Int, ny / 2), :]'; xlims=(xc[1], xc[end]), ylims=(zc[1], zc[end]), aspect_ratio=1, c=:turbo)
-    png(p1, @sprintf("viz3D_out/%04d.png", iframe += 1))
+    plt[3] = Array(T)[:, ceil(Int, ny / 2), :]
+    recordframe!(io)
 end
+
+## after the time loop
+mkpath("viz3D_out")
+save("viz3D_out/porous_convect_3D.mp4", io)
 
 md"""
 

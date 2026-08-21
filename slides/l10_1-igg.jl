@@ -136,15 +136,20 @@ md"""
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 md"""
-To implement the latter and generate a `gif`, one needs to define a global array for visualisation:
+To implement the latter and generate an `mp4`, one needs to define a global array for visualisation:
 ```julia
 if do_visu
-    if (me==0) ENV["GKSwstype"]="nul"; if isdir("viz2D_mxpu_out")==false mkdir("viz2D_mxpu_out") end; loadpath = "./viz2D_mxpu_out/"; anim = Animation(loadpath,String[]); println("Animation directory: $(anim.dir)") end
     nx_v, ny_v = (nx-2)*dims[1], (ny-2)*dims[2]
     if (nx_v*ny_v*sizeof(Data.Number) > 0.8*Sys.free_memory()) error("Not enough memory for visualization.") end
     C_v   = zeros(nx_v, ny_v) # global array for visu
     C_inn = zeros(nx-2, ny-2) # no halo local array for visu
     xi_g, yi_g = LinRange(dx+dx/2, Lx-dx-dx/2, nx_v), LinRange(dy+dy/2, Ly-dy-dy/2, ny_v) # inner points only
+    if (me==0) # only the master process renders
+        fig, ax, plt = heatmap(xi_g, yi_g, C_v; axis=(; aspect=DataAspect(), xlabel="Lx", ylabel="Ly"),
+                               colormap=:turbo, colorrange=(0.0, 1.0))
+        Colorbar(fig[1, 2], plt)
+        io = VideoStream(fig; framerate=5) # `io` collects the frames
+    end
 end
 ```
 """
@@ -158,14 +163,15 @@ Then, the plotting routine can be adapted to first gather the inner points of th
 if do_visu && (it % nout == 0)
     C_inn .= Array(C)[2:end-1,2:end-1]; gather!(C_inn, C_v)
     if (me==0)
-        opts = (aspect_ratio=1, xlims=(xi_g[1], xi_g[end]), ylims=(yi_g[1], yi_g[end]), clims=(0.0, 1.0), c=:turbo, xlabel="Lx", ylabel="Ly", title="time = $(round(it*dt, sigdigits=3))")
-        heatmap(xi_g, yi_g, Array(C_v)'; opts...); frame(anim)
+        ax.title = "time = $(round(it*dt, sigdigits=3))"
+        plt[3] = C_v
+        recordframe!(io)
     end
 end
 ```
-To finally generate the `gif`, one needs to place the following after the time loop:
+To finally generate the `mp4`, one needs to place the following after the time loop:
 ```julia
-if (do_visu && me==0) gif(anim, "diffusion_2D_mxpu.gif", fps = 5)  end
+if (do_visu && me==0) save("diffusion_2D_mxpu.mp4", io) end
 ```
 """
 

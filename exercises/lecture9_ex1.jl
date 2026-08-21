@@ -36,7 +36,7 @@ For each of the (4) neighbour exchanges:
 
 \note{Apply similar overlap and halo update as in the fake parallelisation examples. Look-up [MPI.Send](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Send) and [MPI.recv!](https://juliaparallel.github.io/MPI.jl/latest/pointtopoint/#MPI.Recv!) for further details.}
 
-In a new section of your lecture's 9 `README.md`, add a .gif animation showing the diffusion of the quantity `C`, **running on 4 MPI processes**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well.
+In a new section of your lecture's 9 `README.md`, add a .mp4 animation showing the diffusion of the quantity `C`, **running on 4 MPI processes**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well.
 
 ### Task 3
 
@@ -50,5 +50,5 @@ The steps to realise this task summarise as following:
 3. Gather the GPU arrays back on the host memory for visualisation or saving (using `Array()`)
 4. Modify the `update_halo` function; use `copyto!` to copy device data to the host into the send buffer or to copy host data to the device from the receive buffer
 
-In a new (3rd) section of your lecture's 9 `README.md`, add .gif animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
+In a new (3rd) section of your lecture's 9 `README.md`, add a .mp4 animation showing the diffusion of the quantity `C`, **running on 4 GPUs (MPI processes)**, for the physical and numerical parameters suggested in the [initial file](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_diffusion_2D_mpi.jl). Add a short description of the results and provide the command used to launch the script in the `README.md` as well. Note what changes were needed to go from CPU to GPU in this distributed solver.
 """

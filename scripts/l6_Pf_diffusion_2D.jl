@@ -1,5 +1,4 @@
-using Plots, Plots.Measures, Printf
-default(size=(600, 500), framestyle=:box, label=false, grid=false, margin=10mm, lw=6, labelfontsize=11, tickfontsize=11, titlefontsize=11)
+using CairoMakie, Printf
 
 function Pf_diffusion_2D()
     # physics
@@ -23,6 +22,11 @@ function Pf_diffusion_2D()
     qDy     = zeros(Float64, nx, ny + 1)
     r_Pf    = zeros(nx, ny)
     # iteration loop
+    fig, ax, plt = heatmap(xc, yc, Array(Pf);
+                           figure=(; size=(600, 500)),
+                           axis=(; aspect=DataAspect(), xlabel="x", ylabel="y", title="Pf"),
+                           colormap=:turbo)
+    Colorbar(fig[1, 2], plt)
     iter = 1; err_Pf = 2ϵtol
     while err_Pf >= ϵtol && iter <= maxiter
         qDx[2:end-1, :] .-= (qDx[2:end-1, :] .+ k_ηf .* (diff(Pf, dims=1) ./ dx)) ./ (1.0 + θ_dτ)
@@ -32,7 +36,8 @@ function Pf_diffusion_2D()
             r_Pf .= diff(qDx, dims=1) ./ dx .+ diff(qDy, dims=2) ./ dy
             err_Pf = maximum(abs.(r_Pf))
             @printf("  iter/nx=%.1f, err_Pf=%1.3e\n", iter / nx, err_Pf)
-            display(heatmap(xc, yc, Pf'; xlims=(xc[1], xc[end]), ylims=(yc[1], yc[end]), aspect_ratio=1, c=:turbo, clim=(0, 1)))
+            plt[3] = Array(Pf)
+            display(fig)
         end
         iter += 1
     end

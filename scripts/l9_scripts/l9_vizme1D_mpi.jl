@@ -1,5 +1,5 @@
 # Visualisation script for the 1D MPI solver
-using Plots, MAT
+using CairoMakie, MAT
 
 nprocs = 4
 
@@ -13,10 +13,10 @@ nprocs = 4
         if (ip == 1) C = zeros(nprocs * nx_i) end
         C[i1:i1+nx_i-1] .= C_loc[2:end-1]
     end
-    fontsize = 12
-    display(plot(C, legend=false, framestyle=:box, linewidth=3, xlims=(1, length(C)), ylims=(0, 1), xlabel="nx",
-                 title="diffusion 1D MPI", yaxis=font(fontsize, "Courier"), xaxis=font(fontsize, "Courier"),
-                 titlefontsize=fontsize, titlefont="Courier"))
+    fig, ax, plt = lines(C; figure=(; fontsize=12),
+                         axis=(; xlabel="nx", title="diffusion 1D MPI",
+                               limits=(1, length(C), 0, 1)), linewidth=3)
+    display(fig)
     return
 end
 

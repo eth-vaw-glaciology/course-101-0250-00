@@ -11,7 +11,7 @@ hascode = false
 
 - [Fastrack to Julia](https://juliadocs.github.io/Julia-Cheat-Sheet/) cheatsheet
 - [MATLAB-Julia-Python comparative](https://cheatsheets.quantecon.org/) cheatsheet (by [QuantEcon group](https://quantecon.org/))
-- [Plots.jl](https://github.com/sswatson/cheatsheets/blob/master/plotsjl-cheatsheet.pdf) cheatsheet
+- [Makie.jl](https://docs.makie.org/stable/) documentation and plot gallery
 - [7 rules of a great `git commit` message](https://chris.beams.io/posts/git-commit/)
 - [git-cheatsheet](https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
 
@@ -60,7 +60,7 @@ _any further relevant suggestions are welcome - open a PR_
 - [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 - [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl)
 - [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl)
-- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
+- [Makie.jl](https://github.com/MakieOrg/Makie.jl)
 - [Revise.jl](https://github.com/timholy/Revise.jl)
 
 ### Other resources

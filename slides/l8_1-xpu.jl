@@ -183,7 +183,7 @@ using ParallelStencil.FiniteDifferences2D
 else
     @init_parallel_stencil(Threads, Float64, 2, inbounds=false)
 end
-using Plots, Plots.Measures, Printf
+using CairoMakie, Printf
 
 #src #########################################################################
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}

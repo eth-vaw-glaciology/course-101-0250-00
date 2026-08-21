@@ -1,5 +1,5 @@
-using Plots, Plots.Measures, Printf
-default(size=(1200, 800), framestyle=:box, label=false, grid=false, margin=10mm, lw=6, labelfontsize=20, tickfontsize=20, titlefontsize=24)
+using CairoMakie, Printf
+Makie.set_theme!(; size=(1200, 800), fontsize=25, Lines=(; linewidth=6), Axis=(; titlesize=24))
 
 @views avx(A) = 0.5 .* (A[1:end-1] .+ A[2:end])
 
@@ -31,6 +31,13 @@ default(size=(1200, 800), framestyle=:box, label=false, grid=false, margin=10mm,
     # pressure
     P       = zeros(nx)
     qDx     = zeros(Float64, nx - 1)
+    # visu
+    fig  = Figure()
+    ax1  = Axis(fig[1, 1]; ylabel="Temperature", limits=(0, lx, nothing, nothing), xticklabelsvisible=false)
+    ax2  = Axis(fig[2, 1]; xlabel="lx", ylabel="Pressure", limits=(0, lx, nothing, nothing))
+    lines!(ax1, xc, T_i)
+    pltT = lines!(ax1, xc, T)
+    pltP = lines!(ax2, xc, P)
     # time loop
     for it in 1:nt
         @printf("it = %d\n", it)
@@ -55,11 +62,13 @@ default(size=(1200, 800), framestyle=:box, label=false, grid=false, margin=10mm,
                               min.(qDx[2:end  ], 0.0) .* diff(T[2:end  ]) ./ dx)
         if it % nvis == 0
             # visualisation
-            p1 = plot(xc, [T_i, T]; xlims=(0, lx), ylabel="Temperature", title="iter/nx=$(round(iter/nx,sigdigits=3))")
-            p2 = plot(xc, P       ; xlims=(0, lx), xlabel="lx", ylabel="Pressure")
-            display(plot(p1, p2; layout=(2, 1)))
+            ax1.title = "iter/nx=$(round(iter/nx, sigdigits=3))"
+            pltT[2] = T # update the plot in-place
+            pltP[2] = P
+            display(fig)
         end
     end
+    return
 end
 
 double_diffusion_1D()

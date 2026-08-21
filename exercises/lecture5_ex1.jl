@@ -128,7 +128,7 @@ if it % nvis == 0
 end
 ```
 
-Well done 🚀 - you made it. Add the produced gif or animation to the `README.md` within your `homework-5` folder.
+Well done 🚀 - you made it. Add the produced mp4 animation to the `README.md` within your `homework-5` folder.
 
 The final convection animation you produced should be similar to the one displayed hereafter (using the parameters listed above):
 """

@@ -1,6 +1,6 @@
 # # 2D linear diffusion Julia MPI solver
 # run: ~/.julia/bin/mpiexecjl -n 4 julia --project diffusion_2D_mpi.jl
-using Plots, Printf, MAT
+using Printf, MAT
 import MPI
 
 # enable plotting by default
