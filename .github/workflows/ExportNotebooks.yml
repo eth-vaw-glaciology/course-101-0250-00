@@ -40,11 +40,7 @@ jobs:
                     ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
 
             - name: 🪴 Generate site
-              run: julia --project=pluto-deployment-environment -e '
-                  import Pkg;
-                  Pkg.instantiate();
-                  using PlutoPages;
-                  PlutoPages.generate(pwd())'
+              run: julia generate.jl
 
             
             - uses: actions/upload-artifact@v7
