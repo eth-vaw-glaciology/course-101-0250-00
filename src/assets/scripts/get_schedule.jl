@@ -34,7 +34,9 @@ let
             # the CommonMark processor ends a raw-HTML block on the first blank line,
             # which would otherwise wrap the remaining cards in `<p>` and mis-nest the
             # anchors (titles get hoisted out of their cards).
-            @htl("""<a title=$(desc) class=$(class) href=$(root_url * "/" * other_page.url)><h3>$(name)</h3><span class="schedule-date $(upcoming ? "upcoming-badge" : "")">$(date_str)</span>$(upcoming ? @htl("""<span class="upcoming-label">Upcoming</span>""") : nothing)</a>""")
+            # `data-date` lets `schedule_upcoming.js` refresh the upcoming state in the
+            # browser, since `today` above is the build date.
+            @htl("""<a title=$(desc) class=$(class) data-date=$(string(date_str)) href=$(root_url * "/" * other_page.url)><h3>$(name)</h3><span class="schedule-date $(upcoming ? "upcoming-badge" : "")">$(date_str)</span>$(upcoming ? @htl("""<span class="upcoming-label">Upcoming</span>""") : nothing)</a>""")
         end
     end
 

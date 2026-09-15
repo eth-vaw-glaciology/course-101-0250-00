@@ -3,6 +3,7 @@ layout: "layout.jlhtml"
 ---
 
 <link rel="stylesheet" href="$(root_url)/assets/styles/homepage.css" type="text/css" />
+<script src="$(root_url)/assets/scripts/schedule_upcoming.js" defer></script>
 
 <div id="title" class="banner">
     <h1>$(homepage["title"])</h1>
