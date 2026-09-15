@@ -39,7 +39,7 @@ julia
 
 to make sure that the Julia REPL (aka terminal) starts. Then you should be able to add `1+1` and verify you get the expected result. Exit with `Ctrl-d`.
 
-![Julia from Terminal](/assets/julia-repl.png)
+![Julia from Terminal](../assets/julia-repl.png)
 
 ### VS Code
 
