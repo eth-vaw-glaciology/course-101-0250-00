@@ -7,19 +7,23 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            # Restoring a cache counts as accessing it, which prevents GitHub from evicting it
+            # after 7 days without use. Restore-only, so no duplicate caches are saved.
             - name: ⏱ Cache notebook states
-              uses: actions/cache@v2
+              uses: actions/cache/restore@v5
               with:
                 path: _cache
-                key: ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}-${{ github.run_id }}
+                key: ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
                 restore-keys: |
                     ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
 
             - name: ⏱ Cache .julia
-              uses: actions/cache@v2
+              uses: actions/cache/restore@v5
               with:
                 path: ~/.julia
-                key: ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}-${{ github.run_id }}
+                key: ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
                 restore-keys: |
                     ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
-
