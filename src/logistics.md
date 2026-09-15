@@ -18,21 +18,21 @@ main a img {
 [![ETHZ Moodle](../assets/moodle.png)]($(course_info["moodle_url"]))
 
 !!! tip "Suggestion"
-    Bookmark this page for easy access to all information you need for the course.
+    Bookmark this page for easy access to all the information you need for the course.
 
 ## Course structure
 
-Each lecture contains material on physics, numerics, technical concepts, as well as exercises. The lecture content is outlined in its introduction using the following items for each type of content:
+Each lecture contains material on physics, numerics, and technical concepts, as well as exercises. The lecture content is outlined in its introduction using the following items for each type of content:
 
 - 📚 **Physics**: equations, discretisation, implementation, solver, visualisation
 - 💻 **Code**: technical, Julia, GitHub
 - 🚧 **Exercises**
 
-The course will be taught in a hands-on fashion, putting emphasis on you writing code and completing exercises; lecturing will be kept at a minimum.
+The course will be taught in a "flipped classroom" fashion: you will study the lecture materials at home, and in the classroom you will work on hands-on exercises and participate in group discussions.
 
 ## Lectures
 
-- Tuesdays 12h45-15h30 in [HCI](http://www.mapsearch.ethz.ch/map/mapSearchPre.do?gebaeudeMap=HCI&geschossMap=E&raumMap=8&farbcode=c010&lang=en) [E8](http://www.rauminfo.ethz.ch/Rauminfo/grundrissplan.gif?gebaeude=HCI&geschoss=E&raumNr=8&lang=en)
+- Tuesdays 12h45-15h30 in [HCI E8](https://ethz.ch/staffnet/en/utils/location.html?building=HCI&floor=E&room=8).
 
 ## Discussion
 
@@ -41,50 +41,50 @@ We use [Element](https://chat.ethz.ch/) as the main channel for communication be
 Head to the [_Element chat_ link on Moodle]($(course_info["moodle_url"])) to get started with Element:
 
 1. Select **Start Student-Chat**
-2. Login using your NETHZ credentials to start using the browser-based client
+2. Log in using your NETHZ credentials to start using the browser-based client
 3. Join the **_General_** and **_Helpdesk_** rooms
 4. Download the [desktop or mobile client](https://element.io/) for more convenient access or in case of encryption-related issues
 
-## Homework
+## Homework and submission
 
-[Homework](/homework) tasks will be announced after each week's lecture. The exercise session following the lecture will get you started.
+Before each class, study the assigned lecture materials and post questions in the Element chat. During class, you will work on exercises and submit them in two steps:
 
-Homework **due date will be Wednesday 23h59 CET** every following week (8 days) to allow for Q&A during the following in-class exercise session.
+1. At the end of class, you will submit your current progress on Moodle. It doesn't have to be complete, but it should be a reasonable draft of the solution. **This submission won't be graded**, but we will check which exercises you worked on during class.
+2. Before **23:59 on Wednesday** following the lecture, you will submit the final version of the code. **This submission will be graded**, but we will only assign points to exercises showing sufficient state of progress in the end-of-class submission:
+   - The exercise should be submitted by the end of class
+   - The submission should conain the skeleton of correct solution (> 50% of tasks completed)
+   - Missing visualisation and minor code bugs are acceptable in the end-of-class submission
 
-> ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
-
-### Submission
-
-- Submission of Pluto notebooks after weeks 1 and 2, then GitHub commit hash (SHA) after week 3 and onwards, or other documents happens on the course's [Moodle]($(course_info["moodle_url"])).
-- Actions and tasks related to GitHub will happen on your private course-related GitHub repository.
-
-**Starting from lecture 3 and onwards**, the development of homework scripts happens on GitHub **and** you will have to submit the git commit hash (SHA) on [Moodle]($(course_info["moodle_url"])) in the related _git commit hash (SHA)_ submission activity.
+Submit Pluto notebooks on Moodle for weeks 1 and 2. From **week 3 onwards**, develop your solutions in your private course GitHub repository and submit both the final commit hash (SHA) and the pull request URL on [Moodle]($(course_info["moodle_url"])).
 
 ### Private GitHub repository setup
 
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments:
 
-1. Within the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) organisation, create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
-2. Select an `MIT License` and add a `README.md` file.
+1. Within the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) organisation, create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde", your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+2. Select the `MIT License` and add a `README.md` file.
 3. **For each homework submission**, you will:
-    - create a git branch named `homework-X` (X ``\\in [2-...]``) and switch to that branch (`git switch -c homework-X`);
-    - create a new folder named `homework-X` to put the exercise codes into;
-    - (don't forget to `git add` the code-files and `git commit` them);
-    - push to GitHub and open a pull request (PR) on the `main` branch on GitHub;
-    - copy **the single git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (it will serve to control the material was pushed on time);
+    - create a Git branch named `homework-X` (X ``\\in [2-...]``) and switch to that branch (`git switch -c homework-X`);
+    - create a new folder named `homework-X` to put the exercise code into;
+    - (don't forget to `git add` the code files and `git commit` them);
+    - push to GitHub and open a pull request (PR) targeting the `main` branch on GitHub;
+    - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time);
     - (do not merge the PR yet).
 
 !!! warn
-    Make sure to only include the `homework-X` folders and `README.md` in the GitHub repo you share with the exercise bot in order to keep the repository lightweight.
+    Keep the repository lightweight: include the homework folders, `README.md`, license, and required configuration files; exclude large outputs.
 
 !!! note
-    For homework 3 and later, the respective folders on GitHub should be Julia projects and thus must contain a `Project.toml` file. The `Manifest.toml` file should be excluded from version control. To do so, add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their [global `.gitignore`](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-all-repositories-on-your-computer). Codes could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.
+    For homework 3 and later, the respective folders on GitHub should be Julia projects and thus must contain a `Project.toml` file. The `Manifest.toml` file should be excluded from version control. To do so, add it as an entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their [global `.gitignore`](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-all-repositories-on-your-computer). Code could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.
 
 ### Feedback
 
-After the submission deadline, we will correct and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle]($(course_info["moodle_url"])).  Once you got feedback, please merge the PR.
+After the submission deadline, we will review and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle]($(course_info["moodle_url"])). Once you have received feedback, please merge the PR.
+We will try to correct your assignments before the lecture following the homework's deadline.
 
-We will try to correct your assignments before the lecture following the homework's deadline. This should allow you to get rapid feedback in order to clarify the points you may struggle on as soon as possible.
+## Final project
+
+🚧 Under construction.
 
 <!--
 ## Project
@@ -122,6 +122,12 @@ _Note that for evaluation will be considered the following (non-exhaustive) item
 Enrolled ETHZ students will have to hand in on [Moodle]($(course_info["moodle_url"])) and [GitHub](https://github.com):
 
 1. Nine weekly assignments during the course constitute 35% of the final grade. The lowest grade will be dropped.
-2. A project developed during the course constitutes 65% of the final grade
+2. A project developed during the course constitutes 65% of the final grade.
 
-**Project submission includes code in a Github repository and an automatically generated documentation**.
+**Project submission includes code in a GitHub repository and automatically generated documentation**.
+
+## The use of large language models (LLMs)
+
+- LLMs can be very helpful, but using them during class or to write your final project can prevent you from developing the skills the course is designed to teach.
+- We cannot stop you from using LLMs, but we strongly discourage ["vibe coding"](https://en.wikipedia.org/wiki/Vibe_coding). You are fully responsible for your code and results.
+- Your final project repository **must** include a section in the README stating which AI tools were used, for which tasks, and how they contributed to the project.
