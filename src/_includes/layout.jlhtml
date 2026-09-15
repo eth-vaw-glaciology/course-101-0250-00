@@ -130,7 +130,7 @@ $(pluto_head)
                 <li><hr></li>
             <li class="sidebar-about">
                 <div class="semester-details">
-                    <a href="$(root_url)/semesters/">$(course_info["semester"])</a>
+                    <span>$(course_info["semester"])</span>
                     <div class="course-numbers"><span>$(course_info["code"])</span></div>
                 </div>
                 <div class="logos">
