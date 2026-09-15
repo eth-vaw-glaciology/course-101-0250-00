@@ -1,5 +1,5 @@
 ---
-title: "Lecture 8 - ImplicitGlobalGrid.jl"
+title: "ImplicitGlobalGrid.jl"
 tags: ["module3"]
 date: "2026-11-03"
 order: 2

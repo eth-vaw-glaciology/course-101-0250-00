@@ -1,5 +1,5 @@
 ---
-title: "Lecture 6 - xPU computing"
+title: "xPU computing"
 tags: ["module2"]
 date: "2026-10-20"
 order: 3

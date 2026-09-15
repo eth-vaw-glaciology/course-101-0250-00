@@ -1,5 +1,5 @@
 ---
-title: "Lecture 5 - GPU computing"
+title: "GPU computing"
 tags: ["module2"]
 date: "2026-10-13"
 order: 2

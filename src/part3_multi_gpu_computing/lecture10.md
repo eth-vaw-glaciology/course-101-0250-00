@@ -1,5 +1,5 @@
 ---
-title: "Lecture 10 - Advanced optimisations"
+title: "Advanced optimisations"
 tags: ["module3"]
 date: "2026-11-17"
 order: 4

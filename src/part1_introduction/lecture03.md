@@ -1,5 +1,5 @@
 ---
-title: "Lecture 3 - Solving elliptic PDEs"
+title: "Solving elliptic PDEs"
 tags: ["module1"]
 date: "2026-09-29"
 order: 3

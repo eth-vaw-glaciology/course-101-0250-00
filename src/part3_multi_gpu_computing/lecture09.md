@@ -1,5 +1,5 @@
 ---
-title: "Lecture 9 - Multi-xPU"
+title: "Multi-xPU"
 tags: ["module3"]
 date: "2026-11-10"
 order: 3

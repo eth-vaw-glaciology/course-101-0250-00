@@ -1,5 +1,5 @@
 ---
-title: "Lecture 7 - Julia MPI"
+title: "Julia MPI"
 tags: ["module3"]
 date: "2026-10-27"
 order: 1

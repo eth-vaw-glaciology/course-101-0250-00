@@ -1,5 +1,5 @@
 ---
-title: "Lecture 4 - Parallel computing"
+title: "Parallel computing"
 tags: ["module2"]
 date: "2026-10-06"
 order: 1
