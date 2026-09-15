@@ -11,7 +11,7 @@ layout: "md.jlmd"
 
 - [Fastrack to Julia](https://juliadocs.github.io/Julia-Cheat-Sheet/) cheatsheet
 - [MATLAB-Julia-Python comparative](https://cheatsheets.quantecon.org/) cheatsheet (by [QuantEcon group](https://quantecon.org/))
-- [Plots.jl](https://github.com/sswatson/cheatsheets/blob/master/plotsjl-cheatsheet.pdf) cheatsheet
+- [Makie.jl](https://docs.makie.org/stable/) documentation and plot gallery
 - [7 rules of a great `git commit` message](https://chris.beams.io/posts/git-commit/)
 - [git-cheatsheet](https://www.ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
 
@@ -31,7 +31,7 @@ _any further relevant suggestions are welcome - open a PR_
 
 ### Julia GPU HPC tutorials and workshops
 
-- [Solving differential equations in parallel on GPUs @JuliaCon2021](https://github.com/luraess/parallel-gpu-workshop-JuliaCon21): 
+- [Solving differential equations in parallel on GPUs @JuliaCon2021](https://github.com/luraess/parallel-gpu-workshop-JuliaCon21):
   <iframe width="560" height="315" src="https://www.youtube.com/embed/DvlM0w6lYEY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 - [Geo-HPC short course](https://github.com/luraess/geo-hpc-course)
@@ -53,7 +53,7 @@ _any further relevant suggestions are welcome - open a PR_
 - [ParallelStencil.jl](https://github.com/omlins/ParallelStencil.jl)
 - [ImplicitGlobalGrid.jl](https://github.com/eth-cscs/ImplicitGlobalGrid.jl)
 - [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl)
-- [Plots.jl](https://github.com/JuliaPlots/Plots.jl)
+- [Makie.jl](https://github.com/MakieOrg/Makie.jl)
 - [Revise.jl](https://github.com/timholy/Revise.jl)
 
 ### Other resources
