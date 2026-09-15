@@ -139,6 +139,7 @@ $(pluto_head)
                 </div>
                 <div class="logos">
                     <picture title="$(course_info["institution"])">
+                        $(haskey(course_info, "institution_logo_dark") ? @htl("""<source srcset="$(root_url)/assets/$(course_info["institution_logo_dark"])" media="(prefers-color-scheme: dark)" />""") : nothing)
                         <img src="$(root_url)/assets/$(course_info["institution_logo"])">
                     </picture>
                     <picture title="Julia Programming Language">
