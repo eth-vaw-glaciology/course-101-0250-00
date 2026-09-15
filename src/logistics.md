@@ -51,8 +51,6 @@ Head to the [_Element chat_ link on Moodle]($(course_info["moodle_url"])) to get
 
 Homework **due date will be Wednesday 23h59 CET** every following week (8 days) to allow for Q&A during the following in-class exercise session.
 
-All homework assignments can be carried out by groups of two. However, **note that every student has to hand in a personal version of the homework**.
-
 > ➡ Check out the [Homework](/homework) page for an overview on expected hand-in and deadlines.
 
 ### Submission
@@ -66,10 +64,9 @@ All homework assignments can be carried out by groups of two. However, **note th
 
 Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments:
 
-1. Create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+1. Within the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) organisation, create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde" your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
 2. Select an `MIT License` and add a `README.md` file.
-3. Share this private repository on GitHub with the [teaching bot](https://github.com/teaching-bot).
-4. **For each homework submission**, you will:
+3. **For each homework submission**, you will:
     - create a git branch named `homework-X` (X ``\\in [2-...]``) and switch to that branch (`git switch -c homework-X`);
     - create a new folder named `homework-X` to put the exercise codes into;
     - (don't forget to `git add` the code-files and `git commit` them);
@@ -89,11 +86,8 @@ After the submission deadline, we will correct and grade your assignments. You w
 
 We will try to correct your assignments before the lecture following the homework's deadline. This should allow you to get rapid feedback in order to clarify the points you may struggle on as soon as possible.
 
+<!--
 ## Project
-
-Starting from lecture 8, and until lecture 11, homework assigments contribute to the course's first project. The goal of this project is to have a multi-xPU thermal porous convection solver in 3D.
-
-The exercises **in lecture 8** will serve as starting point for the first project:
 
 1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l9_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
 2. Follow the specific instructions given in [Lecture 8 - infos about projects](/lecture8/#infos_about_projects).
@@ -121,13 +115,13 @@ Make sure to have following items in your private GitHub repository:
 
 _Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
 
-## Evaluation
+-->
 
-All homework assignments can be done alone or in groups of two.
+## Evaluation
 
 Enrolled ETHZ students will have to hand in on [Moodle]($(course_info["moodle_url"])) and [GitHub](https://github.com):
 
-1. Seven weekly assignments during the course's Part 1 and Part 2 constitute 65% of the final grade. **The best six out of seven homeworks will be counted**.
-2. A project developed during Part 3 of the course constitutes 35% of the final grade
+1. Nine weekly assignments during the course constitute 35% of the final grade. The lowest grade will be dropped.
+2. A project developed during the course constitutes 65% of the final grade
 
 **Project submission includes code in a Github repository and an automatically generated documentation**.
