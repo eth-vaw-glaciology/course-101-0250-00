@@ -24,6 +24,17 @@ Starting from lecture 3, exercise scripts will be mostly standalone regular Juli
 
 Follow the instructions from the [Julia Download page](https://julialang.org/downloads/) to install Julia v1.12 (which is using the [**Juliaup**](https://github.com/JuliaLang/juliaup) Julia installer under the hood).
 
+!!! warning "Julia 1.13 is not yet supported"
+    Pluto doesn't support Julia 1.13 [yet](https://github.com/JuliaPluto/Pluto.jl/issues/3389). Please install Julia 1.12 for the time being.
+    After installing juliaup, type the following commmand in the terminal:
+    ```
+    \$ juliaup add 1.12
+    ```
+    and after the installation completes, switch default Julia to 1.12 using this command:
+    ```
+    \$ juliaup default 1.12
+    ```
+
 !!! note "For Windows users"
     When installing Julia 1.12 on Windows, make sure to check the "Add PATH" tick or ensure Julia is on PATH (see **[help]**). Julia's REPL has a built-in shell mode you can access typing `;` that natively works on Unix-based systems. On Windows, you can access the Windows shell by typing `Powershell` within the shell mode, and exit it typing `exit`, as described [here](https://docs.julialang.org/en/v1/stdlib/REPL/#man-shell-mode).
 

@@ -222,6 +222,9 @@ We will now look at
 - Functions
 - Modules and packages
 
+!!! tip
+    Make sure you have working installation of Julia and Pluto. Follow the [software installation](https://pde-on-gpu.vaw.ethz.ch/previews/PR57/installation/) instructions.
+
 The Julia documentation is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
 
 For tutorials, see [https://julialang.org/learning/](https://julialang.org/learning/).
