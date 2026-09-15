@@ -1,0 +1,67 @@
+name: Export Pluto notebooks & Deploy
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+concurrency:
+    group: export
+    cancel-in-progress: true
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: 🙌 Install Julia
+              uses: julia-actions/setup-julia@v3
+              with:
+                  version: "1.12"
+
+            - name: ⏱ Cache notebook states
+              uses: actions/cache@v5
+              with:
+                path: _cache
+                key: ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}-${{ github.run_id }}
+                restore-keys: |
+                    ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
+
+            - name: ⏱ Cache .julia
+              uses: actions/cache@v5
+              with:
+                path: ~/.julia
+                key: ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}-${{ github.run_id }}
+                restore-keys: |
+                    ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
+
+            - name: 🪴 Generate site
+              run: julia generate.jl
+
+            
+            - uses: actions/upload-artifact@v7
+              if: always()
+              with:
+                path: generation_report.html
+
+            - name: 🚀 Deploy to GitHub Pages (main)
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  branch: gh-pages
+                  folder: _site
+                  clean-exclude: |
+                    previews/*
+
+            - name: Deploy PR preview
+              if: github.event_name == 'pull_request' && github.repository == github.event.pull_request.head.repo.full_name # if this build is a PR build and the PR is NOT from a fork
+              uses: JamesIves/github-pages-deploy-action@releases/v4
+              with:
+                  branch: gh-pages
+                  folder: _site
+                  target-folder: "previews/PR${{ github.event.number }}" # The website preview is going to be stored in the previews subfolder
+                  clean: false

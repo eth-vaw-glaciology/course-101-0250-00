@@ -1,0 +1,187 @@
+$(begin
+    import Pluto
+    "The contents of `<head>` from a Pluto HTML export."
+    const pluto_head = let
+        default = Pluto.generate_html(; 
+            pluto_cdn_root=Pluto.PLUTO_VERSION < v"0.19" ? "https://cdn.jsdelivr.net/gh/fonsp/Pluto.jl@9ca70c36/frontend/" : nothing)
+        m = match(r"<head.*?>(.*)</head>"s, default)
+        reduce([
+            # r"<script[^\n]data-pluto-file=[\"']?launch-parameters.*?/script>"s
+            r"<title.*?/title>"
+            r"<meta name=[\"']?description.*?>"
+            r"<meta name=[\"']?description.*?>"
+            r"<link rel=[\"']?icon.*?>"
+        ]; init=m[1]) do s,r
+            replace(s, r => "")
+        end |> HTML
+    end
+    
+    f(x,y) = get(page.output.frontmatter, x, y)
+    
+    function section_number(frontmatter)
+        ch = get(frontmatter, "chapter", nothing)
+        se = get(frontmatter, "section", nothing)
+        
+        isnothing(ch) || isnothing(se) ? nothing : "$(ch).$(se)"
+    end
+    
+    nothing
+end)<html lang="en">
+<head>
+
+<title>$(f("title", splitext(basename(page.input.relative_path))[1])) — $(course_info["course_name"]) </title>
+$(let d = f("description", nothing)
+    if d !== nothing
+        @htl("""<meta name="description" content=$(d) />""")
+    end
+end)
+
+<link rel="root" href="$(root_url)" />
+
+<link rel="icon" href="$(root_url)/assets/favicon.ico" />
+<link rel="icon" href="$(root_url)/assets/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="$(root_url)/assets/styles/index.css" type="text/css" />
+<link rel="stylesheet" href="$(root_url)/assets/styles/layout.css" type="text/css" />
+<script src="$(root_url)/assets/scripts/sidebar.js" type="module"></script>
+
+<link rel="pp-search-data" href="$(root_url)/pp_search_data.json" />
+<script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" integrity="sha256-DFDZACuFeAqEKv/7Vnu1Tt5ALa58bcWZegGGFNgET8g=" crossorigin="anonymous" defer></script>
+<script src="$(root_url)/assets/scripts/search.js" type="module" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.js" integrity="sha256-sDRYYtDc+jNi2rrJPUS5kGxXXMlmnOSCq5ek5tYAk/M=" crossorigin="anonymous" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.css" integrity="sha256-lv6SEl7Dhri7d86yiHCTuSWFb9CYROQFewxZ7Je0n5k=" crossorigin="anonymous">
+
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8572a580bead4b729ad55779ba3a1cd6"}'></script>
+
+<script data-goatcounter="https://computationalthinking-stats.plutojl.org/count" async src="//computationalthinking-stats.plutojl.org/count.js"></script>
+
+$(pluto_head)
+
+</head>
+<body>
+    <div id="pages-layout">
+        <button id="toggle-nav" title="Open navigation"></button>
+        <nav id="pages-sidebar">
+        <div>
+        <ul>
+            <li class="sidebar-about">
+                <div class="course-title">
+                    <h1><a href="$(root_url)"><span>$(course_info["course_name"])</span></a></h1>
+                    <h2><span>$(course_info["course_subtitle"])</span></h2>
+                </div>
+                <div class="authors">
+                    by $(let
+                        authors = course_info["authors"]
+                        nauthors = length(authors)
+                        map(enumerate(authors)) do (i, (author_name, author_link))
+                            sep = i == nauthors ? "" : ", "
+                            @htl("""<a href="$(author_link)">$(author_name)</a>$(sep)""")
+                        end
+                    end)
+                </div>
+            </li>
+            <li>
+                <div class="search-bar">
+                    <form action="$(root_url)/search" method="GET">
+                        <input type="search" name="q" placeholder="Search...">
+                        <input type=submit value="🔎">
+                    </form>
+                </div>
+            </li>
+        $(let
+            sections = sidebar
+            [
+                @htl("""
+                <li>
+                <h3>$(section_name)</h3>
+                <ul>
+                $([
+                    let
+                        input = other_page.input
+                        output = other_page.output
+                        
+                        number = section_number(output.frontmatter)
+                        
+                        name = get(output.frontmatter, "title", basename(input.relative_path))
+                        desc = get(output.frontmatter, "description", nothing)
+                        tags = get(output.frontmatter, "tags", String[])
+                        active = page.url == other_page.url
+                        
+                        homework_number = get(output.frontmatter, "homework_number", nothing)
+                        
+                        href = root_url * "/" * other_page.url
+
+                        class = [
+                            active ? "active" : nothing,
+                            homework_number === nothing ? "lecture" : "homework",
+                            ("tag_$(replace(x, " "=>"_"))" for x in tags)...,
+                        ]
+                        
+                        if homework_number === nothing
+                            @htl("""<li class=$(class)><a href=$(href) title=$(desc)><span class="entry-number">$(number)</span> $(name)</a></li>""")
+                        else
+                            @htl("""<li class=$(class)><a href=$(href) title=$(desc)><span class="entry-number">Homework $(homework_number):</span> $(name)</a></li>""")
+                        end
+                    end for other_page in collections[section_id].pages
+                ])
+                </ul>
+                </li>
+                """)
+                for (section_id, section_name) in sections
+            ]
+        end)
+                <li><hr></li>
+            <li class="sidebar-about">
+                <div class="semester-details">
+                    <a href="$(root_url)/semesters/">$(course_info["semester"])</a>
+                    <div class="course-numbers"><span>$(course_info["code"])</span></div>
+                </div>
+                <div class="logos">
+                    <picture title="$(course_info["institution"])">
+                        $(haskey(course_info, "institution_logo_dark") ? @htl("""<source srcset="$(root_url)/assets/$(course_info["institution_logo_dark"])" media="(prefers-color-scheme: dark)" />""") : nothing)
+                        <img src="$(root_url)/assets/$(course_info["institution_logo"])">
+                    </picture>
+                    <picture title="Julia Programming Language">
+                        <source srcset="$(root_url)/assets/julia-logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                        <img src="$(root_url)/assets/julia-logo-color.svg">
+                    </picture>
+                </div>
+            </li>
+        </ul>
+        </div>
+        </nav>
+        <div id="pages-content">
+           $(isempty(f("title", "")) ? nothing : @htl("""<div class="lecture-header" >
+                $(if !isempty(f("homework_number", ""))
+                @htl("""<p class="number">Homework $(f("homework_number", ""))</p>""")
+                elseif !isempty(f("chapter", "")) && !isempty(f("section", ""))
+                @htl("""<p class="number">Section $(f("chapter", "-")).$(f("section", "-"))</p>""")
+                else
+                nothing
+                end)
+                <h1>$(
+                    f("title", basename(page.input.relative_path))
+                )</h1>
+                
+                $(!isempty(f("youtube_id", "")) ? @htl("""
+                <div class="video">
+
+                    <h4>Lecture Video</h4>
+                    <div>
+                        <lite-youtube videoid=$(f("youtube_id", "notfound")) params="modestbranding=1&rel=0"></lite-youtube>
+                    </div>
+                </div>
+                """) : nothing)
+            </div>"""))
+        $(content)
+        <div class="page-foot">
+            <div class="copyright">
+                <a href="$(course_info["repo"])"><b>Edit this page on <img class="github-logo" src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+                Website based on the MIT course <a href="https://computationalthinking.mit.edu"><em><b>Computational Thinking</b>, a live online Julia/Pluto textbook</em></a> and built with <a href="https://plutojl.org/">Pluto.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
