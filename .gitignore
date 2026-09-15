@@ -3,3 +3,6 @@ Manifest.toml
 _cache
 _site
 generation_report.html
+
+# we store the lectures outside and generate them with PlutoSplitter on deploy
+src/part*
