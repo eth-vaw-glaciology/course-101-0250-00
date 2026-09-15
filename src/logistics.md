@@ -128,6 +128,9 @@ Enrolled ETHZ students will have to hand in on [Moodle]($(course_info["moodle_ur
 
 ## The use of large language models (LLMs)
 
+!!! warning
+    We will probably adjust these guidelines as the course develops
+
 - LLMs can be very helpful, but using them during class or to write your final project can prevent you from developing the skills the course is designed to teach.
 - We cannot stop you from using LLMs, but we strongly discourage ["vibe coding"](https://en.wikipedia.org/wiki/Vibe_coding). You are fully responsible for your code and results.
 - Your final project repository **must** include a section in the README stating which AI tools were used, for which tasks, and how they contributed to the project.
