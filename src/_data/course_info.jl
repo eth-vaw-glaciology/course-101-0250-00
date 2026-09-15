@@ -1,7 +1,7 @@
 Dict(
     "course_name" => "Solving partial differential equations in parallel on GPUs",
     "course_subtitle" => "",
-    "code" => md"[ETHZ 101-0250-01](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2026W&ansicht=KATALOGDATEN&lerneinheitId=203503&lang=en)",
+    "code" => md"[ETHZ 101-0250-01L](https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez=2026W&ansicht=KATALOGDATEN&lerneinheitId=203503&lang=en)",
     "semester" => "Fall 2026",
     "authors" => [
         "Ivan Utkin" => "https://github.com/utkinis",
