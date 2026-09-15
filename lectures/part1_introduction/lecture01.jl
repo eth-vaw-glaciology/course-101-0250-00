@@ -38,10 +38,10 @@ using CairoMakie
 md"""
 # Lecture 1
 
-Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphical processing units (GPUs) with the Julia language.
+Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphics processing units (GPUs) with the Julia language.
 
 !!! info "Agenda"
-	💡 Welcome words     \
+	💡 Welcome     \
     📚 Why GPU computing \
     💻 Intro to Julia    \
     🚧 Exercises:
@@ -68,52 +68,52 @@ md"""
 
 Problems in modern computational science are often **multiscale** both in time and space. A few examples:
 
-- **Antarctic ice streams** drain 80% of Antartic ice sheet into the ocean, driving the sea-level rise. Forecasting the evolution of ice sheets requires resolving scales from *~1km* within the ice stream margin to *~5000km* at the continental scale.
-- **Plate tectonics** drives the evolution of continents and oceans on Earth. Resolving subduction processes at convergent boundaries between plates requires **<1km** resolution, while plate tectonics itself spans the entire Earth on the scales of **~10000km**.
-- **Earthquake initiation** happens in two phases: 1) slow stress buildup at the fault lines, taking **years**, and 2) rupture, happening when the stress reaches critical strenths of the rocks, at scale of **milliseconds**.
-- **Atmosperic and ocean circulation** are critical in understanding the climate change. Long-term climate-change forecasts suffer from large uncertainty, with the hope that achieving **<1km** spatial resolution will enable much more accurate predictions. Current global circulation models (GCMs) achieve "only" 50km resolution 😢
+- **Antarctic ice streams** carry a large share (as much as 90%) of the discharge from the ice sheet into the ocean, driving sea-level rise. Forecasting the evolution of ice sheets requires resolving scales from *~1 km* within the ice stream margin to *~5,000 km* at the continental scale.
+- **Plate tectonics** drives the evolution of continents and oceans on Earth. Resolving subduction processes at convergent boundaries between plates requires **<1 km** resolution, while plate tectonics itself spans the entire Earth on scales of **~10,000 km**.
+- **Earthquake cycle** happens in two phases: 1) slow stress buildup at the fault lines, taking **years**, and 2) rupture, happening when the stress reaches the critical strength of the rocks, on a timescale of **milliseconds**.
+- **Atmospheric and ocean circulation** are critical for understanding climate change. Long-term climate-change forecasts suffer from large uncertainty, with the hope that achieving **<1 km** spatial resolution will enable much more accurate predictions. Current global circulation models (GCMs) achieve "only" 5--10 km resolution 😢
 """
 
 # ╔═╡ 99c900e3-4548-4688-9311-3fee4a5c7d39
 aside(md"""
 !!! info "What are other ways?"
-	Deep learning is massively successfull in uncovering patterns in sheer amounts of observational data. Data-driven and physics-based methods often complement each other. Examples are physics-informed neural networks (PINNs), neural operators, and adjoint-based inversions of physical parameters for PDEs.
+	Deep learning is highly successful in uncovering patterns in vast amounts of observational data. Data-driven and physics-based methods often complement each other. Examples are physics-informed neural networks (PINNs), neural operators, and adjoint-based inversions of physical parameters for PDEs.
 """)
 
 # ╔═╡ 6fcd42a3-68c2-4a82-95de-09003c7fd4ff
 md"""
-These problems can be approached from different angles. In this course, we will focus on modelling physical processes based on solving partial differential equations (PDEs) numerically by discretising them in time and space. This discretisation must capture the smallest important scales to capture relevant physical processes. Resolving these multiscale processes, often governed by complex and nonlinear PDEs, requires enormous amounts of computations, which can be only provided by **massively parallel computing**.
+These problems can be approached from different angles. In this course, we will focus on modelling physical processes based on solving partial differential equations (PDEs) numerically by discretising them in time and space. This discretisation must resolve the smallest important scales to capture relevant physical processes. Resolving these multiscale processes, often governed by complex and nonlinear PDEs, can require computational resources that make **massively parallel computing** essential for practical simulations.
 
-Increase in single-core performance started stagnating in mid-2000s due to physical limitations. The Moore's law is still relevant, but now is driven by the increase in the number of processing cores:
+Growth in single-core performance started stagnating in the mid-2000s due to physical limitations. Moore's law is still relevant, but is now driven by the increase in the number of processing cores:
 
 ![50 years of microprocessor trend data](https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/refs/heads/master/50yrs/50-years-processor-trend.png)
 
-Another important trend is the so-called **memory wall**. This term was coined in 1995 and refers to the growing gap between arithmetic performance, measured in floating point operations per second (FLOPs), and memory bandwidth, measured by memory operations per second (MOPs). Both metrics grow exponentially over time, but the exponents are different:
+Another important trend is the so-called **memory wall**, which refers to the growing gap between processor performance and memory-system performance, usually quantified as floating-point throughput (FLOP/s) and memory bandwidth (bytes/s), respectively. Both metrics grow exponentially over time, but the exponents are different:
 
 $(LocalResource("assets/l1_cpu_gpu_evo.png"))
 
-This means that not the arithmetic complexity, but the amount and cost of memory accesses will ultimately determine the performance of more and more applications. Many scientific codes, especially PDE solvers, have been memory bound since ~2004.
+This means that not the arithmetic complexity, but the amount and cost of memory accesses will ultimately determine the performance of more and more applications. Many scientific codes, especially PDE solvers, are memory bound.
 
-GPUs offer memory bandwith that is vastly superior than that of CPUs:
+GPUs offer memory bandwidth that is vastly superior to that of CPUs:
 
 $(LocalResource("assets/l1_perf_gpu.png", :width=>500))
 
-However, developing codes for GPUs requires re-thinking the implementation and which methods we choose for solving PDEs. In this course, you will learn how to use parallel computing, in particular GPU computing, to develop scalable PDEs solvers with applications in natural sciences.
+However, developing codes for GPUs requires rethinking the implementation and which methods we choose for solving PDEs. In this course, you will learn how to use parallel computing, in particular GPU computing, to develop scalable PDE solvers with applications in natural sciences.
 """
 
 # ╔═╡ bee9ddbf-13d4-4a56-9561-a5331d0e2787
 md"""
 ## Why Julia?
 
-Julia is a high-level and interactive language offering performance of compiled languages such as C++ or Fortran. It provides the solution to the so-called **two-language problem**:
+Julia is a high-level and interactive language offering the performance of compiled languages such as C++ or Fortran. It provides the solution to the so-called **two-language problem**:
 
 $(LocalResource("assets/l1_two_lang.png"))
 
 - One language to prototype - another language for production
-- Example from Ludovic's past: prototype in Matlab, production in CUDA-C
-- One language for the users – one language for under-the-hood
-    - Numpy (python/C)
-    - machine-learning: PyTorch, TensorFlow
+- Example from Ludovic's past: prototype in MATLAB, production in CUDA-C
+- One language for the users – one language for the implementation
+    - NumPy (Python/C)
+    - Machine learning: PyTorch, TensorFlow
 
 Code stats for PyTorch/TensorFlow and Flux (Julia ML package):
 
@@ -123,22 +123,22 @@ As you can see, Julia packages can be developed in 100% Julia.
 
 Julia is interactive:
 
-- No need for 3rd-party visualisation software;
+- No need for third-party visualisation software;
 - Debugging and interactive REPL mode;
 - Efficient for development.
 
-Another "killer" feature of Julia is its rich [GPU ecosystem](https://juliagpu.org). You can run native Julia code on accelerators from many GPU vendors, including [NVidia](https://cuda.juliagpu.org/stable/), [AMD](https://amdgpu.juliagpu.org/stable/), [Apple](https://metal.juliagpu.org/stable/) and [Intel](https://juliagpu.github.io/oneAPI.jl/stable/). This enables **backend-agnostic** development, when the same program can execute on different architectures. You will learn how to write backend-agnostic programs in this course 😉
+Another "killer" feature of Julia is its rich [GPU ecosystem](https://juliagpu.org). You can run native Julia code on accelerators from many GPU vendors, including [NVIDIA](https://cuda.juliagpu.org/stable/), [AMD](https://amdgpu.juliagpu.org/stable/), [Apple](https://metal.juliagpu.org/stable/) and [Intel](https://juliagpu.github.io/oneAPI.jl/stable/). This enables **backend-agnostic** development, where the same program can execute on different architectures. You will learn how to write backend-agnostic programs in this course 😉
 
-In recent years, more and more state-of-the art numerical codes are being developed in Julia. Few examples:
+In recent years, more and more state-of-the-art numerical codes have been developed in Julia. A few examples:
 
 - [JustRelax.jl](https://github.com/PTsolvers/JustRelax.jl) - geodynamics solvers for mantle convection and subduction;
 - [Oceananigans.jl](https://github.com/CliMA/Oceananigans.jl) - ocean circulation model;
-- [SpeedyWeather.jl](https://github.com/SpeedyWeather/SpeedyWeather.jl) - atmosperic circulation model;
+- [SpeedyWeather.jl](https://github.com/SpeedyWeather/SpeedyWeather.jl) - atmospheric circulation model;
 - [Trixi.jl](https://github.com/trixi-framework/Trixi.jl) - framework for solving conservation laws;
 - [ODINN.jl](https://github.com/ODINN-SciML/ODINN.jl) - global glacier evolution model;
 - [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) - finite element toolbox.
 
-Other nice things in the Julia ecosystem, that we won't discuss further, but are worth mentioning:
+Other nice things in the Julia ecosystem that we won't discuss further but are worth mentioning:
 
 1. State-of-the-art ODE solvers - [DifferentialEquations.jl](https://docs.sciml.ai/DiffEqDocs/stable/);
 2. Differentiability through automatic differentiation - [Enzyme.jl](https://enzyme.mit.edu/julia/stable/), [ForwardDiff.jl](https://juliadiff.org/ForwardDiff.jl/stable/);
@@ -146,8 +146,8 @@ Other nice things in the Julia ecosystem, that we won't discuss further, but are
 
 !!! warning "Are there downsides?"
 	Sure, as with any technology, there are a few:
-	- Time to first execution (TTFX) can be quite slow;
-	- Language and package ecosystem evolve quickly and can be unstable.
+	- Time to first execution (TTFX) can be quite long;
+	- The language and package ecosystem evolve quickly and can be unstable.
 """
 
 # ╔═╡ bd908b00-0c24-4145-8acb-3e3ab125e52f
@@ -156,21 +156,21 @@ md"""
 
 !!! info "What is your previous programming experience?"
 	1. Julia
-	2. Matlab, Python, Octave, R, ...
+	2. MATLAB, Python, Octave, R, ...
 	3. C, Fortran, ...
 	4. Pascal, Java, C++, ...
 	5. Lisp, Haskell, ...
 	6. Assembler
 	7. Coq, Brainfuck, ...
 
-Here's survey for you to fill now: [https://forms.gle/fZekjf9B5HwFEtvRA](https://forms.gle/fZekjf9B5HwFEtvRA). It shouldn't take more than 3 min to complete.
+Here's a survey for you to fill in now: [https://forms.gle/fZekjf9B5HwFEtvRA](https://forms.gle/fZekjf9B5HwFEtvRA). It shouldn't take more than 3 min to complete.
 """
 
 # ╔═╡ 35e22cb6-9d3d-11f1-b980-a15009e82513
 md"""
 # Introduction to Julia
 
-[Julia](https://julialang.org) is a modern, interactive, and high performance programming language. It's a general purpose language with a bend on technical computing.
+[Julia](https://julialang.org) is a modern, interactive, and high-performance programming language. It's a general-purpose language with a focus on technical computing.
 
 - Julia was first released in 2012
 - Reached version 1.0 in 2018
@@ -222,18 +222,18 @@ We will now look at
 - Functions
 - Modules and packages
 
-The documentation of Julia is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
+The Julia documentation is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
 
-There are also tutorials, see [https://julialang.org/learning/](https://julialang.org/learning/).
+For tutorials, see [https://julialang.org/learning/](https://julialang.org/learning/).
 
-Furthermore, documentation can be gotten with ?xyz
+Furthermore, documentation can be accessed with `?xyz`
 
 ```julia-repl
 > ?cos
 ```
 
 !!! tip
-	To get started, click "**Edit** or **run** this notebook" in the top-right corner of this web page, then find "**Copy the notebook URL**" section, copy the link to the notebook, and paste it to the "Open the notebook" field in your local Pluto main page.
+	To get started, click "**Edit** or **run** this notebook" in the top-right corner of this web page, then find the "**Copy the notebook URL**" section, copy the link to the notebook, and paste it into the "Open the notebook" field on your local Pluto main page.
 
 ## Variables, assignments, and types
 
@@ -247,7 +247,7 @@ hello = "Hello"
 
 # ╔═╡ 2573876f-b9e8-49df-a4fb-b48d7b78ea96
 md"""
-Julia supports string concantenation using the multiplication symbol '`*`':
+Julia supports string concatenation using the multiplication symbol '`*`':
 """
 
 # ╔═╡ 162a5f3c-5137-4161-a1aa-5b011cd964bd
@@ -256,20 +256,20 @@ hello_world = hello * ", world!"
 # ╔═╡ 3f376974-a7a0-44e5-bb26-d195f8dec9b8
 md"""
 !!! info "Pluto reactivity"
-    Unlike Jupyter notebooks, Pluto.jl is **reactive**. Try changing the value of variable `hello` and see what happens to `hello_world`.
+    Unlike Jupyter notebooks, Pluto.jl is **reactive**. Try changing the value of the variable `hello` and see what happens to `hello_world`.
 """
 
 # ╔═╡ 494c2217-f969-42b3-a7c4-0fcfbfe8df1f
 md"""
 ### Naming conventions
 
-- variables are (usually) lowercase, words can be separated by `_`
+- variables are (usually) lowercase; words can be separated by `_`
 - function names are lowercase
 - modules, packages and types are in CamelCase
 
 ### Unicode
 
-In Julia, Unicode names are allowed. See [documentation](https://docs.julialang.org/en/v1/manual/variables/) for details.
+In Julia, Unicode names are allowed. See [the documentation](https://docs.julialang.org/en/v1/manual/variables/) for details.
 """
 
 # ╔═╡ 381b4692-4571-448c-a9fc-97590837f958
@@ -280,9 +280,9 @@ In Julia, Unicode names are allowed. See [documentation](https://docs.julialang.
 
 # ╔═╡ f3633fb8-fa4b-4cf1-9832-bd959f3e6530
 md"""
-In the Julia REPL (also in Pluto and VSCode), you can type many Unicode math symbols by typing the backslashed LaTeX symbol name followed by tab. For example, the variable name `δ` can be entered by typing `\delta + tab`, or even `α̂⁽²⁾` by `\alpha + tab + \hat + tab + \^(2) + tab`.
+In the Julia REPL (also in Pluto and VS Code), you can type many Unicode math symbols by typing the backslashed LaTeX symbol name followed by Tab. For example, the variable name `δ` can be entered by typing `\delta + tab`, or even `α̂⁽²⁾` by `\alpha + tab + \hat + tab + \^(2) + tab`.
 
-If you find a symbol that you don't know how to type, just type `?` in Pluto cell or REPL and then paste the symbol:
+If you find a symbol that you don't know how to type, just type `?` in a Pluto cell or the REPL and then paste the symbol:
 """
 
 # ╔═╡ ccc03075-f0d8-499f-8fe6-8a404c5fd5f1
@@ -290,9 +290,9 @@ If you find a symbol that you don't know how to type, just type `?` in Pluto cel
 
 # ╔═╡ c531c2b1-e127-4f36-9801-f01d17400519
 md"""
-### Basic datatypes
+### Basic data types
 
-Built-in primitive datatypes in Julia include, but are not limited to:
+Built-in data types in Julia include, but are not limited to:
 
 - numbers
 - strings
@@ -307,7 +307,7 @@ i = 1 # try to type Int32(1) instead
 
 # ╔═╡ d8ed3500-2f9c-42d9-9c32-d3b5ea703c2c
 md"""
-Variable `i` is a $(sizeof(i)*8) bit integer.
+Variable `i` is a $(sizeof(i)*8)-bit integer.
 
 Every value in Julia has a type:
 """
@@ -317,7 +317,7 @@ typeof(1.5), typeof(1//2)
 
 # ╔═╡ b4a736a7-494e-499c-93d5-0f9f1ac6daf5
 md"""
-Declare a tuple in Julia using parenthesis. Tuples are **immutable** and can store any datatypes:
+Declare a tuple in Julia using parentheses. Tuples are **immutable** and can store any data types:
 """
 
 # ╔═╡ c606fe99-cc0e-4f5d-a59f-60dc817d3708
@@ -333,7 +333,7 @@ Arrays are declared with square brackets, and can only store values of the same 
 
 # ╔═╡ 767a51ef-e9ea-4a70-ba34-3c78be24c7d6
 md"""
-Try to create an array with two elements of different type. Explain why it works despite what was said above.
+Try to create an array with two elements of different types. Explain why it works despite what was said above.
 """
 
 # ╔═╡ ace7d4ca-c087-48ec-90b2-4e4e9fe7f2a4
@@ -350,12 +350,12 @@ Try to create an array with two elements of different type. Explain why it works
 # ╔═╡ 6eefde0c-4b53-40bc-acdf-f8b6d5b53eac
 md"""
 !!! hint
-	Use `eltype` to determing the type of elements.
+	Use `eltype` to determine the element type.
 """
 
 # ╔═╡ 348a9646-8721-492e-916d-4cff6caa147c
 md"""
-Dictionaries are collections that allow fast look-up of a value by key:
+Dictionaries are collections that allow fast lookup of a value by key:
 """
 
 # ╔═╡ a22d8be6-5102-425d-9bcb-ffa7ef96a71f
@@ -367,9 +367,9 @@ md"""
 
 We will use arrays extensively in this course.
 
-All arrays in Julia are subtypes of `AbstractArray`. There are many built-in `AbstractArray`'s in Julia, including regular arrays and ranges, and even more array types available through external packages: GPU arrays, static arrays, etc.
+All array types in Julia are subtypes of `AbstractArray`. There are many built-in `AbstractArray` types in Julia, including regular arrays and ranges, and even more array types available through external packages: GPU arrays, static arrays, etc.
 
-Assign two integer vectors to variables `a` and `b`, and the concatenate them using '`;`' :
+Assign two integer vectors to variables `a` and `b`, and then concatenate them using '`;`':
 """
 
 # ╔═╡ f2c73519-bcd4-466c-ab51-756d10b2ce6f
@@ -392,9 +392,9 @@ end
 # ╔═╡ fb3634f7-9721-467d-8823-15bf9aad3f4c
 md"""
 !!! info "Code blocks in Pluto"
-	By default, each code cell must contain only one expression. This limitation comes from the reactivity. To use several expressions in a single cell, wrap them in a `begin ... end` code block.
+	By default, each code cell must contain only one expression. This limitation comes from reactivity. To use several expressions in a single cell, wrap them in a `begin ... end` code block.
 
-Add few new elements, e.g., `[6, 7]` to the end of `b`:
+Add a few new elements, e.g., `[6, 7]`, to the end of `b`:
 """
 
 # ╔═╡ 0a494b8c-1454-49ac-b68f-1630014b80d7
@@ -517,7 +517,7 @@ By looking at linear indices of `c`, answer the question:
 
 # ╔═╡ 98cd2072-73cf-46ca-9cfe-63fc5f9a27bf
 md"""
-Access the last element of `c` (look up `?end`) both either linear or Cartesian indices:
+Access the last element of `c` (look up `?end`) using either linear or Cartesian indices:
 """
 
 # ╔═╡ b8a6b23d-2ed7-4fad-810a-ab49be68e37d
@@ -557,7 +557,7 @@ md"""
 
 # ╔═╡ 94cc402e-aab7-4806-a1a5-c665daa2cd50
 md"""
-Access a 2x2 sub-matrix:
+Access a 2 × 2 submatrix:
 """
 
 # ╔═╡ 916b8269-b407-4c5f-97d1-017bb471829e
@@ -603,7 +603,7 @@ md"""
 # ╔═╡ c566aa5b-d3a6-4804-a67c-a875974f16a0
 # split: solution
 md"""
-Both variables `d` and `e` refer to the same memory address. Thus updates the array via one variable will show up in the other.
+Both variables `d` and `e` refer to the same memory address. Thus, updates to the array via one variable will show up in the other.
 """
 
 # ╔═╡ abc9a86c-9b4c-4764-9968-2a815e570e6a
@@ -621,7 +621,7 @@ end
 
 # ╔═╡ a612e8af-e946-4766-b199-5902ba428d42
 md"""
-In Julia indexing with ranges will create a new array with copies of the original's entries. Consider this:
+In Julia, indexing with ranges will create a new array with copies of the original's entries. Consider this:
 """
 
 # ╔═╡ f5fd39be-e532-4d2c-8b05-19cad9196eed
@@ -633,7 +633,7 @@ end
 
 # ╔═╡ 6a3689f7-bf39-4030-a11e-53fc46670cce
 md"""
-But the memory footprint will be large if we work with large arrays and take sub-arrays of them.
+But the memory footprint will be large if we work with large arrays and take subarrays of them.
 
 Views to the rescue:
 """
@@ -646,7 +646,7 @@ end
 
 # ╔═╡ 6baeee64-29e3-45df-ae1d-acc29fba1c73
 md"""
-Check whether the change in b is reflected in a:
+Check whether the change through `v` is reflected in `c`:
 """
 
 # ╔═╡ 5a4f7187-69ab-4f50-bc3d-9758ecbf81c4
@@ -656,10 +656,10 @@ Check whether the change in b is reflected in a:
 md"""
 ## More about types
 
-All values have types as we saw above. Arrays store in their type what type the elements can be.
+All values have types, as we saw above. An array’s type includes its element type.
 
 !!! tip
-	Arrays which have concrete element-types are more performant!
+	Arrays which have concrete element types are more performant!
 
 The type can be specified at creation:
 """
@@ -692,9 +692,9 @@ end
 # ╔═╡ 41c7d2f1-5b65-4a8f-9aa4-81f15c378b92
 md"""
 !!! info "Let block"
-	`let ... end` syntax in Julia creates a new scope for variables in Julia, which allows reusing variable names, which Pluto normally won't allow.
+    A `let ... end` block introduces a local scope, allowing you to reuse variable names, which Pluto normally won't allow.
 
-Try to assgin 1.5 to the first element of an array of type Array{Int,1}:
+Try to assign `1.5` to the first element of an array of type `Array{Int,1}`:
 """
 
 # ╔═╡ 21de8544-f929-4b97-b8aa-2beba0632572
@@ -714,7 +714,7 @@ end
 md"""
 ### Array initialisation
 
-Create a uninitialised Matrix of size (3,3) and assign it to a. First look up the docs of `Array` with `?Array`. Test that its size is correct (see `size`):
+Create an uninitialised matrix of size `(3, 3)` and assign it to `k`. Specify a `let` block if needed to avoid another global definition. First look up the docs for `Array` with `?Array`. Test that its size is correct (see `size`):
 """
 
 # ╔═╡ f620497e-9a57-4d91-bab8-0f0b17b0dfbf
@@ -732,14 +732,14 @@ end
 
 # ╔═╡ f9753402-6d39-4139-837f-c7090c0bebe7
 md"""
-Well done! You will learn-by-doing the rest about Julia arrays 😉
+Well done! You will learn the rest about Julia arrays by doing 😉
 """
 
 # ╔═╡ a568d1da-de09-42ab-bbc2-9fcf78ba4cca
 md"""
 ## Control flow
 
-Julia provides a variety of control flow constructs, of which we look at:
+Julia provides a variety of control flow constructs. We will look at:
 
 - conditional evaluation: `if ... elseif ... else` and `... ? ... : ...` (ternary operator)
 - short-circuit evaluation: logical operators `&&` ("and") and `||` ("or"), and also chained comparisons
@@ -747,9 +747,9 @@ Julia provides a variety of control flow constructs, of which we look at:
 
 ### Conditional evaluation
 
-Read the first paragraph of [documentation](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation) up to "... and no further condition expressions or blocks are evaluated."
+Read the first paragraph of [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation) up to "... and no further condition expressions or blocks are evaluated."
 
-Write an conditional check which looks at the start of the string in variable `l` (look up `?startswith`) and returns accordingly.
+Write a conditional check which looks at the start of the string in variable `l` (look up `?startswith`) and returns accordingly.
 
 If the start is:
 
@@ -772,7 +772,7 @@ l = "Where are the flowers"
 # split: solution
 if startswith(l, "Wh")
   "Likely a question"
-elseif startswith(l, "The")
+elseif startswith(l, "The  ")
   "Likely a noun"
 else
   "no idea"
@@ -792,7 +792,7 @@ x = 5
 md"""
 Look up the docs for the ternary operator `?` (use `??`).
 
-Rewrite the following code using ternary operator:
+Rewrite the following code using the ternary operator:
 """
 
 # ╔═╡ 2fa15b9f-adc7-4aba-851d-e44550320459
@@ -815,7 +815,7 @@ x > 5 ? "really big" : "not so big"
 
 # ╔═╡ 7c8caad6-346c-4f18-ac24-e95424cd43a5
 md"""
-### Short circuit operators `&&` and `||`
+### Short-circuit operators `&&` and `||`
 
 Read [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation) about short-circuit evaluation.
 
@@ -839,7 +839,7 @@ md"""
 # ╔═╡ c238c957-a269-4b85-b71c-8deb547a15e9
 # split: solution
 md"""
-If `x < 0` evaluates to `true` then the part after the `&&` is evaluated too, i.e. an error is thrown. Otherwise, only `x < 0` is evaluated and no error is thrown.
+If `x < 0` evaluates to `true`, then the part after the `&&` is evaluated too, i.e. an error is thrown. Otherwise, only `x < 0` is evaluated and no error is thrown.
 """
 
 # ╔═╡ 9778d460-1ac6-4a16-a4a2-b81162eab8b9
@@ -849,7 +849,7 @@ md"""
 Read [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#man-loops) about loops.
 
 
-Here's the summary of the loop syntax in Julia:
+Here's a summary of the loop syntax in Julia:
 """
 
 # ╔═╡ 92e70453-d542-43c1-8b8c-670a99ce8969
@@ -893,11 +893,11 @@ g(a, b) = a * b
 
 # ╔═╡ 52297b32-af55-484a-b000-207ee785fda4
 md"""
-Defining many, short functions is typical in good Julia code.
+Defining many short functions is typical in good Julia code.
 
-Read [the documentation](https://docs.julialang.org/en/v1/manual/functions/) about function up to and including "The `return` Keyword".
+Read [the documentation](https://docs.julialang.org/en/v1/manual/functions/) about functions up to and including "The `return` Keyword".
 
-Define a function in long-form which takes two arguments. Use some `if ... else` statements and the `return` keyword:
+Define a function in long form which takes two arguments. Use some `if ... else` statements and the `return` keyword:
 """
 
 # ╔═╡ a23899dd-80e6-4b17-8d20-812e64e76edc
@@ -916,7 +916,7 @@ end
 
 # ╔═╡ e52e1d07-6894-4935-a76e-f30693b37aca
 md"""
-Re-define the `map` function. First look up what `map` does, then create a `mymap` function which does the same. Map `sin` over the vector `1:10`.
+Implement a simplified version of `map` called `mymap`. First look up what `map` does, then create a `mymap` function which does the same. Map `sin` over the range `1:10`.
 
 !!! note "Higher-order functions"
 	Note that `map` and `mymap` are **higher-order functions**: functions which take another function as an argument.
@@ -950,11 +950,11 @@ end
 
 # ╔═╡ 19a42d47-a4be-416f-aaac-54e278840e7f
 md"""
-## Broadcasting and the dot-syntax
+## Broadcasting and the dot syntax
 
-This is really similar to the `map` function, a short-hand to map/broadcast a function over values. Append `.` to the function name to apply the function to a collection element-wise.
+Broadcasting applies a function elementwise and can combine inputs with compatible shapes. This is really similar to the `map` function, a shorthand to map/broadcast a function over values. Append `.` to the function name to apply the function to a collection element-wise.
 
-Broadcast the `sin` function over a `1:10` range using the dot-syntax:
+Broadcast the `sin` function over a `1:10` range using the dot syntax:
 """
 
 # ╔═╡ dde4f08a-ecd0-46ac-a0cf-60354c24f16f
@@ -987,7 +987,7 @@ Broadcasting will extend row and column vectors into a matrix. Try `(1:10) .+ (1
 # ╔═╡ 11f95adb-9b39-469e-b85f-4f90ab2d719d
 md"""
 !!! note "The transpose operator"
-	The symbol `'` is a transpose operator that in this case turns a column-vector to a row-vector.
+	The symbol `'` is a transpose operator that in this case turns a column vector into a row vector.
 """
 
 # ╔═╡ 203223f6-1cc7-4049-b8b5-d728d2094f44
@@ -1012,14 +1012,14 @@ end
 # ╔═╡ b26dab4e-0bb3-4eee-8804-797dd05083d4
 md"""
 !!! hint
-	Use ranges for `x` and `y`, and `let` block to avoid variable name clash. Both `π` and `pi` are built-in constants defined in Julia. Don't forget to use `'`!
+	Use ranges for `x` and `y`, and a `let` block to avoid variable name clashes. Both `π` and `pi` are built-in constants defined in Julia. Don't forget to use `'`!
 """
 
 # ╔═╡ a0c502b0-7585-450a-91ef-5899671d06ca
 md"""
 ### Anonymous functions
 
-So far our functions got names. They can also be defined without name.
+So far, our functions have had names. They can also be defined without a name.
 
 Read [the documentation](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) about anonymous functions.
 
@@ -1041,11 +1041,11 @@ map(x -> sin(x) + cos(x), 1:10)
 md"""
 ## Killer feature: multiple dispatch
 
-Julia is **not an object oriented language**, and this is a good thing!
+Julia is **not an object-oriented language**, and this is a good thing!
 
-In an object oriented language methods belong to objects, and a particular method is selected based on the dynamic type of an object (which is sometimes passed as a first argument, e.g. `self` in Python).
+In an object-oriented language, methods belong to objects, and a particular method is selected based on the dynamic type of an object (which is sometimes passed as a first argument, e.g. `self` in Python).
 
-Julia is a language with ✨**multiple dispatch**✨. This means that methods are separate from objects, and are selected at runtime are based on dynamic type of **all arguments**. This is similar to overloading but method selection occurs at runtime and not compile-time.
+Julia is a language with ✨**multiple dispatch**✨. This means that methods are separate from objects, and are selected at runtime based on the dynamic types of **all arguments**. This is similar to overloading but method selection occurs at runtime and not compile-time.
 
 This turns out to be very natural for mathematical programming.
 
@@ -1086,9 +1086,9 @@ end
 
 # ╔═╡ 4152492c-e1bf-46e0-921a-8ea70d372486
 md"""
-Can easily be extended later
+This can easily be extended later
 
-with new type:
+with a new type:
 """
 
 # ╔═╡ 0a91c58a-b8f2-41c8-99de-7bd0a077e6ff
@@ -1107,7 +1107,7 @@ play(Scissors(), Pond())
 
 # ╔═╡ 8844984d-f677-4a15-8b00-eaed1c5d3042
 md"""
-or with new function:
+or with a new function:
 """
 
 # ╔═╡ 78c8b8b2-7046-41ac-92f1-f4356a8e4dd0
@@ -1131,14 +1131,14 @@ This is a key characteristic of the Julia package ecosystem.
 md"""
 ## Modules and packages
 
-Modules can be used to structure code into larger entities, and be used to divide it into different name spaces. We will not make much use of those, but if interested see [the documentation](https://docs.julialang.org/en/v1/manual/modules/).
+Modules can be used to structure code into larger entities, and to divide it into different namespaces. We will not make much use of them, but if you are interested, see [the documentation](https://docs.julialang.org/en/v1/manual/modules/).
 
 Packages are the way people distribute code and we'll make use of them extensively. In the first example, the Lorenz ODE, you saw
 """
 
 # ╔═╡ f971ad6b-808f-4c00-8cc8-20a5a3187a5b
 md"""
-This statement loads the package CairoMakie and makes its functions and types available in the current session. Use can use it like so:
+At the start of this notebook, `using CairoMakie` loads CairoMakie and brings its exported names into scope. You can use it like so:
 """
 
 # ╔═╡ a243b363-cc8e-434d-aec2-001c24bd1ab7
@@ -1151,13 +1151,13 @@ md"""
 
 **This concludes the rapid Julia tour!**
 
-There are many more features of Julia for sure but this should get you started, and setup for the exercises. (Let us know if you feel we left something out which would have been helpful for the exercises).
+Julia has many more features, but this should get you started and ready for the exercises. (Let us know if you feel we left something out which would have been helpful for the exercises.)
 
-Remember you can self-help with:
+Remember, you can get help by:
 
-- using `?` at the notebook. Similarly there is an `apropos` function.
-- [the docs](https://docs.julialang.org/en/v1/) are your friend
-- ask for help in our chat channel: see Moodle
+- using `?` in the notebook. Similarly, there is an `apropos` function.
+- reading [the docs](https://docs.julialang.org/en/v1/)
+- asking for help in our chat channel: see Moodle
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
