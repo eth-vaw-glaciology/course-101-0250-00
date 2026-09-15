@@ -180,7 +180,7 @@ a.pluto_home_link {
     border-radius: var(--border-radius);
     padding: var(--child-padding);
 }
-.semester-details > a {
+.semester-details > span {
     font-weight: 700;
 }
 

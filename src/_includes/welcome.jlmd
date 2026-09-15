@@ -3,6 +3,7 @@ layout: "layout.jlhtml"
 ---
 
 <link rel="stylesheet" href="$(root_url)/assets/styles/homepage.css" type="text/css" />
+<script src="$(root_url)/assets/scripts/schedule_upcoming.js" defer></script>
 
 <div id="title" class="banner">
     <h1>$(homepage["title"])</h1>
@@ -11,7 +12,5 @@ layout: "layout.jlhtml"
 $(isempty(get(homepage, "disclaimer", "")) ? nothing : @htl("""<blockquote class="banner"><p>$(homepage["disclaimer"])</p></blockquote>"""))
 
 <main class="homepage">
-<!-- $(Base.include(@__MODULE__, joinpath(@__DIR__, "..", "assets", "scripts", "get_highlights.jl"))) -->
-<!-- $(Base.include(@__MODULE__, joinpath(@__DIR__, "..", "assets", "scripts", "get_subjects.jl"))) -->
 $(Base.include(@__MODULE__, joinpath(@__DIR__, "..", "assets", "scripts", "get_schedule.jl")))
 </main>
