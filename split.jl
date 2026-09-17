@@ -1,4 +1,4 @@
-SOLUTION_CUTOFF = 0
+SOLUTION_CUTOFF = 1
 LECTURES_PATH = joinpath(@__DIR__, "lectures")
 
 import PlutoSplitter
@@ -27,7 +27,7 @@ for part in readdir(LECTURES_PATH)
                 @info "copying '$filepath' to '$outpath'"
                 cp(filepath, outpath)
             else
-                error("only .jl or .md lecture files are supported")
+                error("only .jl or .md lecture files are supported, got '$file'")
             end
         end
     end
