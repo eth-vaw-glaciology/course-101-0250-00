@@ -30,41 +30,42 @@ using CairoMakie
 md"""
 # PDEs and physical processes
 
-The goal of this lecture is to get familiar with:
+The goal of this lecture is to become familiar with:
 
 - Classification of partial differential equations
 - Finite-difference discretisation
-- Nonlinear processes
-- Multi-physics coupling
+- Explicit time integration
+- Git version control system
 
-A [**partial differential equation (PDE)**](https://en.wikipedia.org/wiki/Partial_differential_equation) is an equation which imposes relations between the various partial derivatives of a multivariable function.
+A [**partial differential equation (PDE)**](https://en.wikipedia.org/wiki/Partial_differential_equation) relates an unknown function of several variables to its partial derivatives.
+
 ## Notation
 
-Consider function ``u(t, x, y, z)``. You can think of ``t`` as time, and ``x``, ``y``, and ``z`` as spatial coordinates. We will call such functions **fields**. If this function is scalar-valued, we call it a **scalar field**, and if it is vector-valued, a **vector field**. Vector fields are written in **bold**. For example, velocity field is ``\boldsymbol{v}(t, x, y, z)``. We will denote the components of vector fields with superscripts, e.g. ``v^x``, ``v^y``, ``v^z`` or ``v^1``, ``v^2``, ``v^3``.
+Consider a function ``u(t, x, y, z)``. You can think of ``t`` as time, and ``x``, ``y``, and ``z`` as spatial coordinates. We will call such functions **fields**. If this function is scalar-valued, we call it a **scalar field**, and if it is vector-valued, a **vector field**. Vector fields are written in **bold**. For example, a velocity field is ``\boldsymbol{v}(t, x, y, z)``. We will denote the components of vector fields with superscripts, e.g. ``v^x``, ``v^y``, ``v^z`` or ``v^1``, ``v^2``, ``v^3``.
 
-A [partial derivative](https://en.wikipedia.org/wiki/Partial_derivative) is a derivative with respect to one of the variables, with other variables kept constant.
+A [partial derivative](https://en.wikipedia.org/wiki/Partial_derivative) is a derivative with respect to one of the variables, with the other variables held constant.
 
-There are two equivalent ways to write a partial derivative:
+We use two notations for partial derivatives:
 
 - ``u_t`` is equivalent to ``\partial u/\partial t``
 - ``u_{xx}`` is equivalent to ``\partial^2 u / \partial x^2``
 - ``u_{xy}`` is equivalent to ``\partial^2 u / \partial x \partial y``
 
-Similarly to ordinary derivatives, the **order** of a partial derivative is the number of times the derivation is applied to a function. For example, ``u_x`` is a first derivative, ``u_{xx}`` and ``u_{xy}`` are second derivatives, ``u_{ttt}`` is a third derivative, and so on.
+As with ordinary derivatives, the **order** of a partial derivative is the number of times differentiation is applied to a function. For example, ``u_x`` is a first derivative, ``u_{xx}`` and ``u_{xy}`` are second derivatives, ``u_{ttt}`` is a third derivative, and so on.
 
-It is possible to define differential operators in a **vector calculus notation**, which helps to write the equations in a form which is independent of the number of spatial dimensions.
+It is possible to define differential operators using **vector calculus notation**, which lets us write equations in a form that is independent of the number of spatial dimensions.
 """
 
 # ╔═╡ 0f85d4f3-8e27-478d-a7b3-c8a5f902adec
 md"""
-Select the number of spatial dimensions to see what various differential operators look in the coordinate form:
+Select the number of spatial dimensions to see what various differential operators look like in coordinate form:
 
 ``N`` = $(@bind N PlutoUI.Slider(1:3; default=3, show_value=true))
 """
 
 # ╔═╡ 24c0921c-ac89-4987-82d5-c209f7f131d1
 md"""
-[**Gradient**](https://en.wikipedia.org/wiki/Gradient) of a scalar field is a vector field, coordinates of which are partial derivatives in spatial directions:
+The [**gradient**](https://en.wikipedia.org/wiki/Gradient) of a scalar field is a vector field whose components are the partial derivatives with respect to the spatial coordinates:
 """
 
 # ╔═╡ a1960792-dfe9-426b-8dc5-7746b3190da4
@@ -76,9 +77,9 @@ end
 
 # ╔═╡ 41ad8ec5-0fb2-459c-93b4-121331a4c2f2
 md"""
-Geometrically speaking, ``\mathbf{grad}\,u`` points in a direction of steepest increase of ``u``, and its magnitude corresponds to the rate of this increase.
+Where it is nonzero, ``\mathbf{grad}\,u`` points in the direction of steepest increase of ``u``, and its magnitude corresponds to the rate of this increase.
 
-[**Divergence**](https://en.wikipedia.org/wiki/Divergence) of a vector field is a scalar field, value of which at each point in space is equal to the sum of partial derivatives of vector components at this point:
+The [**divergence**](https://en.wikipedia.org/wiki/Divergence) of a vector field is a scalar field obtained by summing the partial derivatives of each vector component with respect to its corresponding spatial coordinate:
 """
 
 # ╔═╡ 12795455-66e2-436a-b993-46957783cc0f
@@ -90,9 +91,9 @@ end
 
 # ╔═╡ d2560b51-155e-411e-a414-093f9694273a
 md"""
-Physically, the divergence indicates the rate at which fluid enters or leaves an infinitesimaly small volume located at the point. Positive divergence means that the point is a source, negaive divergence indicates a sink, and zero divergence means that the volume doesn't change. Divergence-free velocity fields thus describe the motion of an incompressible fluid such as water.
+Physically, the divergence indicates the rate at which the vector field alters an infinitesimally small volume located at the point. Positive divergence means that the point is a source, negative divergence indicates a sink, and zero divergence means that the volume doesn't change. Divergence-free velocity fields thus describe the motion of an incompressible fluid such as water.
 
-[**Laplacian**](https://en.wikipedia.org/wiki/Laplace_operator) of a scalar field is a second-order operator which is equal to divergence of a gradient:
+The [**Laplacian**](https://en.wikipedia.org/wiki/Laplace_operator) is a second-order differential operator. Applied to a scalar field, it is the divergence of the gradient:
 
 ```math
 \mathrm{lap}\, u = \mathrm{div}(\mathbf{grad}\,u)~.
@@ -111,7 +112,7 @@ end
 # ╔═╡ 3704f55f-96e1-415a-902d-159314818f12
 md"""
 !!! note "Actually..."
-	These formulas are only true in a [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). For a general curvilinear coordiante system, [metric tensor](https://en.wikipedia.org/wiki/Metric_tensor) needs to be taken into account. In this course, we will only work with Cartesian coordiantes.
+	These component formulas apply in a [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). For a general curvilinear coordinate system, the [metric tensor](https://en.wikipedia.org/wiki/Metric_tensor) needs to be taken into account. In this course, we will only work with Cartesian coordinates.
 
 It is convenient to express gradient and divergence using the **del** operator ``\boldsymbol{\nabla}``:
 
@@ -128,13 +129,13 @@ It is convenient to express gradient and divergence using the **del** operator `
 md"""
 ## Classification of PDEs
 
-There are few ways to classify PDEs, we'll look at few of them.
+There are several ways to classify PDEs. We will look at a few of them.
 
-**Order** of a PDE is the highest order among its partial derivatives. In the course, we will mostly look at first-order and second-order PDEs.
+The **order** of a PDE is the highest order among its partial derivatives. In this course, we will mostly look at first-order and second-order PDEs.
 
-Besides order, PDEs can be classified as **linear** and **nonlinear**. Linear PDEs are linear **with respect to the unknown variable**.
+Besides order, PDEs can be classified as **linear** or **nonlinear**. Linear PDEs are linear **with respect to the unknown function and its derivatives**.
 
-👉 Here's a few PDEs. Look at them and select their order and if they are linear or not:
+👉 Here are a few PDEs. Select the order of each equation and indicate whether it is linear:
 
 |Equation                                |Order                          |Is it linear?             |
 |---------------------------------------:|-------------------------------|:-------------------------|
@@ -156,7 +157,7 @@ if orders == correct_orders
 	if linear == correct_linear
 		correct()
 	else
-		almost(md"Almost there! Check if linearity is correct.")
+		almost(md"Almost there! Check your answers about linearity.")
 	end
 elseif linear == correct_linear
 	almost(md"Almost there! Check if the orders are correct.")
@@ -169,7 +170,7 @@ end
 md"""
 ## Second-order PDEs
 
-For second-order PDEs, there exists another useful classification. Similarly to the classification of [conic sections](https://en.wikipedia.org/wiki/Conic_section), it is convenient to classify second-order PDEs into **hyperbolic**, **parabolic** and **elliptic** types:
+For second-order PDEs, another useful classification exists. By analogy with the classification of [conic sections](https://en.wikipedia.org/wiki/Conic_section), it is convenient to classify second-order PDEs into **hyperbolic**, **parabolic** and **elliptic** types:
 
 |     Type     |         Equation         |Physical process|
 |:-------------|:------------------------:|---------------:|
@@ -177,39 +178,37 @@ For second-order PDEs, there exists another useful classification. Similarly to 
 |**Hyperbolic**|``u_{tt} = c^2\nabla^2 u``|Wave propagation|
 |**Elliptic**  |  ``\nabla^2 u = 0``      |Steady diffusion|
 
-This classification is important because solutions to different kinds of PDEs show completely different behaviors, and obtaining these solutions numerically requires different approaches.
+This classification is important because solutions to different kinds of PDEs show different behaviours, and obtaining these solutions numerically requires different approaches.
 """
 
 # ╔═╡ 4e464867-020a-4143-a027-2c968c30a960
 md"""
 ## Initial and boundary conditions
 
-Just knowing the equation is not enough to solve it. If the equation contains first derivative in time ``u_t``, they also need [**initial conditions**](https://en.wikipedia.org/wiki/Initial_value_problem) (ICs), i.e. the distribution of an unknown at the initial time ``t=0``. If the equation contains second time derivative ``u_{tt}``, in addition to the initial distribution of `c` we need the initial distribution of ``u_t`` at ``t=0``. For higher-order derivatives, more initial conditions are needed.
+Just knowing the equation is not enough to solve it. If the equation is first order in time, we also need [**initial conditions**](https://en.wikipedia.org/wiki/Initial_value_problem) (ICs), i.e. the distribution of the unknown at the initial time ``t=0``. If the equation is second order in time, in addition to the initial distribution of ``u`` we need the initial distribution of ``u_t`` at ``t=0``. For higher-order derivatives, more initial conditions are needed.
 
-If the equation contains spatial derivaties, we need to specify [**boundary conditions**](https://en.wikipedia.org/wiki/Boundary_value_problem) (BCs) specifying how to compute the unknown quantity ``u`` at the boundary of the domain. There are many possibilities for specifying the BCs. In this course, we will only consider two types of BCs: [**Dirichet**](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition) and [**Neumann**](https://en.wikipedia.org/wiki/Neumann_boundary_condition) boundary conditions.
+If the equation contains spatial derivatives, we need to specify [**boundary conditions**](https://en.wikipedia.org/wiki/Boundary_value_problem) (BCs) that constrain the unknown quantity ``u`` or its derivatives at the boundary of the domain. There are many possibilities for specifying the BCs. In this course, we will only consider two types of BCs: [**Dirichlet**](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition) and [**Neumann**](https://en.wikipedia.org/wiki/Neumann_boundary_condition) boundary conditions.
 
-**Dirichlet** boundary condition is imposed so that the value of the unknown quantity ``u`` on the boundary is known and fixed.
+A **Dirichlet** boundary condition prescribes the value of the unknown quantity ``u`` on the boundary.
 
-**Neumann** boundary conditions instead impose the value of the derivative of ``u`` in the normal direction to the boundary. For example, in 1D, ``u_x`` needs to be known and fixed at the ends of the domain.
+**Neumann** boundary conditions prescribe the derivative of ``u`` in the direction normal to the boundary. In 1D, this amounts to prescribing ``u_x`` at the ends of the domain, with a sign change at the left endpoint when using the outward normal.
 """
 
 # ╔═╡ 985a7cbd-185a-4129-9ef1-98463f991745
 md"""
-## Finite difference approximation
+## Finite-difference approximation
 
-According to the [**finite difference method**](https://en.wikipedia.org/wiki/Finite_difference_method), we convert partial differential equation to a system of linear equations by approximating partial derivatives using truncated [Taylor series](https://en.wikipedia.org/wiki/Taylor_series).
+In the [**finite-difference method**](https://en.wikipedia.org/wiki/Finite_difference_method), we approximate derivatives by differences between values at grid points. These approximations can be derived using truncated [Taylor series](https://en.wikipedia.org/wiki/Taylor_series).
 
-For example, we can approximate the first derivative ``c_x`` at point ``x`` using the **central difference** rule:
+For example, we can approximate the first derivative ``c_x`` at the point ``x`` using the **central difference** rule:
 
 ```math
 c_x(t, x) \approx \frac{c(t, x+dx/2) - c(t, x-dx/2)}{dx}~,
 ```
 
-where ``dx`` is a *finite* parameter which controls the accuracy of approximation. As ``dx \rightarrow 0``, the appoximation converges to the true value of the derivative.
+where ``dx`` is a *finite* parameter which controls the accuracy of the approximation. For a sufficiently smooth function, as ``dx \rightarrow 0``, the approximation converges to the true value of the derivative.
 
-We can approximate ``q_x`` in the same way.
-
-To compute this finite difference in Julia, we can use the built-in `diff` function:
+To compute differences between neighbouring values in Julia, we can use the built-in `diff` function:
 """
 
 # ╔═╡ 0411bd65-d3db-4b1f-a58e-a88cbccfacd7
@@ -217,23 +216,23 @@ diff([1, 2, 2, 6, 3])
 
 # ╔═╡ 129996e6-739c-4745-929e-583a15842fca
 md"""
-Calling `diff(C)` is equivalent to computing `C[2:end] - C[1:end-1]`.
+For a vector `C`, calling `diff(C)` is equivalent to computing `C[2:end] - C[1:end-1]`. Divide by `dx` to approximate the derivative at the midpoints between neighbouring grid points.
 
 ## Explicit Euler time integration
 
-The [Euler method](https://en.wikipedia.org/wiki/Euler_method) is a simplest first-order numerical procedure for integrating initial value problems in time. It consists of approximating the time derivative using the **forward finite difference rule**:
+The [Euler method](https://en.wikipedia.org/wiki/Euler_method) is a simple first-order method for integrating initial value problems in time. It consists of approximating the time derivative using the **forward finite difference rule**:
 
 ```math
 u_t(t, x) \approx \frac{u(t + dt, x) - u(t, x)}{dt}~,
 ```
 
-Where ``dt`` is a **time step**. Assume that our PDE has the following form:
+where ``dt`` is the **time step**. Assume that our PDE has the following form:
 
 ```math
 u_t = R(t, x, u, u_x, u_{xx}, ...)~,
 ```
 
-where ``R`` encapsulates parts of PDE which are independent of time derivatives of ``u``. If we want to numerically integrate this equation from ``t=0`` to ``t=T``, we can discretise the time interval `[0, T]` by selecting `nt+1` points ``t^0 < t^1 < \dots < t^\mathrm{nt}`` such that ``t^0 = 0`` and ``t^\mathrm{nt} = T``. We denote the distributions of ``u`` and ``R`` at ``t=t^n`` as ``u^n`` and ``R^n``, respectively. We should provide ``u^0`` using the initial conditions. Then, according to the Euler method, we can compute [``u^1``, ``u^2``, ... ] by solving for the value at the next time step:
+where ``R`` denotes the right-hand side, which does not contain time derivatives of ``u``. If we want to numerically integrate this equation from ``t=0`` to ``t=T``, we can discretise the time interval `[0, T]` by selecting `nt+1` equally spaced points ``t^0 < t^1 < \dots < t^\mathrm{nt}`` such that ``t^0 = 0`` and ``t^\mathrm{nt} = T``. We denote the distributions of ``u`` and ``R`` at ``t=t^n`` as ``u^n`` and ``R^n``, respectively. The initial condition specifies ``u^0``. Then, according to the Euler method, we can compute [``u^1``, ``u^2``, ... ] by evaluating the right-hand side at the current time step:
 
 ```math
 u^{n+1} = u^n + d t\, R^n
@@ -243,19 +242,19 @@ u^{n+1} = u^n + d t\, R^n
 
 # ╔═╡ 3ed7e2de-7a0f-46bb-95d7-e6b6f4149585
 md"""
-## Parabolic equations -- diffusion
+## Parabolic equations — diffusion
 
-The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was introduced by Fourier in 1822 in the form of [heat equation](https://en.wikipedia.org/wiki/Heat_equation) to understand heat distribution in various materials.
+The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was presented in Fourier’s 1822 treatise in the form of the [heat equation](https://en.wikipedia.org/wiki/Heat_equation) to understand heat distribution in various materials.
 
-Diffusive processes were also employed by Fick in 1855 with application to chemical and particle diffusion ([Fick's law](https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion)).
+Fick formulated laws of diffusion in 1855 to describe the transport of dissolved substances ([Fick's laws](https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion)).
 
-The diffusion equation is a second order parabolic PDE:
+For a positive diffusion coefficient ``λ``, the diffusion equation is a second-order parabolic PDE:
 
 ```math
 c_t = λ c_{xx}~.
 ```
 
-Quantity ``c`` could represent temperature of a material or chemical concentration of a substance in the fluid. Parameter ``\lambda`` is **the diffusion coefficient**, controlling how "conductive" the material is: higher values of ``\lambda`` result in faster diffusion.
+The quantity ``c`` could represent the temperature of a material or the concentration of a substance in a fluid. The parameter ``\lambda`` is the **diffusion coefficient** (thermal diffusivity when ``c`` is temperature): higher values of ``\lambda`` result in faster diffusion.
 
 Alternatively, we can write this equation as a conservation law for ``c``:
 
@@ -263,7 +262,7 @@ Alternatively, we can write this equation as a conservation law for ``c``:
 c_t = -q_x~,
 ```
 
-where ``q`` is a diffusion flux:
+where ``q`` is the diffusive flux:
 
 ```math
 q = -\lambda c_x~.
@@ -272,18 +271,18 @@ q = -\lambda c_x~.
 !!! note
 	These two forms are equivalent only when the diffusion coefficient ``\lambda`` is not a function of ``x`` or ``c``. If this is not the case, the conservation form should be used.
 
-In the following, we will approximate the space derivatives in the diffusion equation using the [finite differences](https://en.wikipedia.org/wiki/Finite_difference), and integrate this discretised equation in time using explicit [Euler method](https://en.wikipedia.org/wiki/Euler_method).
+In the following, we will approximate the spatial derivatives in the diffusion equation using [finite differences](https://en.wikipedia.org/wiki/Finite_difference), and integrate this discretised equation in time using the explicit [Euler method](https://en.wikipedia.org/wiki/Euler_method).
 """
 
 # ╔═╡ 1230392d-eff2-4c96-9e5c-c95f790a5004
 md"""
 ### Numerical solver
 
-We are ready to solve the diffusion equation in 1D. In this section, we will discuss the ingredients of a solver, and then will let you to write the solver yourself.
+We are ready to solve the diffusion equation in 1D. In this section, we will discuss the ingredients of a solver, and then ask you to write it yourself.
 
-We discretise the computational domain `[0, lx]` by descomposing it into `nx` non-overlapping intervals of length `lx/nx` each. We will call these intervals **grid cells**.
+We discretise the computational domain `[0, lx]` by dividing it into `nx` non-overlapping intervals of length `lx/nx` each. We will call these intervals **grid cells**.
 
-First, we introduce the physical parameters that are relevant for the considered problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
+First, we introduce the physical parameters that are relevant to this problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
 
 ```julia
 # physics
@@ -291,7 +290,7 @@ lx   = 20.0
 dc   = 1.0
 ```
 
-Then we declare numerical parameters: the number of grid cells used to discretise the computational domain `nx`, and the frequency of updating the visualisation `nvis`:
+Then we declare the numerical parameters: the number of grid cells `nx` and the number of time steps between visualisation updates `nvis`:
 
 ```julia
 # numerics
@@ -299,7 +298,7 @@ nx   = 200
 nvis = 5
 ```
 
-We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centers `xc`:
+We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centres `xc`:
 
 ```julia
 # preprocessing
@@ -307,21 +306,21 @@ dx   = lx/nx
 xc   = LinRange(dx/2,lx-dx/2,nx)
 ```
 
-Then we compute the time step and the number of time steps in the simulation:
+Then we compute the time step and set the number of time steps in the simulation:
 
 ```julia
 dt   = dx^2 / dc / 2
 nt   = 500
 ```
 
-!!! note "🤔 Why is time step computed like this?"
-	The reason for this is numerical stability. Explicit Euler scheme cannot be used with arbitrarily large time steps. If `dt` is larger than some threshold, the small errors in the numerical solution grow unboundedly, which looks like a "sawtooth" pattern. The detailed derivation is out of scope of this course, unfortunately. If you're interested, check the literature in the [Extras](https://pde-on-gpu.vaw.ethz.ch/cheatsheets/). In short, this stability bound can be derived using the [von Neumann stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis) procedure.
+!!! note "🤔 Why is the time step computed like this?"
+	The reason for this is numerical stability. The explicit Euler scheme cannot be used with arbitrarily large time steps. If `dt` is larger than some threshold, the small errors in the numerical solution grow unboundedly, which looks like a "sawtooth" pattern. The detailed derivation is outside the scope of this course, unfortunately. If you're interested, check the literature in the [Extras](https://pde-on-gpu.vaw.ethz.ch/cheatsheets/). In short, this stability bound can be derived using the [von Neumann stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis) procedure.
 
-In the `# array initialisation` section, we need to initialise one array to store the concentration field `C`, and the diffusive flux in the x direction `qx`:
+In the `# array initialisation` section, we initialise two arrays: `C` for the concentration field and `qx` for the diffusive flux in the x direction:
 
 ```julia
 # array initialisation
-C    = @. 0.5cos(9π*xc/lx)+0.5
+C    = @. exp(-(xc-lx/2)^2)
 qx   = zeros(nx) # 😉
 ```
 
@@ -335,7 +334,7 @@ lines!(xc, C; color=:blue)
 plt = lines!(xc, C; color=:red)
 ```
 
-Note that we plot C twice: the first line plot will stay unmodified, and will show the initial condition, while the second plot will be updated every `nvis` steps.
+Note that we plot `C` twice: the first line plot will stay unchanged and will show the initial condition, while the second plot will be updated every `nvis` steps.
 
 Finally, implement the time loop:
 
@@ -351,10 +350,45 @@ end
 ```
 
 !!! note "Animating the plots"
-	Animating plots in Pluto notebooks is complicated, becase the result of running the cell is only displayed when the computation is finished. We implemented a macro `@animate` that will create a video stream of the animated result. This macro requires a figure, an update frequency, and a for loop over time steps. This macro is based on [this trick](https://discourse.julialang.org/t/real-time-animations-with-makie-in-pluto/63684) from the community.
+	[Animating plots](https://docs.makie.org/dev/explanations/animation) with Makie.jl in Pluto notebooks is complicated because the result of running the cell is only displayed when the computation is finished. We implemented a macro `@animate` that will create a video stream of the animated result. This macro requires a figure, an update frequency, and a for loop over time steps. This macro is based on [this trick](https://discourse.julialang.org/t/real-time-animations-with-makie-in-pluto/63684) from the community.
 
 👉 Your turn. Implement your first diffusion solver:
 """
+
+# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function diffusion_1d()
+	# physics
+	lx   = 20.0
+	dc   = 1.0
+	# numerics
+	nx   = 200
+	nvis = 5
+	# preprocessing
+	dx   = lx / nx
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx) # 😉
+	# create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
+	# time loop
+	@animate fig nvis for it = 1:nt
+	    # qx          .=
+		# C[2:end-1] .-=
+		if it % nvis == 0
+			plt[2] = C
+		end
+	end
+end
+  ╠═╡ =#
 
 # ╔═╡ 241cf2b3-dd9c-41d0-b69e-aef71d3ee162
 # ╠═╡ disabled = true
@@ -367,29 +401,29 @@ end
 # ╔═╡ 8534ddd3-6097-4a53-a403-429397b0df61
 md"""
 !!! hint
-	We actually deceived you before! 😈 The size of array `qx` cannot be `nx`. To figure out what the actual size is, check how the sizes of arrays `C` and `diff(C)` are related.
+	We actually deceived you before! 😈 The size of the array `qx` cannot be `nx`. To figure out what the actual size is, check how the sizes of arrays `C` and `diff(C)` are related.
 
-Well done! You can experiment with the solver, changing physical and numerical paramters to see how the solution will change.
+Well done! You can experiment with the solver, changing physical and numerical parameters to see how the solution will change.
 
 !!! tip
 	Check what the numerical instability looks like: multiply the time step `dt` in the definition by a small factor, say `1.1`, and see the 💥!
 
 ### What about BCs?
 
-You probably noticed, that we never explicitly implemented any boundary conditions, despite the claim that the BCs are needed for a well posed problem. Actually, there is a BC implemented in the solver, but you need to look carefully at what the code to find it.
+You probably noticed that we never explicitly implemented any boundary conditions, despite the claim that the BCs are needed for a well-posed problem. Actually, there is a BC implemented in the solver, but you need to look carefully at the code to find it.
 
-👉 Figure out what boundary condition is imposed at the left and right domain boundaries. Change it's value to something else and see what happens. Then think how to implement a different type of boundary condition (Dirichlet or Neumann).
+👉 Figure out what boundary condition is imposed at the left and right domain boundaries. Change its value to something else and see what happens. Then think about how to implement a different type of boundary condition (Dirichlet or Neumann).
 
-Now let's move to a different kind of second-order PDEs.
+Now let's move to a different kind of second-order PDE.
 """
 
 # ╔═╡ e9c4fcc1-09f8-4a00-8368-2d5b67e11e5f
 md"""
-## Hyperbolic equations - wave propapgation
+## Hyperbolic equations — wave propagation
 
-The prototypal hyperbolic PDE is the [wave equation](https://en.wikipedia.org/wiki/Wave_equation), which describes the propagation of waves in many natural processes, such as sound waves, waves on the water surface, seismic waves, or electromagnetic waves.
+A prototypical hyperbolic PDE is the [wave equation](https://en.wikipedia.org/wiki/Wave_equation), which describes the propagation of waves in many natural processes, such as sound waves, waves on the water surface, seismic waves, or electromagnetic waves.
 
-The hyperbolic equation in 1D reads:
+The wave equation in 1D reads:
 
 ```math
 p_{tt} = c^2 p_{xx}~,
@@ -398,9 +432,9 @@ p_{tt} = c^2 p_{xx}~,
 where
 
 - ``p`` is pressure (or displacement, or another quantity...)
-- ``c`` a real constant (speed of sound, stiffness, ...)
+- ``c`` is a positive constant representing the wave speed (for example, the speed of sound)
 
-Alternatively, the wave equation can be implemented as a first-order system of PDEs:
+Alternatively, the wave equation can be written as a first-order system of PDEs:
 
 ```math
 \begin{aligned}
@@ -409,12 +443,12 @@ p_t &= -\frac{1}{\beta}v_x~.
 \end{aligned}
 ```
 
-Here, ``v`` is fluid velocity, ``\rho`` is density, and ``\beta`` is compressibility.
+Here, ``v`` is the fluid velocity, ``\rho`` is the density, and ``\beta`` is the compressibility. We assume that ``\rho`` and ``\beta`` are positive constants.
 
-👉 Demonstrate that these two forms are equivalent. Derive how the parameter ``c`` is related to paramteres ``\rho`` and ``\beta``.
+👉 Demonstrate that these two forms are equivalent. Derive how the parameter ``c`` is related to parameters ``\rho`` and ``\beta``.
 
 !!! hint
-	Eliminate ``v`` by differentiating the first equation by ``x``, second equation by ``t``, and then subtracting the second equation multiplied by ``\beta`` from the first equation.
+	Eliminate ``v`` by differentiating the first equation with respect to ``x`` and the second with respect to ``t``, then substituting the expression for ``v_{tx}`` into the second equation.
 """
 
 # ╔═╡ 563965f8-ef6c-4b12-91dd-1e3a25f65248
@@ -431,7 +465,7 @@ The objective is to implement the wave equation in 1D using an explicit time int
 
 ### Numerical solver
 
-We can start modifying the diffusion code's, adding `ρ` and `β` in `# physics` section, and taking a Gaussian (centred in `lx/4`) as initial condition for the pressure `Pr`:
+We can start by modifying the diffusion code, adding `ρ` and `β` in the `# physics` section, and using a Gaussian (centred at `lx/4`) as the initial condition for the pressure `Pr`:
 
 ```julia
 # physics
@@ -445,22 +479,61 @@ Pr   =  exp.(...)
 !!! note
 	The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
 
-Then, the diffusion physics:
+The diffusion update:
 
 ```julia
 qx          .= .-dc.*diff(C )./dx
 C[2:end-1] .-=   dt.*diff(qx)./dx
 ```
 
-should be modified to account for pressure `Pr` instead of concentration `C`, the velocity update (`Vx`) added, and the coefficients modified:
+should be modified to use pressure `Pr` instead of concentration `C`. Add an update for the velocity `Vx` and adjust the coefficients:
 
 ```julia
 Vx          .-= ...
 Pr[2:end-1] .-= ...
 ```
 
+!!! warn "Use the new velocity in the pressure update"
+	When updating pressure `Pr`, use the freshly computed values of `Vx`, instead of saving somewhere the old array. This method is called [semi-implicit Euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method) and it works specifically well for the wave equation: it preserves the stored acoustic energy, so the waves never attenuate.
+
 👉 Your turn. Finish the implementation of acoustic wave propagation:
 """
+
+# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    # dt   = ...
+    nt   = 2nx
+    # array initialisation
+    # Pr   = @. exp(...)
+    # Vx   = zeros(...)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # Vx          .-= ...
+        # Pr[2:end-1] .-= ...
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
+  ╠═╡ =#
 
 # ╔═╡ 0ae59d37-ba0e-435a-b1e8-7ebd35eb98d3
 # ╠═╡ disabled = true
@@ -481,7 +554,7 @@ The simplest first-order PDE is the so-called [advection equation](https://en.wi
 c_t + \boldsymbol{v} \cdot \boldsymbol{\nabla}c = 0~.
 ```
 
-It represents the transport of some scalar quantity ``c`` due to the bulk motion of a fluid flowing with velocity ``\boldsymbol{v}``.
+It represents the transport of some scalar quantity ``c``, defined per unit mass of the fluid, due to the bulk motion of a fluid flowing with velocity ``\boldsymbol{v}``.
 """
 
 # ╔═╡ 37362ad9-3383-4171-bc37-bc85acf642fc
@@ -493,20 +566,20 @@ Assume that the fluid has density ``\rho``. We start from a [mass conservation e
 (\rho c)_t + \boldsymbol{\nabla}\cdot(\rho c\boldsymbol{v}) = 0
 ```
 
-We can use the product rule to transform this equation to the following form:
+Using the product rule gives:
 
 ```math
 c\,[\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})] + \rho\,[c_t + \boldsymbol{v}\cdot\boldsymbol{\nabla}c] = 0
 ```
 
-In the first term the quantity in the brackets, ``\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})``, is always equal to ``0``: this is the mass conservation for the bulk flow. Dividing both sides of the remaining equation by ``\rho``, which is always positive, we get the advection equation.
+In the first term, the quantity in brackets, ``\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})``, is always equal to ``0``: this is the mass conservation equation for the bulk flow. Dividing both sides of the remaining equation by ``\rho``, which is always positive, we get the advection equation.
 """)
 
 # ╔═╡ c3fb9efa-0728-448c-a992-79926dea6f7c
 md"""
 ### Exact solution
 
-For constant velocity ``\boldsymbol{v}``, the advection equation has surprisingly simple exact solution: it simply translates the initial shape of the field ``c`` in space.
+For constant velocity ``\boldsymbol{v}``, the advection equation has a simple exact solution: it simply translates the initial shape of the field ``c`` in space.
 
 For example, in 1D, if initially (at ``t = 0``) the shape of ``c`` was given by ``f(x)``, then the solution at time ``t`` is simply:
 
@@ -514,7 +587,7 @@ For example, in 1D, if initially (at ``t = 0``) the shape of ``c`` was given by 
 c(t, x) = f(x - vt)
 ```
 
-Let's visualize it. Here's the function for the initial condition (it's a Gaussian, but feel free to try something else):
+Let's visualise it. Here's the function for the initial condition (it's a Gaussian, but feel free to try something else):
 """
 
 # ╔═╡ 197f44d5-76e1-4aee-b576-811d6923310f
@@ -554,7 +627,7 @@ md"""
 
 ### Numerical solver
 
-Let's solve the advection equation numerically, following the same code structure as for the diffusion and the acoustic wave propagation.
+Let's solve the advection equation numerically, following the same code structure as for diffusion and acoustic wave propagation.
 
 The only physical parameter besides the domain extent now is the advection velocity:
 
@@ -564,7 +637,7 @@ lx   = 20.0
 vx   = 1.0
 ```
 
-In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, standard deviation 1, with centre located at `lx / 4`.
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, centred at `lx / 4`.
 
 ```julia
 C = @. exp( ... )
@@ -577,235 +650,20 @@ The only change in the `# preprocessing` section is the numerical time step defi
 dt   = dx / abs(vx)
 ```
 
-Update `C` in the time loop as following:
+Update `C` in the time loop as follows:
 
 ```julia
 C .-= dt .* vx .* diff(C) ./ dx # won't work
 ```
 
-Similarly to the diffusion and wave equation, this assignment doesn't work because of the mismatching array sizes. But unlike the the second-order equations, we don't have two derivatives to make sure that we can update the inner points of `C`.
+As with the diffusion and wave equations, this assignment doesn't work because of the mismatching array sizes. But unlike the second-order equations, we don't have two derivatives to make sure that we can update the inner points of `C`.
 
-There are at least three (naive) ways to solve the problem: update `C[1:end-1]`, `C[2:end]`, or one could even update `C[2:end-1]` with the spatial average of the rate of change `dt .* vx .* diff(C) ./ dx`.
+There are at least three (naive) ways to solve the problem: update `C[1:end-1]`, `C[2:end]`, or one could even update `C[2:end-1]` with the spatial average of the increment `dt .* vx .* diff(C) ./ dx`.
 
-To make things more interesting, let's also flip the sign of velocity when reaching `it=nt÷2`. Recall Exercise 1 from Lecture 1 for the hint on how to implement it.
+To make things more interesting, let's also flip the sign of the velocity when reaching `it=nt÷2`. Recall the conditional statements and short-circuit operators from Lecture 1 for a hint on how to implement this.
 
 👉 Your turn. Implement all three options for updating `C` and see what works best:
 """
-
-# ╔═╡ df956745-ec01-49b8-8e7b-0717ce60a159
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# Uncomment this when implemented the solver
-# advection_1D()
-  ╠═╡ =#
-
-# ╔═╡ 9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
-Foldable("Why only one scheme works?",
-md"""
-The reason is again the numerical stability. It turns out that not only the time step, but the space discretisation can affect stability. The scheme that is stable for the explicit Euler time integration is the so-called [upwind scheme](https://en.wikipedia.org/wiki/Upwind_scheme). Interestingly, two other choices, the "downwind" scheme and the [central scheme](https://en.wikipedia.org/wiki/FTCS_scheme) are **unconditionally unstable**, i.e. the solution explodes for any time step.
-""")
-
-# ╔═╡ 5c9b9479-d89e-44d6-9081-ddae9a6291ba
-md"""
-## First step towards solving the elliptic problem
-
-We have considered numerical solutions to the hyperbolic and parabolic PDEs. In both cases we used the explicit time integration.
-
-The elliptic PDE is different:
-
-```math
-c_{xx} = 0
-```
-
-It doesn't depend on time! How do we solve it numerically then?
-
-There are many ways, but in this course we will focus on **relaxation solvers**. The idea is that the solution to the elliptic PDE can be achieved as a **steady-state** of a corresponding **time-dependent** parabolic equation:
-
-```math
-c_t = \lambda c_{xx}~.
-```
-
-The steady-state is reached at ``t \rightarrow \infty`` when ``c_t \rightarrow 0``.
-
-!!! note 
-	The existense of such a steady-state is not guaranteed for all PDEs, but it is the case for elliptic equations.
-
-We already know how to solve parabolic equations, so solving elliptic equations should be easy then, right?
-
-👉 Increase the number of time steps `nt` in our diffusion code to see whether the solution would converge, and decrease the frequency of plotting:
-
-```julia
-nt   = 5000
-nvis = 50
-```
-
-and see what happens.
-
-We approach the steady-state, but the number of time steps required to converge to a solution is proportional to `nx^2`:
-
-- For simulations in 1D and low resolutions in 2D the quadratic scaling is acceptable;
-- For high-resolution 2D and 3D the `nx^2` factor becomes prohibitively expensive!
-
-So, solving elliptic equations efficiently is not that simple. We'll tackle this challenge in the next lecture, **stay tuned!** 🚀
-
-!!! note
-	The described routine is far from being the only way to tackle numerical solutions to these PDEs. In this course, we will stick to those concepts as they will allow for efficient parallel implementations on GPUs and are relatively easy to implement.
-"""
-
-# ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
-md"""
-# Intro to Git
-
-Git is a version control software, useful to
-
-- Keep track of your progress on code (and other files)
-- Collaborate on code
-- Distribute code, to onself (on other computers) and others
-
-!!! note
-	Do not put big binary (or other big files) into git. Anything bigger than 1MB should probably go elsewhere.
-
-**Some questions for you:**
-
-- How often do you use git?
-- Who has git installed on their laptop?
-- Do you use: `commit`, `push`, `pull`, `clone`?
-- Do you use: `branch`, `merge`, `rebase`?
-- GitHub/GitLab etc?
-
-You can read about Git online, here are a few sources:
-
-- [git - the simple guide](https://rogerdudler.github.io/git-guide/)
-- [Git cheatsheet](https://git-scm.com/cheat-sheet)
-- [Using git from VSCode](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
-- [Official tutorial videos (~20 min)](https://git-scm.com/videos)
-
-## A brief git demo session
-
-👉 If you don't have git on your computer, [install it](https://git-scm.com/install/windows)!
-
-- Git setup:
-
-```sh
-git config --global user.name "Your Name"
-git config --global user.email "youremail@yourdomain.com"
-```
-
-- Make a repo (`init`)
-- Add some files (`add`, `commit`)
-- Do some changes (`commit` some more)
-- Make a feature branch (`branch`, `diff`, `difftool`)
-- Merge branch (`merge`)
-- Tag (`tag`)
-
-## Other tools for git
-
-There is plenty of software to interact with git, graphical, command line, VSCode, etc.  Feel free to use those.
-
-But we will only be able to help you with vanilla, command-line git.
-
-## Getting started on GitHub (similar on GitLab, or elsewhere)
-
-GitHub and GitLab are social coding websites
-
-- They host code
-- They facilitate for developers to interact
-- They provide infrastructure for software testing, deployment, etc
-
-!!! note
-	ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).
-
-If you don't have a GitHub account, make one (most of Julia development happens on GitHub)
-
-[https://github.com/](https://github.com/) → "Sign up"
-
-### GitHub setup
-
-Make such that you can push and pull without entering a password
-
-$(LocalResource("assets/l2_github-bar.png"))
-
-- Local: tell git to store credentials: `git config --global credential.helper cache`
-  (this may not be needed on all operating systems, potentially a built-in password/credential
-   manager will do this automatically)
-- [github.com](github.com):
-  - "Settings" → "Developer settings"  "Personal access tokens" → "Generate new token"
-    - Give the token a description/name and select the scope of the token
-    - I selected "repo only" to facilitate pull, push, clone, and commit actions
-  - → "Generate token" and copy it (keep that website open for now)
-
-## Let's get our repo onto GitHub
-
-- Create a repository on github.com: click the "+"
-- Local: follow setup given on website
-- Local: `git push`
-  - Enter your username here + the **token** generated before
-
-## Work with other people: pull request (PR)
-
-When you contribute new code to a repo (in particular a repo which other people work on too), the new code is submitted via a **"pull request"**.  This code is then in a separate branch.  A pull request then makes a web-interface where one can review the changes, request amendments and finally merge the code.
-
-In a repo with write permission, the use following work-flow:
-
-- Make a branch and switch to it: `git switch -c some-branch-name`
-- Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
-- Push the branch to GitHub
-- On the GitHub web-page a bar with a "open pull request" should show: click it
-- If you got more changes, just commit and push them to that branch
-- When happy merge the PR
-
-This work-flow you will use to submit homework for the course.
-
-## Work with other peoples code: fork
-
-For repos without write access, to contribute do:
-
-- Fork a repository on github.com (top right)
-- Make a branch on that fork and work on it
-- Push that to github and open a PR with respect to that fork
-- (not needed in this lecture course)
-"""
-
-# ╔═╡ 3125ddfe-2a52-4c92-989c-6d26c21e3c93
-Foldable("Got any questions?",
-md"""
-Write us on Element. We will also do more exercises and answer questions in the class.
-		 
-$(LocalResource("assets/l2_git-me.png"))
-""")
-
-# ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402
-# helper function to animate the loop in Pluto live
-macro animate(fig, nvis, loop)
-	loop.head == :for || error("`@animate` can only be used with `for` loops")
-	iter_expr = loop.args[1]
-	iter_var = iter_expr.args[1]
-	iter_range = iter_expr.args[2]
-	body = loop.args[2]
-	return quote
-		iframe = first($(esc(iter_range)))
-		CairoMakie.Makie.Record($(esc(fig)), $(esc(iter_range))[1:$(esc(nvis)):end]; format="mp4", framerate=30, compression=35, profile = "high444") do _
-			for i in 1:$(esc(nvis))
-				$(esc(iter_var)) = iframe
-				$(esc(body))
-				iframe += 1
-			end
-		end
-	end
-end;
-
-# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
-# split: solution
-diffusion_1d()
-
-# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
-# split: solution
-acoustic_1D()
-
-# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
-# split: solution
-advection_1D()
 
 # ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
 # ╠═╡ disabled = true
@@ -831,13 +689,226 @@ function advection_1D()
     lines!(ax, xc, C; color=:blue)
     plt = lines!(ax, xc, C; color=:red)
     # time loop
-    @animate fig 2 for it = 1:nt
+    @animate fig nvis for it = 1:nt
         # C ...
         # flip the sign of vx when it == nt ÷ 2
         plt[2] = C
     end
 end
   ╠═╡ =#
+
+# ╔═╡ df956745-ec01-49b8-8e7b-0717ce60a159
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+# Uncomment this when implemented the solver
+# advection_1D()
+  ╠═╡ =#
+
+# ╔═╡ 6bd96e91-83be-4f19-b2dd-267187521fdf
+md"""
+!!! hint
+	Depending on the sign of velocity, you need a different scheme. One of the choices (where to store `dt .* vx .* diff(C) ./ dx`) will only work for `vx >= 0`, while the other will only work for `vx <= 0`. We suggest implementing both these schemes in the same code, but in one case use `max(vx, 0)` and in other use `min(vx, 0)` for velocity.
+"""
+
+# ╔═╡ 9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+Foldable("Why does only one scheme work?",
+md"""
+The reason is again numerical stability. It turns out that both the time step and the spatial discretisation affect stability. The scheme that is stable for the explicit Euler time integration is the so-called [upwind scheme](https://en.wikipedia.org/wiki/Upwind_scheme). Interestingly, the other two choices, the "downwind" scheme and the [central scheme](https://en.wikipedia.org/wiki/FTCS_scheme) are **unconditionally unstable**, i.e. the solution explodes for any time step.
+""")
+
+# ╔═╡ f6270619-d412-465b-a3af-e6c3c6f8e257
+md"""
+!!! warn "Numerical diffusion"
+	Interestingly, the numerical solution looks just just like the exact one. But this is possible only when the velocity is constant and in 1D. In general case, the finite-difference schemes for advection suffer from the **numerical diffusion**. Try multiplying the time step `dt` by `0.5` and see how the Gaussian starts diffusing while advecting. To reduce numerical diffusion, high-order methods such as [WENO](https://en.wikipedia.org/wiki/WENO_methods) can be used.
+"""
+
+# ╔═╡ 5c9b9479-d89e-44d6-9081-ddae9a6291ba
+md"""
+## First steps towards solving elliptic problems
+
+We have considered numerical solutions to hyperbolic and parabolic PDEs. In both cases, we used explicit time integration.
+
+An elliptic PDE is different:
+
+```math
+c_{xx} = 0
+```
+
+It doesn't depend on time! How do we solve it numerically then?
+
+There are many ways, but in this course we will focus on **relaxation solvers**. The idea is that the solution to the elliptic PDE can be obtained as a **steady state** of a corresponding **time-dependent** parabolic equation:
+
+```math
+c_t = \lambda c_{xx}~.
+```
+
+The steady state is approached as ``t \rightarrow \infty`` when ``c_t \rightarrow 0``.
+
+!!! note 
+	The existence of such a steady state is not guaranteed for all PDEs, but it is the case for elliptic equations.
+
+We already know how to solve parabolic equations, so solving elliptic equations should be easy then, right?
+
+👉 Increase the number of time steps `nt` in our diffusion code to see whether the solution converges, and decrease the frequency of plotting:
+
+```julia
+nt   = 5000
+nvis = 50
+```
+
+Observe how the solution approaches the steady state. However, the number of time steps required to converge to a solution is proportional to `nx^2`:
+
+- For simulations in 1D and low resolutions in 2D, the quadratic scaling is acceptable;
+- For high-resolution simulations in 2D and 3D, the `nx^2` factor becomes prohibitively expensive!
+
+So, solving elliptic equations efficiently is not that simple. We'll tackle this challenge in the next lecture, **stay tuned!** 🚀
+
+!!! note
+	The described routine is far from being the only way to solve these PDEs numerically. In this course, we will stick to those concepts as they will allow for efficient parallel implementations on GPUs and are relatively easy to implement.
+"""
+
+# ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
+md"""
+# Introduction to Git
+
+Git is version control software. It helps you to:
+
+- Keep track of changes to code (and other files)
+- Collaborate on code
+- Share code across your computers and with others
+
+!!! note
+	Avoid committing large files, especially binary files, to Git. For this course, consider storing files larger than 1 MB elsewhere.
+
+**Some questions for you:**
+
+- How often do you use Git?
+- Who has Git installed on their laptop?
+- Do you use: `commit`, `push`, `pull`, `clone`?
+- Do you use: `branch`, `merge`, `rebase`?
+- Do you use GitHub, GitLab, or similar platforms?
+
+Here are a few online resources about Git:
+
+- [git - the simple guide](https://rogerdudler.github.io/git-guide/)
+- [Git cheatsheet](https://git-scm.com/cheat-sheet)
+- [Using Git in VS Code](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
+- [Official tutorial videos (~24 min)](https://git-scm.com/videos)
+
+## A brief Git demo
+
+👉 If you don't have Git on your computer, [install it](https://git-scm.com/install/)!
+
+- Git setup:
+
+```sh
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+```
+
+- Make a repo (`init`)
+- Add some files (`add`, `commit`)
+- Make some changes (`commit` some more)
+- Make a feature branch (`branch`, `diff`, `difftool`)
+- Merge the branch (`merge`)
+- Tag (`tag`)
+
+## Other tools for Git
+
+Many tools let you interact with Git, including graphical clients, command-line tools, and VS Code. Feel free to use them.
+
+But we will only be able to help you with standard command-line Git.
+
+## Getting started on GitHub (similar on GitLab, or elsewhere)
+
+GitHub and GitLab are collaborative software development platforms:
+
+- They host code
+- They help developers collaborate
+- They provide infrastructure for software testing, deployment, etc
+
+!!! note
+	ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).
+
+If you don't have a GitHub account, make one (most of Julia development happens on GitHub)
+
+[https://github.com/](https://github.com/) → "Sign up"
+
+### GitHub setup
+
+Set up authentication so that you can push and pull without repeatedly entering your credentials.
+
+$(LocalResource("assets/l2_github-bar.png"))
+
+- Local: tell Git to cache credentials: `git config --global credential.helper cache`
+  (this may not be needed on all operating systems, potentially a built-in password/credential
+   manager will do this automatically)
+- [github.com](https://github.com/):
+  - "Settings" → "Developer settings" → "Personal access tokens" → "Generate new token"
+    - Give the token a description/name and select the scope of the token
+    - I selected "repo only" to facilitate pull, push, clone, and commit actions
+  - → "Generate token" and copy it (keep that website open for now)
+
+## Let's get our repo onto GitHub
+
+- Create a repository on github.com: click the "+"
+- Local: follow the setup instructions on the website
+- Local: `git push`
+  - Enter your username here + the **token** generated before
+
+## Work with other people: pull request (PR)
+
+When contributing to a shared repository, you typically make changes on a separate branch and submit a **pull request (PR)**. A pull request provides a web interface for reviewing changes, requesting revisions, and merging the code.
+
+In a repository where you have write permission, use the following workflow:
+
+- Make a branch and switch to it: `git switch -c some-branch-name`
+- Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
+- Push the branch to GitHub
+- On the GitHub web page, a bar with an "Open pull request" option should appear: click it
+- If you have more changes, just commit and push them to that branch
+- When the changes are ready and reviewed, merge the PR
+
+You will use this workflow to submit homework for the course.
+
+## Work with other people's code: fork
+
+To contribute to a repository where you do not have write access:
+
+- Fork a repository on github.com (top right)
+- Make a branch on that fork and work on it
+- Push the branch to your fork on GitHub and open a PR against the original repository
+- (not needed in this lecture course)
+"""
+
+# ╔═╡ 3125ddfe-2a52-4c92-989c-6d26c21e3c93
+Foldable("Got any questions?",
+md"""
+Write to us on Element. We will also work through more exercises and answer questions in class.
+		 
+$(LocalResource("assets/l2_git-me.png"))
+""")
+
+# ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402
+# helper function to animate the loop in Pluto live
+macro animate(fig, nvis, loop)
+	loop.head == :for || error("`@animate` can only be used with `for` loops")
+	iter_expr = loop.args[1]
+	iter_var = iter_expr.args[1]
+	iter_range = iter_expr.args[2]
+	body = loop.args[2]
+	return quote
+		iframe = first($(esc(iter_range)))
+		CairoMakie.Makie.Record($(esc(fig)), $(esc(iter_range))[1:$(esc(nvis)):end]; format="mp4", framerate=30, compression=35, profile = "high444") do _
+			for i in 1:$(esc(nvis))
+				$(esc(iter_var)) = iframe
+				$(esc(body))
+				iframe += 1
+			end
+		end
+	end
+end;
 
 # ╔═╡ 3e833c61-5f94-413e-ab57-5e1669da380e
 # split: solution
@@ -871,35 +942,9 @@ function diffusion_1d()
 	end
 end
 
-# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
+# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
 # split: solution
-function advection_1D()
-    # physics
-    lx   = 20.0
-    vx   = 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # derived numerics
-    dx   = lx / nx
-    xc   = LinRange(dx / 2, lx - dx / 2, nx)
-    dt   = dx / abs(vx)
-    nt   = nx
-    # array initialisation
-    C    = @. exp(-(xc - lx / 4)^2)
-    # make visualisation
-    fig = Figure(size=(600, 200))
-    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
-    lines!(ax, xc, C; color=:blue)
-    plt = lines!(ax, xc, C; color=:red)
-    # time loop
-    @animate fig 2 for it = 1:nt
-        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
-        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
-        (it % (nt ÷ 2) == 0) && (vx = -vx)
-        plt[2] = C
-    end
-end
+diffusion_1d()
 
 # ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
 # split: solution
@@ -934,76 +979,43 @@ function acoustic_1D()
     end
 end
 
-# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function diffusion_1d()
-	# physics
-	lx   = 20.0
-	dc   = 1.0
-	# numerics
-	nx   = 200
-	nvis = 5
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	dt   = dx^2 / dc / 2
-	nt   = 500
-	# array initialisation
-	C    = @. 0.5cos(9π*xc/lx)+0.5
-	qx   = zeros(nx) # 😉
-	# create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
-	lines!(xc, C; color=:blue)
-	plt = lines!(xc, C; color=:red)
-	# time loop
-	@animate fig nvis for it = 1:nt
-	    # qx          .=
-		# C[2:end-1] .-=
-		if it % nvis == 0
-			plt[2] = C
-		end
-	end
-end
-  ╠═╡ =#
+# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
+# split: solution
+acoustic_1D()
 
-# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function acoustic_1D()
+# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
+# split: solution
+function advection_1D()
     # physics
     lx   = 20.0
-    ρ, β = 1.0, 1.0
+    vx   = 1.0
     # numerics
     nx   = 200
     nvis = 2
-    # preprocessing
+    # derived numerics
     dx   = lx / nx
-    xc   = LinRange(dx/2,lx-dx/2,nx)
-    # dt   = ...
-    nt   = 2nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
     # array initialisation
-    # Pr   = @. exp(...)
-    # Vx   = zeros(...)
-    # create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
-    ylims!(ax, -0.6, 1.1)
-	lines!(xc, Pr; color=:blue)
-	plt = lines!(xc, Pr; color=:red)
+    C    = @. exp(-(xc - lx / 4)^2)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
     # time loop
     @animate fig nvis for it = 1:nt
-        # Vx          .-= ...
-        # Pr[2:end-1] .-= ...
-        if it % nvis == 0
-            plt[2] = Pr
-        end
+        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
+        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
+        (it % (nt ÷ 2) == 0) && (vx = -vx)
+        plt[2] = C
     end
 end
-  ╠═╡ =#
+
+# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+# split: solution
+advection_1D()
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2737,7 +2749,7 @@ version = "4.1.0+0"
 # ╟─a1960792-dfe9-426b-8dc5-7746b3190da4
 # ╟─41ad8ec5-0fb2-459c-93b4-121331a4c2f2
 # ╟─12795455-66e2-436a-b993-46957783cc0f
-# ╟─d2560b51-155e-411e-a414-093f9694273a
+# ╠═d2560b51-155e-411e-a414-093f9694273a
 # ╟─85e2f8fa-f284-4e6e-ae8c-1cd203643f64
 # ╟─3704f55f-96e1-415a-902d-159314818f12
 # ╟─316505fa-14d6-4f22-876c-e6e1dabbe4d9
@@ -2773,7 +2785,9 @@ version = "4.1.0+0"
 # ╠═76c2a2f8-53ac-4820-97ed-1683209b9353
 # ╠═df956745-ec01-49b8-8e7b-0717ce60a159
 # ╠═a84ea677-fee3-42be-a194-24e50c4859e4
+# ╟─6bd96e91-83be-4f19-b2dd-267187521fdf
 # ╟─9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+# ╟─f6270619-d412-465b-a3af-e6c3c6f8e257
 # ╟─5c9b9479-d89e-44d6-9081-ddae9a6291ba
 # ╟─50cb4141-1cb1-428b-938b-fd81f8102a91
 # ╟─3125ddfe-2a52-4c92-989c-6d26c21e3c93
