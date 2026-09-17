@@ -242,7 +242,7 @@ fold = Foldable("Words of caution", md"""
 
 	When the exact solution to our problem is unknown (otherwise we wouldn't need the numerical solution), we must rely on indirect checks to help us assess the numerical method and its results:
 
-	- Mesh convergence studies: check that reducing the grid spacing produces progressively smaller changes in the solution.
+	- [**Mesh convergence studies**](https://www.grc.nasa.gov/www/wind/valid/tutorial/spatconv.html): check that reducing the grid spacing produces progressively smaller changes in the solution.
 	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes in the total mass, momentum, and energy of the system must be balanced by fluxes of these quantities through the domain boundaries, and any external forces or energy inputs. [**The second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) requires that the total entropy of an isolated system cannot decrease, and must increase for irreversible processes.
 	- Method of manufactured solutions: choose a synthetic solution, substitute it into the PDE, and derive a source term and initial and boundary conditions consistent with that solution. Then check whether the numerical solver converges to the manufactured solution at the expected rate.
 	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exhibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
