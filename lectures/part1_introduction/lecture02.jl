@@ -282,6 +282,9 @@ diff([1, 2, 2, 6, 3])
 md"""
 For a vector `C`, calling `diff(C)` is equivalent to computing `C[2:end] - C[1:end-1]`. Divide by `dx` to approximate the derivative at the midpoints between neighbouring grid points.
 
+!!! hint
+	The size of the array returned by `diff` is not the same as the size of the inpit array. Check the difference using the `size` function.
+
 ## Explicit Euler time integration
 
 The [Euler method](https://en.wikipedia.org/wiki/Euler_method) is a simple first-order method for integrating initial value problems in time. It consists of approximating the time derivative using the **forward finite difference rule**:
@@ -380,6 +383,8 @@ nt   = 500
 !!! note "🤔 Why is the time step computed like this?"
 	The reason for this is numerical stability. The explicit Euler scheme cannot be used with arbitrarily large time steps. If `dt` is larger than some threshold, the small errors in the numerical solution grow unboundedly, which looks like a "sawtooth" pattern. The detailed derivation is outside the scope of this course, unfortunately. If you're interested, check the literature in the [Extras](https://pde-on-gpu.vaw.ethz.ch/cheatsheets/). In short, this stability bound can be derived using the [von Neumann stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis) procedure.
 
+	If interested, you can also ask an LLM to explain the time step selection to you for this and subsequent problems. Remember that LLMs [hallucinate](https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)) sometimes, so never trust their output blindly!
+
 In the `# array initialisation` section, we initialise two arrays: `C` for the concentration field and `qx` for the diffusive flux in the x direction:
 
 ```julia
@@ -418,41 +423,6 @@ end
 
 👉 Your turn. Implement your first diffusion solver:
 """
-
-# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function diffusion_1d()
-	# physics
-	lx   = 20.0
-	dc   = 1.0
-	# numerics
-	nx   = 200
-	nvis = 5
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	dt   = dx^2 / dc / 2
-	nt   = 500
-	# array initialisation
-	C    = @. exp(-(xc-lx/2)^2)
-	qx   = zeros(nx) # 😉
-	# create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
-	lines!(xc, C; color=:blue)
-	plt = lines!(xc, C; color=:red)
-	# time loop
-	@animate fig nvis for it = 1:nt
-	    # qx          .=
-		# C[2:end-1] .-=
-		if it % nvis == 0
-			plt[2] = C
-		end
-	end
-end
-  ╠═╡ =#
 
 # ╔═╡ 241cf2b3-dd9c-41d0-b69e-aef71d3ee162
 # ╠═╡ disabled = true
@@ -562,42 +532,6 @@ Pr[2:end-1] .-= ...
 
 👉 Your turn. Finish the implementation of acoustic wave propagation:
 """
-
-# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function acoustic_1D()
-    # physics
-    lx   = 20.0
-    ρ, β = 1.0, 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # preprocessing
-    dx   = lx / nx
-    xc   = LinRange(dx/2,lx-dx/2,nx)
-    # dt   = ...
-    nt   = 2nx
-    # array initialisation
-    # Pr   = @. exp(...)
-    # Vx   = zeros(...)
-    # create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
-    ylims!(ax, -0.6, 1.1)
-	lines!(xc, Pr; color=:blue)
-	plt = lines!(xc, Pr; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        # Vx          .-= ...
-        # Pr[2:end-1] .-= ...
-        if it % nvis == 0
-            plt[2] = Pr
-        end
-    end
-end
-  ╠═╡ =#
 
 # ╔═╡ 0ae59d37-ba0e-435a-b1e8-7ebd35eb98d3
 # ╠═╡ disabled = true
@@ -729,38 +663,6 @@ To make things more interesting, let's also flip the sign of the velocity when r
 👉 Your turn. Implement all three options for updating `C` and see what works best:
 """
 
-# ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function advection_1D()
-    # physics
-    lx   = 20.0
-    vx   = 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # derived numerics
-    dx   = lx / nx
-    xc   = LinRange(dx / 2, lx - dx / 2, nx)
-    dt   = dx / abs(vx)
-    nt   = nx
-    # array initialisation
-    # C    = @. exp(...)
-    # make visualisation
-    fig = Figure(size=(600, 200))
-    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
-    lines!(ax, xc, C; color=:blue)
-    plt = lines!(ax, xc, C; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        # C ...
-        # flip the sign of vx when it == nt ÷ 2
-        plt[2] = C
-    end
-end
-  ╠═╡ =#
-
 # ╔═╡ df956745-ec01-49b8-8e7b-0717ce60a159
 # ╠═╡ disabled = true
 #=╠═╡
@@ -810,7 +712,7 @@ c_t = \lambda c_{xx}~.
 The steady state is approached as ``t \rightarrow \infty`` when ``c_t \rightarrow 0``.
 
 !!! note 
-	The existence of such a steady state is not guaranteed for all PDEs, but it is the case for elliptic equations.
+	The existence of such a steady state is not guaranteed for all PDEs, but it is the case for many parabolic equations.
 
 We already know how to solve parabolic equations, so solving elliptic equations should be easy then, right?
 
@@ -821,7 +723,11 @@ nt   = 5000
 nvis = 50
 ```
 
-Observe how the solution approaches the steady state. However, the number of time steps required to converge to a solution is proportional to `nx^2`:
+Observe how the solution approaches the steady state. It looks a bit trivial though, as it approaches 0 everywhere:
+
+👉 Change the boundary conditions so that ``c = 1`` at ``x = \mathrm{lx}`` and run the simulation again.
+
+Now, the solution should converge to a linear profile. However, the number of time steps required to converge to a solution is proportional to `nx^2`:
 
 - For simulations in 1D and low resolutions in 2D, the quadratic scaling is acceptable;
 - For high-resolution simulations in 2D and 3D, the `nx^2` factor becomes prohibitively expensive!
@@ -990,6 +896,51 @@ macro animate(fig, nvis, loop)
 	end
 end;
 
+# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
+# split: solution
+diffusion_1d()
+
+# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
+# split: solution
+acoustic_1D()
+
+# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+# split: solution
+advection_1D()
+
+# ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    # C    = @. exp(...)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # C[...] -= ...
+        # flip the sign of vx when it == nt ÷ 2
+        # ...
+        plt[2] = C
+    end
+end
+  ╠═╡ =#
+
 # ╔═╡ 3e833c61-5f94-413e-ab57-5e1669da380e
 # split: solution
 function diffusion_1d()
@@ -1015,6 +966,7 @@ function diffusion_1d()
 	# time loop
 	@animate fig nvis for it = 1:nt
 	    qx          .= .-dc.*diff(C )./dx
+		# take a forward Euler time step
 		C[2:end-1] .-=   dt.*diff(qx)./dx
 		if it % nvis == 0
 			plt[2] = C
@@ -1022,46 +974,41 @@ function diffusion_1d()
 	end
 end
 
-# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
-# split: solution
-diffusion_1d()
-
-# ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
-# split: solution
-function acoustic_1D()
-    # physics
-    lx   = 20.0
-    ρ, β = 1.0, 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # preprocessing
-    dx   = lx / nx
-    xc   = LinRange(dx/2,lx-dx/2,nx)
-    dt   = dx / sqrt(1/ρ/β)
-    nt   = 2nx
-    # array initialisation
-    Pr   = @. exp(-(xc-lx/4)^2)
-    Vx   = zeros(nx-1)
-    # create plot
+# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function diffusion_1d()
+	# physics
+	lx   = 20.0
+	dc   = 1.0
+	# numerics
+	nx   = 200
+	nvis = 5
+	# preprocessing
+	dx   = lx / nx
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx) # 😉
+	# create plot
 	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
-    ylims!(ax, -0.6, 1.1)
-	lines!(xc, Pr; color=:blue)
-	plt = lines!(xc, Pr; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        Vx          .-= dt./ρ.*diff(Pr)./dx
-        Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
-        if it % nvis == 0
-            plt[2] = Pr
-        end
-    end
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
+	# time loop
+	@animate fig nvis for it = 1:nt
+	    # qx          .= ...
+		# take a forward Euler time step
+		# C[2:end-1] .-= ...
+		if it % nvis == 0
+			plt[2] = C
+		end
+	end
 end
-
-# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
-# split: solution
-acoustic_1D()
+  ╠═╡ =#
 
 # ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
 # split: solution
@@ -1093,9 +1040,78 @@ function advection_1D()
     end
 end
 
-# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    # dt   = ...
+    nt   = 2nx
+    # array initialisation
+    # Pr   = @. exp(...)
+    # Vx   = zeros(...)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        # Vx          .-= ...
+        # now use the freshly updated Vx
+        # Pr[2:end-1] .-= ...
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
+  ╠═╡ =#
+
+# ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
 # split: solution
-advection_1D()
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    dt   = dx / sqrt(1/ρ/β)
+    nt   = 2nx
+    # array initialisation
+    Pr   = @. exp(-(xc-lx/4)^2)
+    Vx   = zeros(nx-1)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        Vx          .-= dt./ρ.*diff(Pr)./dx
+        # now use the freshly updated Vx
+        Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2836,8 +2852,8 @@ version = "4.1.0+0"
 # ╟─fc1a07dc-8540-4b08-aec6-7fca73cf5b94
 # ╟─6f66c134-6060-4f78-9c16-51bf3b1311d1
 # ╟─4e464867-020a-4143-a027-2c968c30a960
-# ╠═2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
-# ╠═b1ca295f-a305-467b-a57d-7075b1aef5af
+# ╟─2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+# ╟─b1ca295f-a305-467b-a57d-7075b1aef5af
 # ╟─985a7cbd-185a-4129-9ef1-98463f991745
 # ╠═0411bd65-d3db-4b1f-a58e-a88cbccfacd7
 # ╟─129996e6-739c-4745-929e-583a15842fca
