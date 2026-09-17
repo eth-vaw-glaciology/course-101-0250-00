@@ -829,8 +829,10 @@ Here are a few online resources about Git:
 
 👉 If you don't have Git on your computer, [install it](https://git-scm.com/install/)!
 
-[Git demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-demo-cords-comp.mp4)
-[Git merge demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-merge-demo-cords-comp.mp4)
+The Git demo is available on video and as transcript:
+- [demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-demo-cords-comp.mp4)
+- [merge demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-merge-demo-cords-comp.mp4)
+- [transcript](https://github.com/mauro3/CORDS/blob/master/Workshop-Reproducible-Research/lectures/L02_git.md)
 
 - Git setup:
 
@@ -886,8 +888,8 @@ Set up authentication so that you can push and pull without repeatedly entering 
 
 - Create a repository on github.com: click the "+"
 - Local terminal: follow the setup instructions on the website for "…or push an existing repository from the command line"
-  - with the `git push` it will send it to github
-  - Enter your username here + the **token** generated before
+  - with the `git push` it will send it to github, which will prompt you to:
+  - enter your username here + the **token** generated before
 
 ## Work with other people: pull request (PR)
 
