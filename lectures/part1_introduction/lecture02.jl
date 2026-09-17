@@ -3,12 +3,12 @@
 
 #> [frontmatter]
 #> chapter = "1"
-#> section = "1"
-#> order = "1"
-#> title = "Introduction to Julia"
-#> date = "2026-09-15"
-#> layout = "layout.jlhtml"
+#> section = "2"
+#> order = "2"
+#> title = "PDEs and physical processes"
+#> date = "2026-09-22"
 #> tags = ["module1"]
+#> layout = "layout.jlhtml"
 #> 
 #>     [[frontmatter.author]]
 #>     name = "Ivan Utkin"
@@ -22,1146 +22,1096 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 5acc40dd-3463-4a28-b209-5c6dac4af0a7
-# ╠═╡ show_logs = false
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    #! format: off
+    return quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+    #! format: on
+end
+
+# ╔═╡ 646b24fe-f47b-4554-86fd-a4f8bf2099ff
 begin
 using PlutoTeachingTools
 using PlutoUI
-PlutoUI.TableOfContents()
+TableOfContents()
 end
 
-# ╔═╡ 3737ad5c-cc93-446f-884e-e196553d60cc
-# ╠═╡ show_logs = false
+# ╔═╡ 8c2afa19-cd8e-4f7c-a7d5-fe5a8313f684
 using CairoMakie
 
-# ╔═╡ c51edadb-418d-4d83-9aa5-ff4691250465
+# ╔═╡ ee6dedf2-b105-11f1-9ab4-b5e3b10de8fa
 md"""
-# Lecture 1
+# PDEs and physical processes
 
-Welcome to ETH's course 101-0250-00L on solving partial differential equations (PDEs) in parallel on graphics processing units (GPUs) with the Julia language.
+The goal of this lecture is to become familiar with:
 
-!!! info "Agenda"
-	💡 Welcome     \
-    📚 Why GPU computing \
-    💻 Intro to Julia    \
-    🚧 Exercises:
-    - Solving ordinary differential equations (ODEs)
-    - Visualisation
+- Classification of partial differential equations
+- Finite-difference discretisation
+- Explicit time integration
+- Git version control system
+
+A [**partial differential equation (PDE)**](https://en.wikipedia.org/wiki/Partial_differential_equation) relates an unknown function of several variables to its partial derivatives.
+
+## Notation
+
+Consider a function ``u(t, x, y, z)``. You can think of ``t`` as time, and ``x``, ``y``, and ``z`` as spatial coordinates. We will call such functions **fields**. If this function is scalar-valued, we call it a **scalar field**, and if it is vector-valued, a **vector field**. Vector fields are written in **bold**. For example, a velocity field is ``\boldsymbol{v}(t, x, y, z)``. We will denote the components of vector fields with superscripts, e.g. ``v^x``, ``v^y``, ``v^z`` or ``v^1``, ``v^2``, ``v^3``.
+
+A [partial derivative](https://en.wikipedia.org/wiki/Partial_derivative) is a derivative with respect to one of the variables, with the other variables held constant.
+
+We use two notations for partial derivatives:
+
+- ``u_t`` is equivalent to ``\partial u/\partial t``
+- ``u_{xx}`` is equivalent to ``\partial^2 u / \partial x^2``
+- ``u_{xy}`` is equivalent to ``\partial^2 u / \partial x \partial y``
+
+As with ordinary derivatives, the **order** of a partial derivative is the number of times differentiation is applied to a function. For example, ``u_x`` is a first derivative, ``u_{xx}`` and ``u_{xy}`` are second derivatives, ``u_{ttt}`` is a third derivative, and so on.
+
+It is possible to define differential operators using **vector calculus notation**, which lets us write equations in a form that is independent of the number of spatial dimensions.
 """
 
-# ╔═╡ dca5d64f-52cd-483b-ac36-e5206a6e5f55
+# ╔═╡ 0f85d4f3-8e27-478d-a7b3-c8a5f902adec
 md"""
-## The team
+Select the number of spatial dimensions to see what various differential operators look like in coordinate form: \
+``N`` = $(@bind N PlutoUI.Slider(1:3; default=3, show_value=true))
 
-| Name          | About me                                                                                    | Role in the course          |
-| :----------- | :------------------------------------------------------------------------------------------ | :-------------------------- |
-| Ivan Utkin   | Applied mathematician in the glaciology lab at ETH. Loves making things move on the screen. | Solving PDEs ...            |
-| Ludovic Räss | Computational scientist at the University of Lausanne. Makes GPUs go brrr.                  | ... on GPUs ...             |
-| Mauro Werder | Senior scientist in the glaciology lab at ETH. Knows how to `git push --force` safely.      | ... with best practices ... |
-| Samuel Omlin | Computational scientist at CSCS. Wields the arcane arts of code optimisation.               | ... fast ...                |
-| Ida Vetsch   | Teaching assistant. Knows how to solve the exercises better than the teachers do.           | ... and without worries.    |
+!!! warning "If the slider doesn't do anything"
+	If you're viewing this notebook on the website, interactive elements such as this slider won't work. Click the "**Edit** or **run** this notebook" button in the top-right corner to see how to run it interactively. ↗️
 """
 
-# ╔═╡ 59f175ad-f390-4e64-b319-7c4564a8a3e3
+# ╔═╡ 24c0921c-ac89-4987-82d5-c209f7f131d1
 md"""
-## Why solve PDEs on GPUs?
-
-Problems in modern computational science are often **multiscale** both in time and space. A few examples:
-
-- **Antarctic ice streams** carry a large share (as much as 90%) of the discharge from the ice sheet into the ocean, driving sea-level rise. Forecasting the evolution of ice sheets requires resolving scales from *~1 km* within the ice stream margin to *~5,000 km* at the continental scale.
-- **Plate tectonics** drives the evolution of continents and oceans on Earth. Resolving subduction processes at convergent boundaries between plates requires **<1 km** resolution, while plate tectonics itself spans the entire Earth on scales of **~10,000 km**.
-- **Earthquake cycle** happens in two phases: 1) slow stress buildup at the fault lines, taking **years**, and 2) rupture, happening when the stress reaches the critical strength of the rocks, on a timescale of **milliseconds**.
-- **Atmospheric and ocean circulation** are critical for understanding climate change. Long-term climate-change forecasts suffer from large uncertainty, with the hope that achieving **<1 km** spatial resolution will enable much more accurate predictions. Current global circulation models (GCMs) achieve "only" 5--10 km resolution 😢
+The [**gradient**](https://en.wikipedia.org/wiki/Gradient) of a scalar field is a vector field whose components are the partial derivatives with respect to the spatial coordinates:
 """
 
-# ╔═╡ 99c900e3-4548-4688-9311-3fee4a5c7d39
-aside(md"""
-!!! info "What are other ways?"
-	Deep learning is highly successful in uncovering patterns in vast amounts of observational data. Data-driven and physics-based methods often complement each other. Examples are physics-informed neural networks (PINNs), neural operators, and adjoint-based inversions of physical parameters for PDEs.
-""")
-
-# ╔═╡ 6fcd42a3-68c2-4a82-95de-09003c7fd4ff
-md"""
-These problems can be approached from different angles. In this course, we will focus on modelling physical processes based on solving partial differential equations (PDEs) numerically by discretising them in time and space. This discretisation must resolve the smallest important scales to capture relevant physical processes. Resolving these multiscale processes, often governed by complex and nonlinear PDEs, can require computational resources that make **massively parallel computing** essential for practical simulations.
-
-Growth in single-core performance started stagnating in the mid-2000s due to physical limitations. Moore's law is still relevant, but is now driven by the increase in the number of processing cores:
-
-![50 years of microprocessor trend data](https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/refs/heads/master/50yrs/50-years-processor-trend.png)
-
-Another important trend is the so-called **memory wall**, which refers to the growing gap between processor performance and memory-system performance, usually quantified as floating-point throughput (FLOP/s) and memory bandwidth (bytes/s), respectively. Both metrics grow exponentially over time, but the exponents are different:
-
-![Evolution of CPU and GPU performance and memory bandwidth](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_cpu_gpu_evo.png)
-
-This means that not the arithmetic complexity, but the amount and cost of memory accesses will ultimately determine the performance of more and more applications. Many scientific codes, especially PDE solvers, are memory bound.
-
-GPUs offer memory bandwidth that is vastly superior to that of CPUs:
-
-![GPU memory bandwidth comparison](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_perf_gpu.png)
-
-However, developing codes for GPUs requires rethinking the implementation and which methods we choose for solving PDEs. In this course, you will learn how to use parallel computing, in particular GPU computing, to develop scalable PDE solvers with applications in natural sciences.
-"""
-
-# ╔═╡ bee9ddbf-13d4-4a56-9561-a5331d0e2787
-md"""
-## Why Julia?
-
-Julia is a high-level and interactive language offering the performance of compiled languages such as C++ or Fortran. It provides the solution to the so-called **two-language problem**:
-
-![The two-language problem](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_two_lang.png)
-
-- One language to prototype - another language for production
-- Example from Ludovic's past: prototype in MATLAB, production in CUDA-C
-- One language for the users – one language for the implementation
-    - NumPy (Python/C)
-    - Machine learning: PyTorch, TensorFlow
-
-Code stats for PyTorch/TensorFlow and Flux (Julia ML package):
-
-![Code composition of Flux, PyTorch, and TensorFlow](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_flux-vs-tensorflow.png)
-
-As you can see, Julia packages can be developed in 100% Julia.
-
-Julia is interactive:
-
-- No need for third-party visualisation software;
-- Debugging and interactive REPL mode;
-- Efficient for development.
-
-Another "killer" feature of Julia is its rich [GPU ecosystem](https://juliagpu.org). You can run native Julia code on accelerators from many GPU vendors, including [NVIDIA](https://cuda.juliagpu.org/stable/), [AMD](https://amdgpu.juliagpu.org/stable/), [Apple](https://metal.juliagpu.org/stable/) and [Intel](https://juliagpu.github.io/oneAPI.jl/stable/). This enables **backend-agnostic** development, where the same program can execute on different architectures. You will learn how to write backend-agnostic programs in this course 😉
-
-In recent years, more and more state-of-the-art numerical codes have been developed in Julia. A few examples:
-
-- [JustRelax.jl](https://github.com/PTsolvers/JustRelax.jl) - geodynamics solvers for mantle convection and subduction;
-- [Oceananigans.jl](https://github.com/CliMA/Oceananigans.jl) - ocean circulation model;
-- [SpeedyWeather.jl](https://github.com/SpeedyWeather/SpeedyWeather.jl) - atmospheric circulation model;
-- [Trixi.jl](https://github.com/trixi-framework/Trixi.jl) - framework for solving conservation laws;
-- [ODINN.jl](https://github.com/ODINN-SciML/ODINN.jl) - global glacier evolution model;
-- [Ferrite.jl](https://github.com/Ferrite-FEM/Ferrite.jl) - finite element toolbox.
-
-Other nice things in the Julia ecosystem that we won't discuss further but are worth mentioning:
-
-1. State-of-the-art ODE solvers - [DifferentialEquations.jl](https://docs.sciml.ai/DiffEqDocs/stable/);
-2. Differentiability through automatic differentiation - [Enzyme.jl](https://enzyme.mit.edu/julia/stable/), [ForwardDiff.jl](https://juliadiff.org/ForwardDiff.jl/stable/);
-
-
-!!! warning "Are there downsides?"
-	Sure, as with any technology, there are a few:
-	- Time to first execution (TTFX) can be quite long;
-	- The language and package ecosystem evolve quickly and can be unstable.
-"""
-
-# ╔═╡ bd908b00-0c24-4145-8acb-3e3ab125e52f
-md"""
-### Time for some interactivity
-
-!!! info "What is your previous programming experience?"
-	1. Julia
-	2. MATLAB, Python, Octave, R, ...
-	3. C, Fortran, ...
-	4. Pascal, Java, C++, ...
-	5. Lisp, Haskell, ...
-	6. Assembler
-	7. Coq, Brainfuck, ...
-
-Here's a survey for you to fill in now: [https://forms.gle/fZekjf9B5HwFEtvRA](https://forms.gle/fZekjf9B5HwFEtvRA). It shouldn't take more than 3 min to complete.
-"""
-
-# ╔═╡ 35e22cb6-9d3d-11f1-b980-a15009e82513
-md"""
-# Introduction to Julia
-
-[Julia](https://julialang.org) is a modern, interactive, and high-performance programming language. It's a general-purpose language with a focus on technical computing.
-
-- Julia was first released in 2012
-- Reached version 1.0 in 2018
-- Current version 1.13
-- Thriving community, for instance there are currently around [14000 packages registered](https://juliahub.com/ui/Packages)
-
-Let's see what Julia looks like. Here's an example solving the Lorenz system of ODEs:
-"""
-
-# ╔═╡ 799c495f-25b7-4533-b2ae-a5ac5ba629a8
-let 
-function lorenz(x)
-    σ = 10
-    β = 8/3
-    ρ = 28
-    [σ*(x[2]-x[1]),
-     x[1]*(ρ-x[3]) - x[2],
-     x[1]*x[2] - β*x[3]]
-end
-    
-# integrate dx/dt = lorenz(t,x) numerically for 5000 steps
-dt = 0.01
-x₀ = [1.0, 0.0, 0.0]
-out = zeros(3, 5000)
-out[:,1] = x₀
-for i=2:size(out,2)
-    out[:,i] = out[:,i-1] + lorenz(out[:,i-1]) * dt
+# ╔═╡ a1960792-dfe9-426b-8dc5-7746b3190da4
+let
+terms = ["u_x", "u_y", "u_z"]
+str = string("```math\n\\mathbf{grad}\\, u = [", join(terms[1:N], "\\quad "), "]^\\mathrm{T}~.\n```")
+Markdown.parse(str)
 end
 
-fig = Figure(size=(550, 500))
-ax  = Axis3(fig[1, 1], title="Lorenz attractor", aspect=:equal, azimuth=2π/3)
-lines!(ax, out[1,:], out[2,:], out[3,:])
-fig
-end
-
-# ╔═╡ dfd2ac20-04b9-40a5-9ba2-266791449ebb
+# ╔═╡ 41ad8ec5-0fb2-459c-93b4-121331a4c2f2
 md"""
-Yes, this takes a bit of time... Julia is Just-Ahead-of-Time compiled. I.e. Julia is compiling.
+Where it is nonzero, ``\mathbf{grad}\,u`` points in the direction of steepest increase of ``u``, and its magnitude corresponds to the rate of this increase.
+
+The [**divergence**](https://en.wikipedia.org/wiki/Divergence) of a vector field is a scalar field obtained by summing the partial derivatives of each vector component with respect to its corresponding spatial coordinate:
 """
 
-# ╔═╡ 8fe811e0-f6cc-48a8-9d49-8e7213a922dc
+# ╔═╡ 12795455-66e2-436a-b993-46957783cc0f
+let
+terms = ["v^1_x", "v^2_y", "v^3_z"]
+str = string("```math\n\\mathrm{div}\\, \\boldsymbol{v} =", join(terms[1:N], " + "), "~.\n```")
+Markdown.parse(str)
+end
+
+# ╔═╡ d2560b51-155e-411e-a414-093f9694273a
 md"""
-## Let's get our hands dirty!
+Physically, the divergence indicates the rate at which the vector field alters an infinitesimally small volume located at the point. Positive divergence means that the point is a source, negative divergence indicates a sink, and zero divergence means that the volume doesn't change. Divergence-free velocity fields thus describe the motion of an incompressible fluid such as water.
 
-We will now look at
+The [**Laplacian**](https://en.wikipedia.org/wiki/Laplace_operator) is a second-order differential operator. Applied to a scalar field, it is the divergence of the gradient:
 
-- Variables and types
-- Control flow
-- Functions
-- Modules and packages
-
-!!! tip
-    Make sure you have working installation of Julia and Pluto. Follow the [software installation](https://pde-on-gpu.vaw.ethz.ch/previews/PR57/installation/) instructions.
-
-The Julia documentation is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
-
-For tutorials, see [https://julialang.org/learning/](https://julialang.org/learning/).
-
-Furthermore, documentation can be accessed with `?xyz`
-
-```julia-repl
-> ?cos
+```math
+\mathrm{lap}\, u = \mathrm{div}(\mathbf{grad}\,u)~.
 ```
 
-!!! tip
-	To get started, click "**Edit** or **run** this notebook" in the top-right corner of this web page, then find the "**Copy the notebook URL**" section, copy the link to the notebook, and paste it into the "Open the notebook" field on your local Pluto main page.
-
-## Variables, assignments, and types
-
-Refer to the [documentation](https://docs.julialang.org/en/v1/manual/variables/) for details.
-
-Create a variable by assigning a value to it:
+👉 Here's a little exercise: write the Laplacian in terms of partial derivatives. Use pen and paper 😉.
 """
 
-# ╔═╡ 1b0e888a-b2c7-40db-9f3b-25e2da7159e5
-hello = "Hello"
-
-# ╔═╡ 2573876f-b9e8-49df-a4fb-b48d7b78ea96
-md"""
-Julia supports string concatenation using the multiplication symbol '`*`':
-"""
-
-# ╔═╡ 162a5f3c-5137-4161-a1aa-5b011cd964bd
-hello_world = hello * ", world!"
-
-# ╔═╡ 3f376974-a7a0-44e5-bb26-d195f8dec9b8
-md"""
-!!! info "Pluto reactivity"
-    Unlike Jupyter notebooks, Pluto.jl is **reactive**. Try changing the value of the variable `hello` and see what happens to `hello_world`.
-"""
-
-# ╔═╡ 494c2217-f969-42b3-a7c4-0fcfbfe8df1f
-md"""
-### Naming conventions
-
-- variables are (usually) lowercase; words can be separated by `_`
-- function names are lowercase
-- modules, packages and types are in CamelCase
-
-### Unicode
-
-In Julia, Unicode names are allowed. See [the documentation](https://docs.julialang.org/en/v1/manual/variables/) for details.
-"""
-
-# ╔═╡ 381b4692-4571-448c-a9fc-97590837f958
-δ = 0.00001 # very small number
-
-# ╔═╡ 89ec7590-249a-4845-abd8-b4e600e1e2d6
-안녕하세요 = "Hello"
-
-# ╔═╡ f3633fb8-fa4b-4cf1-9832-bd959f3e6530
-md"""
-In the Julia REPL (also in Pluto and VS Code), you can type many Unicode math symbols by typing the backslashed LaTeX symbol name followed by Tab. For example, the variable name `δ` can be entered by typing `\delta + tab`, or even `α̂⁽²⁾` by `\alpha + tab + \hat + tab + \^(2) + tab`.
-
-If you find a symbol that you don't know how to type, just type `?` in a Pluto cell or the REPL and then paste the symbol:
-"""
-
-# ╔═╡ ccc03075-f0d8-499f-8fe6-8a404c5fd5f1
-# try typing ? and paste δ
-
-# ╔═╡ c531c2b1-e127-4f36-9801-f01d17400519
-md"""
-### Basic data types
-
-Built-in data types in Julia include, but are not limited to:
-
-- numbers
-- strings
-- rationals
-- tuples
-- arrays
-- dictionaries
-"""
-
-# ╔═╡ 350ac9e0-197e-4a79-b64c-540a27f3478c
-i = 1 # try to type Int32(1) instead
-
-# ╔═╡ d8ed3500-2f9c-42d9-9c32-d3b5ea703c2c
-md"""
-Variable `i` is a $(sizeof(i)*8)-bit integer.
-
-Every value in Julia has a type:
-"""
-
-# ╔═╡ 4b8eb13e-e908-401c-a706-97eedc3d3d24
-typeof(1.5), typeof(1//2)
-
-# ╔═╡ b4a736a7-494e-499c-93d5-0f9f1ac6daf5
-md"""
-Declare a tuple in Julia using parentheses. Tuples are **immutable** and can store any data types:
-"""
-
-# ╔═╡ c606fe99-cc0e-4f5d-a59f-60dc817d3708
-(1, 3.5)
-
-# ╔═╡ 72a0c389-124d-439d-856c-0aa2cbb8e720
-md"""
-Arrays are declared with square brackets, and can only store values of the same type:
-"""
-
-# ╔═╡ 6c3af128-d4ac-48b1-945e-a87719747776
-[1, 2, 3] # array of eltype Int
-
-# ╔═╡ 767a51ef-e9ea-4a70-ba34-3c78be24c7d6
-md"""
-Try to create an array with two elements of different types. Explain why it works despite what was said above.
-"""
-
-# ╔═╡ ace7d4ca-c087-48ec-90b2-4e4e9fe7f2a4
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ f1ce7632-6217-492e-bd45-7cd5beddbbf6
-# split: solution
-[1, "hi"]
-
-# ╔═╡ 6eefde0c-4b53-40bc-acdf-f8b6d5b53eac
-md"""
-!!! hint
-	Use `eltype` to determine the element type.
-"""
-
-# ╔═╡ 348a9646-8721-492e-916d-4cff6caa147c
-md"""
-Dictionaries are collections that allow fast lookup of a value by key:
-"""
-
-# ╔═╡ a22d8be6-5102-425d-9bcb-ffa7ef96a71f
-Dict("a" => 1, "b" => cos)
-
-# ╔═╡ 369c7afa-b332-4e78-8db3-490d00ff705e
-md"""
-## Array exercises
-
-We will use arrays extensively in this course.
-
-All array types in Julia are subtypes of `AbstractArray`. There are many built-in `AbstractArray` types in Julia, including regular arrays and ranges, and even more array types available through external packages: GPU arrays, static arrays, etc.
-
-Assign two integer vectors to variables `a` and `b`, and then concatenate them using '`;`':
-"""
-
-# ╔═╡ f2c73519-bcd4-466c-ab51-756d10b2ce6f
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-begin
-	# enter your code here
-end
-  ╠═╡ =#
-
-# ╔═╡ c8684934-f6be-450f-ba76-c57e639ccc5d
-# split: solution
-begin
-	a = [1, 2]
-	b = [3, 4]
-	[a; b]
+# ╔═╡ 85e2f8fa-f284-4e6e-ae8c-1cd203643f64
+let
+terms = ["u_{xx}", "u_{yy}", "u_{zz}"]
+str = string("```math\n\\mathrm{lap}\\, u =", join(terms[1:N], " + "), "~.\n```")
+answer_box(Markdown.parse(str))
 end
 
-# ╔═╡ fb3634f7-9721-467d-8823-15bf9aad3f4c
+# ╔═╡ 3704f55f-96e1-415a-902d-159314818f12
 md"""
-!!! info "Code blocks in Pluto"
-	By default, each code cell must contain only one expression. This limitation comes from reactivity. To use several expressions in a single cell, wrap them in a `begin ... end` code block.
+!!! note "Actually..."
+	These component formulas apply in a [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). For a general curvilinear coordinate system, the [metric tensor](https://en.wikipedia.org/wiki/Metric_tensor) needs to be taken into account. In this course, we will only work with Cartesian coordinates.
 
-Add a few new elements, e.g., `[6, 7]`, to the end of `b`:
+It is convenient to express gradient and divergence using the **del** operator ``\boldsymbol{\nabla}``:
+
+```math
+\begin{aligned}
+\mathbf{grad}\, u &\equiv \boldsymbol{\nabla} u~, \\
+\mathrm{div}\, \boldsymbol{v} &\equiv \boldsymbol{\nabla}\cdot\boldsymbol{v}~, \\
+\mathrm{lap}\, u &\equiv \boldsymbol{\nabla}\cdot\boldsymbol{\nabla} u \equiv \nabla^2 u~.
+\end{aligned}
+```
 """
 
-# ╔═╡ 0a494b8c-1454-49ac-b68f-1630014b80d7
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 6b379e97-a85a-46b1-90aa-ed4f1e96c603
-# split: solution
-push!(b, 6, 7)
-
-# ╔═╡ ad146aa3-38cf-4a82-aa60-3e9cf6f60d59
+# ╔═╡ 316505fa-14d6-4f22-876c-e6e1dabbe4d9
 md"""
-!!! hint
-	Look up the documentation for `push!`
+## Classification of PDEs
+
+There are several ways to classify PDEs. We will look at a few of them.
+
+The **order** of a PDE is the highest order among its partial derivatives. In this course, we will mostly look at first-order and second-order PDEs.
+
+Besides order, PDEs can be classified as **linear** or **nonlinear**. Linear PDEs are linear **with respect to the unknown function and its derivatives**.
+
+👉 Here are a few PDEs. Select the order of each equation and indicate whether it is linear:
+
+|Equation                                |Order                          |Is it linear?             |
+|---------------------------------------:|-------------------------------|:-------------------------|
+|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox())|
+|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
+|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2))|$(@bind __l_3 CheckBox())|
+|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2))|$(@bind __l_4 CheckBox())|
 """
 
-# ╔═╡ 81007648-c981-4ba7-a2e4-dcd5b9cde67e
-md"""
-Ranges in Julia are declared using the colon symbol '`:`'. Concatenate a range `1:10` with a vector `[11, 12]`:
-"""
+# ╔═╡ fc1a07dc-8540-4b08-aec6-7fca73cf5b94
+let
+correct_orders = [1, 1, 2, 2]
+correct_linear = [true, false, true, false]
 
-# ╔═╡ a0dbd78a-6c3f-4736-8cf2-f392daba80a3
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-range_and_vec = missing
-  ╠═╡ =#
+orders = [__o_1, __o_2, __o_3, __o_4]
+linear = [__l_1, __l_2, __l_3, __l_4]
 
-# ╔═╡ c6c905c5-3a2b-4614-b198-381a74c9373e
-# split: solution
-range_and_vec = [1:10; [11, 12]]
-
-# ╔═╡ 7acdf6c0-c8e6-4ac0-9f25-1d7683b08c8e
-if ismissing(range_and_vec)
-	still_missing()
-elseif range_and_vec == [1:10, [11, 12]]
-	almost(md"Whoops, you've put the range and a vector together instead of concantenating.")
-elseif range_and_vec == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-	correct()
+if orders == correct_orders
+	if linear == correct_linear
+		correct()
+	else
+		almost(md"Almost there! Check your answers about linearity.")
+	end
+elseif linear == correct_linear
+	almost(md"Almost there! Check if the orders are correct.")
 else
 	keep_working()
 end
+end
 
-# ╔═╡ 62edf55a-aba7-42ed-8aa8-8fc9a7b084db
+# ╔═╡ 6f66c134-6060-4f78-9c16-51bf3b1311d1
 md"""
-Make a random array `c` of size `(3, 3)`. Look up `?rand`:
+## Second-order PDEs
+
+For second-order PDEs, another useful classification exists. By analogy with the classification of [conic sections](https://en.wikipedia.org/wiki/Conic_section), it is convenient to classify second-order PDEs into **hyperbolic**, **parabolic** and **elliptic** types:
+
+|     Type     |         Equation         |Physical process|
+|:-------------|:------------------------:|---------------:|
+|**Parabolic** | ``u_t = λ\nabla^2 u``    |       Diffusion|
+|**Hyperbolic**|``u_{tt} = c^2\nabla^2 u``|Wave propagation|
+|**Elliptic**  |  ``\nabla^2 u = 0``      |Steady diffusion|
+
+This classification is important because solutions to different kinds of PDEs show different behaviours, and obtaining these solutions numerically requires different approaches.
 """
 
-# ╔═╡ ecb7b160-b745-4ca6-8705-c4246b66bbc5
+# ╔═╡ 4e464867-020a-4143-a027-2c968c30a960
+md"""
+## Initial and boundary conditions
+
+Just knowing the equation is not enough to solve it. If the equation is first order in time, we also need [**initial conditions**](https://en.wikipedia.org/wiki/Initial_value_problem) (ICs), i.e. the distribution of the unknown at the initial time ``t=0``. If the equation is second order in time, in addition to the initial distribution of ``u`` we need the initial distribution of ``u_t`` at ``t=0``. For higher-order derivatives, more initial conditions are needed.
+
+If the equation contains spatial derivatives, we need to specify [**boundary conditions**](https://en.wikipedia.org/wiki/Boundary_value_problem) (BCs) that constrain the unknown quantity ``u`` or its derivatives at the boundary of the domain. There are many possibilities for specifying the BCs. In this course, we will only consider two types of BCs: [**Dirichlet**](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition) and [**Neumann**](https://en.wikipedia.org/wiki/Neumann_boundary_condition) boundary conditions.
+
+A **Dirichlet** boundary condition prescribes the value of the unknown quantity ``u`` on the boundary.
+
+**Neumann** boundary conditions prescribe the derivative of ``u`` in the direction normal to the boundary. In 1D, this amounts to prescribing ``u_x`` at the ends of the domain, with a sign change at the left endpoint when using the outward normal.
+"""
+
+# ╔═╡ 2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+md"""
+## Why do we need numerical methods?
+
+Once we have specified a PDE and its initial and boundary conditions, we want to solve it. Ideally, we would find an exact solution. Several methods can help us do this:
+
+1. [**Separation of variables**](https://en.wikipedia.org/wiki/Separable_partial_differential_equation) (Fourier's method) can reduce a PDE to ordinary differential equations (ODEs), one for each independent variable, when the problem admits a separable form.
+2. [**Method of characteristics**](https://en.wikipedia.org/wiki/Method_of_characteristics) is often used for first-order PDEs. It identifies characteristic curves along which the PDE can be reduced to ODEs.
+3. [**Self-similar solutions**](https://en.wikipedia.org/wiki/Self-similar_solution) can reduce PDEs to ODEs by expressing the solution in terms of a single similarity variable.
+
+Exact solutions help us understand the equations and the physical processes they describe. However, for many problems of practical importance, such solutions are unavailable or very difficult to obtain.
+
+For example, many analytical techniques rely on simple domain geometries. If we want to simulate the Antarctic ice sheet in 3D using realistic bed topography, an exact analytical solution is generally unavailable. We therefore turn to **numerical methods**. These compute approximate solutions to PDEs while allowing much more flexibility in the domain geometry, coefficients, and initial and boundary conditions, which can be specified using observational data.
+"""
+
+# ╔═╡ b1ca295f-a305-467b-a57d-7075b1aef5af
+let
+fold = Foldable("Words of caution", md"""
+!!! warning
+	$(blockquote(
+    "With great power comes great responsibility.",
+    md"-- Uncle Ben",
+	))
+
+	Numerical methods **are approximate by design**, so a numerical solution can deviate significantly from the exact solution to the PDE. Theoretical results provide error bounds for some numerical methods and classes of problems, but we must still check that the approximation error is acceptable for each problem we solve.
+
+	When the exact solution to our problem is unknown (otherwise we wouldn't need the numerical solution), we must rely on indirect checks to help us assess the numerical method and its results:
+
+	- [**Mesh convergence studies**](https://www.grc.nasa.gov/www/wind/valid/tutorial/spatconv.html): check that reducing the grid spacing produces progressively smaller changes in the solution.
+	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes in the total mass, momentum, and energy of the system must be balanced by fluxes of these quantities through the domain boundaries and by any external forces or energy inputs. [**The second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) states that the total entropy of an isolated system cannot decrease and must increase during irreversible processes.
+	- Method of manufactured solutions: choose a synthetic solution, substitute it into the PDE, and derive a source term and initial and boundary conditions consistent with that solution. Then check whether the numerical solver converges to the manufactured solution at the expected rate.
+	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exhibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
+	- **Theoretical proofs of convergence**: select a numerical scheme whose convergence conditions have been established for the problem under consideration, then verify that your implementation satisfies those conditions. For example, for linear problems, the [**Lax–Richtmyer theorem**](https://en.wikipedia.org/wiki/Lax_equivalence_theorem) links convergence to the consistency and stability of the finite-difference scheme.
+
+	Complex solutions can be difficult to interpret: an observed pattern may reflect a physical mechanism or a numerical artefact. In such cases, take a step back, simplify the setup, and systematically investigate the regimes and characteristic patterns produced by your code. Make sure you understand their physical significance.
+""")
+
+md"""
+$(fold)
+
+With these cautions in mind, numerical simulations can still be fun, which is why we will proceed with the rest of the course! 🙃
+"""
+end
+
+# ╔═╡ 985a7cbd-185a-4129-9ef1-98463f991745
+md"""
+## Finite-difference approximation
+
+In the [**finite-difference method**](https://en.wikipedia.org/wiki/Finite_difference_method), we approximate derivatives by differences between values at grid points. These approximations can be derived using truncated [Taylor series](https://en.wikipedia.org/wiki/Taylor_series).
+
+For example, we can approximate the first derivative ``c_x`` at the point ``x`` using the **central difference** rule:
+
+```math
+c_x(t, x) \approx \frac{c(t, x+dx/2) - c(t, x-dx/2)}{dx}~,
+```
+
+where ``dx`` is a *finite* parameter which controls the accuracy of the approximation. For a sufficiently smooth function, as ``dx \rightarrow 0``, the approximation converges to the true value of the derivative.
+
+To compute differences between neighbouring values in Julia, we can use the built-in `diff` function:
+"""
+
+# ╔═╡ 0411bd65-d3db-4b1f-a58e-a88cbccfacd7
+diff([1, 2, 2, 6, 3])
+
+# ╔═╡ 129996e6-739c-4745-929e-583a15842fca
+md"""
+For a vector `C`, calling `diff(C)` is equivalent to computing `C[2:end] - C[1:end-1]`. Divide by `dx` to approximate the derivative at the midpoints between neighbouring grid points.
+
+!!! hint
+	The size of the array returned by `diff` is not the same as the size of the inpit array. Check the difference using the `size` function.
+
+## Explicit Euler time integration
+
+The [Euler method](https://en.wikipedia.org/wiki/Euler_method) is a simple first-order method for integrating initial value problems in time. It consists of approximating the time derivative using the **forward finite difference rule**:
+
+```math
+u_t(t, x) \approx \frac{u(t + dt, x) - u(t, x)}{dt}~,
+```
+
+where ``dt`` is the **time step**. Assume that our PDE has the following form:
+
+```math
+u_t = R(t, x, u, u_x, u_{xx}, ...)~,
+```
+
+where ``R`` denotes the right-hand side, which does not contain time derivatives of ``u``. If we want to numerically integrate this equation from ``t=0`` to ``t=T``, we can discretise the time interval `[0, T]` by selecting `nt+1` equally spaced points ``t^0 < t^1 < \dots < t^\mathrm{nt}`` such that ``t^0 = 0`` and ``t^\mathrm{nt} = T``. We denote the distributions of ``u`` and ``R`` at ``t=t^n`` as ``u^n`` and ``R^n``, respectively. The initial condition specifies ``u^0``. Then, according to the Euler method, we can compute [``u^1``, ``u^2``, ... ] by evaluating the right-hand side at the current time step:
+
+```math
+u^{n+1} = u^n + d t\, R^n
+```
+
+"""
+
+# ╔═╡ 3ed7e2de-7a0f-46bb-95d7-e6b6f4149585
+md"""
+## Parabolic equations — diffusion
+
+The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was presented in Fourier’s 1822 treatise in the form of the [heat equation](https://en.wikipedia.org/wiki/Heat_equation) to understand heat distribution in various materials.
+
+Fick formulated laws of diffusion in 1855 to describe the transport of dissolved substances ([Fick's laws](https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion)).
+
+For a positive diffusion coefficient ``λ``, the diffusion equation is a second-order parabolic PDE:
+
+```math
+c_t = λ c_{xx}~.
+```
+
+The quantity ``c`` could represent the temperature of a material or the concentration of a substance in a fluid. The parameter ``\lambda`` is the **diffusion coefficient** (thermal diffusivity when ``c`` is temperature): higher values of ``\lambda`` result in faster diffusion.
+
+Alternatively, we can write this equation as a conservation law for ``c``:
+
+```math
+c_t = -q_x~,
+```
+
+where ``q`` is the diffusive flux:
+
+```math
+q = -\lambda c_x~.
+```
+
+!!! note
+	These two forms are equivalent only when the diffusion coefficient ``\lambda`` is not a function of ``x`` or ``c``. If this is not the case, the conservation form should be used.
+
+In the following, we will approximate the spatial derivatives in the diffusion equation using [finite differences](https://en.wikipedia.org/wiki/Finite_difference), and integrate this discretised equation in time using the explicit [Euler method](https://en.wikipedia.org/wiki/Euler_method).
+"""
+
+# ╔═╡ 1230392d-eff2-4c96-9e5c-c95f790a5004
+md"""
+### Numerical solver
+
+We are ready to solve the diffusion equation in 1D. In this section, we will discuss the ingredients of a solver, and then ask you to write it yourself.
+
+We discretise the computational domain `[0, lx]` by dividing it into `nx` non-overlapping intervals of length `lx/nx` each. We will call these intervals **grid cells**.
+
+First, we introduce the physical parameters that are relevant to this problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
+
+```julia
+# physics
+lx   = 20.0
+dc   = 1.0
+```
+
+Then we declare the numerical parameters: the number of grid cells `nx` and the number of time steps between visualisation updates `nvis`:
+
+```julia
+# numerics
+nx   = 200
+nvis = 5
+```
+
+We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centres `xc`:
+
+```julia
+# preprocessing
+dx   = lx/nx
+xc   = LinRange(dx/2,lx-dx/2,nx)
+```
+
+Then we compute the time step and set the number of time steps in the simulation:
+
+```julia
+dt   = dx^2 / dc / 2
+nt   = 500
+```
+
+!!! note "🤔 Why is the time step computed like this?"
+	The reason for this is numerical stability. The explicit Euler scheme cannot be used with arbitrarily large time steps. If `dt` is larger than some threshold, the small errors in the numerical solution grow unboundedly, which looks like a "sawtooth" pattern. The detailed derivation is outside the scope of this course, unfortunately. If you're interested, check the literature in the [Extras](https://pde-on-gpu.vaw.ethz.ch/cheatsheets/). In short, this stability bound can be derived using the [von Neumann stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis) procedure.
+
+	If interested, you can also ask an LLM to explain the time step selection to you for this and subsequent problems. Remember that LLMs [hallucinate](https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)) sometimes, so never trust their output blindly!
+
+In the `# array initialisation` section, we initialise two arrays: `C` for the concentration field and `qx` for the diffusive flux in the x direction:
+
+```julia
+# array initialisation
+C    = @. exp(-(xc-lx/2)^2)
+qx   = zeros(nx) # 😉
+```
+
+Then we create objects needed to visualise the results with CairoMakie.jl:
+
+```julia
+# create plot
+fig = Figure(size=(600, 200))
+ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+lines!(xc, C; color=:blue)
+plt = lines!(xc, C; color=:red)
+```
+
+Note that we plot `C` twice: the first line plot will stay unchanged and will show the initial condition, while the second plot will be updated every `nvis` steps.
+
+Finally, implement the time loop:
+
+```julia
+# time loop
+@animate fig nvis for it = 1:nt
+	# qx          .=
+	# C[2:end-1] .-=
+	if it % nvis == 0
+		plt[2] = C
+	end
+end
+```
+
+!!! note "Animating the plots"
+	[Animating plots](https://docs.makie.org/dev/explanations/animation) with Makie.jl in Pluto notebooks is complicated because the result of running the cell is only displayed when the computation is finished. We implemented a macro `@animate` that will create a video stream of the animated result. This macro requires a figure, an update frequency, and a for loop over time steps. This macro is based on [this trick](https://discourse.julialang.org/t/real-time-animations-with-makie-in-pluto/63684) from the community.
+
+👉 Your turn. Implement your first diffusion solver:
+"""
+
+# ╔═╡ 241cf2b3-dd9c-41d0-b69e-aef71d3ee162
 # ╠═╡ disabled = true
 #=╠═╡
 # split: statement
-# enter your code here
+# Uncomment this when implemented the solver
+# diffusion_1d()
   ╠═╡ =#
 
-# ╔═╡ 7965f354-3d48-43ec-a7eb-3d555448c6b2
-# split: solution
-c = rand(3, 3)
-
-# ╔═╡ fbba14e8-6f53-4395-b9be-fc4070e24f01
-md"""
-Access elements `[1, 2]` and `[2, 1]` of matrix `c`:
-"""
-
-# ╔═╡ 003af53e-e17f-4f32-a62e-636d007486f5
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 7b6c77a0-5d24-467b-93b8-2aa9d5fb2a40
-# split: solution
-c[1, 2], c[2, 1]
-
-# ╔═╡ f47e0a2b-d01f-4c72-8108-6db62120a8e3
-md"""
-### Linear vs Cartesian indexing
-
-Access the first element of `c` using a single linear index:
-"""
-
-# ╔═╡ 4ac5a5ff-8cc0-4b4c-933a-ab47a6145e29
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# linear index
-  ╠═╡ =#
-
-# ╔═╡ 7743f6ed-7244-4013-97bd-535a9794cb54
-# split: solution
-c[1]
-
-# ╔═╡ 6c532a20-d672-4b83-a946-0dc0e1f9c2b3
-md"""
-And a Cartesian index:
-"""
-
-# ╔═╡ e4b2f145-d695-4dc9-b601-b0d2bc39aa0b
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# Cartesian index
-  ╠═╡ =#
-
-# ╔═╡ aa37849b-31aa-4a9f-aab7-e03784b93ce0
-# split: solution
-c[1, 1]
-
-# ╔═╡ 72716ed9-50b1-48c7-b0fd-d687d063f7c5
-md"""
-By looking at linear indices of `c`, answer the question:
-
-!!! question
-	Are arrays in Julia row-major or column-major?
-"""
-
-# ╔═╡ 98cd2072-73cf-46ca-9cfe-63fc5f9a27bf
-md"""
-Access the last element of `c` (look up `?end`) using either linear or Cartesian indices:
-"""
-
-# ╔═╡ b8a6b23d-2ed7-4fad-810a-ab49be68e37d
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 43cdee13-5894-4ce6-aa6b-2d844fda5996
-# split: solution
-c[end, end]
-
-# ╔═╡ 023e5441-79ce-401f-b3de-435582ca2cb2
-md"""
-### Indexing by ranges
-
-Access the last **row** of `c`:
-"""
-
-# ╔═╡ 9622c8ce-e36b-4685-9345-cb06133e450c
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 06ec9f2f-cade-4020-a583-baff6086e886
-# split: solution
-c[end, 1:end]
-
-# ╔═╡ 46b99f8f-a08b-4c15-98b8-3c807a389a53
+# ╔═╡ 8534ddd3-6097-4a53-a403-429397b0df61
 md"""
 !!! hint
-	Use `1:end`
-"""
+	We actually deceived you before! 😈 The size of the array `qx` cannot be `nx`. To figure out what the actual size is, check how the sizes of arrays `C` and `diff(C)` are related.
 
-# ╔═╡ 94cc402e-aab7-4806-a1a5-c665daa2cd50
-md"""
-Access a 2 × 2 submatrix:
-"""
-
-# ╔═╡ 916b8269-b407-4c5f-97d1-017bb471829e
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 11943ba0-1328-4f4c-b409-24c391d6ae83
-# split: solution
-c[1:2, 1:2]
-
-# ╔═╡ db4227eb-0395-4ed0-84ed-7641ce72d776
-md"""
-### Variable bindings and views
-
-Look at the following code snippet:
-"""
-
-# ╔═╡ 61eb9beb-baa9-4673-a3f5-f6b865851d73
-begin
-	d = [1 4; 3 4] # this is another way to define a matrix
-	e = d
-	d[1, 2] = 99
-	@assert e[1, 2] == d[1, 2]
-end
-
-# ╔═╡ 62ba4b85-77ee-4fe6-b33a-9fd010755456
-md"""
-What do you make of it? Type your answer here:
-"""
-
-# ╔═╡ 33852296-6a22-412a-ad5d-fd0d37934766
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-md"""
-
-"""
-  ╠═╡ =#
-
-# ╔═╡ c566aa5b-d3a6-4804-a67c-a875974f16a0
-# split: solution
-md"""
-Both variables `d` and `e` refer to the same memory address. Thus, updates to the array via one variable will show up in the other.
-"""
-
-# ╔═╡ abc9a86c-9b4c-4764-9968-2a815e570e6a
-md"""
-An assignment **binds** the same array to both variables:
-"""
-
-# ╔═╡ 6cdaddba-081e-4a21-b506-373edd3e2f58
-begin
-	p = d
-	p[1] = 8
-	@assert d[1] == 8 # f and d are the same thing!
-	@assert p === d  # note the triple `=`
-end
-
-# ╔═╡ a612e8af-e946-4766-b199-5902ba428d42
-md"""
-In Julia, indexing with ranges will create a new array with copies of the original's entries. Consider this:
-"""
-
-# ╔═╡ f5fd39be-e532-4d2c-8b05-19cad9196eed
-begin
-	q = c[1:2, 1:2]
-	q[1] = 99
-	@assert q[1] != c[1]
-end
-
-# ╔═╡ 6a3689f7-bf39-4030-a11e-53fc46670cce
-md"""
-But the memory footprint will be large if we work with large arrays and take subarrays of them.
-
-Views to the rescue:
-"""
-
-# ╔═╡ 361cdc34-6ae0-4aea-b80b-abeda7b06a47
-begin
-	v = @view c[1:3, 1:2]
-	v[1] = 99
-end
-
-# ╔═╡ 6baeee64-29e3-45df-ae1d-acc29fba1c73
-md"""
-Check whether the change through `v` is reflected in `c`:
-"""
-
-# ╔═╡ 5a4f7187-69ab-4f50-bc3d-9758ecbf81c4
-@assert c[1] == 99
-
-# ╔═╡ 571e03ee-be64-4401-89f6-91a2ad7cedfc
-md"""
-## More about types
-
-All values have types, as we saw above. An array’s type includes its element type.
+Well done! You can experiment with the solver, changing physical and numerical parameters to see how the solution will change.
 
 !!! tip
-	Arrays which have concrete element types are more performant!
+	Check what the numerical instability looks like: multiply the time step `dt` in the definition by a small factor, say `1.1`, and see the 💥!
 
-The type can be specified at creation:
+### What about BCs?
+
+You probably noticed that we never explicitly implemented any boundary conditions, despite the claim that the BCs are needed for a well-posed problem. Actually, there is a BC implemented in the solver, but you need to look carefully at the code to find it.
+
+👉 Figure out what boundary condition is imposed at the left and right domain boundaries. Change its value to something else and see what happens. Then think about how to implement a different type of boundary condition (Dirichlet or Neumann).
+
+Now let's move to a different kind of second-order PDE.
 """
 
-# ╔═╡ 0c3f7078-d31a-425e-999a-47ff809a1eba
-String["one", "two"]
-
-# ╔═╡ 7ab513d2-6039-4544-9e28-e4032fd45d61
+# ╔═╡ e9c4fcc1-09f8-4a00-8368-2d5b67e11e5f
 md"""
-Create an empty array of `Int`, then push `1`, `1.0` and `1.5` to it. What happens?
+## Hyperbolic equations — wave propagation
+
+A prototypical hyperbolic PDE is the [wave equation](https://en.wikipedia.org/wiki/Wave_equation), which describes the propagation of waves in many natural processes, such as sound waves, waves on the water surface, seismic waves, or electromagnetic waves.
+
+The wave equation in 1D reads:
+
+```math
+p_{tt} = c^2 p_{xx}~,
+```
+
+where
+
+- ``p`` is pressure (or displacement, or another quantity...)
+- ``c`` is a positive constant representing the wave speed (for example, the speed of sound)
+
+Alternatively, the wave equation can be written as a first-order system of PDEs:
+
+```math
+\begin{aligned}
+v_t &= -\frac{1}{\rho}p_x~, \\[0.5em]
+p_t &= -\frac{1}{\beta}v_x~.
+\end{aligned}
+```
+
+Here, ``v`` is the fluid velocity, ``\rho`` is the density, and ``\beta`` is the compressibility. We assume that ``\rho`` and ``\beta`` are positive constants.
+
+👉 Demonstrate that these two forms are equivalent. Derive how the parameter ``c`` is related to parameters ``\rho`` and ``\beta``.
+
+!!! hint
+	Eliminate ``v`` by differentiating the first equation with respect to ``x`` and the second with respect to ``t``, then substituting the expression for ``v_{tx}`` into the second equation.
 """
 
-# ╔═╡ 7d38590b-90b5-4cf4-a003-0995b8e66477
+# ╔═╡ 563965f8-ef6c-4b12-91dd-1e3a25f65248
+answer_box(
+md"""
+```math
+c = \sqrt{\frac{1}{\rho\beta}}
+```
+""")
+
+# ╔═╡ d6d9d531-4a2f-4e44-a018-04e2e4046041
+md"""
+The objective is to implement the wave equation in 1D using an explicit time integration (forward Euler) as for the diffusion physics.
+
+### Numerical solver
+
+We can start by modifying the diffusion code, adding `ρ` and `β` in the `# physics` section, and using a Gaussian (centred at `lx/4`) as the initial condition for the pressure `Pr`:
+
+```julia
+# physics
+lx   = 20.0
+ρ,β  = 1.0,1.0
+
+# array initialisation
+Pr   =  exp.(...)
+```
+
+!!! note
+	The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
+
+The diffusion update:
+
+```julia
+qx          .= .-dc.*diff(C )./dx
+C[2:end-1] .-=   dt.*diff(qx)./dx
+```
+
+should be modified to use pressure `Pr` instead of concentration `C`. Add an update for the velocity `Vx` and adjust the coefficients:
+
+```julia
+Vx          .-= ...
+Pr[2:end-1] .-= ...
+```
+
+!!! warn "Use the new velocity in the pressure update"
+	When updating pressure `Pr`, use the freshly computed values of `Vx`, instead of saving somewhere the old array. This method is called [semi-implicit Euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method) and it works specifically well for the wave equation: it preserves the stored acoustic energy, so the waves never attenuate.
+
+👉 Your turn. Finish the implementation of acoustic wave propagation:
+"""
+
+# ╔═╡ 0ae59d37-ba0e-435a-b1e8-7ebd35eb98d3
 # ╠═╡ disabled = true
 #=╠═╡
 # split: statement
-let a = Int[]
-	# enter your code here
-end
+# Uncomment this when implemented the solver
+# acoustic_1D()
   ╠═╡ =#
 
-# ╔═╡ 289bfa51-d0fa-4029-b5ff-9e4288182a74
-# split: solution
-let a = Int[]
-	push!(a, 1)   # works
-	push!(a, 1.0) # works
-	push!(a, 1.5) # errors as 1.5 cannot be converted to an Int
+# ╔═╡ c48327ce-2829-441b-a2eb-ff5397d17d09
+md"""
+## First-order PDEs
+
+
+The simplest first-order PDE is the so-called [advection equation](https://en.wikipedia.org/wiki/Advection):
+
+```math
+c_t + \boldsymbol{v} \cdot \boldsymbol{\nabla}c = 0~.
+```
+
+It represents the transport of some scalar quantity ``c``, defined per unit mass of the fluid, due to the bulk motion of a fluid flowing with velocity ``\boldsymbol{v}``.
+"""
+
+# ╔═╡ 37362ad9-3383-4171-bc37-bc85acf642fc
+Foldable(md"Want to know the derivation?",
+md"""
+Assume that the fluid has density ``\rho``. We start from a [mass conservation equation](https://en.wikipedia.org/wiki/Continuity_equation) for the quantity ``\rho c``:
+
+```math
+(\rho c)_t + \boldsymbol{\nabla}\cdot(\rho c\boldsymbol{v}) = 0
+```
+
+Using the product rule gives:
+
+```math
+c\,[\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})] + \rho\,[c_t + \boldsymbol{v}\cdot\boldsymbol{\nabla}c] = 0
+```
+
+In the first term, the quantity in brackets, ``\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})``, is always equal to ``0``: this is the mass conservation equation for the bulk flow. Dividing both sides of the remaining equation by ``\rho``, which is always positive, we get the advection equation.
+""")
+
+# ╔═╡ c3fb9efa-0728-448c-a992-79926dea6f7c
+md"""
+### Exact solution
+
+For constant velocity ``\boldsymbol{v}``, the advection equation has a simple exact solution: it simply translates the initial shape of the field ``c`` in space.
+
+For example, in 1D, if initially (at ``t = 0``) the shape of ``c`` was given by ``f(x)``, then the solution at time ``t`` is simply:
+
+```math
+c(t, x) = f(x - vt)
+```
+
+Let's visualise it. Here's the function for the initial condition (it's a Gaussian, but feel free to try something else):
+"""
+
+# ╔═╡ 197f44d5-76e1-4aee-b576-811d6923310f
+function initial_condition(x)
+	return exp(-x^2)
 end
 
-# ╔═╡ 41c7d2f1-5b65-4a8f-9aa4-81f15c378b92
+# ╔═╡ 770c08ce-bce5-4542-8ca7-92179d43a45d
 md"""
-!!! info "Let block"
-    A `let ... end` block introduces a local scope, allowing you to reuse variable names, which Pluto normally won't allow.
-
-Try to assign `1.5` to the first element of an array of type `Array{Int,1}`:
+Adjust the velocity and time and see what happens:
 """
 
-# ╔═╡ 21de8544-f929-4b97-b8aa-2beba0632572
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 53d6ef00-3b01-4679-94ec-46b8a417418d
-# split: solution
-let a = [1]
-	a[1] = 1.5
-end
-
-# ╔═╡ 68667330-254c-4f7a-9991-122e68cdf659
+# ╔═╡ f1a20d7e-4069-4a5d-a77b-56a07b6ea2fc
 md"""
-### Array initialisation
-
-Create an uninitialised matrix of size `(3, 3)` and assign it to `k`. Specify a `let` block if needed to avoid another global definition. First look up the docs for `Array` with `?Array`. Test that its size is correct (see `size`):
+velocity: $(@bind __vel NumberField(default=5.0)) \
+time: $(@bind __time PlutoUI.Slider(0:0.01:1; default=1, show_value=true))
 """
 
-# ╔═╡ f620497e-9a57-4d91-bab8-0f0b17b0dfbf
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ aa59c4be-6a6b-41f3-b026-50322c0c4d20
-# split: solution
-let k = Array{Any}(undef, 3, 3)
-	@assert size(k) == (3, 3)
-end
-
-# ╔═╡ f9753402-6d39-4139-837f-c7090c0bebe7
-md"""
-Well done! You will learn the rest about Julia arrays by doing 😉
-"""
-
-# ╔═╡ a568d1da-de09-42ab-bbc2-9fcf78ba4cca
-md"""
-## Control flow
-
-Julia provides a variety of control flow constructs. We will look at:
-
-- conditional evaluation: `if ... elseif ... else` and `... ? ... : ...` (ternary operator)
-- short-circuit evaluation: logical operators `&&` ("and") and `||` ("or"), and also chained comparisons
-- repeated evaluation: `while` and `for` loops
-
-### Conditional evaluation
-
-Read the first paragraph of [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation) up to "... and no further condition expressions or blocks are evaluated."
-
-Write a conditional check which looks at the start of the string in variable `l` (look up `?startswith`) and returns accordingly.
-
-If the start is:
-
-- "Wh" then return "Likely a question"
-- "The " then return "A noun"
-- otherwise return "no idea"
-"""
-
-# ╔═╡ 23524c52-2388-425a-8d34-5fc6daee0622
-l = "Where are the flowers"
-
-# ╔═╡ 37b07142-aa3d-4b39-815e-266d45cccfad
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ d31431f5-db94-4a7c-a52c-823206501cee
-# split: solution
-if startswith(l, "Wh")
-  "Likely a question"
-elseif startswith(l, "The  ")
-  "Likely a noun"
-else
-  "no idea"
-end
-
-# ╔═╡ 4a95170d-4ed6-4295-a850-7d8eac624440
-md"""
-### The ternary operator
-
-Let's learn more compact ways of expressing the control flow.
-"""
-
-# ╔═╡ 2b104943-fb24-471e-bb9c-276832ba18ac
-x = 5
-
-# ╔═╡ 8aed2345-9eab-4c27-9863-9f16e6b54303
-md"""
-Look up the docs for the ternary operator `?` (use `??`).
-
-Rewrite the following code using the ternary operator:
-"""
-
-# ╔═╡ 2fa15b9f-adc7-4aba-851d-e44550320459
-if x > 5
-    "really big"
-else
-    "not so big"
-end
-
-# ╔═╡ b9888186-227b-4b9d-b7d9-e37c3e305958
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 02dbd894-e3df-47a6-b3ed-430e0f219d35
-# split: solution
-x > 5 ? "really big" : "not so big"
-
-# ╔═╡ 7c8caad6-346c-4f18-ac24-e95424cd43a5
-md"""
-### Short-circuit operators `&&` and `||`
-
-Read [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#Short-Circuit-Evaluation) about short-circuit evaluation.
-
-Explain what this does:
-"""
-
-# ╔═╡ 10016223-51eb-4287-835c-3b352ea705b5
-x < 0 && error("Not valid input for `x`")
-
-# ╔═╡ 8c985a11-f45f-41d2-96d6-55c41e01b3d4
-md"""
-Type your answer here:
-"""
-
-# ╔═╡ e8ee8ac4-677e-488d-8659-9221c343e76f
-# split: statement
-md"""
-
-"""
-
-# ╔═╡ c238c957-a269-4b85-b71c-8deb547a15e9
-# split: solution
-md"""
-If `x < 0` evaluates to `true`, then the part after the `&&` is evaluated too, i.e. an error is thrown. Otherwise, only `x < 0` is evaluated and no error is thrown.
-"""
-
-# ╔═╡ 9778d460-1ac6-4a16-a4a2-b81162eab8b9
-md"""
-### Loops: `for` and `while`
-
-Read [the documentation](https://docs.julialang.org/en/v1/manual/control-flow/#man-loops) about loops.
-
-
-Here's a summary of the loop syntax in Julia:
-"""
-
-# ╔═╡ 92e70453-d542-43c1-8b8c-670a99ce8969
-begin
-for i = 1:3
-    println(i)
-end
-
-for i in ["dog", "cat"] # 'in`, '=', and even '∈' are equivalent for writing loops
-    println(i)
-end
-end
-
-# ╔═╡ a31b661b-2d1d-47ea-b24f-f9b34eb13bfb
-let i = 1
-    while i<4
-        println(i)
-        i += 1
-    end
-end
-
-# ╔═╡ ba3cc1c1-f744-460d-9c88-05689c031759
-md"""
-## Functions
-
-Functions can be defined in Julia in a number of ways. In particular, there is one variant more suited to longer definitions:
-"""
-
-# ╔═╡ 555e9a9c-7dbe-46b0-bec0-2922c06f6de8
-function f(a, b)
-   return a * b
-end
-
-# ╔═╡ 50ebcc54-0b9b-456e-965e-285542d9a302
-md"""
-And one for one-liners:
-"""
-
-# ╔═╡ 374dab69-402c-4c04-bf12-6863583e4ba2
-g(a, b) = a * b
-
-# ╔═╡ 52297b32-af55-484a-b000-207ee785fda4
-md"""
-Defining many short functions is typical in good Julia code.
-
-Read [the documentation](https://docs.julialang.org/en/v1/manual/functions/) about functions up to and including "The `return` Keyword".
-
-Define a function in long form which takes two arguments. Use some `if ... else` statements and the `return` keyword:
-"""
-
-# ╔═╡ a23899dd-80e6-4b17-8d20-812e64e76edc
-# split: statement
-# enter your code here
-
-# ╔═╡ 3208d485-7de8-4f12-83db-a31841816567
-# split: solution
-function fn(a, b)
-    if a > b
-        return a
-    else
-        return b
-    end
-end
-
-# ╔═╡ e52e1d07-6894-4935-a76e-f30693b37aca
-md"""
-Implement a simplified version of `map` called `mymap`. First look up what `map` does, then create a `mymap` function which does the same. Map `sin` over the range `1:10`.
-
-!!! note "Higher-order functions"
-	Note that `map` and `mymap` are **higher-order functions**: functions which take another function as an argument.
-"""
-
-# ╔═╡ 5c8faade-11f2-429b-a4eb-0a584ba4e7f7
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-mymap(fn, a) = missing
-  ╠═╡ =#
-
-# ╔═╡ f0222d1f-e455-49eb-89b7-b92e63a7ff74
-# split: solution
-mymap(fn, a) = [fn(x) for x in a]
-
-# ╔═╡ a34aaa25-6c4a-4bb1-bad1-5817c11befc7
-mymap(sin, 1:10)
-
-# ╔═╡ 0f4757ec-8659-4de9-8aa1-40e50751dbee
+# ╔═╡ 4c843ddf-bc16-4a33-8683-41cfa88762de
 let
-	answer = mymap(sin, 1:10)
-	if ismissing(answer)
-		still_missing()
-	elseif answer == map(sin, 1:10)
-		correct()
-	else
-		keep_working()
+lx = 20.0 # domain length
+xs = LinRange(-lx/2, lx/2, 201)
+fs = initial_condition.(xs .- __vel * __time)
+lines(xs, initial_condition.(xs);
+	  figure=(size=(600, 200),),
+	  color=:blue,
+	  label="t = 0")
+lines!(xs, fs; color=:red, label="t = $(round(__time; digits=2))")
+axislegend(current_axis())
+current_figure()
+end
+
+# ╔═╡ 31129331-fbd5-4d66-8108-d84e43b14747
+md"""
+!!! note "What about the boundary conditions?"
+	This solution is only valid in an unbounded region. If the domain has finite extent, we will need to specify the values of ``c`` at the inflow parts of the boundary.
+
+### Numerical solver
+
+Let's solve the advection equation numerically, following the same code structure as for diffusion and acoustic wave propagation.
+
+The only physical parameter besides the domain extent now is the advection velocity:
+
+```julia
+# physics
+lx   = 20.0
+vx   = 1.0
+```
+
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, centred at `lx / 4`.
+
+```julia
+C = @. exp( ... )
+```
+
+The only change in the `# preprocessing` section is the numerical time step definition to comply with the [CFL condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration.
+
+```julia
+# preprocessing
+dt   = dx / abs(vx)
+```
+
+Update `C` in the time loop as follows:
+
+```julia
+C .-= dt .* vx .* diff(C) ./ dx # won't work
+```
+
+As with the diffusion and wave equations, this assignment doesn't work because of the mismatching array sizes. But unlike the second-order equations, we don't have two derivatives to make sure that we can update the inner points of `C`.
+
+There are at least three (naive) ways to solve the problem: update `C[1:end-1]`, `C[2:end]`, or one could even update `C[2:end-1]` with the spatial average of the increment `dt .* vx .* diff(C) ./ dx`.
+
+To make things more interesting, let's also flip the sign of the velocity when reaching `it=nt÷2`. Recall the conditional statements and short-circuit operators from Lecture 1 for a hint on how to implement this.
+
+👉 Your turn. Implement all three options for updating `C` and see what works best:
+"""
+
+# ╔═╡ df956745-ec01-49b8-8e7b-0717ce60a159
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+# Uncomment this when implemented the solver
+# advection_1D()
+  ╠═╡ =#
+
+# ╔═╡ 6bd96e91-83be-4f19-b2dd-267187521fdf
+md"""
+!!! hint
+	Depending on the sign of velocity, you need a different scheme. One of the choices (where to store `dt .* vx .* diff(C) ./ dx`) will only work for `vx >= 0`, while the other will only work for `vx <= 0`. We suggest implementing both these schemes in the same code, but in one case use `max(vx, 0)` and in other use `min(vx, 0)` for velocity.
+"""
+
+# ╔═╡ 9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+Foldable("Why does only one scheme work?",
+md"""
+The reason is again numerical stability. It turns out that both the time step and the spatial discretisation affect stability. The scheme that is stable for the explicit Euler time integration is the so-called [upwind scheme](https://en.wikipedia.org/wiki/Upwind_scheme). Interestingly, the other two choices, the "downwind" scheme and the [central scheme](https://en.wikipedia.org/wiki/FTCS_scheme) are **unconditionally unstable**, i.e. the solution explodes for any time step.
+""")
+
+# ╔═╡ f6270619-d412-465b-a3af-e6c3c6f8e257
+md"""
+!!! warn "Numerical diffusion"
+	Interestingly, the numerical solution looks just just like the exact one. But this is possible only when the velocity is constant and in 1D. In general case, the finite-difference schemes for advection suffer from the **numerical diffusion**. Try multiplying the time step `dt` by `0.5` and see how the Gaussian starts diffusing while advecting. To reduce numerical diffusion, high-order methods such as [WENO](https://en.wikipedia.org/wiki/WENO_methods) can be used.
+"""
+
+# ╔═╡ 5c9b9479-d89e-44d6-9081-ddae9a6291ba
+md"""
+## First steps towards solving elliptic problems
+
+We have considered numerical solutions to hyperbolic and parabolic PDEs. In both cases, we used explicit time integration.
+
+An elliptic PDE is different:
+
+```math
+c_{xx} = 0
+```
+
+It doesn't depend on time! How do we solve it numerically then?
+
+There are many ways, but in this course we will focus on **relaxation solvers**. The idea is that the solution to the elliptic PDE can be obtained as a **steady state** of a corresponding **time-dependent** parabolic equation:
+
+```math
+c_t = \lambda c_{xx}~.
+```
+
+The steady state is approached as ``t \rightarrow \infty`` when ``c_t \rightarrow 0``.
+
+!!! note 
+	The existence of such a steady state is not guaranteed for all PDEs, but it is the case for many parabolic equations.
+
+We already know how to solve parabolic equations, so solving elliptic equations should be easy then, right?
+
+👉 Increase the number of time steps `nt` in our diffusion code to see whether the solution converges, and decrease the frequency of plotting:
+
+```julia
+nt   = 5000
+nvis = 50
+```
+
+Observe how the solution approaches the steady state. It looks a bit trivial though, as it approaches 0 everywhere:
+
+👉 Change the boundary conditions so that ``c = 1`` at ``x = \mathrm{lx}`` and run the simulation again.
+
+Now, the solution should converge to a linear profile. However, the number of time steps required to converge to a solution is proportional to `nx^2`:
+
+- For simulations in 1D and low resolutions in 2D, the quadratic scaling is acceptable;
+- For high-resolution simulations in 2D and 3D, the `nx^2` factor becomes prohibitively expensive!
+
+So, solving elliptic equations efficiently is not that simple. We'll tackle this challenge in the next lecture, **stay tuned!** 🚀
+
+!!! note
+	The described routine is far from being the only way to solve these PDEs numerically. In this course, we will stick to those concepts as they will allow for efficient parallel implementations on GPUs and are relatively easy to implement.
+"""
+
+# ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
+md"""
+# Software and numeric engineering skills
+
+We try to make this course "wholesome" by not just teaching you numerics but also the skills to actually work with numerical (and other) code.
+Just like with the numerics we take a hands-on approach to these topics. We will cover:
+
+- Version control with Git to keep track of the code and to allow collaboration.
+- Package and environment management to make your software stack reproducible.
+- Running software on super computers.
+- Etc.
+
+
+# Introduction to Git
+
+Git is version control software. It helps you to:
+
+- Keep track of changes to code (and other files)
+- Collaborate on code
+- Share code across your computers and with others
+
+!!! note
+	Avoid committing large files, especially binary files, to Git. For this course, consider storing files larger than 1 MB elsewhere.
+
+**Some questions for you:**
+
+- How often do you use Git?
+- Who has Git installed on their laptop?
+- Do you use: `commit`, `push`, `pull`, `clone`?
+- Do you use: `branch`, `merge`, `rebase`?
+- Do you use GitHub, GitLab, or similar platforms?
+
+Here are a few online resources about Git:
+
+- [git - the simple guide](https://rogerdudler.github.io/git-guide/)
+- [Git cheatsheet](https://git-scm.com/cheat-sheet)
+- [Using Git in VS Code](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
+- [Official tutorial videos (~24 min)](https://git-scm.com/videos)
+
+## A brief Git demo
+
+👉 If you don't have Git on your computer, [install it](https://git-scm.com/install/)!
+
+The Git demo is available on video and as transcript:
+- [demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-demo-cords-comp.mp4)
+- [merge demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-merge-demo-cords-comp.mp4)
+- [transcript](https://github.com/mauro3/CORDS/blob/master/Workshop-Reproducible-Research/lectures/L02_git.md)
+
+- Git setup:
+
+```sh
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+```
+
+- Make a repo (`init`)
+- Add some files (`add`, `commit`)
+- Make some changes (`commit` some more)
+- Make a feature branch (`branch`, `diff`, `difftool`)
+- Merge the branch (`merge`)
+- Tag (`tag`)
+
+## Other tools for Git
+
+Many tools let you interact with Git, including graphical clients, command-line tools, and VS Code. Feel free to use them.
+
+But we will only be able to help you with standard command-line Git.
+
+## Getting started on GitHub (similar on GitLab, or elsewhere)
+
+GitHub and GitLab are collaborative software development platforms:
+
+- They host code
+- They help developers collaborate
+- They provide infrastructure for software testing, deployment, etc
+
+!!! note
+	ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).
+
+If you don't have a GitHub account, make one (most of Julia development happens on GitHub)
+
+[https://github.com/](https://github.com/) → "Sign up"
+
+### GitHub setup
+
+Set up authentication so that you can push and pull without repeatedly entering your credentials.
+
+![GitHub navigation bar](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_github-bar.png)
+
+- Local terminal: tell Git to cache credentials: `git config --global credential.helper cache`
+  (this may not be needed on all operating systems, potentially a built-in password/credential
+   manager will do this automatically)
+- [github.com](https://github.com/):
+  - "Settings" → "Developer settings" → "Personal access tokens" → "Generate new token"
+    - Give the token a description/name and select the scope of the token
+    - I selected "repo only" to facilitate pull, push, clone, and commit actions
+  - → "Generate token" and copy it (keep that website open for now)
+
+## Let's get our repo onto GitHub
+
+- Create a repository on github.com: click the "+"
+- Local terminal: follow the setup instructions on the website for "…or push an existing repository from the command line"
+  - with the `git push` it will send it to github, which will prompt you to:
+  - enter your username here + the **token** generated before
+
+## Work with other people: pull request (PR)
+
+When contributing to a shared repository, you typically make changes on a separate branch and submit a **pull request (PR)**. A pull request provides a web interface for reviewing changes, requesting revisions, and merging the code.
+
+In a repository where you have write permission, use the following workflow:
+
+- Make a branch `git branch some-branch-name` and switch to it: `git switch -c some-branch-name`
+- Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
+- Push the branch to GitHub
+- On the GitHub web page, a bar with an "Open pull request" option should appear: click it
+- If you have more changes, just commit and push them to that branch
+- When the changes are ready and reviewed, merge the PR
+
+You will use this workflow to submit homework for the course.
+
+## Work with other people's code: fork
+
+To contribute to a repository where you do not have write access:
+
+- Fork a repository on github.com (top right)
+- Make a branch on that fork and work on it
+- Push the branch to your fork on GitHub and open a PR against the original repository
+- (not needed in this lecture course)
+"""
+
+# ╔═╡ 3125ddfe-2a52-4c92-989c-6d26c21e3c93
+Foldable("Got any questions?",
+md"""
+Write to us on Element. We will also work through more exercises and answer questions in class.
+		 
+![Git comic](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_git-me.png)
+""")
+
+# ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402
+# helper function to animate the loop in Pluto live
+macro animate(fig, nvis, loop)
+	loop.head == :for || error("`@animate` can only be used with `for` loops")
+	iter_expr = loop.args[1]
+	iter_var = iter_expr.args[1]
+	iter_range = iter_expr.args[2]
+	body = loop.args[2]
+	return quote
+		iframe = first($(esc(iter_range)))
+		CairoMakie.Makie.Record($(esc(fig)), $(esc(iter_range))[1:$(esc(nvis)):end]; format="mp4", framerate=30, compression=35, profile = "high444") do _
+			for i in 1:$(esc(nvis))
+				$(esc(iter_var)) = iframe
+				$(esc(body))
+				iframe += 1
+			end
+		end
+	end
+end;
+
+# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
+# split: solution
+diffusion_1d()
+
+# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
+# split: solution
+acoustic_1D()
+
+# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+# split: solution
+advection_1D()
+
+# ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    # C    = @. exp(...)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # C[...] -= ...
+        # flip the sign of vx when it == nt ÷ 2
+        # ...
+        plt[2] = C
+    end
+end
+  ╠═╡ =#
+
+# ╔═╡ 3e833c61-5f94-413e-ab57-5e1669da380e
+# split: solution
+function diffusion_1d()
+	# physics
+	lx   = 20.0
+	dc   = 1.0
+	# numerics
+	nx   = 200
+	nvis = 5
+	# preprocessing
+	dx   = lx / nx
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx-1) # deception is resolved in the solution
+	# create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
+	# time loop
+	@animate fig nvis for it = 1:nt
+	    qx          .= .-dc.*diff(C )./dx
+		# take a forward Euler time step
+		C[2:end-1] .-=   dt.*diff(qx)./dx
+		if it % nvis == 0
+			plt[2] = C
+		end
 	end
 end
 
-# ╔═╡ 19a42d47-a4be-416f-aaac-54e278840e7f
-md"""
-## Broadcasting and the dot syntax
-
-Broadcasting applies a function elementwise and can combine inputs with compatible shapes. This is really similar to the `map` function, a shorthand to map/broadcast a function over values. Append `.` to the function name to apply the function to a collection element-wise.
-
-Broadcast the `sin` function over a `1:10` range using the dot syntax:
-"""
-
-# ╔═╡ dde4f08a-ecd0-46ac-a0cf-60354c24f16f
+# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
 # ╠═╡ disabled = true
 #=╠═╡
 # split: statement
-# enter your code here
+function diffusion_1d()
+	# physics
+	lx   = 20.0
+	dc   = 1.0
+	# numerics
+	nx   = 200
+	nvis = 5
+	# preprocessing
+	dx   = lx / nx
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx) # 😉
+	# create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
+	# time loop
+	@animate fig nvis for it = 1:nt
+	    # qx          .= ...
+		# take a forward Euler time step
+		# C[2:end-1] .-= ...
+		if it % nvis == 0
+			plt[2] = C
+		end
+	end
+end
   ╠═╡ =#
 
-# ╔═╡ 9c204f78-7013-48fe-ba7d-7d6754b85f43
+# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
 # split: solution
-sin.(1:10)
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    C    = @. exp(-(xc - lx / 4)^2)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
+        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
+        (it % (nt ÷ 2) == 0) && (vx = -vx)
+        plt[2] = C
+    end
+end
 
-# ╔═╡ b5ecfca6-f288-43da-92b5-3da7a08752f5
-md"""
-Broadcasting will extend row and column vectors into a matrix. Try `(1:10) .+ (1:10)'`:
-"""
-
-# ╔═╡ 1f51a87e-ed58-4c79-889d-5162a81a3fbf
+# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
 # ╠═╡ disabled = true
 #=╠═╡
 # split: statement
-# enter your code here
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    # dt   = ...
+    nt   = 2nx
+    # array initialisation
+    # Pr   = @. exp(...)
+    # Vx   = zeros(...)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        # Vx          .-= ...
+        # now use the freshly updated Vx
+        # Pr[2:end-1] .-= ...
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
   ╠═╡ =#
 
-# ╔═╡ dd26955e-ee24-4c66-8a97-3f388599bc7b
+# ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
 # split: solution
-(1:10) .+ (1:10)'
-
-# ╔═╡ 11f95adb-9b39-469e-b85f-4f90ab2d719d
-md"""
-!!! note "The transpose operator"
-	The symbol `'` is a transpose operator that in this case turns a column vector into a row vector.
-"""
-
-# ╔═╡ 203223f6-1cc7-4049-b8b5-d728d2094f44
-md"""
-Broadcast the function `sin(x) + cos(y)` over `x ∈ [0, π]` and `y ∈ [-π, π]` with a step of 0.1 in both `x` and `y`:
-"""
-
-# ╔═╡ 237f42b7-645e-4776-8af0-186f595c38cb
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ a8c4fbbe-0eb6-440e-8562-fd34145c9404
-# split: solution
-let
-	x, y = 0:0.1:π, -π:0.1:π
-	sin.(x) .+ cos.(y')
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    dt   = dx / sqrt(1/ρ/β)
+    nt   = 2nx
+    # array initialisation
+    Pr   = @. exp(-(xc-lx/4)^2)
+    Vx   = zeros(nx-1)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        Vx          .-= dt./ρ.*diff(Pr)./dx
+        # now use the freshly updated Vx
+        Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
 end
-
-# ╔═╡ b26dab4e-0bb3-4eee-8804-797dd05083d4
-md"""
-!!! hint
-	Use ranges for `x` and `y`, and a `let` block to avoid variable name clashes. Both `π` and `pi` are built-in constants defined in Julia. Don't forget to use `'`!
-"""
-
-# ╔═╡ a0c502b0-7585-450a-91ef-5899671d06ca
-md"""
-### Anonymous functions
-
-So far, our functions have had names. They can also be defined without a name.
-
-Read [the documentation](https://docs.julialang.org/en/v1/manual/functions/#man-anonymous-functions) about anonymous functions.
-
-Map the function `sin(x) + cos(x)` over `1:10` but define it as an anonymous function:
-"""
-
-# ╔═╡ 2cab5fc1-f97c-4d2e-b4d7-8b80a553b542
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-# enter your code here
-  ╠═╡ =#
-
-# ╔═╡ 854f5b33-62a3-4902-95c8-11ac89b24ab0
-# split: solution
-map(x -> sin(x) + cos(x), 1:10)
-
-# ╔═╡ a2c37ad9-16e1-406f-ae3f-e11a3cfb26c5
-md"""
-## Killer feature: multiple dispatch
-
-Julia is **not an object-oriented language**, and this is a good thing!
-
-In an object-oriented language, methods belong to objects, and a particular method is selected based on the dynamic type of an object (which is sometimes passed as a first argument, e.g. `self` in Python).
-
-Julia is a language with ✨**multiple dispatch**✨. This means that methods are separate from objects, and are selected at runtime based on the dynamic types of **all arguments**. This is similar to overloading but method selection occurs at runtime and not compile-time.
-
-This turns out to be very natural for mathematical programming.
-
-Check this JuliaCon 2019 presentation on the subject by Stefan Karpinski (co-creator of Julia):
-"""
-
-# ╔═╡ 86dea386-5d8c-4dff-8e20-b8ea5e68ae24
-html"""
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kc9HwsxE1OY?si=Rmozw0mxfS_c3qqs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-"""
-
-# ╔═╡ ce299789-51d9-4961-8f5a-eed6458af549
-md"""
-### Multiple dispatch demo
-
-This cool example is based on a [blog post](https://giordano.github.io/blog/2017-11-03-rock-paper-scissors/) by Mose Giordano:
-"""
-
-# ╔═╡ 4951bdee-b47c-42df-bf14-8468edf5a9b3
-begin
-struct Rock end
-struct Paper end
-struct Scissors end
-	
-## of course structs could have fields as well
-# struct Rock
-#     color
-#     name::String
-#     density::Float64
-# end
-
-# define multi-method
-play(::Rock, ::Paper) = "Paper wins"
-play(::Rock, ::Scissors) = "Rock wins"
-play(::Scissors, ::Paper) = "Scissors wins"
-play(a, b) = play(b, a) # commutative
-end
-
-# ╔═╡ 4152492c-e1bf-46e0-921a-8ea70d372486
-md"""
-This can easily be extended later
-
-with a new type:
-"""
-
-# ╔═╡ 0a91c58a-b8f2-41c8-99de-7bd0a077e6ff
-begin
-struct Pond end
-play(::Rock, ::Pond) = "Pond wins"
-play(::Paper, ::Pond) = "Paper wins"
-play(::Scissors, ::Pond) = "Pond wins"
-end
-
-# ╔═╡ a4389ae9-5cc5-4270-bcff-f1a28c768429
-play(Scissors(), Rock())
-
-# ╔═╡ 5318bd35-b184-4e6c-8df7-932f82f2dbc0
-play(Scissors(), Pond())
-
-# ╔═╡ 8844984d-f677-4a15-8b00-eaed1c5d3042
-md"""
-or with a new function:
-"""
-
-# ╔═╡ 78c8b8b2-7046-41ac-92f1-f4356a8e4dd0
-begin
-combine(::Rock, ::Paper) = "Paperweight"
-combine(::Paper, ::Scissors) = "Two pieces of papers"
-# ...
-end
-
-# ╔═╡ a41245ac-12ab-4fb6-a148-3a5e8052dc39
-combine(Rock(), Paper())
-
-# ╔═╡ 2a098678-bfda-47fa-a066-ad0925629634
-md"""
-*Multiple dispatch makes Julia packages very composable!*
-
-This is a key characteristic of the Julia package ecosystem.
-"""
-
-# ╔═╡ 54f1fc94-054b-4239-b905-332b24c4ed8c
-md"""
-## Modules and packages
-
-Modules can be used to structure code into larger entities, and to divide it into different namespaces. We will not make much use of them, but if you are interested, see [the documentation](https://docs.julialang.org/en/v1/manual/modules/).
-
-Packages are the way people distribute code and we'll make use of them extensively. In the first example, the Lorenz ODE, you saw
-"""
-
-# ╔═╡ f971ad6b-808f-4c00-8cc8-20a5a3187a5b
-md"""
-At the start of this notebook, `using CairoMakie` loads CairoMakie and brings its exported names into scope. You can use it like so:
-"""
-
-# ╔═╡ a243b363-cc8e-434d-aec2-001c24bd1ab7
-lines((1:10).^2)
-
-# ╔═╡ fe8afed4-e7fd-4db4-b558-016b7d27b5fd
-md"""
-!!! info "Installing packages"
-	Pluto.jl features its own [package manager](https://plutojl.org/en/docs/packages/), which installs packages automatically when they are used. Installing and updating packages when working with Julia outside of Pluto is a future topic.
-
-**This concludes the rapid Julia tour!**
-
-Julia has many more features, but this should get you started and ready for the exercises. (Let us know if you feel we left something out which would have been helpful for the exercises.)
-
-Remember, you can get help by:
-
-- using `?` in the notebook. Similarly, there is an `apropos` function.
-- reading [the docs](https://docs.julialang.org/en/v1/)
-- asking for help in our chat channel: see Moodle
-"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1181,7 +1131,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
 julia_version = "1.12.7"
-manifest_format = "2.1"
+manifest_format = "2.0"
 project_hash = "2f0e84c679cd198d8e9caacefe1556f69a34c941"
 
 [[deps.AbstractFFTs]]
@@ -1196,9 +1146,9 @@ weakdeps = ["ChainRulesCore", "Test"]
     AbstractFFTsTestExt = "Test"
 
 [[deps.AbstractPlutoDingetjes]]
-git-tree-sha1 = "6c3913f4e9bdf6ba3c08041a446fb1332716cbc2"
+git-tree-sha1 = "e71ee7b4aa06b045259a7d6101e1cb45ad140bce"
 uuid = "6e696c72-6542-2067-7265-42206c756150"
-version = "1.4.0"
+version = "1.4.1"
 
 [[deps.AbstractTrees]]
 git-tree-sha1 = "2d9c9a55f9c93e8887ad391fbae72f8ef55e1177"
@@ -1231,9 +1181,9 @@ version = "0.1.45"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "daa72978cd7a624246e894a4f4f067706d4e17e2"
+git-tree-sha1 = "7c2c19b5a26e601634bf718490b89d59685f122e"
 uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
-version = "4.7.0"
+version = "4.7.1"
 weakdeps = ["SparseArrays", "StaticArrays"]
 
     [deps.Adapt.extensions]
@@ -2309,9 +2259,9 @@ version = "1.3.4"
 
 [[deps.Preferences]]
 deps = ["TOML"]
-git-tree-sha1 = "8b770b60760d4451834fe79dd483e318eee709c4"
+git-tree-sha1 = "5005266de4bfe50e53ff44a5cb5c540b6e47a254"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
-version = "1.5.2"
+version = "1.6.0"
 
 [[deps.Primes]]
 deps = ["IntegerMathUtils"]
@@ -2538,9 +2488,9 @@ version = "1.4.4"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "ae3bb1eb3bba077cd276bc5cfc337cc65c3075c0"
+git-tree-sha1 = "e2b53ce13a53367e96601081e33d34746b571bad"
 uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-version = "1.11.1"
+version = "1.11.5"
 weakdeps = ["SparseArrays"]
 
     [deps.Statistics.extensions]
@@ -2885,167 +2835,61 @@ deps = ["Artifacts", "JLLWrappers", "Libdl"]
 git-tree-sha1 = "e7b67590c14d487e734dcb925924c5dc43ec85f3"
 uuid = "dfaa095f-4041-5dcd-9319-2fabd8486b76"
 version = "4.1.0+0"
-
-[registries.General]
-url = "https://github.com/JuliaRegistries/General.git"
-uuid = "23338594-aafe-5451-b93e-139f81909106"
 """
 
 # ╔═╡ Cell order:
-# ╟─5acc40dd-3463-4a28-b209-5c6dac4af0a7
-# ╟─c51edadb-418d-4d83-9aa5-ff4691250465
-# ╟─dca5d64f-52cd-483b-ac36-e5206a6e5f55
-# ╟─59f175ad-f390-4e64-b319-7c4564a8a3e3
-# ╟─99c900e3-4548-4688-9311-3fee4a5c7d39
-# ╟─6fcd42a3-68c2-4a82-95de-09003c7fd4ff
-# ╟─bee9ddbf-13d4-4a56-9561-a5331d0e2787
-# ╟─bd908b00-0c24-4145-8acb-3e3ab125e52f
-# ╟─35e22cb6-9d3d-11f1-b980-a15009e82513
-# ╠═799c495f-25b7-4533-b2ae-a5ac5ba629a8
-# ╟─dfd2ac20-04b9-40a5-9ba2-266791449ebb
-# ╟─8fe811e0-f6cc-48a8-9d49-8e7213a922dc
-# ╠═1b0e888a-b2c7-40db-9f3b-25e2da7159e5
-# ╟─2573876f-b9e8-49df-a4fb-b48d7b78ea96
-# ╠═162a5f3c-5137-4161-a1aa-5b011cd964bd
-# ╟─3f376974-a7a0-44e5-bb26-d195f8dec9b8
-# ╟─494c2217-f969-42b3-a7c4-0fcfbfe8df1f
-# ╠═381b4692-4571-448c-a9fc-97590837f958
-# ╠═89ec7590-249a-4845-abd8-b4e600e1e2d6
-# ╟─f3633fb8-fa4b-4cf1-9832-bd959f3e6530
-# ╠═ccc03075-f0d8-499f-8fe6-8a404c5fd5f1
-# ╟─c531c2b1-e127-4f36-9801-f01d17400519
-# ╠═350ac9e0-197e-4a79-b64c-540a27f3478c
-# ╟─d8ed3500-2f9c-42d9-9c32-d3b5ea703c2c
-# ╠═4b8eb13e-e908-401c-a706-97eedc3d3d24
-# ╟─b4a736a7-494e-499c-93d5-0f9f1ac6daf5
-# ╠═c606fe99-cc0e-4f5d-a59f-60dc817d3708
-# ╟─72a0c389-124d-439d-856c-0aa2cbb8e720
-# ╠═6c3af128-d4ac-48b1-945e-a87719747776
-# ╟─767a51ef-e9ea-4a70-ba34-3c78be24c7d6
-# ╠═ace7d4ca-c087-48ec-90b2-4e4e9fe7f2a4
-# ╠═f1ce7632-6217-492e-bd45-7cd5beddbbf6
-# ╟─6eefde0c-4b53-40bc-acdf-f8b6d5b53eac
-# ╟─348a9646-8721-492e-916d-4cff6caa147c
-# ╠═a22d8be6-5102-425d-9bcb-ffa7ef96a71f
-# ╟─369c7afa-b332-4e78-8db3-490d00ff705e
-# ╠═f2c73519-bcd4-466c-ab51-756d10b2ce6f
-# ╠═c8684934-f6be-450f-ba76-c57e639ccc5d
-# ╟─fb3634f7-9721-467d-8823-15bf9aad3f4c
-# ╠═0a494b8c-1454-49ac-b68f-1630014b80d7
-# ╠═6b379e97-a85a-46b1-90aa-ed4f1e96c603
-# ╟─ad146aa3-38cf-4a82-aa60-3e9cf6f60d59
-# ╟─81007648-c981-4ba7-a2e4-dcd5b9cde67e
-# ╠═a0dbd78a-6c3f-4736-8cf2-f392daba80a3
-# ╠═c6c905c5-3a2b-4614-b198-381a74c9373e
-# ╟─7acdf6c0-c8e6-4ac0-9f25-1d7683b08c8e
-# ╟─62edf55a-aba7-42ed-8aa8-8fc9a7b084db
-# ╠═ecb7b160-b745-4ca6-8705-c4246b66bbc5
-# ╠═7965f354-3d48-43ec-a7eb-3d555448c6b2
-# ╟─fbba14e8-6f53-4395-b9be-fc4070e24f01
-# ╠═003af53e-e17f-4f32-a62e-636d007486f5
-# ╠═7b6c77a0-5d24-467b-93b8-2aa9d5fb2a40
-# ╟─f47e0a2b-d01f-4c72-8108-6db62120a8e3
-# ╠═4ac5a5ff-8cc0-4b4c-933a-ab47a6145e29
-# ╠═7743f6ed-7244-4013-97bd-535a9794cb54
-# ╟─6c532a20-d672-4b83-a946-0dc0e1f9c2b3
-# ╠═e4b2f145-d695-4dc9-b601-b0d2bc39aa0b
-# ╠═aa37849b-31aa-4a9f-aab7-e03784b93ce0
-# ╟─72716ed9-50b1-48c7-b0fd-d687d063f7c5
-# ╟─98cd2072-73cf-46ca-9cfe-63fc5f9a27bf
-# ╠═b8a6b23d-2ed7-4fad-810a-ab49be68e37d
-# ╠═43cdee13-5894-4ce6-aa6b-2d844fda5996
-# ╟─023e5441-79ce-401f-b3de-435582ca2cb2
-# ╠═9622c8ce-e36b-4685-9345-cb06133e450c
-# ╠═06ec9f2f-cade-4020-a583-baff6086e886
-# ╟─46b99f8f-a08b-4c15-98b8-3c807a389a53
-# ╟─94cc402e-aab7-4806-a1a5-c665daa2cd50
-# ╠═916b8269-b407-4c5f-97d1-017bb471829e
-# ╠═11943ba0-1328-4f4c-b409-24c391d6ae83
-# ╟─db4227eb-0395-4ed0-84ed-7641ce72d776
-# ╠═61eb9beb-baa9-4673-a3f5-f6b865851d73
-# ╟─62ba4b85-77ee-4fe6-b33a-9fd010755456
-# ╠═33852296-6a22-412a-ad5d-fd0d37934766
-# ╠═c566aa5b-d3a6-4804-a67c-a875974f16a0
-# ╟─abc9a86c-9b4c-4764-9968-2a815e570e6a
-# ╠═6cdaddba-081e-4a21-b506-373edd3e2f58
-# ╟─a612e8af-e946-4766-b199-5902ba428d42
-# ╠═f5fd39be-e532-4d2c-8b05-19cad9196eed
-# ╟─6a3689f7-bf39-4030-a11e-53fc46670cce
-# ╠═361cdc34-6ae0-4aea-b80b-abeda7b06a47
-# ╟─6baeee64-29e3-45df-ae1d-acc29fba1c73
-# ╠═5a4f7187-69ab-4f50-bc3d-9758ecbf81c4
-# ╟─571e03ee-be64-4401-89f6-91a2ad7cedfc
-# ╠═0c3f7078-d31a-425e-999a-47ff809a1eba
-# ╟─7ab513d2-6039-4544-9e28-e4032fd45d61
-# ╠═7d38590b-90b5-4cf4-a003-0995b8e66477
-# ╠═289bfa51-d0fa-4029-b5ff-9e4288182a74
-# ╟─41c7d2f1-5b65-4a8f-9aa4-81f15c378b92
-# ╠═21de8544-f929-4b97-b8aa-2beba0632572
-# ╠═53d6ef00-3b01-4679-94ec-46b8a417418d
-# ╟─68667330-254c-4f7a-9991-122e68cdf659
-# ╠═f620497e-9a57-4d91-bab8-0f0b17b0dfbf
-# ╠═aa59c4be-6a6b-41f3-b026-50322c0c4d20
-# ╟─f9753402-6d39-4139-837f-c7090c0bebe7
-# ╟─a568d1da-de09-42ab-bbc2-9fcf78ba4cca
-# ╠═23524c52-2388-425a-8d34-5fc6daee0622
-# ╠═37b07142-aa3d-4b39-815e-266d45cccfad
-# ╠═d31431f5-db94-4a7c-a52c-823206501cee
-# ╟─4a95170d-4ed6-4295-a850-7d8eac624440
-# ╠═2b104943-fb24-471e-bb9c-276832ba18ac
-# ╟─8aed2345-9eab-4c27-9863-9f16e6b54303
-# ╠═2fa15b9f-adc7-4aba-851d-e44550320459
-# ╠═b9888186-227b-4b9d-b7d9-e37c3e305958
-# ╠═02dbd894-e3df-47a6-b3ed-430e0f219d35
-# ╟─7c8caad6-346c-4f18-ac24-e95424cd43a5
-# ╠═10016223-51eb-4287-835c-3b352ea705b5
-# ╟─8c985a11-f45f-41d2-96d6-55c41e01b3d4
-# ╠═e8ee8ac4-677e-488d-8659-9221c343e76f
-# ╠═c238c957-a269-4b85-b71c-8deb547a15e9
-# ╟─9778d460-1ac6-4a16-a4a2-b81162eab8b9
-# ╠═92e70453-d542-43c1-8b8c-670a99ce8969
-# ╠═a31b661b-2d1d-47ea-b24f-f9b34eb13bfb
-# ╟─ba3cc1c1-f744-460d-9c88-05689c031759
-# ╠═555e9a9c-7dbe-46b0-bec0-2922c06f6de8
-# ╟─50ebcc54-0b9b-456e-965e-285542d9a302
-# ╠═374dab69-402c-4c04-bf12-6863583e4ba2
-# ╟─52297b32-af55-484a-b000-207ee785fda4
-# ╠═a23899dd-80e6-4b17-8d20-812e64e76edc
-# ╠═3208d485-7de8-4f12-83db-a31841816567
-# ╟─e52e1d07-6894-4935-a76e-f30693b37aca
-# ╠═5c8faade-11f2-429b-a4eb-0a584ba4e7f7
-# ╠═f0222d1f-e455-49eb-89b7-b92e63a7ff74
-# ╠═a34aaa25-6c4a-4bb1-bad1-5817c11befc7
-# ╟─0f4757ec-8659-4de9-8aa1-40e50751dbee
-# ╟─19a42d47-a4be-416f-aaac-54e278840e7f
-# ╠═dde4f08a-ecd0-46ac-a0cf-60354c24f16f
-# ╠═9c204f78-7013-48fe-ba7d-7d6754b85f43
-# ╟─b5ecfca6-f288-43da-92b5-3da7a08752f5
-# ╠═1f51a87e-ed58-4c79-889d-5162a81a3fbf
-# ╠═dd26955e-ee24-4c66-8a97-3f388599bc7b
-# ╟─11f95adb-9b39-469e-b85f-4f90ab2d719d
-# ╟─203223f6-1cc7-4049-b8b5-d728d2094f44
-# ╠═237f42b7-645e-4776-8af0-186f595c38cb
-# ╠═a8c4fbbe-0eb6-440e-8562-fd34145c9404
-# ╟─b26dab4e-0bb3-4eee-8804-797dd05083d4
-# ╟─a0c502b0-7585-450a-91ef-5899671d06ca
-# ╠═2cab5fc1-f97c-4d2e-b4d7-8b80a553b542
-# ╠═854f5b33-62a3-4902-95c8-11ac89b24ab0
-# ╟─a2c37ad9-16e1-406f-ae3f-e11a3cfb26c5
-# ╟─86dea386-5d8c-4dff-8e20-b8ea5e68ae24
-# ╟─ce299789-51d9-4961-8f5a-eed6458af549
-# ╠═4951bdee-b47c-42df-bf14-8468edf5a9b3
-# ╠═a4389ae9-5cc5-4270-bcff-f1a28c768429
-# ╟─4152492c-e1bf-46e0-921a-8ea70d372486
-# ╠═0a91c58a-b8f2-41c8-99de-7bd0a077e6ff
-# ╠═5318bd35-b184-4e6c-8df7-932f82f2dbc0
-# ╟─8844984d-f677-4a15-8b00-eaed1c5d3042
-# ╠═78c8b8b2-7046-41ac-92f1-f4356a8e4dd0
-# ╠═a41245ac-12ab-4fb6-a148-3a5e8052dc39
-# ╟─2a098678-bfda-47fa-a066-ad0925629634
-# ╟─54f1fc94-054b-4239-b905-332b24c4ed8c
-# ╠═3737ad5c-cc93-446f-884e-e196553d60cc
-# ╟─f971ad6b-808f-4c00-8cc8-20a5a3187a5b
-# ╠═a243b363-cc8e-434d-aec2-001c24bd1ab7
-# ╟─fe8afed4-e7fd-4db4-b558-016b7d27b5fd
+# ╟─646b24fe-f47b-4554-86fd-a4f8bf2099ff
+# ╟─ee6dedf2-b105-11f1-9ab4-b5e3b10de8fa
+# ╟─0f85d4f3-8e27-478d-a7b3-c8a5f902adec
+# ╟─24c0921c-ac89-4987-82d5-c209f7f131d1
+# ╟─a1960792-dfe9-426b-8dc5-7746b3190da4
+# ╟─41ad8ec5-0fb2-459c-93b4-121331a4c2f2
+# ╟─12795455-66e2-436a-b993-46957783cc0f
+# ╟─d2560b51-155e-411e-a414-093f9694273a
+# ╟─85e2f8fa-f284-4e6e-ae8c-1cd203643f64
+# ╟─3704f55f-96e1-415a-902d-159314818f12
+# ╟─316505fa-14d6-4f22-876c-e6e1dabbe4d9
+# ╟─fc1a07dc-8540-4b08-aec6-7fca73cf5b94
+# ╟─6f66c134-6060-4f78-9c16-51bf3b1311d1
+# ╟─4e464867-020a-4143-a027-2c968c30a960
+# ╟─2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+# ╟─b1ca295f-a305-467b-a57d-7075b1aef5af
+# ╟─985a7cbd-185a-4129-9ef1-98463f991745
+# ╠═0411bd65-d3db-4b1f-a58e-a88cbccfacd7
+# ╟─129996e6-739c-4745-929e-583a15842fca
+# ╟─3ed7e2de-7a0f-46bb-95d7-e6b6f4149585
+# ╟─1230392d-eff2-4c96-9e5c-c95f790a5004
+# ╠═9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
+# ╠═3e833c61-5f94-413e-ab57-5e1669da380e
+# ╠═241cf2b3-dd9c-41d0-b69e-aef71d3ee162
+# ╠═b3843e23-b9cf-4192-ba9c-496ba1695711
+# ╟─8534ddd3-6097-4a53-a403-429397b0df61
+# ╟─e9c4fcc1-09f8-4a00-8368-2d5b67e11e5f
+# ╟─563965f8-ef6c-4b12-91dd-1e3a25f65248
+# ╟─d6d9d531-4a2f-4e44-a018-04e2e4046041
+# ╠═6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
+# ╠═cff2c4c6-1008-4a2c-b13a-83618f00b6fd
+# ╠═0ae59d37-ba0e-435a-b1e8-7ebd35eb98d3
+# ╠═6fb78164-19e2-48f8-957d-bb6681ebcb54
+# ╟─c48327ce-2829-441b-a2eb-ff5397d17d09
+# ╟─37362ad9-3383-4171-bc37-bc85acf642fc
+# ╟─c3fb9efa-0728-448c-a992-79926dea6f7c
+# ╠═197f44d5-76e1-4aee-b576-811d6923310f
+# ╟─4c843ddf-bc16-4a33-8683-41cfa88762de
+# ╟─770c08ce-bce5-4542-8ca7-92179d43a45d
+# ╟─f1a20d7e-4069-4a5d-a77b-56a07b6ea2fc
+# ╟─31129331-fbd5-4d66-8108-d84e43b14747
+# ╠═e4406be5-fae9-402d-abb2-0d01aa9d80f9
+# ╠═76c2a2f8-53ac-4820-97ed-1683209b9353
+# ╠═df956745-ec01-49b8-8e7b-0717ce60a159
+# ╠═a84ea677-fee3-42be-a194-24e50c4859e4
+# ╟─6bd96e91-83be-4f19-b2dd-267187521fdf
+# ╟─9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+# ╟─f6270619-d412-465b-a3af-e6c3c6f8e257
+# ╟─5c9b9479-d89e-44d6-9081-ddae9a6291ba
+# ╟─50cb4141-1cb1-428b-938b-fd81f8102a91
+# ╟─3125ddfe-2a52-4c92-989c-6d26c21e3c93
+# ╟─8c2afa19-cd8e-4f7c-a7d5-fe5a8313f684
+# ╟─c02bc7a1-2b6b-4453-bee7-9bb2735fc402
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
