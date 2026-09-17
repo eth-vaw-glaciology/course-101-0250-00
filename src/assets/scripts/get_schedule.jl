@@ -3,7 +3,11 @@
 import Dates
 
 let
-    today = Dates.today()
+    # Zurich time (EU DST rule), avoids a TimeZones.jl dependency
+    utc = Dates.now(Dates.UTC)
+    dst_switch(month) = Dates.DateTime(Dates.tolast(Dates.Date(Dates.year(utc), month), Dates.Sunday)) + Dates.Hour(1)
+    now = utc + Dates.Hour(dst_switch(3) <= utc < dst_switch(10) ? 2 : 1)
+    today = Dates.Date(now)
 
     sections = sidebar
     section_htmls = map(sections) do (section_id, _)
@@ -17,15 +21,19 @@ let
 
             date_str === nothing && return nothing
 
-            upcoming = try
-                Dates.Date(string(date_str)) > today
+            date = try
+                Dates.Date(string(date_str))
             catch
-                false
+                nothing
             end
+            upcoming = date !== nothing && date > today
+            # reading material is out from 9:00 on the Thursday before
+            reading = upcoming && now >= Dates.DateTime(Dates.toprev(date, Dates.Thursday)) + Dates.Hour(9)
+            label = reading ? "Reading material for $(Dates.format(date, "dd.mm.yyyy"))" : "Upcoming"
 
             class = [
                 "no-decoration",
-                upcoming ? "upcoming-entry" : nothing,
+                upcoming && !reading ? "upcoming-entry" : nothing,
                 ("tag_$(replace(x, " "=>"_"))" for x in tags)...,
             ]
 
@@ -34,9 +42,8 @@ let
             # the CommonMark processor ends a raw-HTML block on the first blank line,
             # which would otherwise wrap the remaining cards in `<p>` and mis-nest the
             # anchors (titles get hoisted out of their cards).
-            # `data-date` lets `schedule_upcoming.js` refresh the upcoming state in the
-            # browser, since `today` above is the build date.
-            @htl("""<a title=$(desc) class=$(class) data-date=$(string(date_str)) href=$(root_url * "/" * other_page.url)><h3>$(name)</h3><span class="schedule-date $(upcoming ? "upcoming-badge" : "")">$(date_str)</span>$(upcoming ? @htl("""<span class="upcoming-label">Upcoming</span>""") : nothing)</a>""")
+            # `data-date` lets `schedule_upcoming.js` refresh this in the browser.
+            @htl("""<a title=$(desc) class=$(class) data-date=$(string(date_str)) href=$(root_url * "/" * other_page.url)><h3>$(name)</h3><span class="schedule-date $(upcoming ? "upcoming-badge" : "")">$(date_str)</span>$(upcoming ? @htl("""<span class=$(["upcoming-label", reading ? "reading-label" : nothing])>$(label)</span>""") : nothing)</a>""")
         end
     end
 

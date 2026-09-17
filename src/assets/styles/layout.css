@@ -344,3 +344,8 @@ main {
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
+
+.upcoming-label.reading-label {
+    letter-spacing: normal;
+    text-transform: none;
+}
