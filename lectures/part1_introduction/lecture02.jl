@@ -1,6 +1,24 @@
 ### A Pluto.jl notebook ###
 # v1.0.3
 
+#> [frontmatter]
+#> chapter = "1"
+#> section = "2"
+#> order = "2"
+#> title = "PDEs and physical processes"
+#> date = "2026-09-22"
+#> tags = ["module1"]
+#> layout = "layout.jlhtml"
+#> 
+#>     [[frontmatter.author]]
+#>     name = "Ivan Utkin"
+#>     [[frontmatter.author]]
+#>     name = "Ludovic Räss"
+#>     [[frontmatter.author]]
+#>     name = "Mauro Werder"
+#>     [[frontmatter.author]]
+#>     name = "Samuel Omlin"
+
 using Markdown
 using InteractiveUtils
 
