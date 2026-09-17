@@ -882,8 +882,8 @@ Set up authentication so that you can push and pull without repeatedly entering 
 ## Let's get our repo onto GitHub
 
 - Create a repository on github.com: click the "+"
-- Local: follow the setup instructions on the website
-- Local: `git push`
+- Local: follow the setup instructions on the website for "…or push an existing repository from the command line"
+  - with the `git push` it will send it to github
   - Enter your username here + the **token** generated before
 
 ## Work with other people: pull request (PR)
