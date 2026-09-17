@@ -857,7 +857,7 @@ If you don't have a GitHub account, make one (most of Julia development happens 
 
 Set up authentication so that you can push and pull without repeatedly entering your credentials.
 
-$(LocalResource("assets/l2_github-bar.png"))
+![GitHub navigation bar](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_github-bar.png)
 
 - Local: tell Git to cache credentials: `git config --global credential.helper cache`
   (this may not be needed on all operating systems, potentially a built-in password/credential
@@ -905,7 +905,7 @@ Foldable("Got any questions?",
 md"""
 Write to us on Element. We will also work through more exercises and answer questions in class.
 		 
-$(LocalResource("assets/l2_git-me.png"))
+![Git comic](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_git-me.png)
 """)
 
 # ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402

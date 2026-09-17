@@ -90,13 +90,13 @@ Growth in single-core performance started stagnating in the mid-2000s due to phy
 
 Another important trend is the so-called **memory wall**, which refers to the growing gap between processor performance and memory-system performance, usually quantified as floating-point throughput (FLOP/s) and memory bandwidth (bytes/s), respectively. Both metrics grow exponentially over time, but the exponents are different:
 
-$(RobustLocalResource("https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_cpu_gpu_evo.png", "assets/l1_cpu_gpu_evo.png"))
+![Evolution of CPU and GPU performance and memory bandwidth](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_cpu_gpu_evo.png)
 
 This means that not the arithmetic complexity, but the amount and cost of memory accesses will ultimately determine the performance of more and more applications. Many scientific codes, especially PDE solvers, are memory bound.
 
 GPUs offer memory bandwidth that is vastly superior to that of CPUs:
 
-$(RobustLocalResource("https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_perf_gpu.png", "assets/l1_perf_gpu.png", :width=>500))
+![GPU memory bandwidth comparison](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_perf_gpu.png)
 
 However, developing codes for GPUs requires rethinking the implementation and which methods we choose for solving PDEs. In this course, you will learn how to use parallel computing, in particular GPU computing, to develop scalable PDE solvers with applications in natural sciences.
 """
@@ -107,7 +107,7 @@ md"""
 
 Julia is a high-level and interactive language offering the performance of compiled languages such as C++ or Fortran. It provides the solution to the so-called **two-language problem**:
 
-$(RobustLocalResource("https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_two_lang.png", "assets/l1_two_lang.png"))
+![The two-language problem](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_two_lang.png)
 
 - One language to prototype - another language for production
 - Example from Ludovic's past: prototype in MATLAB, production in CUDA-C
@@ -117,7 +117,7 @@ $(RobustLocalResource("https://raw.githubusercontent.com/eth-vaw-glaciology/cour
 
 Code stats for PyTorch/TensorFlow and Flux (Julia ML package):
 
-$(RobustLocalResource("https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_flux-vs-tensorflow.png", "assets/l1_flux-vs-tensorflow.png"))
+![Code composition of Flux, PyTorch, and TensorFlow](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/a4f02420601bae984a3e937fb72278b80d857b86/lectures/part1_introduction/assets/l1_flux-vs-tensorflow.png)
 
 As you can see, Julia packages can be developed in 100% Julia.
 
