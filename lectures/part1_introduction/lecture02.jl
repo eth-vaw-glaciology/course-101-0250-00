@@ -28,7 +28,7 @@ using CairoMakie
 
 # ╔═╡ ee6dedf2-b105-11f1-9ab4-b5e3b10de8fa
 md"""
-# Lecture 2
+# PDEs and physical processes
 
 The goal of this lecture is to get familiar with:
 
@@ -652,6 +652,128 @@ So, solving elliptic equations efficiently is not that simple. We'll tackle this
 !!! note
 	The described routine is far from being the only way to tackle numerical solutions to these PDEs. In this course, we will stick to those concepts as they will allow for efficient parallel implementations on GPUs and are relatively easy to implement.
 """
+
+# ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
+md"""
+# Intro to Git
+
+Git is a version control software, useful to
+
+- Keep track of your progress on code (and other files)
+- Collaborate on code
+- Distribute code, to onself (on other computers) and others
+
+!!! note
+	Do not put big binary (or other big files) into git. Anything bigger than 1MB should probably go elsewhere.
+
+**Some questions for you:**
+
+- How often do you use git?
+- Who has git installed on their laptop?
+- Do you use: `commit`, `push`, `pull`, `clone`?
+- Do you use: `branch`, `merge`, `rebase`?
+- GitHub/GitLab etc?
+
+You can read about Git online, here are a few sources:
+
+- [git - the simple guide](https://rogerdudler.github.io/git-guide/)
+- [Git cheatsheet](https://git-scm.com/cheat-sheet)
+- [Using git from VSCode](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
+- [Official tutorial videos (~20 min)](https://git-scm.com/videos)
+
+## A brief git demo session
+
+👉 If you don't have git on your computer, [install it](https://git-scm.com/install/windows)!
+
+- Git setup:
+
+```sh
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+```
+
+- Make a repo (`init`)
+- Add some files (`add`, `commit`)
+- Do some changes (`commit` some more)
+- Make a feature branch (`branch`, `diff`, `difftool`)
+- Merge branch (`merge`)
+- Tag (`tag`)
+
+## Other tools for git
+
+There is plenty of software to interact with git, graphical, command line, VSCode, etc.  Feel free to use those.
+
+But we will only be able to help you with vanilla, command-line git.
+
+## Getting started on GitHub (similar on GitLab, or elsewhere)
+
+GitHub and GitLab are social coding websites
+
+- They host code
+- They facilitate for developers to interact
+- They provide infrastructure for software testing, deployment, etc
+
+!!! note
+	ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).
+
+If you don't have a GitHub account, make one (most of Julia development happens on GitHub)
+
+[https://github.com/](https://github.com/) → "Sign up"
+
+### GitHub setup
+
+Make such that you can push and pull without entering a password
+
+$(LocalResource("assets/l2_github-bar.png"))
+
+- Local: tell git to store credentials: `git config --global credential.helper cache`
+  (this may not be needed on all operating systems, potentially a built-in password/credential
+   manager will do this automatically)
+- [github.com](github.com):
+  - "Settings" → "Developer settings"  "Personal access tokens" → "Generate new token"
+    - Give the token a description/name and select the scope of the token
+    - I selected "repo only" to facilitate pull, push, clone, and commit actions
+  - → "Generate token" and copy it (keep that website open for now)
+
+## Let's get our repo onto GitHub
+
+- Create a repository on github.com: click the "+"
+- Local: follow setup given on website
+- Local: `git push`
+  - Enter your username here + the **token** generated before
+
+## Work with other people: pull request (PR)
+
+When you contribute new code to a repo (in particular a repo which other people work on too), the new code is submitted via a **"pull request"**.  This code is then in a separate branch.  A pull request then makes a web-interface where one can review the changes, request amendments and finally merge the code.
+
+In a repo with write permission, the use following work-flow:
+
+- Make a branch and switch to it: `git switch -c some-branch-name`
+- Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
+- Push the branch to GitHub
+- On the GitHub web-page a bar with a "open pull request" should show: click it
+- If you got more changes, just commit and push them to that branch
+- When happy merge the PR
+
+This work-flow you will use to submit homework for the course.
+
+## Work with other peoples code: fork
+
+For repos without write access, to contribute do:
+
+- Fork a repository on github.com (top right)
+- Make a branch on that fork and work on it
+- Push that to github and open a PR with respect to that fork
+- (not needed in this lecture course)
+"""
+
+# ╔═╡ 3125ddfe-2a52-4c92-989c-6d26c21e3c93
+Foldable("Got any questions?",
+md"""
+Write us on Element. We will also do more exercises and answer questions in the class.
+		 
+$(LocalResource("assets/l2_git-me.png"))
+""")
 
 # ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402
 # helper function to animate the loop in Pluto live
@@ -2653,6 +2775,8 @@ version = "4.1.0+0"
 # ╠═a84ea677-fee3-42be-a194-24e50c4859e4
 # ╟─9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
 # ╟─5c9b9479-d89e-44d6-9081-ddae9a6291ba
+# ╟─50cb4141-1cb1-428b-938b-fd81f8102a91
+# ╟─3125ddfe-2a52-4c92-989c-6d26c21e3c93
 # ╟─8c2afa19-cd8e-4f7c-a7d5-fe5a8313f684
 # ╟─c02bc7a1-2b6b-4453-bee7-9bb2735fc402
 # ╟─00000000-0000-0000-0000-000000000001
