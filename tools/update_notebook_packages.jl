@@ -9,8 +9,6 @@ if !isdir("pluto-deployment-environment") || length(ARGS) != 2
     """)
 end
 
-include("./verify_correct_julia_version.jl")
-
 import Pkg
 Pkg.activate("./pluto-deployment-environment")
 Pkg.instantiate()
