@@ -80,7 +80,7 @@ Select the number of spatial dimensions to see what various differential operato
 ``N`` = $(@bind N PlutoUI.Slider(1:3; default=3, show_value=true))
 
 !!! warning "If the slider doesn't do anything"
-	If you're looking at this notebook on the website, the interactive elements such as this slider won't work. Click the "**Edit** or **run** this notebook" button in the top-right corner ↗️
+	If you're viewing this notebook on the website, interactive elements such as this slider won't work. Click the "**Edit** or **run** this notebook" button in the top-right corner to see how to run it interactively. ↗️
 """
 
 # ╔═╡ 24c0921c-ac89-4987-82d5-c209f7f131d1
@@ -218,15 +218,15 @@ A **Dirichlet** boundary condition prescribes the value of the unknown quantity 
 md"""
 ## Why do we need numerical methods?
 
-Once we have a PDE with initial and boundary conditions specified, we want to solve it. Ideally, we can do this by finding an exact solution, and there are many ways of doing so, to name a few:
+Once we have specified a PDE and its initial and boundary conditions, we want to solve it. Ideally, we would find an exact solution. Several methods can help us do this:
 
-1. [**Separation of variables**](https://en.wikipedia.org/wiki/Separable_partial_differential_equation) (Fourier's method). Allows reducing PDE to several ODEs for each coordinate.
-2. [**Method of characteristics**](https://en.wikipedia.org/wiki/Method_of_characteristics). Usually used with first-order systems of PDEs, find special characteristic curves along which PDE turns into a family of ODEs.
-3. [**Self-similar solutions**](https://en.wikipedia.org/wiki/Self-similar_solution) also convert PDEs into ODEs by finding a suitable change of variables.
+1. [**Separation of variables**](https://en.wikipedia.org/wiki/Separable_partial_differential_equation) (Fourier's method) can reduce a PDE to ordinary differential equations (ODEs), one for each independent variable, when the problem admits a separable form.
+2. [**Method of characteristics**](https://en.wikipedia.org/wiki/Method_of_characteristics) is often used for first-order PDEs. It identifies characteristic curves along which the PDE can be reduced to ODEs.
+3. [**Self-similar solutions**](https://en.wikipedia.org/wiki/Self-similar_solution) can reduce PDEs to ODEs by expressing the solution in terms of a single similarity variable.
 
-While it is very important to be able to find such solutions to get a deep understanding of these equations and processes behind them, it many problems of practical importance these solutions are not available or very difficult to obtain.
+Exact solutions help us understand the equations and the physical processes they describe. However, for many problems of practical importance, such solutions are unavailable or very difficult to obtain.
 
-For example, most analytical solutions require very simple parameterised domain geometry. If we want to simulate e.g. the Antarctic ice sheet in 3D using realistic bed topography, we cannot compute exact solution anymore (yet, at least 😉). Therefore, we must resort to **numerical methods**, which compute the solutions to PDEs only approximately, but enabling much more flexibility in geometry of the domain, and in the choice of selecting parameters for coefficients, initial and boundary conditions for PDEs, which can become more data-driven.
+For example, many analytical techniques rely on simple domain geometries. If we want to simulate the Antarctic ice sheet in 3D using realistic bed topography, an exact analytical solution is generally unavailable. We therefore turn to **numerical methods**. These compute approximate solutions to PDEs while allowing much more flexibility in the domain geometry, coefficients, and initial and boundary conditions, which can be specified using observational data.
 """
 
 # ╔═╡ b1ca295f-a305-467b-a57d-7075b1aef5af
@@ -238,23 +238,23 @@ fold = Foldable("Words of caution", md"""
     md"-- Uncle Ben",
 	))
 
-	Numerical methods, while being very powerful, **are approximate by design**, which means that the numerical solution might deviate from the true solution to the PDE, sometimes significantly. In many cases there are theoretical results estimating accuracy bounds of certain numerical procedures for wide classes of problems, but it is still our responsibility to make sure that the error of approximation is acceptable for each problem we solve.
+	Numerical methods **are approximate by design**, so a numerical solution can deviate significantly from the exact solution to the PDE. Theoretical results provide error bounds for some numerical methods and classes of problems, but we must still check that the approximation error is acceptable for each problem we solve.
 
-	Since we don't know the exact solution (otherwise numerical method wouldn't be needed), we need to rely on indirect evidence:
+	When the exact solution to our problem is unknown (otherwise we wouldn't need the numerical solution), we must rely on indirect checks to help us assess the numerical method and its results:
 
-	- Mesh convergence studies, where we verify that reducing grid spacing results progressively diminishing changes in the solution.
-	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes of integrated mass, momentum and energy of the system must be balanced by the fluxes of these quantities throught the boundaries of your domain. In irreversible processes, [**the second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) requires that the total entropy of a closed system must inrease.
-	- Method of manufactured solutions: construct a synthetic solution, then substitute it into the PDE and find the source term, and a set of ICs and BCs that is consistent with the solution. Then we can test convergence with a numerical solver.
-	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
-	- [**Theoretical proofs of convergence**](https://en.wikipedia.org/wiki/Lax_equivalence_theorem): select numerical scheme for which conditions of convergence are established for a specific problem, then demonstrate that these conditions are satisfied by your numerical procedure.
+	- Mesh convergence studies: check that reducing the grid spacing produces progressively smaller changes in the solution.
+	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes in the total mass, momentum, and energy of the system must be balanced by fluxes of these quantities through the domain boundaries, and any external forces or energy inputs. [**The second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) requires that the total entropy of an isolated system cannot decrease, and must increase for irreversible processes.
+	- Method of manufactured solutions: choose a synthetic solution, substitute it into the PDE, and derive a source term and initial and boundary conditions consistent with that solution. Then check whether the numerical solver converges to the manufactured solution at the expected rate.
+	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exhibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
+	- **Theoretical proofs of convergence**: select a numerical scheme whose convergence conditions have been established for the problem under consideration, then verify that your implementation satisfies those conditions. For example, for linear problems the famous [**Lax-Richtmyer theorem**](https://en.wikipedia.org/wiki/Lax_equivalence_theorem) links convergence to consistency and stability of the finite difference scheme
 
-	Another challenge is that sometimes the solution becomes very complicated, and it is very difficult to interpret the results, or even tell whether we observe a phyisical mechanism or a numerical artefact. Then it is important to take a few steps back, simplify the setup, and systematically investigate which different regimes, or characteristic patterns, are produced by your numerical code. Make sure you understand the physical relevance of these regimes.
+	Complex solutions can be difficult to interpret: an observed pattern may reflect a physical mechanism or a numerical artefact. In such cases, take a step back, simplify the setup, and systematically investigate the regimes and characteristic patterns produced by your code. Make sure you understand their physical significance.
 """)
-	
+
 md"""
 $(fold)
 
-With these words of caution being said, numerical simulations can be fun, which is why we will proceed with the rest of the course 🙃
+With these cautions in mind, numerical simulations can still be fun, which is why we will proceed with the rest of the course! 🙃
 """
 end
 
