@@ -1,9 +1,16 @@
 SOLUTION_CUTOFF = 1
 LECTURES_PATH = joinpath(@__DIR__, "lectures")
 
-import PlutoSplitter
+import SHA
 
-# split the notebook into solution and 
+SPLIT_CACHE_PATH = mkpath(joinpath(@__DIR__, "_cache", "split-v1"))
+SPLIT_ENVIRONMENT = map(("Project.toml", "Manifest.toml")) do file
+    path = joinpath(@__DIR__, "pluto-deployment-environment", file)
+    isfile(path) ? read(path, String) : nothing
+end
+
+# Keep execution enabled so generated notebooks also work as ordinary Julia scripts.
+# Hash contents, not timestamps: rebuilding src must preserve cache hits.
 for part in readdir(LECTURES_PATH)
     part_path = joinpath(@__DIR__, "src", part)
     rm(part_path; force=true, recursive=true)
@@ -19,10 +26,30 @@ for part in readdir(LECTURES_PATH)
             if ext == ".jl"
                 lecture_id = parse(Int, filter(isnumeric, base))
                 type = lecture_id <= SOLUTION_CUTOFF ? "solution" : "statement"
-                @info "splitting notebook" file type
-                PlutoSplitter.split_notebook(filepath, type; output_filename=outpath)
-                # PlutoSplitter changes directory
-                cd(@__DIR__)
+                key = bytes2hex(SHA.sha256(repr((
+                    relpath(filepath, LECTURES_PATH), read(filepath, String), type,
+                    string(VERSION), SPLIT_ENVIRONMENT,
+                ))))
+                cachepath = joinpath(SPLIT_CACHE_PATH, key * ".jl")
+                if isfile(cachepath)
+                    @info "split cache hit" file type
+                    cp(cachepath, outpath)
+                else
+                    @info "split cache miss" file type
+                    @eval import PlutoSplitter
+                    try
+                        PlutoSplitter.split_notebook(filepath, type; output_filename=outpath)
+                    finally
+                        # PlutoSplitter changes directory, including when execution fails.
+                        cd(@__DIR__)
+                    end
+                    # Publish only a complete output; interrupted runs cannot leave a hit.
+                    mktemp(SPLIT_CACHE_PATH) do path, io
+                        write(io, read(outpath))
+                        close(io)
+                        mv(path, cachepath; force=true)
+                    end
+                end
             elseif ext == ".md"
                 @info "copying '$filepath' to '$outpath'"
                 cp(filepath, outpath)
