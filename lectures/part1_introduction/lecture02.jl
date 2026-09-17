@@ -829,6 +829,9 @@ Here are a few online resources about Git:
 
 👉 If you don't have Git on your computer, [install it](https://git-scm.com/install/)!
 
+[Git demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-demo-cords-comp.mp4)
+[Git merge demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-merge-demo-cords-comp.mp4)
+
 - Git setup:
 
 ```sh
@@ -870,7 +873,7 @@ Set up authentication so that you can push and pull without repeatedly entering 
 
 ![GitHub navigation bar](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_github-bar.png)
 
-- Local: tell Git to cache credentials: `git config --global credential.helper cache`
+- Local terminal: tell Git to cache credentials: `git config --global credential.helper cache`
   (this may not be needed on all operating systems, potentially a built-in password/credential
    manager will do this automatically)
 - [github.com](https://github.com/):
@@ -882,7 +885,7 @@ Set up authentication so that you can push and pull without repeatedly entering 
 ## Let's get our repo onto GitHub
 
 - Create a repository on github.com: click the "+"
-- Local: follow the setup instructions on the website for "…or push an existing repository from the command line"
+- Local terminal: follow the setup instructions on the website for "…or push an existing repository from the command line"
   - with the `git push` it will send it to github
   - Enter your username here + the **token** generated before
 
@@ -892,7 +895,7 @@ When contributing to a shared repository, you typically make changes on a separa
 
 In a repository where you have write permission, use the following workflow:
 
-- Make a branch and switch to it: `git switch -c some-branch-name`
+- Make a branch `git branch some-branch-name` and switch to it: `git switch -c some-branch-name`
 - Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
 - Push the branch to GitHub
 - On the GitHub web page, a bar with an "Open pull request" option should appear: click it
