@@ -788,6 +788,17 @@ So, solving elliptic equations efficiently is not that simple. We'll tackle this
 
 # ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
 md"""
+# Software and numeric engineering skills
+
+We try to make this course "wholesome" by not just teaching you numerics but also the skills to actually work with numerical (and other) code.
+Just like with the numerics we take a hands-on approach to these topics. We will cover:
+
+- version control with Git to keep track of the code and to allow collaboration
+- package and environment management to make your software stack reproducible
+- running software on super computers
+- etc
+
+
 # Introduction to Git
 
 Git is version control software. It helps you to:
