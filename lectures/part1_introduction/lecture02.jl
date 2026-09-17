@@ -76,9 +76,11 @@ It is possible to define differential operators using **vector calculus notation
 
 # ╔═╡ 0f85d4f3-8e27-478d-a7b3-c8a5f902adec
 md"""
-Select the number of spatial dimensions to see what various differential operators look like in coordinate form:
-
+Select the number of spatial dimensions to see what various differential operators look like in coordinate form: \
 ``N`` = $(@bind N PlutoUI.Slider(1:3; default=3, show_value=true))
+
+!!! warning "If the slider doesn't do anything"
+	If you're looking at this notebook on the website, the interactive elements such as this slider won't work. Click the "**Edit** or **run** this notebook" button in the top-right corner ↗️
 """
 
 # ╔═╡ 24c0921c-ac89-4987-82d5-c209f7f131d1
@@ -211,6 +213,50 @@ A **Dirichlet** boundary condition prescribes the value of the unknown quantity 
 
 **Neumann** boundary conditions prescribe the derivative of ``u`` in the direction normal to the boundary. In 1D, this amounts to prescribing ``u_x`` at the ends of the domain, with a sign change at the left endpoint when using the outward normal.
 """
+
+# ╔═╡ 2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+md"""
+## Why do we need numerical methods?
+
+Once we have a PDE with initial and boundary conditions specified, we want to solve it. Ideally, we can do this by finding an exact solution, and there are many ways of doing so, to name a few:
+
+1. [**Separation of variables**](https://en.wikipedia.org/wiki/Separable_partial_differential_equation) (Fourier's method). Allows reducing PDE to several ODEs for each coordinate.
+2. [**Method of characteristics**](https://en.wikipedia.org/wiki/Method_of_characteristics). Usually used with first-order systems of PDEs, find special characteristic curves along which PDE turns into a family of ODEs.
+3. [**Self-similar solutions**](https://en.wikipedia.org/wiki/Self-similar_solution) also convert PDEs into ODEs by finding a suitable change of variables.
+
+While it is very important to be able to find such solutions to get a deep understanding of these equations and processes behind them, it many problems of practical importance these solutions are not available or very difficult to obtain.
+
+For example, most analytical solutions require very simple parameterised domain geometry. If we want to simulate e.g. the Antarctic ice sheet in 3D using realistic bed topography, we cannot compute exact solution anymore (yet, at least 😉). Therefore, we must resort to **numerical methods**, which compute the solutions to PDEs only approximately, but enabling much more flexibility in geometry of the domain, and in the choice of selecting parameters for coefficients, initial and boundary conditions for PDEs, which can become more data-driven.
+"""
+
+# ╔═╡ b1ca295f-a305-467b-a57d-7075b1aef5af
+let
+fold = Foldable("Words of caution", md"""
+!!! warning
+	$(blockquote(
+    "With great power comes great responsibility.",
+    md"-- Uncle Ben",
+	))
+
+	Numerical methods, while being very powerful, **are approximate by design**, which means that the numerical solution might deviate from the true solution to the PDE, sometimes significantly. In many cases there are theoretical results estimating accuracy bounds of certain numerical procedures for wide classes of problems, but it is still our responsibility to make sure that the error of approximation is acceptable for each problem we solve.
+
+	Since we don't know the exact solution (otherwise numerical method wouldn't be needed), we need to rely on indirect evidence:
+
+	- Mesh convergence studies, where we verify that reducing grid spacing results progressively diminishing changes in the solution.
+	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes of integrated mass, momentum and energy of the system must be balanced by the fluxes of these quantities throught the boundaries of your domain. In irreversible processes, [**the second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) requires that the total entropy of a closed system must inrease.
+	- Method of manufactured solutions: construct a synthetic solution, then substitute it into the PDE and find the source term, and a set of ICs and BCs that is consistent with the solution. Then we can test convergence with a numerical solver.
+	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
+	- [**Theoretical proofs of convergence**](https://en.wikipedia.org/wiki/Lax_equivalence_theorem): select numerical scheme for which conditions of convergence are established for a specific problem, then demonstrate that these conditions are satisfied by your numerical procedure.
+
+	Another challenge is that sometimes the solution becomes very complicated, and it is very difficult to interpret the results, or even tell whether we observe a phyisical mechanism or a numerical artefact. Then it is important to take a few steps back, simplify the setup, and systematically investigate which different regimes, or characteristic patterns, are produced by your numerical code. Make sure you understand the physical relevance of these regimes.
+""")
+	
+md"""
+$(fold)
+
+With these words of caution being said, numerical simulations can be fun, which is why we will proceed with the rest of the course 🙃
+"""
+end
 
 # ╔═╡ 985a7cbd-185a-4129-9ef1-98463f991745
 md"""
@@ -2790,6 +2836,8 @@ version = "4.1.0+0"
 # ╟─fc1a07dc-8540-4b08-aec6-7fca73cf5b94
 # ╟─6f66c134-6060-4f78-9c16-51bf3b1311d1
 # ╟─4e464867-020a-4143-a027-2c968c30a960
+# ╠═2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+# ╠═b1ca295f-a305-467b-a57d-7075b1aef5af
 # ╟─985a7cbd-185a-4129-9ef1-98463f991745
 # ╠═0411bd65-d3db-4b1f-a58e-a88cbccfacd7
 # ╟─129996e6-739c-4745-929e-583a15842fca
