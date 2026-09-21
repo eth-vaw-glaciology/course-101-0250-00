@@ -1,4 +1,4 @@
-SOLUTION_CUTOFF = 1
+SOLUTION_CUTOFF = 2
 LECTURES_PATH = joinpath(@__DIR__, "lectures")
 
 import PlutoSplitter
