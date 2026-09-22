@@ -1106,10 +1106,21 @@ end
 # split: solution
 advection_1D()
 
+# ╔═╡ 238dbc0b-c70a-472b-8d9a-a9027e323f74
+# split: solution,folded
+md"""
+|Equation                                |Order                          |Is it linear?             |
+|---------------------------------------:|-------------------------------|:-------------------------|
+|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox(; default=true))|
+|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
+|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2; default=2))|$(@bind __l_3 CheckBox(; default=true))|
+|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2; default=2))|$(@bind __l_4 CheckBox())|
+"""
+
 # ╔═╡ 4ab09e8c-c57f-48e1-b38b-2a92d7a21b85
 # ╠═╡ disabled = true
 #=╠═╡
-# split: statement
+# split: statement,folded
 md"""
 |Equation                                |Order                          |Is it linear?             |
 |---------------------------------------:|-------------------------------|:-------------------------|
@@ -1119,17 +1130,6 @@ md"""
 |``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2))|$(@bind __l_4 CheckBox())|
 """
   ╠═╡ =#
-
-# ╔═╡ 238dbc0b-c70a-472b-8d9a-a9027e323f74
-# split: solution
-md"""
-|Equation                                |Order                          |Is it linear?             |
-|---------------------------------------:|-------------------------------|:-------------------------|
-|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox(; default=true))|
-|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
-|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2; default=2))|$(@bind __l_3 CheckBox(; default=true))|
-|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2; default=2))|$(@bind __l_4 CheckBox())|
-"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
