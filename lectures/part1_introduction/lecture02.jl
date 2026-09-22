@@ -156,13 +156,6 @@ The **order** of a PDE is the highest order among its partial derivatives. In th
 Besides order, PDEs can be classified as **linear** or **nonlinear**. Linear PDEs are linear **with respect to the unknown function and its derivatives**.
 
 👉 Here are a few PDEs. Select the order of each equation and indicate whether it is linear:
-
-|Equation                                |Order                          |Is it linear?             |
-|---------------------------------------:|-------------------------------|:-------------------------|
-|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox())|
-|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
-|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2))|$(@bind __l_3 CheckBox())|
-|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2))|$(@bind __l_4 CheckBox())|
 """
 
 # ╔═╡ fc1a07dc-8540-4b08-aec6-7fca73cf5b94
@@ -424,6 +417,42 @@ end
 👉 Your turn. Implement your first diffusion solver:
 """
 
+# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function diffusion_1d()
+	# physics
+	lx   = 20.0
+	dc   = 1.0
+	# numerics
+	nx   = 200
+	nvis = 5
+	# preprocessing
+	dx   = lx / nx
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx) # 😉
+	# create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
+	# time loop
+	@animate fig nvis for it = 1:nt
+	    # qx          .= ...
+		# take a forward Euler time step
+		# C[2:end-1] .-= ...
+		if it % nvis == 0
+			plt[2] = C
+		end
+	end
+end
+  ╠═╡ =#
+
 # ╔═╡ 241cf2b3-dd9c-41d0-b69e-aef71d3ee162
 # ╠═╡ disabled = true
 #=╠═╡
@@ -532,6 +561,44 @@ Pr[2:end-1] .-= ...
 
 👉 Your turn. Finish the implementation of acoustic wave propagation:
 """
+
+# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    # dt   = ...
+    nt   = 2nx
+    # array initialisation
+    # Pr   = @. exp(...)
+    # Vx   = zeros(...)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        # Vx          .-= ...
+        # now use the freshly updated Vx
+        # Pr[2:end-1] .-= ...
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
+  ╠═╡ =#
 
 # ╔═╡ 0ae59d37-ba0e-435a-b1e8-7ebd35eb98d3
 # ╠═╡ disabled = true
@@ -662,6 +729,39 @@ To make things more interesting, let's also flip the sign of the velocity when r
 
 👉 Your turn. Implement all three options for updating `C` and see what works best:
 """
+
+# ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    # C    = @. exp(...)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # C[...] -= ...
+        # flip the sign of vx when it == nt ÷ 2
+        # ...
+        plt[2] = C
+    end
+end
+  ╠═╡ =#
 
 # ╔═╡ df956745-ec01-49b8-8e7b-0717ce60a159
 # ╠═╡ disabled = true
@@ -896,51 +996,6 @@ macro animate(fig, nvis, loop)
 	end
 end;
 
-# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
-# split: solution
-diffusion_1d()
-
-# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
-# split: solution
-acoustic_1D()
-
-# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
-# split: solution
-advection_1D()
-
-# ╔═╡ e4406be5-fae9-402d-abb2-0d01aa9d80f9
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function advection_1D()
-    # physics
-    lx   = 20.0
-    vx   = 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # derived numerics
-    dx   = lx / nx
-    xc   = LinRange(dx / 2, lx - dx / 2, nx)
-    dt   = dx / abs(vx)
-    nt   = nx
-    # array initialisation
-    # C    = @. exp(...)
-    # make visualisation
-    fig = Figure(size=(600, 200))
-    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
-    lines!(ax, xc, C; color=:blue)
-    plt = lines!(ax, xc, C; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        # C[...] -= ...
-        # flip the sign of vx when it == nt ÷ 2
-        # ...
-        plt[2] = C
-    end
-end
-  ╠═╡ =#
-
 # ╔═╡ 3e833c61-5f94-413e-ab57-5e1669da380e
 # split: solution
 function diffusion_1d()
@@ -974,109 +1029,9 @@ function diffusion_1d()
 	end
 end
 
-# ╔═╡ 9dd60033-2f5a-4e8b-a0e6-b2bb89b7bd1c
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function diffusion_1d()
-	# physics
-	lx   = 20.0
-	dc   = 1.0
-	# numerics
-	nx   = 200
-	nvis = 5
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	dt   = dx^2 / dc / 2
-	nt   = 500
-	# array initialisation
-	C    = @. exp(-(xc-lx/2)^2)
-	qx   = zeros(nx) # 😉
-	# create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
-	lines!(xc, C; color=:blue)
-	plt = lines!(xc, C; color=:red)
-	# time loop
-	@animate fig nvis for it = 1:nt
-	    # qx          .= ...
-		# take a forward Euler time step
-		# C[2:end-1] .-= ...
-		if it % nvis == 0
-			plt[2] = C
-		end
-	end
-end
-  ╠═╡ =#
-
-# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
+# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
 # split: solution
-function advection_1D()
-    # physics
-    lx   = 20.0
-    vx   = 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # derived numerics
-    dx   = lx / nx
-    xc   = LinRange(dx / 2, lx - dx / 2, nx)
-    dt   = dx / abs(vx)
-    nt   = nx
-    # array initialisation
-    C    = @. exp(-(xc - lx / 4)^2)
-    # make visualisation
-    fig = Figure(size=(600, 200))
-    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
-    lines!(ax, xc, C; color=:blue)
-    plt = lines!(ax, xc, C; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
-        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
-        (it % (nt ÷ 2) == 0) && (vx = -vx)
-        plt[2] = C
-    end
-end
-
-# ╔═╡ 6c85a0bf-9156-43ef-a1ad-3ae80ebdb966
-# ╠═╡ disabled = true
-#=╠═╡
-# split: statement
-function acoustic_1D()
-    # physics
-    lx   = 20.0
-    ρ, β = 1.0, 1.0
-    # numerics
-    nx   = 200
-    nvis = 2
-    # preprocessing
-    dx   = lx / nx
-    xc   = LinRange(dx/2,lx-dx/2,nx)
-    # dt   = ...
-    nt   = 2nx
-    # array initialisation
-    # Pr   = @. exp(...)
-    # Vx   = zeros(...)
-    # create plot
-	fig = Figure(size=(600, 200))
-	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
-    ylims!(ax, -0.6, 1.1)
-	lines!(xc, Pr; color=:blue)
-	plt = lines!(xc, Pr; color=:red)
-    # time loop
-    @animate fig nvis for it = 1:nt
-        # take a forward Euler time step
-        # Vx          .-= ...
-        # now use the freshly updated Vx
-        # Pr[2:end-1] .-= ...
-        if it % nvis == 0
-            plt[2] = Pr
-        end
-    end
-end
-  ╠═╡ =#
+diffusion_1d()
 
 # ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
 # split: solution
@@ -1112,6 +1067,69 @@ function acoustic_1D()
         end
     end
 end
+
+# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
+# split: solution
+acoustic_1D()
+
+# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
+# split: solution
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    C    = @. exp(-(xc - lx / 4)^2)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
+        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
+        (it % (nt ÷ 2) == 0) && (vx = -vx)
+        plt[2] = C
+    end
+end
+
+# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+# split: solution
+advection_1D()
+
+# ╔═╡ 4ab09e8c-c57f-48e1-b38b-2a92d7a21b85
+# ╠═╡ disabled = true
+#=╠═╡
+# split: statement
+md"""
+|Equation                                |Order                          |Is it linear?             |
+|---------------------------------------:|-------------------------------|:-------------------------|
+|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox())|
+|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
+|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2))|$(@bind __l_3 CheckBox())|
+|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2))|$(@bind __l_4 CheckBox())|
+"""
+  ╠═╡ =#
+
+# ╔═╡ 238dbc0b-c70a-472b-8d9a-a9027e323f74
+# split: solution
+md"""
+|Equation                                |Order                          |Is it linear?             |
+|---------------------------------------:|-------------------------------|:-------------------------|
+|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox(; default=true))|
+|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
+|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2; default=2))|$(@bind __l_3 CheckBox(; default=true))|
+|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2; default=2))|$(@bind __l_4 CheckBox())|
+"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2849,6 +2867,8 @@ version = "4.1.0+0"
 # ╟─85e2f8fa-f284-4e6e-ae8c-1cd203643f64
 # ╟─3704f55f-96e1-415a-902d-159314818f12
 # ╟─316505fa-14d6-4f22-876c-e6e1dabbe4d9
+# ╟─4ab09e8c-c57f-48e1-b38b-2a92d7a21b85
+# ╟─238dbc0b-c70a-472b-8d9a-a9027e323f74
 # ╟─fc1a07dc-8540-4b08-aec6-7fca73cf5b94
 # ╟─6f66c134-6060-4f78-9c16-51bf3b1311d1
 # ╟─4e464867-020a-4143-a027-2c968c30a960
