@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en">
+<head>
+
+<title>Class logistics — Solving partial differential equations in parallel on GPUs </title>
+
+
+<link rel="root" href=".." />
+
+<link rel="icon" href="../assets/favicon.ico" />
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="../assets/styles/index.css" type="text/css" />
+<link rel="stylesheet" href="../assets/styles/layout.css" type="text/css" />
+<script src="../assets/scripts/sidebar.js" type="module"></script>
+
+<link rel="pp-search-data" href="../pp_search_data.json" />
+<script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" integrity="sha256-DFDZACuFeAqEKv/7Vnu1Tt5ALa58bcWZegGGFNgET8g=" crossorigin="anonymous" defer></script>
+<script src="../assets/scripts/search.js" type="module" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.js" integrity="sha256-sDRYYtDc+jNi2rrJPUS5kGxXXMlmnOSCq5ek5tYAk/M=" crossorigin="anonymous" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.css" integrity="sha256-lv6SEl7Dhri7d86yiHCTuSWFb9CYROQFewxZ7Je0n5k=" crossorigin="anonymous">
+
+<script type="importmap">{"imports":{"aVc6E":"./firebase-firestore.7f842f36.js","bEDS4":"./firebase-app.b603aaa4.js"}}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.ca0dbe6e.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.a7d04aac.css"><script type="module" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/frontend.4541b03a.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8">
+
+    
+<meta name="pluto-insertion-spot-meta">
+
+
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2a2928">
+    <meta name="color-scheme" content="light dark">
+
+    
+    
+    
+    <link rel="pluto-external-source" id="pluto-logo-big" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/logo.103597bc.svg">
+    <link rel="pluto-external-source" id="pluto-logo-small" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/favicon_unsaturated.9ed3a6f6.svg">
+
+    <script defer="">console.log("Pluto.jl, by Fons van der Plas (https://github.com/fonsp), Mikołaj Bochenski (https://github.com/malyvsen), Michiel Dral (https://github.com/dralletje), Παναγιώτης (Panagiotis) Γεωργακόπουλος (https://github.com/pankgeorg), Paul Berg (https://github.com/Pangoraw) and friends 🌈");</script>
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.2f9fc277.js" defer=""></script>
+
+    <!-- This doesn't do anything unless activated, and it makes sure parcel bundles this -->
+    <script id="iframe-resizer-content-window-script" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.7a04a462.js" crossorigin="anonymous" defer=""></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.f6933b66.css" type="text/css">
+
+    <meta rel="pluto-cdn-root" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/">
+    <script data-pluto-file="launch-parameters">
+window.pluto_notebook_id = undefined;
+window.pluto_isolated_cell_ids = undefined;
+window.pluto_notebookfile = undefined;
+window.pluto_disable_ui = true;
+window.pluto_slider_server_url = undefined;
+window.pluto_binder_url = "https://mybinder.org/v2/gh/fonsp/pluto-on-binder/v1.0.3";
+window.pluto_statefile = undefined;
+window.pluto_preamble_html = undefined;
+window.pluto_recording_url = undefined;
+window.pluto_recording_audio_url = undefined;
+</script>
+
+<meta name="pluto-insertion-spot-parameters">
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.9e3719ed.js" type="module" defer=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/frontend.ae6e0116.js"></script>
+
+    <link rel="pluto-external-source" id="vmsg-wasm" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/vmsg.56bb9389.wasm">
+    <!-- This script will be enabled by JS after the notebook has initialized to prevent taking up bandwidth during the initial load. -->
+    <link rel="pluto-external-source" id="MathJax-script" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/tex-svg-full.b78c0ac1.js" type="text/javascript">
+    
+    
+<meta name="pluto-insertion-spot-preload">
+
+
+
+</head>
+<body>
+    <div id="pages-layout">
+        <button id="toggle-nav" title="Open navigation"></button>
+        <nav id="pages-sidebar">
+        <div>
+        <ul>
+            <li class="sidebar-about">
+                <div class="course-title">
+                    <h1><a href=".."><span>Solving partial differential equations in parallel on GPUs</span></a></h1>
+                    <h2><span></span></h2>
+                </div>
+                <div class="authors">
+                    by <a href="https://github.com/utkinis">Ivan Utkin</a>, <a href="https://github.com/luraess">Ludovic Räss</a>, <a href="https://github.com/mauro3">Mauro Werder</a>, <a href="https://github.com/omlins">Samuel Omlin</a>
+                </div>
+            </li>
+            <li>
+                <div class="search-bar">
+                    <form action="../search" method="GET">
+                        <input type="search" name="q" placeholder="Search...">
+                        <input type=submit value="🔎">
+                    </form>
+                </div>
+            </li>
+        <li>
+<h3>Welcome</h3>
+<ul>
+<li class='active lecture tag_welcome'><a href='../logistics/'><span class="entry-number"></span> Class logistics</a></li><li class=' lecture tag_welcome'><a href='../installation/'><span class="entry-number"></span> Software installation</a></li><li class=' lecture tag_welcome'><a href='../cheatsheets/'><span class="entry-number"></span> Extras</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 1: Introduction</h3>
+<ul>
+<li class=' lecture tag_module1'><a href='../part1_introduction/lecture01/'><span class="entry-number">1.1</span> Introduction to Julia</a></li><li class=' lecture tag_module1'><a href='../part1_introduction/lecture02/'><span class="entry-number">1.2</span> PDEs and physical processes</a></li><li class=' lecture tag_module1'><a href='../part1_introduction/lecture03/'><span class="entry-number">1.3</span> Solving elliptic PDEs</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 2: Solving PDEs on GPUs</h3>
+<ul>
+<li class=' lecture tag_module2'><a href='../part2_solving_pdes_on_gpus/lecture04/'><span class="entry-number">2.1</span> Parallel computing</a></li><li class=' lecture tag_module2'><a href='../part2_solving_pdes_on_gpus/lecture05/'><span class="entry-number">2.2</span> GPU computing</a></li><li class=' lecture tag_module2'><a href='../part2_solving_pdes_on_gpus/lecture06/'><span class="entry-number">2.3</span> xPU computing</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 3: Multi-GPU computing</h3>
+<ul>
+<li class=' lecture tag_module3'><a href='../part3_multi_gpu_computing/lecture07/'><span class="entry-number">3.1</span> Julia MPI</a></li><li class=' lecture tag_module3'><a href='../part3_multi_gpu_computing/lecture08/'><span class="entry-number">3.2</span> ImplicitGlobalGrid.jl</a></li><li class=' lecture tag_module3'><a href='../part3_multi_gpu_computing/lecture09/'><span class="entry-number">3.3</span> Multi-xPU</a></li><li class=' lecture tag_module3'><a href='../part3_multi_gpu_computing/lecture10/'><span class="entry-number">3.4</span> Advanced optimisations</a></li>
+</ul>
+</li>
+
+                <li><hr></li>
+            <li class="sidebar-about">
+                <div class="semester-details">
+                    <span>Fall 2026</span>
+                    <div class="course-numbers"><span><div class="markdown"><p><a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez&#61;2026W&amp;ansicht&#61;KATALOGDATEN&amp;lerneinheitId&#61;203503&amp;lang&#61;en">ETHZ 101-0250-01L</a></p>
+</div></span></div>
+                </div>
+                <div class="logos">
+                    <picture title="ETH Zürich">
+                        <source srcset="../assets/vaw_logo_dark.png" media="(prefers-color-scheme: dark)" />
+                        <img src="../assets/vaw_logo_color.png">
+                    </picture>
+                    <picture title="Julia Programming Language">
+                        <source srcset="../assets/julia-logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                        <img src="../assets/julia-logo-color.svg">
+                    </picture>
+                </div>
+            </li>
+        </ul>
+        </div>
+        </nav>
+        <div id="pages-content">
+           <div class="lecture-header" >
+    
+    <h1>Class logistics</h1>
+    
+    
+</div>
+        <pluto-editor skip-custom-element class="disable_ui static_preview">
+<main>
+<preamble></preamble>
+<pluto-notebook>
+<pluto-cell>
+<pluto-output class="pages-markdown rich_output">
+<div class="raw-html-wrapper ">
+<div class="markdown">
+<style>
+main a img {
+    width: 5rem;
+    margin: 1rem;
+}
+</style>
+<h1 id="logistics"><a href="#logistics" class="anchor"></a>Logistics</h1>
+<p><a href="https://chat.ethz.ch"><img src="../assets/element_chat.svg" alt="Element chat" /></a>
+<a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925"><img src="../assets/moodle.png" alt="ETHZ Moodle" /></a></p>
+<div class="admonition tip"><p class="admonition-title">Suggestion</p>
+<p>Bookmark this page for easy access to all the information you need for the course.</p>
+</div>
+<h2 id="course-structure"><a href="#course-structure" class="anchor"></a>Course structure</h2>
+<p>Each lecture contains material on physics, numerics, and technical concepts, as well as exercises. The lecture content is outlined in its introduction using the following items for each type of content:</p>
+<ul>
+<li>📚 <strong>Physics</strong>: equations, discretisation, implementation, solver, visualisation</li>
+<li>💻 <strong>Code</strong>: technical, Julia, GitHub</li>
+<li>🚧 <strong>Exercises</strong></li>
+</ul>
+<p>The course will be taught in a “flipped classroom” fashion: you will study the lecture materials at home, and in the classroom you will work on hands-on exercises and participate in group discussions.</p>
+<h2 id="lectures"><a href="#lectures" class="anchor"></a>Lectures</h2>
+<ul>
+<li>Tuesdays 12h45-15h30 in <a href="https://ethz.ch/staffnet/en/utils/location.html?building=HCI&amp;floor=E&amp;room=8">HCI E8</a>.</li>
+</ul>
+<h2 id="discussion"><a href="#discussion" class="anchor"></a>Discussion</h2>
+<p>We use <a href="https://chat.ethz.ch/">Element</a> as the main channel for communication between the teachers and the students, and hopefully also between students. We encourage ETH students to ask and answer questions related to the course, exercises and projects there.</p>
+<p>Head to the <a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925"><em>Element chat</em> link on Moodle</a> to get started with Element:</p>
+<ol>
+<li>Select <strong>Start Student-Chat</strong></li>
+<li>Log in using your NETHZ credentials to start using the browser-based client</li>
+<li>Join the <strong><em>General</em></strong> and <strong><em>Helpdesk</em></strong> rooms</li>
+<li>Download the <a href="https://element.io/">desktop or mobile client</a> for more convenient access or in case of encryption-related issues</li>
+</ol>
+<h2 id="homework-and-submission"><a href="#homework-and-submission" class="anchor"></a>Homework and submission</h2>
+<p>Before each class, study the assigned lecture materials and post questions in the Element chat. During class, you will work on exercises and submit them in two steps:</p>
+<ol>
+<li>At the end of class, you will submit your current progress on Moodle. It doesn’t have to be complete, but it should be a reasonable draft of the solution. <strong>This submission won’t be graded</strong>, but we will check which exercises you worked on during class.</li>
+<li>Before <strong>23:59 on Wednesday</strong> following the lecture, you will submit the final version of the code. <strong>This submission will be graded</strong>, but we will only assign points to exercises showing sufficient state of progress in the end-of-class submission:
+<ul>
+<li>The exercise should be submitted by the end of class</li>
+<li>The submission should conain the skeleton of correct solution (&gt; 50% of tasks completed)</li>
+<li>Missing visualisation and minor code bugs are acceptable in the end-of-class submission</li>
+</ul>
+</li>
+</ol>
+<p>Submit Pluto notebooks on Moodle for weeks 1 and 2. From <strong>week 3 onwards</strong>, develop your solutions in your private course GitHub repository and submit both the final commit hash (SHA) and the pull request URL on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925">Moodle</a>.</p>
+<h3 id="private-github-repository-setup"><a href="#private-github-repository-setup" class="anchor"></a>Private GitHub repository setup</h3>
+<p>Once you have your GitHub account ready (see lecture 2 <a href="/lecture2/#a_brief_git_demo_session">how-to</a>), create a private repository you will <em><strong>share with the teaching staff only</strong></em> to upload your weekly assignments:</p>
+<ol>
+<li>Within the <a href="https://github.com/pdes-on-gpus-julia-course">pdes-on-gpus-julia-course</a> organisation, create a <strong>private</strong> GitHub repository named <code>pde-on-gpu-&lt;moodleprofilename&gt;</code>, where <code>&lt;moodleprofilename&gt;</code> has to be replaced by your name <strong>as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)</strong>. For example, if your Moodle profile name is “Joël Désirée van der Linde”, your repository should be named <code>pde-on-gpu-joel-desiree-van-der-linde</code>.</li>
+<li>Select the <code>MIT License</code> and add a <code>README.md</code> file.</li>
+<li><strong>For each homework submission</strong>, you will:
+<ul>
+<li>create a Git branch named <code>homework-X</code> (X <span class="math tex">\(\in [2-...]\)</span>) and switch to that branch (<code>git switch -c homework-X</code>);</li>
+<li>create a new folder named <code>homework-X</code> to put the exercise code into;</li>
+<li>(don’t forget to <code>git add</code> the code files and <code>git commit</code> them);</li>
+<li>push to GitHub and open a pull request (PR) targeting the <code>main</code> branch on GitHub;</li>
+<li>copy <strong>the single Git commit hash (SHA) after the final push and the link to the PR</strong> and submit <strong>both</strong> on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925">Moodle</a> as the assignment hand-in (this will allow us to verify that the material was pushed on time);</li>
+<li>(do not merge the PR yet).</li>
+</ul>
+</li>
+</ol>
+<div class="admonition warn"><p class="admonition-title">Warn</p>
+<p>Keep the repository lightweight: include the homework folders, <code>README.md</code>, license, and required configuration files; exclude large outputs.</p>
+</div><div class="admonition note"><p class="admonition-title">Note</p>
+<p>For homework 3 and later, the respective folders on GitHub should be Julia projects and thus must contain a <code>Project.toml</code> file. The <code>Manifest.toml</code> file should be excluded from version control. To do so, add it as an entry to a <code>.gitignore</code> file in the root of your repo. Mac users may also add <code>.DS_Store</code> to their <a href="https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-all-repositories-on-your-computer">global <code>.gitignore</code></a>. Code could be placed in a <code>scripts/</code> folder. Output material to be displayed in the <code>README.md</code> could be placed in a <code>docs/</code> folder.</p>
+</div>
+<h3 id="feedback"><a href="#feedback" class="anchor"></a>Feedback</h3>
+<p>After the submission deadline, we will review and grade your assignments. You will get personal feedback directly on the PR as well as on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925">Moodle</a>. Once you have received feedback, please merge the PR.
+We will try to correct your assignments before the lecture following the homework’s deadline.</p>
+<h2 id="final-project"><a href="#final-project" class="anchor"></a>Final project</h2>
+<p>🚧 Under construction.</p>
+<!--
+## Project
+
+1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l9_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
+2. Follow the specific instructions given in [Lecture 8 - infos about projects](/lecture8/#infos_about_projects).
+3. During lectures 8 and 11 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+
+### Project hand-in checklist
+
+The project submission deadline is set to **18.12.2026 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle](https://moodle-app2.let.ethz.ch/course/view.php?id=28925) in the Lecture 11 section.
+
+Make sure to have following items in your private GitHub repository:
+
+- a `PorousConvection` folder containing the structure proposed in [Lecture 8](/lecture8/#preparing_the_project_folder_in_your_github_repo)
+- the 2D and 3D scripts from Lecture 8
+- the CI set-up to test the 2D and 3D porous convection scripts
+- a `lecture_9` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 9](/lecture9/#exercises_-_lecture_9)
+- the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 11](/lecture11/#exercises_-_lecture_11).
+
+**In addition** enhance the `README.md` within the `PorousConvection` folder to include:
+
+- a short motivation/introduction
+- concise information about the equations you are solving
+- concise information about the numerical method and implementation
+- the results, incl. figures with labels, captions, etc...
+- a short discussion/conclusion section about the performed work, results, and outlook
+
+_Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
+
+-->
+<h2 id="evaluation"><a href="#evaluation" class="anchor"></a>Evaluation</h2>
+<p>Enrolled ETHZ students will have to hand in on <a href="https://moodle-app2.let.ethz.ch/course/view.php?id=28925">Moodle</a> and <a href="https://github.com">GitHub</a>:</p>
+<ol>
+<li>Nine weekly assignments during the course constitute 35% of the final grade. The lowest grade will be dropped.</li>
+<li>A project developed during the course constitutes 65% of the final grade.</li>
+</ol>
+<p><strong>Project submission includes code in a GitHub repository and automatically generated documentation</strong>.</p>
+<h2 id="the-use-of-large-language-models-llms"><a href="#the-use-of-large-language-models-llms" class="anchor"></a>The use of large language models (LLMs)</h2>
+<div class="admonition warning"><p class="admonition-title">Warning</p>
+<p>We will probably adjust these guidelines as the course develops</p>
+</div>
+<ul>
+<li>LLMs can be very helpful, but using them during class or to write your final project can prevent you from developing the skills the course is designed to teach.</li>
+<li>No <a href="https://en.wikipedia.org/wiki/Vibe_coding">“vibe coding”</a>, instead, use LLMs as a tutor.</li>
+<li>We require that you understand all the numerical code that you write and hand in as homework. You are fully responsible for your code and results.</li>
+<li>Your final project repository <strong>must</strong> include a section in the README stating which AI tools were used, for which tasks, and how they contributed to the project.</li>
+</ul>
+<div class="admonition tip"><p class="admonition-title">Tip</p>
+<p>Read these materials if you’re interested in responsible use of LLMs:</p>
+<ul>
+<li><a href="https://rfd.shared.oxide.computer/rfd/0576">Using LLMs at Oxide</a></li>
+<li><a href="https://discourse.llvm.org/t/rfc-llvm-ai-tool-policy-human-in-the-loop/89159">LLVM AI tool policy: human in the loop</a></li>
+</ul>
+</div>
+</div>
+</div>
+</pluto-output>
+</pluto-cell>
+</pluto-notebook>
+</main>
+</pluto-editor>
+
+        <div class="page-foot">
+            <div class="copyright">
+                <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00"><b>Edit this page on <img class="github-logo" src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+                Website based on the MIT course <a href="https://computationalthinking.mit.edu"><em><b>Computational Thinking</b>, a live online Julia/Pluto textbook</em></a> and built with <a href="https://plutojl.org/">Pluto.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

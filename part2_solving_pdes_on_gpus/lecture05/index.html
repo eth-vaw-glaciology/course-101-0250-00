@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en">
+<head>
+
+<title>GPU computing — Solving partial differential equations in parallel on GPUs </title>
+
+
+<link rel="root" href="../.." />
+
+<link rel="icon" href="../../assets/favicon.ico" />
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="../../assets/styles/index.css" type="text/css" />
+<link rel="stylesheet" href="../../assets/styles/layout.css" type="text/css" />
+<script src="../../assets/scripts/sidebar.js" type="module"></script>
+
+<link rel="pp-search-data" href="../../pp_search_data.json" />
+<script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" integrity="sha256-DFDZACuFeAqEKv/7Vnu1Tt5ALa58bcWZegGGFNgET8g=" crossorigin="anonymous" defer></script>
+<script src="../../assets/scripts/search.js" type="module" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.js" integrity="sha256-sDRYYtDc+jNi2rrJPUS5kGxXXMlmnOSCq5ek5tYAk/M=" crossorigin="anonymous" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.css" integrity="sha256-lv6SEl7Dhri7d86yiHCTuSWFb9CYROQFewxZ7Je0n5k=" crossorigin="anonymous">
+
+<script type="importmap">{"imports":{"aVc6E":"./firebase-firestore.7f842f36.js","bEDS4":"./firebase-app.b603aaa4.js"}}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.ca0dbe6e.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.a7d04aac.css"><script type="module" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/frontend.4541b03a.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8">
+
+    
+<meta name="pluto-insertion-spot-meta">
+
+
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2a2928">
+    <meta name="color-scheme" content="light dark">
+
+    
+    
+    
+    <link rel="pluto-external-source" id="pluto-logo-big" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/logo.103597bc.svg">
+    <link rel="pluto-external-source" id="pluto-logo-small" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/favicon_unsaturated.9ed3a6f6.svg">
+
+    <script defer="">console.log("Pluto.jl, by Fons van der Plas (https://github.com/fonsp), Mikołaj Bochenski (https://github.com/malyvsen), Michiel Dral (https://github.com/dralletje), Παναγιώτης (Panagiotis) Γεωργακόπουλος (https://github.com/pankgeorg), Paul Berg (https://github.com/Pangoraw) and friends 🌈");</script>
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.2f9fc277.js" defer=""></script>
+
+    <!-- This doesn't do anything unless activated, and it makes sure parcel bundles this -->
+    <script id="iframe-resizer-content-window-script" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.7a04a462.js" crossorigin="anonymous" defer=""></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.f6933b66.css" type="text/css">
+
+    <meta rel="pluto-cdn-root" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/">
+    <script data-pluto-file="launch-parameters">
+window.pluto_notebook_id = undefined;
+window.pluto_isolated_cell_ids = undefined;
+window.pluto_notebookfile = undefined;
+window.pluto_disable_ui = true;
+window.pluto_slider_server_url = undefined;
+window.pluto_binder_url = "https://mybinder.org/v2/gh/fonsp/pluto-on-binder/v1.0.3";
+window.pluto_statefile = undefined;
+window.pluto_preamble_html = undefined;
+window.pluto_recording_url = undefined;
+window.pluto_recording_audio_url = undefined;
+</script>
+
+<meta name="pluto-insertion-spot-parameters">
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/editor.9e3719ed.js" type="module" defer=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/frontend.ae6e0116.js"></script>
+
+    <link rel="pluto-external-source" id="vmsg-wasm" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/vmsg.56bb9389.wasm">
+    <!-- This script will be enabled by JS after the notebook has initialized to prevent taking up bandwidth during the initial load. -->
+    <link rel="pluto-external-source" id="MathJax-script" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.3/frontend-dist/tex-svg-full.b78c0ac1.js" type="text/javascript">
+    
+    
+<meta name="pluto-insertion-spot-preload">
+
+
+
+</head>
+<body>
+    <div id="pages-layout">
+        <button id="toggle-nav" title="Open navigation"></button>
+        <nav id="pages-sidebar">
+        <div>
+        <ul>
+            <li class="sidebar-about">
+                <div class="course-title">
+                    <h1><a href="../.."><span>Solving partial differential equations in parallel on GPUs</span></a></h1>
+                    <h2><span></span></h2>
+                </div>
+                <div class="authors">
+                    by <a href="https://github.com/utkinis">Ivan Utkin</a>, <a href="https://github.com/luraess">Ludovic Räss</a>, <a href="https://github.com/mauro3">Mauro Werder</a>, <a href="https://github.com/omlins">Samuel Omlin</a>
+                </div>
+            </li>
+            <li>
+                <div class="search-bar">
+                    <form action="../../search" method="GET">
+                        <input type="search" name="q" placeholder="Search...">
+                        <input type=submit value="🔎">
+                    </form>
+                </div>
+            </li>
+        <li>
+<h3>Welcome</h3>
+<ul>
+<li class=' lecture tag_welcome'><a href='../../logistics/'><span class="entry-number"></span> Class logistics</a></li><li class=' lecture tag_welcome'><a href='../../installation/'><span class="entry-number"></span> Software installation</a></li><li class=' lecture tag_welcome'><a href='../../cheatsheets/'><span class="entry-number"></span> Extras</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 1: Introduction</h3>
+<ul>
+<li class=' lecture tag_module1'><a href='../../part1_introduction/lecture01/'><span class="entry-number">1.1</span> Introduction to Julia</a></li><li class=' lecture tag_module1'><a href='../../part1_introduction/lecture02/'><span class="entry-number">1.2</span> PDEs and physical processes</a></li><li class=' lecture tag_module1'><a href='../../part1_introduction/lecture03/'><span class="entry-number">1.3</span> Solving elliptic PDEs</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 2: Solving PDEs on GPUs</h3>
+<ul>
+<li class=' lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture04/'><span class="entry-number">2.1</span> Parallel computing</a></li><li class='active lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture05/'><span class="entry-number">2.2</span> GPU computing</a></li><li class=' lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture06/'><span class="entry-number">2.3</span> xPU computing</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 3: Multi-GPU computing</h3>
+<ul>
+<li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture07/'><span class="entry-number">3.1</span> Julia MPI</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture08/'><span class="entry-number">3.2</span> ImplicitGlobalGrid.jl</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture09/'><span class="entry-number">3.3</span> Multi-xPU</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture10/'><span class="entry-number">3.4</span> Advanced optimisations</a></li>
+</ul>
+</li>
+
+                <li><hr></li>
+            <li class="sidebar-about">
+                <div class="semester-details">
+                    <span>Fall 2026</span>
+                    <div class="course-numbers"><span><div class="markdown"><p><a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez&#61;2026W&amp;ansicht&#61;KATALOGDATEN&amp;lerneinheitId&#61;203503&amp;lang&#61;en">ETHZ 101-0250-01L</a></p>
+</div></span></div>
+                </div>
+                <div class="logos">
+                    <picture title="ETH Zürich">
+                        <source srcset="../../assets/vaw_logo_dark.png" media="(prefers-color-scheme: dark)" />
+                        <img src="../../assets/vaw_logo_color.png">
+                    </picture>
+                    <picture title="Julia Programming Language">
+                        <source srcset="../../assets/julia-logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                        <img src="../../assets/julia-logo-color.svg">
+                    </picture>
+                </div>
+            </li>
+        </ul>
+        </div>
+        </nav>
+        <div id="pages-content">
+           <div class="lecture-header" >
+    <p class="number">Section 2.2</p>
+    <h1>GPU computing</h1>
+    
+    
+</div>
+        <pluto-editor skip-custom-element class="disable_ui static_preview">
+<main>
+<preamble></preamble>
+<pluto-notebook>
+<pluto-cell>
+<pluto-output class="pages-markdown rich_output">
+<div class="raw-html-wrapper ">
+<div class="markdown">
+<h1 id="under-construction"><a href="#under-construction" class="anchor"></a>🚧 Under construction</h1>
+
+</div>
+</div>
+</pluto-output>
+</pluto-cell>
+</pluto-notebook>
+</main>
+</pluto-editor>
+
+        <div class="page-foot">
+            <div class="copyright">
+                <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00"><b>Edit this page on <img class="github-logo" src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+                Website based on the MIT course <a href="https://computationalthinking.mit.edu"><em><b>Computational Thinking</b>, a live online Julia/Pluto textbook</em></a> and built with <a href="https://plutojl.org/">Pluto.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
