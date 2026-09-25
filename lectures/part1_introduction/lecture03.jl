@@ -196,7 +196,7 @@ This ODE describes the motion of a point mass damped by a dissipative physical p
 html"""
 <div style="text-align: center;">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 359" width="110" height="359"
-       role="img" aria-label="Damped spring oscillation" style="max-width: 100%; height: auto; background: white;">
+       role="img" aria-label="Damped spring oscillation" style="max-width: 100%; height: auto; background: transparent;">
     <title>Damped spring oscillation</title>
     <desc>An orange mass hangs from a blue spring. Its vertical oscillations decay before the animation repeats.</desc>
     <path data-hatching fill="none" stroke="#374752" stroke-width="0.7" />
