@@ -1,6 +1,24 @@
 ### A Pluto.jl notebook ###
 # v1.0.3
 
+#> [frontmatter]
+#> chapter = "1"
+#> section = "3"
+#> order = "3"
+#> title = "Solving elliptic PDEs"
+#> date = "2026-09-29"
+#> tags = ["module1"]
+#> layout = "layout.jlhtml"
+#> 
+#>     [[frontmatter.author]]
+#>     name = "Ivan Utkin"
+#>     [[frontmatter.author]]
+#>     name = "Ludovic Räss"
+#>     [[frontmatter.author]]
+#>     name = "Mauro Werder"
+#>     [[frontmatter.author]]
+#>     name = "Samuel Omlin"
+
 using Markdown
 using InteractiveUtils
 
