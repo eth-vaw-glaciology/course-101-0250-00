@@ -194,9 +194,94 @@ This ODE describes the motion of a point mass damped by a dissipative physical p
 
 # ╔═╡ c351741d-347e-4fc3-bce1-d8dd84a3a992
 html"""
-<p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Damped_spring.gif" />
-</p>
+<div style="text-align: center;">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 359" width="110" height="359"
+       role="img" aria-label="Damped spring oscillation" style="max-width: 100%; height: auto; background: white;">
+    <title>Damped spring oscillation</title>
+    <desc>An orange mass hangs from a blue spring. Its vertical oscillations decay before the animation repeats.</desc>
+    <path data-hatching fill="none" stroke="#374752" stroke-width="0.7" />
+    <path d="M 4 14 H 106" fill="none" stroke="#374752" stroke-width="3" />
+    <path data-spring fill="none" stroke="#3867ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <rect data-mass x="20" y="161" width="58" height="58" fill="#cd6e28" stroke="#855d3f" stroke-width="2" />
+  </svg>
+  <script>
+  (() => {
+    const script = typeof currentScript === "undefined" ? document.currentScript : currentScript;
+    const svg = script.parentElement.querySelector("svg");
+    const spring = svg.querySelector("[data-spring]");
+    const mass = svg.querySelector("[data-mass]");
+    const hatching = svg.querySelector("[data-hatching]");
+
+    // Geometry and motion adapted from Oleg Alexandrov's public-domain MATLAB source:
+    // https://commons.wikimedia.org/wiki/File:Damped_spring.gif
+    const scale = 232;
+    const anchorX = 49;
+    const anchorY = 14;
+    const projection = Math.cos(Math.PI / 6);
+    const radius = 0.1;
+    const lead = 0.05;
+    const loopMs = 65 * 70;
+    const coils = Array.from({length: 500}, (_, i) => {
+      const u = i / 499;
+      const angle = -Math.PI / 2 + 17 * Math.PI * u;
+      return {u, x: -radius * Math.cos(angle), depth: radius * Math.sin(angle)};
+    });
+    hatching.setAttribute("d", Array.from({length: 20}, (_, i) => {
+      const x = 4 + i * 5;
+      return "M " + x + " 11 L " + (x + 7) + " 4";
+    }).join(" "));
+
+    function draw(elapsed) {
+      // The GIF advances phase by 2π/15 every 70 ms; interpolate continuously.
+      const phase = Math.PI / 2 + 2 * Math.PI * (elapsed % loopMs) / (15 * 70);
+      const length = 1 - 0.45 * Math.exp(-0.1 * phase) * Math.sin(phase);
+      let path = "M " + anchorX + " " + anchorY;
+      for (const point of coils) {
+        const x = anchorX + scale * point.x;
+        const y = anchorY + scale * (projection * (lead + (length - 2 * lead) * point.u)
+          + (point.depth + radius) * 0.5);
+        path += " L " + x.toFixed(3) + " " + y.toFixed(3);
+      }
+      // Projection shifts the endpoint too: attach the mass to the rendered spring.
+      const endY = anchorY + scale * (projection * length + radius);
+      path += " L " + anchorX + " " + endY.toFixed(3);
+      spring.setAttribute("d", path);
+      mass.setAttribute("y", endY.toFixed(3));
+    }
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = null;
+    let start = null;
+    let disposed = false;
+    function animate(timestamp) {
+      if (disposed) return;
+      if (!svg.isConnected) {
+        dispose();
+        return;
+      }
+      if (start === null) start = timestamp;
+      draw(timestamp - start);
+      frame = requestAnimationFrame(animate);
+    }
+    function restart() {
+      if (disposed) return;
+      cancelAnimationFrame(frame);
+      frame = null;
+      start = null;
+      draw(0);
+      if (!reducedMotion.matches) frame = requestAnimationFrame(animate);
+    }
+    function dispose() {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      reducedMotion.removeEventListener("change", restart);
+    }
+    reducedMotion.addEventListener("change", restart);
+    if (typeof invalidation !== "undefined") invalidation.then(dispose);
+    restart();
+  })();
+  </script>
+</div>
 """
 
 # ╔═╡ 79e201d7-0183-4861-ad30-993f1308f39f
