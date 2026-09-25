@@ -34,15 +34,15 @@ md"""
 The goal of this lecture is to become familiar with:
 
 - The damped wave equation.
-- Accelerated pseudo-transient method for solving elliptic PDEs.
+- The accelerated pseudo-transient method for solving elliptic PDEs.
 
-In the previous lecture, we established that the solution to the elliptic PDE could be obtained through integrating in time a corresponding parabolic PDE:
+In the previous lecture, we established that the solution to an elliptic PDE could be obtained by integrating a corresponding parabolic PDE in time:
 
 ```math
 u_t = λ \nabla^2 u ~.
 ```
 
-As time approaches infinity, the time derivative vanishes. Of course, we cannot integrate to infinity, but if we integrate long enough, the time derivative will hopefully become very small, resulting in the approximate solution.
+As time approaches infinity, the time derivative vanishes. Of course, we cannot integrate to infinity, but if we integrate long enough, the time derivative will become very small, yielding an approximate steady-state solution.
 """
 
 # ╔═╡ 0b357917-fc2c-48d1-93bd-7591cffc7238
@@ -50,9 +50,9 @@ Foldable("""How long is "long enough"?""",
 md"""
 ## 
 
-Let's make a quick estimate. Assume that we solve our heat equation in 1D in a domain ``x \in [0, \pi]``, we set ``\lambda = 1``, and we impose Dirichlet boundary conditions at both boundaries.
+Let's make a quick estimate. Assume that we solve the heat equation in 1D on the domain ``x \in [0, \pi]``, set ``\lambda = 1``, and impose Dirichlet boundary conditions at both boundaries.
 
-Let ``u_\mathrm{s}(x)`` be the exact steady-state solution to the elliptic equation ``u_{xx} = 0``. Let the error, i.e. the difference between the transient solution ``u(t, x)`` and ``u_\mathrm{s}(x)`` be ``\epsilon(t, x) = u(t, x) - u_\mathrm{s}(x)``. Substituting ``\epsilon(t, x)`` to the heat equation yields the evolution PDE for the error:
+Let ``u_\mathrm{s}(x)`` be the exact steady-state solution to the elliptic equation ``u_{xx} = 0``. Define the error, i.e. the difference between the transient solution ``u(t, x)`` and ``u_\mathrm{s}(x)``, as ``\epsilon(t, x) = u(t, x) - u_\mathrm{s}(x)``. Substituting ``\epsilon(t, x)`` into the heat equation yields the evolution PDE for the error:
 
 ```math
 \epsilon_t = \epsilon_{xx}~.
@@ -60,32 +60,32 @@ Let ``u_\mathrm{s}(x)`` be the exact steady-state solution to the elliptic equat
 
 Because both the steady solution and the transient solution satisfy the same Dirichlet boundary conditions, ``\epsilon(t, 0) = \epsilon(t, \pi) = 0``.
 
-Let's look for the exact solution to this error equation of the following [separable](https://en.wikipedia.org/wiki/Separation_of_variables) form:
+Let's look for an exact solution to this error equation in the following [separable](https://en.wikipedia.org/wiki/Separation_of_variables) form:
 
 ```math
 \epsilon(t, x) = E(t) \sin(x)~.
 ```
 
-Here, ``E(t)`` is the unknown function representing the **error amplitude**. Note that this solution satisfies the homogeneous Dirichlet boundary conditions. Substituting this ["ansatz"](https://en.wikipedia.org/wiki/Ansatz) to the the error equation we get the following ODE for ``E``:
+Here, ``E(t)`` is the unknown function representing the **error amplitude**. Note that this solution satisfies the homogeneous Dirichlet boundary conditions. Substituting this ["ansatz"](https://en.wikipedia.org/wiki/Ansatz) into the error equation gives the following ODE for ``E``:
 
 ```math
 E' = -E~.
 ```
 
-Solving this ODE, assuming ``E(0) = E^0`` yields:
+Solving this ODE with ``E(0) = E^0`` yields:
 
 ```math
 E(t) = E^0 \exp(-t)~.
 ```
 
-We can see that the magnitude of the error is decaying **exponentially** with time.
+We can see that the magnitude of the error decays **exponentially** with time.
 Let's calculate how long it will take to reduce the error by a given factor. Assuming we want ``E(t)/E^0 < \varepsilon_\mathrm{tol}``, we can invert the solution to find the total time ``t_\mathrm{tot}``:
 
 ```math
 t_\mathrm{tot} = -\log\varepsilon_\mathrm{tol}
 ```
 
-Now, let's convert this time to the number of time steps that it takes to integrate the solution to ``t_\mathrm{tot}``. If we discretize the domain ``[0, \pi]`` into ``n`` grid cells, the cell size will be:
+Now, let's convert this time into the number of time steps needed to reach ``t_\mathrm{tot}``. If we discretise the domain ``[0, \pi]`` into ``n`` grid cells, the cell size will be:
 
 ```math
 \Delta x = \frac{\pi}{n} ~.
@@ -106,25 +106,25 @@ n_\mathrm{it} = \left\lceil -2\frac{n^2}{\pi^2} \log \varepsilon_\mathrm{tol} \r
 As you can see, the number of time steps **increases quadratically** with ``n``.
 
 !!! note "Wait a minute"
-	There are other solutions that satisfy the Dirichlet boundary conditions, namely, ``\epsilon(t, x) = E_k(t) \sin(k x)`` with integer ``k \neq 1``. The general solution is a superposition of all these waves. Why don't we consider these too? It turns out, the rate of decay of these errors will be larger than that for ``k = 1``, so the convergence will be limited by the slowest wave with the smallest [wave number](https://en.wikipedia.org/wiki/Wavenumber) ``k = 1``.
+	There are other solutions that satisfy the Dirichlet boundary conditions, namely, ``\epsilon(t, x) = E_k(t) \sin(k x)`` with positive integer ``k \neq 1``. The general solution is a superposition of all these waves. Why don't we consider these too? These modes decay faster than the mode with ``k = 1``, so convergence is limited by the slowest mode, with the smallest [wavenumber](https://en.wikipedia.org/wiki/Wavenumber), ``k = 1``.
 """)
 
 # ╔═╡ f11d07aa-ab22-4c8a-83dc-31e984244cec
 md"""
 ## Pseudo-transient method
 
-In this course, we call any method that builds upon the analogy to the transient physics the **pseudo-transient (PT)** method.
+In this course, we call any method that builds on an analogy with transient physics a **pseudo-transient (PT)** method.
 
-Using this analogy proves useful when studying multi-physics and nonlinear processes. The PT method isn't restricted to solving the elliptic equations, but can be applied to a wide range of problems that are modelled with PDEs, as long as the steady state exists.
+This analogy is useful when studying multi-physics and nonlinear processes. The PT method isn't restricted to solving elliptic equations; it can be applied to a wide range of problems modelled with PDEs, as long as a steady state exists.
 
-In a pseudo-transient method, we are interested only in steady distributions of the unknown field variables such as concentration, temperature, etc. We thus consider time steps as iterations in a numerical method, and call time a **"pseudo-time"**. To distinguish the physical time ``t`` from pseudo-time, we replace ``t`` in the equations with ``\tau``, and a time step `it` with iteration counter `iter`. When a pseudo-transient method converges, all the pseudo-time derivatives ``\partial/\partial\tau``, ``\partial^2/\partial\tau^2`` etc., vanish.
+In a pseudo-transient method, we are interested only in steady distributions of the unknown field variables, such as concentration and temperature. We thus treat time steps as iterations in a numerical method and call time **"pseudo-time"**. To distinguish physical time ``t`` from pseudo-time, we replace ``t`` in the equations with ``\tau`` and the time-step counter `it` with the iteration counter `iter`. When a pseudo-transient method converges, all the pseudo-time derivatives, ``\partial/\partial\tau``, ``\partial^2/\partial\tau^2``, etc., vanish.
 """
 
 # ╔═╡ cc685fe8-db51-471d-a2a4-6acec55e3c5a
 md"""
 ## Accelerated elliptic solver: intuition
 
-As discussed previously, the number of time steps required to converge the first-order pseudo-transient solver scales quadratically with increasing resolution, which is too expensive for 2D and 3D problems.
+As discussed previously, the number of time steps required for the first-order pseudo-transient solver to converge scales quadratically with increasing resolution, which is too expensive for 2D and 3D problems.
 
 In this lecture, we'll improve the convergence rate of the elliptic solver in 1D. Recall the stability conditions for diffusion and acoustic wave propagation:
 
@@ -133,16 +133,16 @@ dτ = dx^2/dc/2      # diffusion
 dτ = dx/sqrt(1/β/ρ) # acoustic wave propagation
 ```
 
-We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, and not `dx^2` as for the diffusion. So, can we just integrate the wave equation instead?
+We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, rather than `dx^2` as for diffusion. So, can we just integrate the wave equation instead?
 
-Unfortunately, in the solution to the wave equation, the waves do not attenuate with time: **there is no steady state**! However, we can quite easily combine the physical processes of diffusion and wave propagation, and then we will have the best of both worlds: larger time steps, and existence of steady state.
+Unfortunately, in the solution to the wave equation, the waves do not attenuate with time: **there is no steady state**! However, we can combine the physical processes of diffusion and wave propagation to obtain both larger time steps and a steady state.
 """
 
 # ╔═╡ 94ec3349-294e-40f5-8501-4d7fe5510452
 md"""
 ### Damped wave equation
 
-Consider the diffusion equation with diffusivity ``\lambda = 1``, and a wave equation with wavespeed ``c = 1``:
+Consider the diffusion equation with diffusivity ``\lambda = 1`` and a wave equation with wave speed ``c = 1``:
 
 ```math
 \begin{align}
@@ -161,7 +161,7 @@ The parameter ``\zeta > 0`` is called a [**damping parameter**](https://en.wikip
 
 This PDE is called a **damped wave equation**. It is **hyperbolic**, but in contrast to the wave equation, the waves decay over time, and eventually the solution reaches a steady state.
 
-When ``\zeta \ll 1``, the equation behaves more like the wave equation, and it takes a long time for the pseudo-transient process to converge to the steady state. In that case, the equations is said to be **underdamped**. For ``\zeta \gg 1``, the second pseudo-time derivative ``u_{\tau\tau}`` becomes insignificant, and the solution evolves more like a diffusion process, i.e., the equation is **overdamped**. In the latter case, the time step also becomes limited by the square of the grid spacing, `dx^2`, and the number of time steps is large again.
+When ``\zeta \ll 1``, the equation behaves more like the wave equation, and it takes a long time for the pseudo-transient process to converge to the steady state. In that case, the equation is said to be **underdamped**. For ``\zeta \gg 1``, the second pseudo-time derivative ``u_{\tau\tau}`` becomes insignificant, and the solution evolves more like a diffusion process, i.e., the equation is **overdamped**. In the latter case, the time step also becomes limited by the square of the grid spacing, `dx^2`, and the number of time steps is large again.
 
 There is an optimal value of ``\zeta``, a "sweet spot" for which the waves decay at the fastest rate possible. This is called **critical damping**.
 
@@ -171,7 +171,7 @@ The effect of damping can be seen on the simpler **damped oscillator equation**:
 \ddot{u} + \zeta \dot{u} = -u~.
 ```
 
-This is ODE describing the oscillatory motion of a point mass, that is damped by some dissipative physical process, such as the air resistance:
+This ODE describes the motion of a point mass damped by a dissipative physical process, such as air resistance:
 """
 
 # ╔═╡ c351741d-347e-4fc3-bce1-d8dd84a3a992
@@ -184,9 +184,9 @@ html"""
 # ╔═╡ 79e201d7-0183-4861-ad30-993f1308f39f
 md"""
 !!! note
-	The damped oscillator equation actually describes how the magnitude of the error betweed the exact solution to the elliptic equation and the pseudo-transient damped wave equation evolves over time. This can be derived similarly to the case described in the "How long is long enough?" section above.
+	The damped oscillator equation describes how the magnitude of the error between the exact solution to the elliptic equation and the solution to the pseudo-transient damped wave equation evolves over time. This can be derived similarly to the case described in the "How long is long enough?" section above.
 
-Below is the solution to the damped oscillator equation. Tweak the value of `ζ` and see how different regimes look like:
+Below is the solution to the damped oscillator equation. When running this notebook in Pluto, change the value of `ζ` to see what the different regimes look like:
 """
 
 # ╔═╡ 9e910f47-59ad-4591-bd17-064acf1f31fa
@@ -237,13 +237,13 @@ You can see that at `ζ = 2` the system is **critically damped**, and the steady
 md"""
 ### Implementing the damped wave equation
 
-Let's implement simple numerical solver for the damped wave equation in 1D:
+Let's implement a simple numerical solver for the damped wave equation in 1D:
 
 ```math
 u_{\tau\tau} + \zeta u_\tau = \nabla^2 u
 ```
 
-First, we introduce another variable ``v`` for the rate-of-change of ``u``:
+First, we introduce another variable ``v`` for the rate of change of ``u``:
 
 ```math
 \begin{align}
@@ -253,7 +253,7 @@ v_\tau + \zeta v &= \nabla^2 u~.
 ```
 
 !!! note
-	In the previous lecture, we converted the wave equation to the first-order system. This is another way to integrate hyperbolic equations in time using semi-implicit Euler method.
+	In the previous lecture, we converted the wave equation to a first-order system. This is another way to integrate hyperbolic equations in time using the semi-implicit Euler method.
 
 Now, we can discretise the pseudo-time derivatives:
 
@@ -261,7 +261,7 @@ Now, we can discretise the pseudo-time derivatives:
 u_\tau \approx \frac{u^{n+1} - u^n}{\Delta\tau}~.
 ```
 
-As before, superscript ``n`` indicates the time layer, not a power. We can discretise ``v_\tau`` similarly.
+As before, the superscript ``n`` indicates the time level, not a power. We can discretise ``v_\tau`` similarly.
 
 In the `# physics` section, use `lx = π`:
 
@@ -279,7 +279,7 @@ dτ = 0.95dx
 xc = LinRange(dx/2, lx-dx/2, nx)
 ```
 
-Use the sine wave as the initial condition for `u`. Initialise the rate-of-change vector `v` as a zero vector:
+Use a sine wave as the initial condition for `u`. Initialise the rate-of-change vector `v` as a zero vector:
 
 ```julia
 # initialisation
@@ -308,10 +308,10 @@ In the time loop, we first update the solution `u`, and then the rate-of-change 
 ```
 
 !!! hint
-	- To discretise the second derivative, either use nested `diff(diff(...)./dx)./dx` call or introduce flux vector `q` similarly to the previous exercises.
-	- In the term `ζ v`, you can either pick `v` from the previous pseudo-time iteration, or from the next one. You can choose either version, or implement both and check which works better for you.
+	- To discretise the second derivative, either use the nested call `diff(diff(...)./dx)./dx` or introduce a flux vector `q`, as in the previous exercises.
+	- In the term `ζ v`, you can use `v` from either the previous pseudo-time iteration or the next one. Choose either version, or implement both and compare them.
 
-In the visualisation section, we need to update the pseudo-time history vectors `τs` and the amplitude history `us`, then update the plots:
+In the visualisation section, we need to update the pseudo-time history vector `τs` and the amplitude history vector `us`, then update the plots:
 
 ```julia
 if iter % nvis == 0
@@ -333,7 +333,7 @@ If your code is correct, you should see this animation at `ζ = 0.5`:
 
 # ╔═╡ 56cde71c-1926-4628-bcd5-2467b6009f77
 md"""
-Try different values of `ζ` in the range 0--10, and compare the evolution of the amplitude with the solution to the damped oscillator equation above. Verify that at `ζ = 2` the behavior corresponds to the critically damped oscillator.
+Try different values of `ζ` in the range 0–10 and compare the evolution of the amplitude with the solution to the damped oscillator equation above. Verify that at `ζ = 2` the behaviour corresponds to the critically damped oscillator.
 """
 
 # ╔═╡ 025f2984-bc92-4576-8cc8-8559f5c0e327
@@ -389,17 +389,17 @@ end
 
 # ╔═╡ 67dd1075-e9d8-4644-8ea5-cbaeea8c1916
 md"""
-Yay, you've implemented a damped wave equation, which almost a full second-order pseudo-transient solver! But here, we were just building an intuition of the physical analogy between the relaxation solvers and a transient physical process.
+You've implemented a damped wave equation solver, which is almost a full second-order pseudo-transient solver! Here, our aim was to build intuition for the physical analogy between relaxation solvers and transient physical processes.
 
-The idea of accelerating the convergence by increasing the order of PDE dates back to the work by [Frankel (1950)](https://doi.org/10.2307/2002770) where he studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the **second-order Richardson method**.
+The idea of accelerating convergence by increasing the order of the PDE dates back to the work of [Frankel (1950)](https://doi.org/10.2307/2002770), who studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the **second-order Richardson method**.
 
-👀 If interested in how to analytically derive the optimal damping parameter for different equations including elliptic and Stokes equations, [Räss et al. (2022)](https://gmd.copernicus.org/articles/15/5757/2022/) paper is a good starting point.
+👀 If you are interested in deriving the optimal damping parameter analytically for different equations, including elliptic and Stokes equations, the paper by [Räss et al. (2022)](https://gmd.copernicus.org/articles/15/5757/2022/) is a good starting point.
 """
 
 # ╔═╡ 51b15738-f473-40a4-b76a-3ea5ccc20e4a
 md"""
 !!! warning
-	We should be careful when introducing the new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e., if the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
+	We should be careful when introducing new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e. when the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
 
 For example, consider the acoustic problem from the previous lecture:
 
@@ -410,7 +410,7 @@ For example, consider the acoustic problem from the previous lecture:
 \end{align}
 ```
 
-We can introduce damping into this system in few ways. For example, let's add a damping term to a second equation:
+We can introduce damping into this system in several ways. For example, let's add a damping term to the second equation:
 
 ```math
 \begin{align}
@@ -419,7 +419,7 @@ We can introduce damping into this system in few ways. For example, let's add a 
 \end{align}
 ```
 
-Here, we added a term ``p/\eta`` where parameter ``\eta`` can be interpreted as bulk viscosity. It can be easily demonstrated by eliminating ``v`` that this is indeed a damped wave equation. At the steady-state, the second equation reads:
+Here, we added a term ``p/\eta``, where the parameter ``\eta`` can be interpreted as a bulk viscosity. Eliminating ``v`` shows that this is indeed a damped wave equation. At steady state, the second equation reads:
 
 ```math
 p / \eta = -v_x~.
@@ -434,13 +434,13 @@ In other words: **only add those new terms to the governing equations that vanis
 md"""
 ## Accelerated pseudo-transient solver: implementation
 
-Now that we have a good idea about the physical analogy between solving the elliptic equation and the damped wave equation, we can implement the full steady diffusion solver for the spatially variable diffusion coefficient ``\lambda``:
+Now that we understand the physical analogy between solving the elliptic equation and the damped wave equation, we can implement the full steady diffusion solver with a spatially variable diffusion coefficient ``\lambda``:
 
 ```math
 \boldsymbol{\nabla}\cdot(\lambda \boldsymbol{\nabla} u) = 0~.
 ```
 
-Before we proceed, we need formulate how to we measure the convergence.
+Before we proceed, we need to define how we measure convergence.
 """
 
 # ╔═╡ 05a2e73a-3433-44f6-b14a-345778e54655
@@ -453,7 +453,7 @@ To define the measure of error, we introduce the residual:
 r = \boldsymbol{\nabla}\cdot(\lambda \boldsymbol{\nabla} u)~.
 ```
 
-There are many ways to define the error as the norm of the residual, the most popular ones are the ``L_1``, ``L_2``, and ``L_\infty`` norms. We will use the ``L_\infty`` norm here:
+There are many ways to define the error as a norm of the residual; the most common choices are the ``L_1``, ``L_2``, and ``L_\infty`` norms. We will use the ``L_\infty`` norm here:
 
 ```math
 \|\boldsymbol{r}\|_\infty = \max_i(|r_i|)
@@ -461,22 +461,22 @@ There are many ways to define the error as the norm of the residual, the most po
 
 In Julia, this can be computed by calling `maximum(abs, r)`.
 
-If our damping parameter is optimal, the number of iterations required to achieve convergence will scale linearly with increasing resolution. This means that the number of iterations divided by number of grid cells should stay approximately constant. We therefore track convergence by saving the history of the number of iterations per number of grid cells and the history of the ``L_\infty`` norm of the residual. We stop iterations when ``\|r\|_\infty < \varepsilon_\mathrm{tol}``.
+If our damping parameter is optimal, the number of iterations required to achieve convergence will scale linearly with increasing resolution. This means that the number of iterations divided by the number of grid cells should stay approximately constant. We therefore track convergence by saving the iteration count divided by the number of grid cells and the ``L_\infty`` norm of the residual. We stop iterating when ``\|r\|_\infty < \varepsilon_\mathrm{tol}``.
 """
 
 # ╔═╡ c5151cee-5ce3-4baf-8e51-d64c448763f8
 md"""
 ### Preconditioning
 
-In many problems, the material properties such as the diffusion coefficient can vary significantly in space, which can make the convergence of the iterative solvers slow. Such problems are usually called **ill-conditioned**, which means that they have large [condition number](https://en.wikipedia.org/wiki/Condition_number), which measures how accurate the approximate solution to the linear system of equations can be made. In problems with large material contrasts, the condition number is large. To reduce it, the equations are transformed into a form with a better, i.e. lower, condition number. This technique is called [preconditioning](https://en.wikipedia.org/wiki/Preconditioner).
+In many problems, material properties such as the diffusion coefficient can vary significantly in space, slowing the convergence of iterative solvers. Such problems are usually called **ill-conditioned**, meaning that they have a large [condition number](https://en.wikipedia.org/wiki/Condition_number), which measures how accurately the solution to the linear system of equations can be approximated. In problems with large material contrasts, the condition number is large. To reduce it, the equations are transformed into a form with a lower condition number. This technique is called [preconditioning](https://en.wikipedia.org/wiki/Preconditioner).
 
-In our case, assume the discretised the elliptic equation is equivalent to the linear system:
+In our case, assume that the discretised elliptic equation is equivalent to the linear system:
 
 ```math
 A u = b~.
 ```
 
-Solving this is system is equivalent to solving another system:
+Solving this system is equivalent to solving:
 
 ```math
 Q(b - A u) = 0~,
@@ -497,20 +497,20 @@ md"""
 
 The PT solver has the following structure:
 
-1. Initialize the step size ``\alpha``, and the damping parameter ``\beta``.
-2. Initialize the solution vector ``u``, search vector ``d``, residual vector ``r``, preconditioner ``Q``, preconditioned residual ``z``.
-3. Each iteration:
+1. Initialise the step size ``\alpha`` and the damping parameter ``\beta``.
+2. Initialise the solution vector ``u``, search direction vector ``d``, residual vector ``r``, preconditioner ``Q``, and preconditioned residual vector ``z``.
+3. At each iteration:
    - ``u^{n+1} = u^{n} + \alpha d^n``.
    - ``r^{n+1} = r(u^{n+1})``.
    - if ``\|r^{n+1}\|_\infty < \varepsilon_\mathrm{tol}``, break.
    - ``z^{n+1} = Q r^{n+1}``
    - ``d^{n+1} = d^{n} \beta + z^{n+1}``
 
-If you compare the two lines updating the solution vector ``u`` and the search vector ``d`` with the two lines updating the solution ``u`` and the rate-of-change vector ``v`` from the damped equation solver, you will notice that the accelerated PT solver is actually a damped wave equation solver, but with some variables renamed.
+If you compare the updates of the solution vector ``u`` and the search direction vector ``d`` with the updates of ``u`` and the rate-of-change vector ``v`` in the damped wave equation solver, you will notice that the accelerated PT solver is a damped wave equation solver with some variables renamed.
 
 With this information, we can implement the PT solver.
 
-We will solve the steady diffusion problem with spatially variable diffusivity field `λ` parameterised by the background diffusivity `λbg = 1.0` and the perturbation amplitude `λamp = 10.0`. We impose the Dirichlet boundary conditions: `u = 0` at `x = 0` and `u = 1` at `x = lx`.
+We will solve the steady diffusion problem with a spatially variable diffusivity field `λ`, parameterised by the background diffusivity `λbg = 1.0` and the perturbation amplitude `λamp = 10.0`. We impose Dirichlet boundary conditions: `u = 0` at `x = 0` and `u = 1` at `x = lx`.
 
 The physics section will now contain the new diffusivity parameters:
 
@@ -521,7 +521,7 @@ lx   = 20.0
 λamp = 10.0
 ```
 
-In the `# numerics` section, we will introduce the solver parmeters: the PT solver tolerance `εtol  = 1e-6`, the maximum number of iterations `niter = 15nx`, and the convergence check frequency `nchck = ceil(Int, 0.1nx)`:
+In the `# numerics` section, we introduce the solver parameters: the PT solver tolerance `εtol  = 1e-6`, the maximum number of iterations `niter = 15nx`, and the convergence check interval `nchck = ceil(Int, 0.1nx)`:
 
 ```julia
 # numerics
@@ -531,7 +531,7 @@ niter = 15nx
 nchck = ceil(Int, 0.1nx)
 ```
 
-In the `# preprocessing` section, we introduce the grid point coordinates `xv` that will be necessary to initialise the `λ` field, which is located at the grid points, and not cell centres. Then we introduce the damping parameter `β`, and the step size `α`:
+In the `# preprocessing` section, we introduce the grid point coordinates `xv` needed to initialise the `λ` field, which is located at grid points rather than cell centres. We also introduce the damping parameter `β` and the step size `α`:
 
 ```julia
 # preprocessing
@@ -543,10 +543,10 @@ xv   = LinRange(dx,lx-dx,nx-1)
 ```
 
 !!! note
-    - Look at these parameters `α` and `β`. They are closely related to the pseudo-time step `dτ` and the damping `ζ` from the damped wave equation solver. We won't look into their derivation closely in the course, but if you're interested, you can try to convert the damped wave formulation to the PT formulation using pen and paper (or ask LLM).
-    - The value of `β = 1 - 1.3π / nx` here is manually tuned for the specific problem setup. If the diffusivity `λ` was constant, the optimal value would be `β = 1 - 2π / nx`, where the factor `2` is the critical damping value `ζ` from the damped wave equation, and `π` is the scaling factor to convert between the domain length `π` in the damped wave equation solver and `lx`.
+    - The parameters `α` and `β` are closely related to the pseudo-time step `dτ` and the damping `ζ` from the damped wave equation solver. We won't derive them in detail in this course, but if you're interested, you can try to convert the damped wave formulation to the PT formulation using pen and paper (or ask an LLM).
+    - The value `β = 1 - 1.3π / nx` is manually tuned for this problem setup. If the diffusivity `λ` were constant, the optimal value would be `β = 1 - 2π / nx`, where the factor `2` is the critical damping value `ζ` from the damped wave equation, and `π` is the scaling factor to convert between the domain length `π` in the damped wave equation solver and `lx`.
 
-In the array initialisation section, we initialise the solution `u` with zeros (this will be simply an initial guess for the solver, since the solution to the elliptic equation can only depend on the boundary conditions). Then initialize `λ` with a sum of a constant background value `λbg` and a Gaussian profile centered at `lx/2` with an amplitude `λamp`. Then initialize the flux vector as in the previous exercises. Then we introduce the direction vector `d`, the residual vector `r`, and the preconditoned residual vector `z`, all initialized with zeros:
+In the array initialisation section, we initialise the solution `u` with zeros (this is simply an initial guess for the solver, since the solution to the elliptic equation can only depend on the boundary conditions). Initialise `λ` as the sum of the constant background value `λbg` and a Gaussian profile centred at `lx/2` with amplitude `λamp`. Initialise the flux vector as in the previous exercises. Finally, introduce the search direction vector `d`, the residual vector `r`, and the preconditioned residual vector `z`, all initialised with zeros:
 
 ```julia
 # array initialisation
@@ -559,9 +559,9 @@ In the array initialisation section, we initialise the solution `u` with zeros (
 ```
 
 !!! hint
-    The sizes of the search vector, residual vector, and preconditioned residual vector differ from the size of the solution vector, because at the boundaries the value of `u` is specified by the Dirichlet boundary conditions.
+    The sizes of the search direction vector, residual vector, and preconditioned residual vector differ from the size of the solution vector because the value of `u` at the boundaries is specified by the Dirichlet boundary conditions.
 
-Then we intialize the Jacobi preconditioner:
+Then we initialise the Jacobi preconditioner:
 
 ```julia
 # preconditioner
@@ -599,7 +599,7 @@ Then we specify the boundary conditions `u = 0` at `x = 0` and `u = 1` at `x = l
 # u[end] = ...
 ```
 
-Then we compute residual `r = ∇ ⋅ (λ∇u)` by first computing the diffusive flux `qx = -λ∇u`, and then the residual `r = -∇⋅q`:
+Then we compute the residual `r = ∇ ⋅ (λ∇u)` by first computing the diffusive flux `qx = -λ∇u` and then the residual `r = -∇⋅q`:
 
 ```julia
 # compute residual
@@ -610,7 +610,7 @@ Then we compute residual `r = ∇ ⋅ (λ∇u)` by first computing the diffusive
 !!! hint
     Use `u[2:end] - u[1:end-1]` instead of `diff(u)` for better performance.
 
-Then, we check convergence by comparing the ``L_\infty`` norm of residual to the tolerance `εtol`. At the same time, we push the \# of iterations per `nx` and the residual norm to the convergence history vectors:
+Then we check convergence by comparing the ``L_\infty`` norm of the residual with the tolerance `εtol`. At the same time, we append the iteration count divided by `nx` and the residual norm to the convergence history vectors:
 
 ```julia
 # check convergence
@@ -625,7 +625,7 @@ if iter % nchck == 0
 end
 ```
 
-Then we compute the preconditioned residual `z` and update the search vector `d` using newly computed `z` and a damping parameter `β`:
+Then we compute the preconditioned residual `z` and update the search direction vector `d` using the new `z` and the damping parameter `β`:
 
 ```julia
 # compute preconditioned residual
@@ -720,7 +720,7 @@ end
 
 # ╔═╡ a28bdaa2-82f9-4949-b3af-34a0bf4c18ab
 md"""
-If you correctly implemented the solver, you should see the following figure:
+If you have implemented the solver correctly, you should see the following figure:
 """
 
 # ╔═╡ e2a22f7c-34a0-4d67-b9a3-1c76213921a9
@@ -799,21 +799,21 @@ end;
 md"""
 Congrats, you have implemented a full iterative solver!
 
-Now, you can experiment a bit with the solver. Try to vary a litte the damping parameter `β`. You will see that pretty quickly the iterations stop converging if `β` is far from the optimal value.
+Now you can experiment with the solver. Try varying the damping parameter `β` slightly. You will see that the iterations quickly stop converging if `β` is far from the optimal value.
 
-Set the diffusivity perturbation amplitude `λamp` to `0`, then verify that the optimal value of `β` is `1 - 2π/nx`. You can see that when increasing the number of grid points `nx` the total number of iterations per nx  stays approximately the same.
+Set the diffusivity perturbation amplitude `λamp` to `0`, then verify that the optimal value of `β` is `1 - 2π/nx`. As you increase the number of grid cells `nx`, the number of iterations divided by `nx` stays approximately the same.
 
-If you change the center of the diffusivity perturbation, or the amplitude, or add source terms to the equation, then the `β` parameter is no longer optimal and needs manual fine-tuning. For larger material contrasts (i.e. larger `λamp`) no single choice of `β` will guarantee satisfactory convergence rate. Fortunately, there is a simple way to compute it automatically and adjust during iterations.
+If you change the centre or amplitude of the diffusivity perturbation, or add source terms to the equation, the parameter `β` is no longer optimal and needs manual fine-tuning. For larger material contrasts (i.e. larger `λamp`), no single choice of `β` will guarantee a satisfactory convergence rate. Fortunately, there is a simple way to compute it automatically and adjust it during the iterations.
 """
 
 # ╔═╡ 53ead820-57da-4430-9e62-3bab0aca81f2
 md"""
 ### Dynamic relaxation
 
-Historically, the accelerated PT method with automatically computed damping parameter `β` is called **dynamic relaxation (DR)** in the literature (e.g. [Papadrakakis (1981)](https://doi.org/10.1016/0045-7825(81)90066-9)).
+Historically, the accelerated PT method with an automatically computed damping parameter `β` is called **dynamic relaxation (DR)** in the literature (e.g. [Papadrakakis (1981)](https://doi.org/10.1016/0045-7825(81)90066-9)).
 
 !!! note
-	Read [Duretz et al. (2026)](https://doi.org/10.5194/gmd-19-5343-2026) if you want to know how the dynamic relaxation can be applied to the nonlinear large-scael problems in geodynamics.
+	Read [Duretz et al. (2026)](https://doi.org/10.5194/gmd-19-5343-2026) to learn how dynamic relaxation can be applied to large-scale nonlinear problems in geodynamics.
 
 The automatic computation of `β` is as follows:
 
@@ -824,11 +824,11 @@ The automatic computation of `β` is as follows:
 \end{align}
 ```
 
-Update of `β` doesn't need to happen every iteration, which is good because the dot products involve global "reduce" operation, and therefore are quite expensive, especially on GPU. Updating `β` every ~10 iterations is usually a good balance between efficiency and accuracy.
+Updating `β` doesn't need to happen at every iteration, which is useful because dot products involve global reductions and are therefore quite expensive, especially on GPUs. Updating `β` approximately every 10 iterations is usually a good balance between efficiency and accuracy.
 
 Let's implement this DR strategy in our elliptic solver.
 
-Introduce the storage vector for the preconditioned residual from the previous iteration ``z^n``:
+Introduce a vector to store the preconditioned residual from the previous iteration, ``z^n``:
 
 ```julia
 # array initialisaition
@@ -838,7 +838,7 @@ Introduce the storage vector for the preconditioned residual from the previous i
 # ...
 ```
 
-Then, in the `# numerics` section, we add a new parameter `ndrel` controlling the frequency of `β` updates:
+Then, in the `# numerics` section, we add a new parameter `ndrel` controlling the interval between `β` updates:
 
 ```julia
 # numerics
@@ -848,14 +848,14 @@ ndrel = 10
 # ...
 ```
 
-In the iterative loop we now need to compute `α` before updating the solution:
+In the iteration loop, we now need to compute `α` before updating the solution:
 
 ```julia
 α = 0.99 * (1 + β)
 # u[2:end-1] += ...
 ```
 
-Then, before computing the preconditioned residual `z`, we need to save the old `z`, and before updating the direction vector `d`, we need to recompute `β` (but only every `ndrel` iterations):
+Before computing the preconditioned residual `z`, we need to save its old value. Before updating the search direction vector `d`, we need to recompute `β` (but only every `ndrel` iterations):
 
 ```julia
 # save old z
@@ -874,9 +874,9 @@ end
 ```
 
 !!! hint
-	Use `dot` function from LinearAlgebra package for computing dot products of vectors.
+	Use the `dot` function from the `LinearAlgebra` standard library to compute dot products of vectors.
 
-👉 Your turn. Starting from the previous scprit, implement the DR elliptic solver:
+👉 Your turn. Starting from the previous script, implement the DR elliptic solver:
 """
 
 # ╔═╡ d5726aa5-dd9e-4cc8-8c67-7160bba9c133
@@ -974,14 +974,14 @@ end;
 
 # ╔═╡ ae8fc6a2-84f6-41f9-92bd-a02cce10a8b6
 md"""
-You can see that the number of iterations with the DR solver is lower than that with any manually specified constant value of `β`. If you increase the material contrast `λamp` to larger values, e.g. 1000, the DR solver will still converge, but will require much more iterations per `nx`. The manually tuned PT solver will convergence will be impractically slow.
+You can see that the number of iterations with the DR solver is lower than with any manually specified constant value of `β`. If you increase the material contrast `λamp` to larger values, e.g. 1000, the DR solver will still converge but will require many more iterations per `nx`. The manually tuned PT solver will converge impractically slowly.
 """
 
 # ╔═╡ 7c955efd-edd3-4dc9-9ccf-8508d48872ed
 md"""
 ### Multi-physics: steady diffusion-reaction
 
-Let's implement our first multi-physics DR solver by adding chemical reaction:
+Let's implement our first multi-physics DR solver by adding a chemical reaction:
 
 ```math
 \boldsymbol{\nabla}\cdot(\lambda\boldsymbol{\nabla} u) = \frac{u - u_{eq}}{\xi}
@@ -1109,60 +1109,60 @@ end;
 
 # ╔═╡ 72fa4fde-0300-4abe-8f72-9f9b85a7c70c
 md"""
-Interestingly, for smaller reaction timescales `ξ` the convergence becomes faster. This is because the term `1/ξ` on the diagonal of the matrix associated with the linear system of discretised equation makes the matrix better conditioned.
+Interestingly, convergence becomes faster for smaller reaction timescales `ξ`. This is because the term `1/ξ` on the diagonal of the matrix associated with the discretised equation makes the matrix better conditioned.
 """
 
 # ╔═╡ f574be7f-945d-45d6-a16e-00bd9d85581b
 md"""
-## Wrapping-up
+## Wrapping up
 
-- Switching from parabolic to hyperbolic PDE allows to approach the steady-state in number of iterations, proportional to the number of grid points.
-- Pseudo-transient (PT) method is the matrix-free iterative method to solve elliptic PDEs by utilising the analogy to transient physics.
-- Using the optimal iteration parameters is essential to ensure the fast convergence of the PT method.
+- Switching from a parabolic to a hyperbolic PDE allows us to approach steady state in a number of iterations proportional to the number of grid points.
+- The pseudo-transient (PT) method is a matrix-free iterative method for solving elliptic PDEs using an analogy with transient physics.
+- Choosing optimal iteration parameters is essential for fast convergence of the PT method.
 """
 
 # ╔═╡ 413647f6-7a93-49e3-a517-b8ef158f670f
 md"""
-# Julia's REPL, the Package manager (Pkg.jl), and essential packages
+# Julia's REPL, the package manager (Pkg.jl), and essential packages
 
 ## Julia package manager
 
-Docs:
+Documentation:
 - [short](https://docs.julialang.org/en/v1/stdlib/Pkg/)
 - [detailed](https://pkgdocs.julialang.org/v1/)
 
-Powerful package manager:
+The package manager supports:
 - installing, updating and removing packages
-  - this also includes dependencies such as C/Fortan libs, Python/Conda environments, etc.
+  - this also includes dependencies such as C/Fortran libraries and Python/Conda environments
 - separate environments for separate projects
 
 ## Essential packages for your global environment
 
-Packages installed in your global environment are always available, thus useful for utility packages.
+With Julia's default load path, packages installed in your global environment are available for interactive use across projects, making it a useful place for utility packages.
 
-I have installed in my global environment:
+I have the following packages installed in my global environment:
 - [Revise.jl](https://github.com/timholy/Revise.jl) --
   To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
-- [BenchmarkTools.jl](https://github.com/timholy/Revise.jl) --
-  Accurate timers for benchmarking, even quick fast running functions
+- [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) --
+  Accurate timers for benchmarking, even for functions with very short runtimes
 - [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
-  The Julia Jupyter kernel.  Needs to be installed globally.
+  The Julia Jupyter kernel. Installing it in the global environment is recommended.
 - [Makie.jl](https://github.com/MakieOrg/Makie.jl)
 - [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
-  A debugger.  Pretty basic but works well without slowing down program execution (unlike Debugger.jl which has more features).
+  A basic debugger that works well without slowing down program execution (unlike Debugger.jl, which has more features).
 - [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
-  To be used with the built in `Profile` module.  Displays nice flame graphs (probably does not work on the GPU)
+  Tools for displaying flame graphs from the built-in `Profile` module (probably do not work on the GPU)
 
-## Julia Project environments: usage in this course
+## Julia project environments: usage in this course
 
-You will make use of Julia environments to submit your homework:
+You will use Julia environments to submit your homework:
 
-- In your project folder, which is push to GitHub, make sure to create a new folder for each week's exercises.
+- In your project folder, which you push to GitHub, create a new folder for each week's exercises.
 - Each week's folder should be a Julia project, i.e. it should contain a `Project.toml` file.
 
 ## How to do this
 
-This can be achieved by typing entering the Pkg mode from the Julia REPL in the target folder
+Start Julia in the target folder, enter Pkg mode by pressing `]`, activate the project, and add at least one package:
 
 ```julia-repl
 julia> ]
@@ -1172,8 +1172,6 @@ julia> ]
 (lectureXX) pkg> add Plots
 ```
 
-and adding at least one package.
-
 In addition, it is recommended to have the following structure and content:
 - lectureXX
   - `README.md`
@@ -1182,10 +1180,10 @@ In addition, it is recommended to have the following structure and content:
   - docs/
   - scripts/
 
-Codes could be placed in the `scripts/` folder. Output material to be displayed in the `README.md` could be placed in the `docs/` folder.
+Code can be placed in the `scripts/` folder. Output material to be displayed in the `README.md` can be placed in the `docs/` folder.
 
 !!! note
-    The `Manifest.toml` file should be kept local. An automated way of doing so is to add it as entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their **global** `.gitignore`.
+    The `Manifest.toml` file should be kept local. To exclude it from version control, add it as an entry to a `.gitignore` file in the root of your repository. Mac users may also add `.DS_Store` to their **global** `.gitignore`.
 """
 
 # ╔═╡ 9ec2acf5-850d-4d7b-b185-f65965a19250
