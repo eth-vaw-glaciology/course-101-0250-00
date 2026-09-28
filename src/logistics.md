@@ -69,7 +69,7 @@ Once you have your GitHub account ready (see lecture 2 [how-to](https://pde-on-g
     - create a new folder named `homework-X` to put the exercise code into;
     - (don't forget to `git add` the code files and `git commit` them);
     - push to GitHub and open a pull request (PR) targeting the `main` branch on GitHub;
-    - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time);
+    - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time). **Use the same PR for the end-of-class submissions and for the final submissions.**;
     - (do not merge the PR yet).
 
 !!! warn
