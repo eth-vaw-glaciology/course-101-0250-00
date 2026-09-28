@@ -59,16 +59,17 @@ Submit Pluto notebooks on Moodle for weeks 1 and 2. From **week 3 onwards**, dev
 
 ### Private GitHub repository setup
 
-Once you have your GitHub account ready (see lecture 2 [how-to](/lecture2/#a_brief_git_demo_session)), create a private repository you will _**share with the teaching staff only**_ to upload your weekly assignments:
+Once you have your GitHub account ready (see lecture 2 [how-to](https://pde-on-gpu.vaw.ethz.ch/part1_introduction/lecture02/#A-brief-Git-demo)), create a private repository you will **share with the teaching staff only** to upload your weekly assignments:
 
-1. Within the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) organisation, create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde", your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
-2. Select the `MIT License` and add a `README.md` file.
-3. **For each homework submission**, you will:
+1. Submit your GitHub user handle to [Moodle]($(course_info["moodle_github_url"])).
+2. Within the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) organisation, create a **private** GitHub repository named `pde-on-gpu-<moodleprofilename>`, where `<moodleprofilename>` has to be replaced by your name **as displayed on Moodle, lowercase, diacritics removed, spacing replaced with hyphens (-)**. For example, if your Moodle profile name is "Joël Désirée van der Linde", your repository should be named `pde-on-gpu-joel-desiree-van-der-linde`.
+3. Select the `MIT License` and add a `README.md` file.
+4. **For each homework submission**, you will:
     - create a Git branch named `homework-X` (X ``\\in [2-...]``) and switch to that branch (`git switch -c homework-X`);
     - create a new folder named `homework-X` to put the exercise code into;
     - (don't forget to `git add` the code files and `git commit` them);
     - push to GitHub and open a pull request (PR) targeting the `main` branch on GitHub;
-    - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time);
+    - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time). **Use the same PR for the end-of-class submissions and for the final submissions.**;
     - (do not merge the PR yet).
 
 !!! warn
