@@ -8,12 +8,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             # Restoring a cache counts as accessing it, which prevents GitHub from evicting it
             # after 7 days without use. Restore-only, so no duplicate caches are saved.
             - name: ⏱ Cache notebook states
-              uses: actions/cache/restore@v5
+              uses: actions/cache/restore@v6
               with:
                 path: _cache
                 key: ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
@@ -21,7 +21,7 @@ jobs:
                     ${{ runner.os }}-pluto_state_cache-v3-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
 
             - name: ⏱ Cache .julia
-              uses: actions/cache/restore@v5
+              uses: actions/cache/restore@v6
               with:
                 path: ~/.julia
                 key: ${{ runner.os }}-dotjulia-v1-${{ hashFiles('**/Project.toml', '**/Manifest.toml') }}
