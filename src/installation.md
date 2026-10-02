@@ -15,8 +15,8 @@ Code cells are executed by putting the cursor into the cell and hitting `shift +
 
 ## Exercises and homework
 
-The first two lecture's homework assignments will be [Pluto notebooks](https://plutojl.org). You can download the notebooks from Moodle and run them them locally.
-Starting from lecture 3, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#submission).
+The homework assignments of the first three lectures are [Pluto notebooks](https://plutojl.org). You can download the notebooks from Moodle and run them locally.
+Starting from lecture 4, exercise scripts will be mostly standalone regular Julia scripts that have to be uploaded to your private GitHub repo (shared with the teaching staff only). Details in [Logistics](/logistics/#homework-and-submission).
 
 ## Installing Julia v1.12
 
