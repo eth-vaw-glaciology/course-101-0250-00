@@ -185,7 +185,7 @@ which the DR solver from lecture 3 evaluates on a staggered grid as `qx[ix] = -�
 - 1 subtraction, 1 multiplication and 1 division ⟹ **3 floating-point operations**.
 
 !!! note
-	We don't count 2 memory reads for `u[ix+1]` and `u[ix]` because when CPU or GPU never reads only one number from memory: Usually, it fetches a small contiguous range of memory and stores it in a fast cache. Accessing cached memory is orders of magnitude faster than the global RAM.
+	We don't count two memory reads for `u[ix+1]` and `u[ix]`, because a CPU or a GPU never reads a single number from main memory: it fetches a small contiguous block of memory (a cache line, typically 64 bytes) and stores it in a fast cache. Accessing data in the cache is much faster than accessing main memory.
 
 That is about 1 floating-point operation per number transferred, while the devices above could perform 50–70 operations in the same time. Such computations are **memory-bound**: their performance is limited by the memory bandwidth, not by the floating-point performance. Therefore, the number of floating-point operations per second (FLOP/s) is not an adequate metric for the performance of many modern applications on modern hardware.
 """
@@ -228,7 +228,7 @@ md"""
 
 The simplest way to measure ``T_\mathrm{peak}`` is to copy a large array into another one (a memory copy, or memcopy). A memcopy of ``n`` numbers reads ``n`` numbers and writes ``n`` numbers, so its effective memory access is ``A_\mathrm{eff} = 2 \times n \times 8`` bytes for `Float64` numbers.
 
-We use the `@belapsed` macro from the [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package, which runs a function many times and returns the minimum execution time in seconds. We will discuss benchmarking and multi-threadinf in more detail later in this lecture.
+We use the `@belapsed` macro from the [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) package, which runs a function many times and returns the minimum execution time in seconds. With one thread, we copy the arrays with Julia's `copy!` function. With multiple threads, we use the function `mtcopy!`, which copies the array elements in a loop parallelised with `Threads.@threads`. We will discuss benchmarking and multi-threading in more detail later in this lecture.
 """
 
 # ╔═╡ 368a021e-cefc-4e5d-8483-8bd56804b246
@@ -253,7 +253,7 @@ end
 
 # ╔═╡ 1e8d7d7d-8391-4e03-9551-dc0cb748afc5
 md"""
-When running this notebook in Pluto, choose the array size and the number of threads, and tick the box to run the benchmark. By default, Pluto runs notebooks with approximately as many threads as your computer has physical cores.
+When running this notebook in Pluto, choose the number of threads, and tick the box to run the benchmark for array sizes from ``2^{10}`` to ``2^{26}`` elements. By default, Pluto runs notebooks with approximately as many threads as your computer has physical cores.
 
 threads: $(@bind __memcopy_threaded Select([false => "1", true => "all available"])) \
 run the benchmark: $(@bind __memcopy_run CheckBox())
@@ -265,8 +265,6 @@ __sizes = [1 << i for i in 10:2:26]
 __Teffs = Float64[]
 if __memcopy_run
 	@progress "Benchmarking" for n in __sizes
-		A = rand(n)
-		B = rand(n)
 		Teff = memcopy_throughput(n; threaded=__memcopy_threaded)
 		push!(__Teffs, Teff)
 	end
@@ -279,7 +277,7 @@ if __memcopy_run
 	ax  = Axis(fig[1, 1]; xscale=log2, xlabel="Number of elements", ylabel = L"T_\mathrm{eff}~[\text{GB/s}]", title="Benchmark results")
 	xlims!(ax, 1<<9, 1<<27)
 	scatterlines!(ax, __sizes, __Teffs; label="measured")
-	hlines!(ax, __B_peak; color=:gray, linestyle=:dash, linewidth=2, label="peak")
+	hlines!(ax, __B_peak; color=:gray, linestyle=:dash, linewidth=2, label=L"B_\mathrm{peak}")
 	axislegend(ax)
 	fig
 end
@@ -292,8 +290,9 @@ What do you see on the plot? Try to explain the observed trend. Does the measure
 # ╔═╡ 20fc4edd-ce95-4bf5-9e96-5cf01e72cdad
 md"""
 !!! note
-    - The arrays must be much larger than the caches: with a small array size, you will measure a higher throughput, since the data then fits into the cache.
+    - Small arrays fit into the caches, so for small array sizes, we measure the bandwidth of the caches rather than of the main memory. To measure ``T_\mathrm{peak}``, the arrays must be much larger than the caches.
     - The measured throughput is lower than the theoretical peak memory bandwidth ``B_\mathrm{peak}``. On many CPUs, a single core cannot saturate the memory bandwidth: compare the results obtained with 1 thread and with all available threads.
+    - For very small arrays, the overhead of starting the threads dominates, and the multi-threaded copy is slower than the single-threaded one.
 """
 
 # ╔═╡ f0d6a820-daa6-48f6-a487-9e4e7f638ab6
@@ -303,6 +302,9 @@ md"""
 As a first task, let's compute ``T_\mathrm{eff}`` for the steady diffusion solver with dynamic relaxation (DR) from [lecture 3](https://pde-on-gpu.vaw.ethz.ch/part1_introduction/lecture03/#Dynamic-relaxation).
 
 👉 Create a new script `elliptic_1d_dr.jl`, and copy the package imports, the function `elliptic_1d_dr` that you implemented in lecture 3, and the function call into it. Run the script and check that you obtain the same results as in lecture 3.
+
+!!! note
+    In the starting script below, the coefficient in the `β` update is called ``\gamma``, as in the formula in lecture 3 (the code in lecture 3 calls it `A`). This avoids confusion with the effective memory access ``A_\mathrm{eff}``.
 """
 
 # ╔═╡ a03dc7e7-8abe-4273-b9be-4607b86a16e6
@@ -415,7 +417,7 @@ for iter = 1:niter
 end
 ```
 
-Count the exact number of timed iterations (introduce, e.g., `niter_timed`). With the convergence check, the solver can stop before reaching `niter` iterations. Compute the elapsed time `t_toc` after the iteration loop, and the performance metrics:
+The counter `niter_timed` stores the exact number of timed iterations: with the convergence check, the solver can stop before reaching `niter` iterations. Compute the elapsed time `t_toc` after the iteration loop, and the performance metrics:
 
 ```julia
 t_toc = ...
@@ -580,7 +582,7 @@ elliptic_1d_dr(; nx=2^23, niter=110, do_check=false, do_visu=false)
 
 # ╔═╡ 44e7be6f-a432-4eae-964d-aa737b1ba01c
 md"""
-How does the ``T_\mathrm{eff}`` of the solver compare to the memory throughput ``T_\mathrm{peak}`` that you measured with the memcopy benchmark? On an Apple M2 Max laptop, we obtained ``T_\mathrm{eff} \approx 13`` GB/s, while the memcopy on a single core achieved ``T_\mathrm{peak} \approx 96`` GB/s. There is room for improvement!
+How does the ``T_\mathrm{eff}`` of the solver compare to the memory throughput ``T_\mathrm{peak}`` that you measured with the memcopy benchmark? On an Apple M2 Max laptop, we obtained ``T_\mathrm{eff} \approx 14`` GB/s, while the memcopy on a single core achieved ``T_\mathrm{peak} \approx 110`` GB/s. There is room for improvement!
 """
 
 # ╔═╡ de2207dd-765d-478e-9c88-3e895970987d
@@ -616,10 +618,10 @@ The expression `z .- z0` in the `β` update allocates a new temporary array ever
 
 ```julia
 @. z0 = z - z0 # reuse z0 to store the difference
-A = abs(dot(d, z0)) / dot(d, d)
+γ = abs(dot(d, z0)) / dot(d, d)
 ```
 
-On our test machine, these changes only slightly improved the performance: ``T_\mathrm{eff}`` increased from about 13 to 15 GB/s, mostly thanks to removing the allocations. Replacing divisions with multiplications matters more in compute-bound codes, where the arithmetic operations are not hidden behind the memory accesses.
+On our test machine, these changes only slightly improved the performance: ``T_\mathrm{eff}`` increased from about 14 to 15 GB/s, mostly thanks to removing the allocations. Replacing divisions with multiplications matters more in compute-bound codes, where the arithmetic operations are not hidden behind the memory accesses.
 """
 
 # ╔═╡ 58892afc-2f6e-4035-bbf9-2698861bd88d
@@ -662,26 +664,9 @@ end
 
 # ╔═╡ fac744fc-e7ca-4f6c-8225-db9b982bc870
 md"""
-👉 Now, rewrite the update of the solution `u`, the computation of the preconditioned residual `z`, and the update of the search direction `d` with loops. You can keep the copy `@. z0 = z`, which is only performed every `ndrel` iterations.
+👉 Now, rewrite the update of the solution `u`, the computation of the preconditioned residual `z`, and the update of the search direction `d` with loops.
 
-The `β` update contains two dot products. Dot products are **reductions**: every grid cell contributes to a single number. Compute both sums in a single loop:
-
-```julia
-# update β
-if iter % ndrel == 0
-    num = 0.0
-    den = 0.0
-    for ix = 1:nx-2
-        num += ??
-        den += ??
-    end
-    γ = abs(num) / den
-    β = (1 - sqrt(γ))^2
-end
-```
-
-!!! note
-    We call the coefficient ``\gamma``, as in the formula in lecture 3 (the code in lecture 3 calls it `A`), to avoid confusion with the effective memory access ``A_\mathrm{eff}``. The loop computes the difference `z[ix] - z0[ix]` on the fly, so we no longer need to store it in `z0`.
+Keep the operations performed only every `ndrel` iterations as they are: saving `z` to `z0`, and the `β` update. The two dot products in the `β` update are **reductions**: every grid cell contributes to a single number. Reductions require special care when we parallelise the code, and we will come back to them in the section on multi-threading.
 
 !!! hint
     Keep the order of the operations from lecture 3: save `z` to `z0`, compute the new `z`, compute the new `β` using the old `d`, and only then update `d`.
@@ -732,13 +717,8 @@ for iter = 1:niter
     end
     # update β
     if iter % ndrel == 0
-        num = 0.0
-        den = 0.0
-        for ix = 1:nx-2
-            num += d[ix] * (z[ix] - z0[ix])
-            den += d[ix] * d[ix]
-        end
-        γ = abs(num) / den
+        @. z0 = z - z0 # reuse z0 to store the difference
+        γ = abs(dot(d, z0)) / dot(d, d)
         β = (1 - sqrt(γ))^2
     end
     # update search direction
@@ -784,7 +764,7 @@ end
 
 # ╔═╡ 05f468da-39f1-4d3b-b6e3-897bf32a9819
 md"""
-The performance is already much better with the loop version 🚀: on our test machine, ``T_\mathrm{eff}`` increased from about 15 to 35 GB/s.
+The performance is already much better with the loop version 🚀: on our test machine, ``T_\mathrm{eff}`` increased from about 15 to 34 GB/s.
 
 Note that the array operations in the previous version don't allocate memory: since lecture 3, we use views and in-place broadcasting. In fact, each broadcast operation alone is as fast as the corresponding loop. However, in our tests, the compiler generated less efficient code for a large function containing many broadcast operations. Such effects are hard to predict, which is why we always need to measure the performance.
 """
@@ -797,19 +777,19 @@ md"""
 
 In this last step, the goal is to move the loops into compute functions ("kernels"), and to call those within the iteration loop. Compute functions:
 - make the code more modular, and easier to read and to test;
-- are needed for efficient multi-threading, as we will see below;
+- are needed for efficient multi-threading: `Threads.@threads` turns the loop body into a separate function (a closure), and closures that capture variables reassigned in the enclosing function, such as `α` and `β`, make the code type-unstable and slow (see [performance of captured variables](https://docs.julialang.org/en/v1/manual/performance-tips/#man-performance-captured));
 - map directly to GPU kernels, which we will write in the next lecture.
 
-👉 Create the functions `update_solution!` (including the boundary conditions), `compute_residual!`, `precondition!` and `update_search_direction!`, which take the input and output arrays and the needed scalars as arguments and return `nothing`, and the function `compute_β`, which returns the new value of `β`:
+👉 Create the functions `update_u!` (including the boundary conditions), `compute_r!`, `precondition!` and `update_d!`, which take the input and output arrays and the needed scalars as arguments and return `nothing`:
 
 ```julia
-function update_solution!(u, d, α)
+function update_u!(u, d, α)
     nx = length(u)
     ...
-    return nothing
+    return
 end
 
-function compute_residual!(r, qx, u, λ, _dx)
+function compute_r!(r, qx, u, λ, _dx)
     ...
 end
 
@@ -817,17 +797,12 @@ function precondition!(z, r, Q)
     ...
 end
 
-function compute_β(d, z, z0)
-    ...
-    return (1 - sqrt(γ))^2
-end
-
-function update_search_direction!(d, z, β)
+function update_d!(d, z, β)
     ...
 end
 ```
 
-Then, call these functions within the iteration loop.
+Then, call these functions within the iteration loop. For now, keep the `β` update with the dot products in the iteration loop.
 
 !!! note
     Functions that modify their arguments have a `!` at the end of their name; this is a Julia convention.
@@ -837,17 +812,17 @@ Then, call these functions within the iteration loop.
 answer_box(
 md"""
 ```julia
-function update_solution!(u, d, α)
+function update_u!(u, d, α)
     nx = length(u)
     for ix = 1:nx-2
         u[ix+1] += α * d[ix]
     end
     u[1]   = 0
     u[end] = 1
-    return nothing
+    return
 end
 
-function compute_residual!(r, qx, u, λ, _dx)
+function compute_r!(r, qx, u, λ, _dx)
     nx = length(u)
     for ix = 1:nx-1
         qx[ix] = -λ[ix] * @d_xa(u) * _dx
@@ -855,32 +830,21 @@ function compute_residual!(r, qx, u, λ, _dx)
     for ix = 1:nx-2
         r[ix] = -@d_xa(qx) * _dx
     end
-    return nothing
+    return
 end
 
 function precondition!(z, r, Q)
     for ix in eachindex(z)
         z[ix] = Q[ix] * r[ix]
     end
-    return nothing
+    return
 end
 
-function compute_β(d, z, z0)
-    num = 0.0
-    den = 0.0
-    for ix in eachindex(d)
-        num += d[ix] * (z[ix] - z0[ix])
-        den += d[ix] * d[ix]
-    end
-    γ = abs(num) / den
-    return (1 - sqrt(γ))^2
-end
-
-function update_search_direction!(d, z, β)
+function update_d!(d, z, β)
     for ix in eachindex(d)
         d[ix] = d[ix] * β + z[ix]
     end
-    return nothing
+    return
 end
 
 ...
@@ -891,9 +855,9 @@ for iter = 1:niter
     niter_timed += 1
     # update solution
     α = 0.99 * (1 + β)
-    update_solution!(u, d, α)
+    update_u!(u, d, α)
     # compute residual
-    compute_residual!(r, qx, u, λ, _dx)
+    compute_r!(r, qx, u, λ, _dx)
     # check convergence
     if do_check && iter % nchck == 0
         err = maximum(abs, r)
@@ -912,10 +876,12 @@ for iter = 1:niter
     precondition!(z, r, Q)
     # update β
     if iter % ndrel == 0
-        β = compute_β(d, z, z0)
+        @. z0 = z - z0 # reuse z0 to store the difference
+        γ = abs(dot(d, z0)) / dot(d, d)
+        β = (1 - sqrt(γ))^2
     end
     # update search direction
-    update_search_direction!(d, z, β)
+    update_d!(d, z, β)
 end
 ```
 """)
@@ -940,7 +906,7 @@ Let's evaluate the performance of our code using `BenchmarkTools`. To time a sin
 
 ```julia
 function compute!(u, d, z, r, qx, λ, Q, α, β, _dx)
-    update_solution!(...)
+    update_u!(...)
     ...
     return
 end
@@ -972,11 +938,11 @@ answer_box(
 md"""
 ```julia
 function compute!(u, d, z, r, qx, λ, Q, α, β, _dx)
-    update_solution!(u, d, α)
-    compute_residual!(r, qx, u, λ, _dx)
+    update_u!(u, d, α)
+    compute_r!(r, qx, u, λ, _dx)
     precondition!(z, r, Q)
-    update_search_direction!(d, z, β)
-    return nothing
+    update_d!(d, z, β)
+    return
 end
 
 ...
@@ -1000,7 +966,7 @@ end
 md"""
 ## Shared memory parallelisation
 
-Julia's `Base` provides [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/). Only two modifications are needed to use it in our code:
+Julia's `Base` provides [multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/). Only two modifications are needed to parallelise the loops in our compute functions:
 
 1. Place `Threads.@threads` in front of the loops in the compute functions, e.g.:
 
@@ -1028,9 +994,41 @@ The number of threads can be queried within a Julia session with `Threads.nthrea
 
 # ╔═╡ b8949c19-1ab3-4d12-b579-9ca00f7e390a
 md"""
-In our solver, we keep the reductions serial: they are only performed every `ndrel` (or `nchck`) iterations, so their cost is small. Parallel reductions are possible, e.g. by letting each thread sum up its own part of the array and adding up the partial sums at the end, but that is beyond the scope of this lecture. Note that the serial parts of a code limit the achievable speed-up ([Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law)).
+### Parallel reductions
 
-👉 Add `Threads.@threads` in front of the loops in all compute functions except `compute_β`. Run the script with 1, 2, 4, ... threads and compare the performance.
+Not every loop can be parallelised by placing `Threads.@threads` in front of it. `Threads.@threads` assumes that the iterations of the loop are independent: each iteration may only write to memory locations that no other iteration reads or writes. This is the case for the loops in our compute functions, but not for **reductions**, such as the dot products in the `β` update, where every grid cell contributes to a single number. If several threads update the same variable at the same time, some of the updates get lost. This is called a [race condition](https://en.wikipedia.org/wiki/Race_condition), and it leads to wrong and non-deterministic results. Parallel reductions require a different strategy: each thread reduces its own part of the array, and the partial results are combined at the end.
+
+Instead of implementing parallel reductions ourselves, we use the [AcceleratedKernels.jl](https://github.com/JuliaGPU/AcceleratedKernels.jl) package. It provides parallel implementations of standard algorithms, such as sorting and reductions, for multi-threaded CPUs and for GPUs. Its function `mapreduce(f, op, src, srcs...)` applies the function `f` to the elements of one or several arrays, and combines the results with the operator `op`. For example, the dot product of the arrays `a` and `b` can be computed as:
+
+```julia
+AcceleratedKernels.mapreduce(*, +, a, b)
+```
+
+With several arrays, `f` takes one argument per array. This allows us to compute ``\boldsymbol{d}^n \cdot (\boldsymbol{z}^{n+1} - \boldsymbol{z}^n)`` on the fly, without storing the difference `z - z0` in `z0`.
+
+👉 Add the AcceleratedKernels package to your project, and `using AcceleratedKernels` at the top of the script. Move the `β` update into a function `compute_β(d, z, z0)`, which computes both dot products with `AcceleratedKernels.mapreduce` and returns the new value of `β`:
+
+```julia
+function compute_β(d, z, z0)
+    num = AcceleratedKernels.mapreduce(...)
+    den = AcceleratedKernels.mapreduce(...)
+    γ = abs(num) / den
+    return (1 - sqrt(γ))^2
+end
+```
+
+and call it within the iteration loop:
+
+```julia
+# update β
+if iter % ndrel == 0
+    β = compute_β(d, z, z0)
+end
+```
+
+The maximum in the convergence check is also a reduction, but we keep it as it is: it is only performed every `nchck` iterations, and it is deactivated when we measure the performance. Note that the serial parts of a code limit the achievable speed-up ([Amdahl's law](https://en.wikipedia.org/wiki/Amdahl%27s_law)).
+
+👉 Add `Threads.@threads` in front of the loops in the compute functions `update_u!`, `compute_r!`, `precondition!` and `update_d!`. Run the script with 1, 2, 4, ... threads and compare the performance.
 """
 
 # ╔═╡ 3719f399-238d-40bc-8101-4301670e1f8d
@@ -1198,13 +1196,13 @@ md"""
 
 | Version                                                      | 1 thread | 8 threads |
 | :----------------------------------------------------------- | :------: | :-------: |
-| `elliptic_1d_dr_Teff.jl`                                     | 13       | –         |
+| `elliptic_1d_dr_Teff.jl`                                     | 14       | –         |
 | `elliptic_1d_dr_perf.jl`                                     | 15       | –         |
-| `elliptic_1d_dr_perf_loop.jl`                                | 35       | –         |
-| `elliptic_1d_dr_perf_loop_fun.jl` (without threads)          | 35       | –         |
-| `elliptic_1d_dr_perf_loop_fun.jl` (with `Threads.@threads`)  | 31       | 57        |
-| same, `@belapsed compute!(...)`                              | 38       | 74        |
-| memcopy (``T_\mathrm{peak}``)                                | 96       | 210       |
+| `elliptic_1d_dr_perf_loop.jl`                                | 34       | –         |
+| `elliptic_1d_dr_perf_loop_fun.jl` (without threads)          | 34       | –         |
+| `elliptic_1d_dr_perf_loop_fun.jl` (with `Threads.@threads`)  | 30       | 64        |
+| same, `@belapsed compute!(...)`                              | 38       | 75        |
+| memcopy (``T_\mathrm{peak}``)                                | 110      | 210       |
 
 Multi-threading speeds up the solver until the memory bandwidth is saturated.
 """
@@ -1215,14 +1213,14 @@ md"""
 
 Modern CPU cores can apply the same operation to several numbers at once using [SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data) instructions, e.g. [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) on x86 processors, or NEON on ARM processors such as the Apple M-series chips. The Julia compiler uses SIMD instructions automatically when it can prove that it is safe to do so.
 
-Julia's `Base` also exposes the [`@simd` macro](https://docs.julialang.org/en/v1/base/base/#Base.SimdLoop.@simd), which gives the compiler extra liberties to reorder the iterations of a loop, e.g. to vectorise the sums in `compute_β`. To try it, decorate the loop with `@simd for`.
+Julia's `Base` also exposes the [`@simd` macro](https://docs.julialang.org/en/v1/base/base/#Base.SimdLoop.@simd), which gives the compiler extra liberties to reorder the iterations of a loop, e.g. to vectorise a sum `s += a[i]` computed in a loop. To try it, decorate the loop with `@simd for`.
 
 !!! warning
     The `@simd` macro is still experimental and could change or disappear in future versions of Julia. Incorrect use of `@simd` may cause unexpected results.
 
-Using the [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with SIMD optimisations. LoopVectorization can also safely parallelise reductions, such as the sums in `compute_β`. To try it:
+Using the [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) package, it is possible to combine multi-threading with SIMD optimisations. LoopVectorization can also parallelise reductions written as loops. To try it:
 1. Add LoopVectorization to your project, and add `using LoopVectorization` at the top of the script.
-2. Replace `Threads.@threads` with `@tturbo`, and add `@tturbo` in front of the loop in `compute_β`.
+2. Replace `Threads.@threads` with `@tturbo`.
 
 !!! warning
     `@tturbo` doesn't check array bounds, and assumes that the iterations of the loop can be executed in any order. Misusing it can lead to wrong results or crashes.
@@ -1235,7 +1233,7 @@ md"""
 - The performance of PDE solvers is usually limited by the memory bandwidth, not by the floating-point performance.
 - The effective memory throughput ``T_\mathrm{eff}`` measures how efficiently a solver uses the memory bandwidth; its upper bound ``T_\mathrm{peak}`` can be measured with a memcopy benchmark.
 - We rewrote the DR solver using loops and compute functions, and parallelised it with `Threads.@threads`.
-- Reductions require special care in parallel code.
+- Reductions require special care in parallel code. AcceleratedKernels.jl provides parallel reductions for CPUs and GPUs.
 """
 
 # ╔═╡ 198cbdf1-7def-47d2-ad81-7fa423331bc9
