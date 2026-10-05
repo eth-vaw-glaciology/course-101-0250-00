@@ -8,6 +8,8 @@ on:
 jobs:
   doc-preview-cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # push to gh-pages
     steps:
       - name: Checkout gh-pages branch
         uses: actions/checkout@v7
