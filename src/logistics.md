@@ -93,7 +93,7 @@ The list of available topics, the expected content of the project repository, an
 
 The following steps will get you started on your final project:
 
-1. Find a classmate to team up with.
+1. Find a classmate to team up with. If you don't find anyone, reach out to the teaching staff.
 2. Read through the proposed topics on the [Final projects](/final_projects/) page.
 3. Choose a preferred topic and an alternative one.
 
