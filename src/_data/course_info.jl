@@ -15,4 +15,5 @@ Dict(
     "repo" => "https://github.com/eth-vaw-glaciology/course-101-0250-00",
     "moodle_url" => "https://moodle-app2.let.ethz.ch/course/view.php?id=28925",
     "moodle_github_url" => "https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1459632",
+    "moodle_final_project_url" => "https://moodle-app2.let.ethz.ch/", # TODO: add URL
 )

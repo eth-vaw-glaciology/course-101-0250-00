@@ -83,40 +83,34 @@ Once you have your GitHub account ready (see lecture 2 [how-to](https://pde-on-g
 After the submission deadline, we will review and grade your assignments. You will get personal feedback directly on the PR as well as on [Moodle]($(course_info["moodle_url"])). Once you have received feedback, please merge the PR.
 We will try to correct your assignments before the lecture following the homework's deadline.
 
-## Final project
+## Final projects
 
-🚧 Under construction.
+**Project's due date is December 17, 2026 -- 23h59 CET (enforced by a "release tag v1.0.0").**
 
-<!--
-## Project
+### Getting started
 
-1. Within your `pde-on-gpu-<moodleprofilename>` folder, copy over the `PorousConvection` you can find in the `l9_project_template` folder within the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts) folder. Make sure to copy the entire folder as not to loose the hidden files.
-2. Follow the specific instructions given in [Lecture 8 - infos about projects](/lecture8/#infos_about_projects).
-3. During lectures 8 and 11 you will be asked to add material to the `PorousConvection` folder as part of regular homework hand-in _which will serve as evaluation for the Part 2 (35% of the final grade)_ (see [Evaluation](#evaluation) section).
+The following steps will get you started with the final projects:
 
-### Project hand-in checklist
+1. Find a classmate to work with.
+2. Select a topic of your choice.
+3. Initiate a **private** GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`) in the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) GitHub organisation.
+4. Send and email to Ivan (iutkin@ethz.ch) and Ludovic (luraess@ethz.ch) by **Tuesday December 3, 2024**, with subject _**Final projects**_ including
+    - your project partner
+    - a brief description of your choice
+    - a link to your final project GitHub repository
+    - _anything else missing in this list_
+5. Work on your final project, asking for help
+    - in the Element _Helpdesk_ channel for general question
+    - as **GitHub "issue"** for project specific questions
+    - during class hours serving as helpdesk
 
-The project submission deadline is set to **18.12.2026 - 23h59 CET** (see also [Homework](/homework)). The final GitHub SHA has to be added to [Moodle]($(course_info["moodle_url"])) in the Lecture 11 section.
+### Final project submission
 
-Make sure to have following items in your private GitHub repository:
+Submission deadline for the project is **December 17, 2026 -- 23h59 CET**.
 
-- a `PorousConvection` folder containing the structure proposed in [Lecture 8](/lecture8/#preparing_the_project_folder_in_your_github_repo)
-- the 2D and 3D scripts from Lecture 8
-- the CI set-up to test the 2D and 3D porous convection scripts
-- a `lecture_9` folder (different from the PorousConvection folder) containing the codes, `README.md` and material listed in [Exercises - Lecture 9](/lecture9/#exercises_-_lecture_9)
-- the 3D multi-xPU thermal porous convection script and output as per directions from [Exercises - Lecture 11](/lecture11/#exercises_-_lecture_11).
+Final submission timestamp is enforced upon tagging the `v1.0.0` version release of your repository. See [GitHub docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) for infos.
 
-**In addition** enhance the `README.md` within the `PorousConvection` folder to include:
-
-- a short motivation/introduction
-- concise information about the equations you are solving
-- concise information about the numerical method and implementation
-- the results, incl. figures with labels, captions, etc...
-- a short discussion/conclusion section about the performed work, results, and outlook
-
-_Note that for evaluation will be considered the following (non-exhaustive) items: code correctness, style, and conciseness; implementation of demanded tasks; final layout and rendering, ..._
-
--->
+Add the last commit SHA to [Moodle - Final project submission]($(course_info["moodle_final_project_url"])) as for the exercises.
 
 ## Evaluation
 
