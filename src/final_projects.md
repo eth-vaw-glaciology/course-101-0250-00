@@ -28,10 +28,10 @@ Thermal (T), mechanical (M) and hydrological (H) processes, alone or coupled:
 4. HM: Porosity waves
 5. M: Rock mechanics -- shear strain localisation
 6. M: Ice sheet mechanics -- shallow shelf approximation
+7. M: Fluid dynamics -- Navier-Stokes equations
 
 ### Explicit solvers
 
-7. Fluid dynamics: Navier-Stokes equations
 8. Oceanography: Shallow water equations
 9. Seismic wave physics: Elastic wave propagation
 
