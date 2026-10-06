@@ -87,14 +87,18 @@ We will try to correct your assignments before the lecture following the homewor
 
 **Project's due date is December 17, 2026 -- 23h59 CET (enforced by a "release tag v1.0.0").**
 
+The list of available topics, the expected content of the project repository, and the presentation format are described on the [Final projects](/final_projects/) page.
+
 ### Getting started
 
-The following steps will get you started with the final projects:
+The following steps will get you started on your final project:
 
-1. Find a classmate to work with.
-2. Select a topic of your choice.
-3. Initiate a **private** GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`) in the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) GitHub organisation.
-4. Send and email to Ivan (iutkin@ethz.ch) and Ludovic (luraess@ethz.ch) by **Tuesday December 3, 2024**, with subject _**Final projects**_ including
+1. Find a classmate to team up with.
+2. Read through the proposed topics on the [Final projects](/final_projects/) page.
+3. Choose a preferred topic and an alternative one.
+
+<!-- 3. Initiate a **private** GitHub repository for your project (CamelCaps, including `.jl` at the end - e.g.: `MyProject.jl`) in the [pdes-on-gpus-julia-course](https://github.com/pdes-on-gpus-julia-course) GitHub organisation.
+4. Send an email to Ivan (iutkin@ethz.ch) and Ludovic (luraess@ethz.ch) by **Tuesday December 3, 2024**, with subject _**Final projects**_ including
     - your project partner
     - a brief description of your choice
     - a link to your final project GitHub repository
@@ -102,7 +106,7 @@ The following steps will get you started with the final projects:
 5. Work on your final project, asking for help
     - in the Element _Helpdesk_ channel for general question
     - as **GitHub "issue"** for project specific questions
-    - during class hours serving as helpdesk
+    - during class hours serving as helpdesk -->
 
 ### Final project submission
 
