@@ -3,10 +3,10 @@
 
 #> [frontmatter]
 #> chapter = "1"
-#> section = "3"
-#> order = "3"
-#> title = "Solving elliptic PDEs"
-#> date = "2026-09-29"
+#> section = "2"
+#> order = "2"
+#> title = "PDEs and physical processes"
+#> date = "2026-09-22"
 #> tags = ["module1"]
 #> layout = "layout.jlhtml"
 #> 
@@ -34,1270 +34,825 @@ macro bind(def, element)
     #! format: on
 end
 
-# ╔═╡ 14f1b80f-1518-4016-87a1-5b6139e96680
-using LinearAlgebra
-
-# ╔═╡ 2ddec1a4-f9ae-4518-bd2e-7ffc0eee8490
+# ╔═╡ 646b24fe-f47b-4554-86fd-a4f8bf2099ff
 begin
-using CairoMakie
-using PlutoUI
 using PlutoTeachingTools
+using PlutoUI
 TableOfContents()
 end
 
-# ╔═╡ 63841d7d-2520-433e-b09a-630c73c084c0
+# ╔═╡ 8c2afa19-cd8e-4f7c-a7d5-fe5a8313f684
+using CairoMakie
+
+# ╔═╡ ee6dedf2-b105-11f1-9ab4-b5e3b10de8fa
 md"""
-# Solving elliptic PDEs
+# PDEs and physical processes
 
 The goal of this lecture is to become familiar with:
 
-- The damped wave equation.
-- The accelerated pseudo-transient method for solving elliptic PDEs.
+- Classification of partial differential equations
+- Finite-difference discretisation
+- Explicit time integration
+- Git version control system
 
-In the previous lecture, we established that the solution to an elliptic PDE could be obtained by integrating a corresponding parabolic PDE in time:
+A [**partial differential equation (PDE)**](https://en.wikipedia.org/wiki/Partial_differential_equation) relates an unknown function of several variables to its partial derivatives.
 
-```math
-u_t = λ \nabla^2 u ~.
-```
+## Notation
 
-As time approaches infinity, the time derivative vanishes. Of course, we cannot integrate to infinity, but if we integrate long enough, the time derivative will become very small, yielding an approximate steady-state solution.
+Consider a function ``u(t, x, y, z)``. You can think of ``t`` as time, and ``x``, ``y``, and ``z`` as spatial coordinates. We will call such functions **fields**. If this function is scalar-valued, we call it a **scalar field**, and if it is vector-valued, a **vector field**. Vector fields are written in **bold**. For example, a velocity field is ``\boldsymbol{v}(t, x, y, z)``. We will denote the components of vector fields with superscripts, e.g. ``v^x``, ``v^y``, ``v^z`` or ``v^1``, ``v^2``, ``v^3``.
+
+A [partial derivative](https://en.wikipedia.org/wiki/Partial_derivative) is a derivative with respect to one of the variables, with the other variables held constant.
+
+We use two notations for partial derivatives:
+
+- ``u_t`` is equivalent to ``\partial u/\partial t``
+- ``u_{xx}`` is equivalent to ``\partial^2 u / \partial x^2``
+- ``u_{xy}`` is equivalent to ``\partial^2 u / \partial x \partial y``
+
+As with ordinary derivatives, the **order** of a partial derivative is the number of times differentiation is applied to a function. For example, ``u_x`` is a first derivative, ``u_{xx}`` and ``u_{xy}`` are second derivatives, ``u_{ttt}`` is a third derivative, and so on.
+
+It is possible to define differential operators using **vector calculus notation**, which lets us write equations in a form that is independent of the number of spatial dimensions.
 """
 
-# ╔═╡ 0b357917-fc2c-48d1-93bd-7591cffc7238
-Foldable("""How long is "long enough"?""",
+# ╔═╡ 0f85d4f3-8e27-478d-a7b3-c8a5f902adec
 md"""
-## 
+Select the number of spatial dimensions to see what various differential operators look like in coordinate form: \
+``N`` = $(@bind N PlutoUI.Slider(1:3; default=3, show_value=true))
 
-Let's make a quick estimate. Assume that we solve the heat equation in 1D on the domain ``x \in [0, \pi]``, set ``\lambda = 1``, and impose Dirichlet boundary conditions at both boundaries.
+!!! warning "If the slider doesn't do anything"
+	If you're viewing this notebook on the website, interactive elements such as this slider won't work. Click the "**Edit** or **run** this notebook" button in the top-right corner to see how to run it interactively. ↗️
+"""
 
-Let ``u_\mathrm{s}(x)`` be the exact steady-state solution to the elliptic equation ``u_{xx} = 0``. Define the error, i.e. the difference between the transient solution ``u(t, x)`` and ``u_\mathrm{s}(x)``, as ``\epsilon(t, x) = u(t, x) - u_\mathrm{s}(x)``. Substituting ``\epsilon(t, x)`` into the heat equation yields the evolution PDE for the error:
-
-```math
-\epsilon_t = \epsilon_{xx}~.
-```
-
-Because both the steady solution and the transient solution satisfy the same Dirichlet boundary conditions, ``\epsilon(t, 0) = \epsilon(t, \pi) = 0``.
-
-Let's look for an exact solution to this error equation in the following [separable](https://en.wikipedia.org/wiki/Separation_of_variables) form:
-
-```math
-\epsilon(t, x) = E(t) \sin(x)~.
-```
-
-Here, ``E(t)`` is the unknown function representing the **error amplitude**. Note that this solution satisfies the homogeneous Dirichlet boundary conditions. Substituting this ["ansatz"](https://en.wikipedia.org/wiki/Ansatz) into the error equation gives the following ODE for ``E``:
-
-```math
-E' = -E~.
-```
-
-Solving this ODE with ``E(0) = E^0`` yields:
-
-```math
-E(t) = E^0 \exp(-t)~.
-```
-
-We can see that the magnitude of the error decays **exponentially** with time.
-Let's calculate how long it will take to reduce the error by a given factor. Assuming we want ``E(t)/E^0 < \varepsilon_\mathrm{tol}``, we can invert the solution to find the total time ``t_\mathrm{tot}``:
-
-```math
-t_\mathrm{tot} = -\log\varepsilon_\mathrm{tol}
-```
-
-Now, let's convert this time into the number of time steps needed to reach ``t_\mathrm{tot}``. If we discretise the domain ``[0, \pi]`` into ``n`` grid cells, the cell size will be:
-
-```math
-\Delta x = \frac{\pi}{n} ~.
-```
-
-The stable time step for explicit Euler time integration of the heat equation is:
-
-```math
-\Delta t = \frac{\Delta x^2}{2} = \frac{1}{2}\frac{\pi^2}{n^2}~.
-```
-
-To cover ``t_\mathrm{tot}`` with time steps ``\Delta t``, the number of time steps should be:
-
-```math
-n_\mathrm{it} = \left\lceil -2\frac{n^2}{\pi^2} \log \varepsilon_\mathrm{tol} \right\rceil~.
-```
-
-As you can see, the number of time steps **increases quadratically** with ``n``.
-
-!!! note "Wait a minute"
-	There are other solutions that satisfy the Dirichlet boundary conditions, namely, ``\epsilon(t, x) = E_k(t) \sin(k x)`` with positive integer ``k \neq 1``. The general solution is a superposition of all these waves. Why don't we consider these too? These modes decay faster than the mode with ``k = 1``, so convergence is limited by the slowest mode, with the smallest [wavenumber](https://en.wikipedia.org/wiki/Wavenumber), ``k = 1``.
-""")
-
-# ╔═╡ f11d07aa-ab22-4c8a-83dc-31e984244cec
+# ╔═╡ 24c0921c-ac89-4987-82d5-c209f7f131d1
 md"""
-## Pseudo-transient method
-
-In this course, we call any method that builds on an analogy with transient physics a **pseudo-transient (PT)** method.
-
-This analogy is useful when studying multi-physics and nonlinear processes. The PT method isn't restricted to solving elliptic equations; it can be applied to a wide range of problems modelled with PDEs. However, the existence of a steady state alone does not guarantee convergence: the chosen pseudo-transient evolution must approach that state, and its numerical discretisation must be stable.
-
-In a pseudo-transient method, we are interested only in steady distributions of the unknown field variables, such as concentration and temperature. We thus treat time steps as iterations in a numerical method and call time **"pseudo-time"**. To distinguish physical time ``t`` from pseudo-time, we replace ``t`` in the equations with ``\tau`` and the time-step counter `it` with the iteration counter `iter`. When a pseudo-transient method converges, all the pseudo-time derivatives, ``\partial/\partial\tau``, ``\partial^2/\partial\tau^2``, etc., vanish.
+The [**gradient**](https://en.wikipedia.org/wiki/Gradient) of a scalar field is a vector field whose components are the partial derivatives with respect to the spatial coordinates:
 """
 
-# ╔═╡ cc685fe8-db51-471d-a2a4-6acec55e3c5a
-md"""
-## Accelerated elliptic solver: intuition
-
-As discussed previously, the number of time steps required for the first-order pseudo-transient solver to converge scales quadratically with increasing resolution, which is too expensive for 2D and 3D problems.
-
-In this lecture, we'll improve the convergence rate of the elliptic solver in 1D. Recall the stability conditions for diffusion and acoustic wave propagation:
-
-```julia
-dτ = dx^2/dc/2      # diffusion
-dτ = dx/sqrt(1/β/ρ) # acoustic wave propagation
-```
-
-We can see that the acceptable time step for an acoustic problem is proportional to the grid spacing `dx`, rather than `dx^2` as for diffusion. So, can we just integrate the wave equation instead?
-
-The wave equation has steady solutions, but undamped waves do not attenuate with time, so a general transient solution **does not converge to a steady state**. By introducing damping, we can retain wave propagation while allowing the transient solution to approach a steady state.
-"""
-
-# ╔═╡ 94ec3349-294e-40f5-8501-4d7fe5510452
-md"""
-### Damped wave equation
-
-Consider the diffusion equation with diffusivity ``\lambda = 1`` and a wave equation with wave speed ``c = 1``:
-
-```math
-\begin{align}
-u_\tau       &= \nabla^2 u~,\\[2pt]
-u_{\tau\tau} &= \nabla^2 u~.
-\end{align}
-```
-
-Let's "combine" the heat equation and the wave equation in the following way:
-
-```math
-u_{\tau\tau} + \zeta u_\tau = \nabla^2 u~.
-```
-
-The parameter ``\zeta > 0`` is called a [**damping parameter**](https://en.wikipedia.org/wiki/Damping).
-
-This PDE is called a **damped wave equation**. It is **hyperbolic**, but in contrast to the wave equation, the waves decay over time, and eventually the solution reaches a steady state.
-
-When ``\zeta < 2``, the equation behaves more like the wave equation, and it takes a long time for the pseudo-transient process to converge to the steady state. In that case, the equation is said to be **underdamped**. For ``\zeta > 2``, the second pseudo-time derivative ``u_{\tau\tau}`` becomes insignificant, and the solution evolves more like a diffusion process, i.e., the equation is **overdamped**. In the latter case, the time step also becomes limited by the square of the grid spacing, `dx^2`, and the number of time steps is large again.
-
-There is an optimal value of ``\zeta = 2``, a "sweet spot" for which the slowest error mode of the damped wave equation decays at the fastest rate possible. This is called **critical damping**.
-
-The effect of damping can be seen on the simpler **damped oscillator equation**:
-
-```math
-\ddot{u} + \zeta \dot{u} = -u~.
-```
-
-This ODE describes the motion of a point mass damped by a dissipative physical process, such as air resistance:
-"""
-
-# ╔═╡ c351741d-347e-4fc3-bce1-d8dd84a3a992
-html"""
-<div style="text-align: center;">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 359" width="110" height="359"
-       role="img" aria-label="Damped spring oscillation" style="max-width: 100%; height: auto; background: transparent;">
-    <title>Damped spring oscillation</title>
-    <desc>An orange mass hangs from a blue spring. Its vertical oscillations decay before the animation repeats.</desc>
-    <path data-hatching fill="none" stroke="#374752" stroke-width="0.7" />
-    <path d="M 4 14 H 106" fill="none" stroke="#374752" stroke-width="3" />
-    <path data-spring fill="none" stroke="#3867ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    <rect data-mass x="20" y="161" width="58" height="58" fill="#cd6e28" stroke="#855d3f" stroke-width="2" />
-  </svg>
-  <script>
-  (() => {
-    const script = typeof currentScript === "undefined" ? document.currentScript : currentScript;
-    const svg = script.parentElement.querySelector("svg");
-    const spring = svg.querySelector("[data-spring]");
-    const mass = svg.querySelector("[data-mass]");
-    const hatching = svg.querySelector("[data-hatching]");
-
-    // Geometry and motion adapted from Oleg Alexandrov's public-domain MATLAB source:
-    // https://commons.wikimedia.org/wiki/File:Damped_spring.gif
-    const scale = 232;
-    const anchorX = 49;
-    const anchorY = 14;
-    const projection = Math.cos(Math.PI / 6);
-    const radius = 0.1;
-    const lead = 0.05;
-    const loopMs = 65 * 70;
-    const coils = Array.from({length: 500}, (_, i) => {
-      const u = i / 499;
-      const angle = -Math.PI / 2 + 17 * Math.PI * u;
-      return {u, x: -radius * Math.cos(angle), depth: radius * Math.sin(angle)};
-    });
-    hatching.setAttribute("d", Array.from({length: 20}, (_, i) => {
-      const x = 4 + i * 5;
-      return "M " + x + " 11 L " + (x + 7) + " 4";
-    }).join(" "));
-
-    function draw(elapsed) {
-      // The GIF advances phase by 2π/15 every 70 ms; interpolate continuously.
-      const phase = Math.PI / 2 + 2 * Math.PI * (elapsed % loopMs) / (15 * 70);
-      const length = 1 - 0.45 * Math.exp(-0.1 * phase) * Math.sin(phase);
-      let path = "M " + anchorX + " " + anchorY;
-      for (const point of coils) {
-        const x = anchorX + scale * point.x;
-        const y = anchorY + scale * (projection * (lead + (length - 2 * lead) * point.u)
-          + (point.depth + radius) * 0.5);
-        path += " L " + x.toFixed(3) + " " + y.toFixed(3);
-      }
-      // Projection shifts the endpoint too: attach the mass to the rendered spring.
-      const endY = anchorY + scale * (projection * length + radius);
-      path += " L " + anchorX + " " + endY.toFixed(3);
-      spring.setAttribute("d", path);
-      mass.setAttribute("y", endY.toFixed(3));
-    }
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = null;
-    let start = null;
-    let disposed = false;
-    function animate(timestamp) {
-      if (disposed) return;
-      if (!svg.isConnected) {
-        dispose();
-        return;
-      }
-      if (start === null) start = timestamp;
-      draw(timestamp - start);
-      frame = requestAnimationFrame(animate);
-    }
-    function restart() {
-      if (disposed) return;
-      cancelAnimationFrame(frame);
-      frame = null;
-      start = null;
-      draw(0);
-      if (!reducedMotion.matches) frame = requestAnimationFrame(animate);
-    }
-    function dispose() {
-      disposed = true;
-      cancelAnimationFrame(frame);
-      reducedMotion.removeEventListener("change", restart);
-    }
-    reducedMotion.addEventListener("change", restart);
-    if (typeof invalidation !== "undefined") invalidation.then(dispose);
-    restart();
-  })();
-  </script>
-</div>
-"""
-
-# ╔═╡ 79e201d7-0183-4861-ad30-993f1308f39f
-md"""
-!!! note
-	The damped oscillator equation describes the signed amplitude of the slowest error mode of the pseudo-transient damped wave equation. This can be derived similarly to the case described in the "How long is long enough?" section above.
-
-Below is the solution to the damped oscillator equation. When running this notebook in Pluto, change the value of `ζ` to see what the different regimes look like:
-"""
-
-# ╔═╡ 9e910f47-59ad-4591-bd17-064acf1f31fa
-md"""
-``\zeta`` = $(@bind __ζ PlutoUI.Slider(range(0.5, 5, 46); show_value=true))
-"""
-
-# ╔═╡ c24d6699-1e22-40a6-a469-3ef6b249f8be
+# ╔═╡ a1960792-dfe9-426b-8dc5-7746b3190da4
 let
-function damped_oscillator(ζ)
-	t = LinRange(0, 20, 201)
-	uc = @. (1 + t) * exp(-t)
-	if ζ^2 < 4
-		# underdamped
-		ω = sqrt(1 - ζ^2/4)
-		u = @. exp(-ζ * t / 2) * (cos(ω  * t) + ζ / (2ω) * sin(ω * t))
-		txt = "underdamped"
-	elseif ζ^2 > 4
-		# overdamped
-		r⁺ = -ζ/2 + sqrt(ζ^2/4 - 1)
-		r⁻ = -ζ/2 - sqrt(ζ^2/4 - 1)
-		A  = -r⁻ / (r⁺ - r⁻)
-		B  =  r⁺ / (r⁺ - r⁻)
-		u  = @. A * exp(r⁺ * t) + B * exp(r⁻ * t)
-		txt = "overdamped"
-	else
-		# critically damped
-		u = uc
-		txt = "critically damped!!!"
-	end
-	lines(t, uc; color=:blue, label="ζ = 2",
-		  figure=(size=(600, 250), ),
-		  axis=(; xlabel="t", ylabel="u", limits=(0, 20, -0.5, 1)))
-	lines!(t, u; color=:red, label=string("ζ = ", round(ζ; digits=2)))
-	text!(10, 0.7; text=txt, align=(:center, :bottom), font=:bold, fontsize=16)
-	axislegend(current_axis())
-	current_figure()
-end
-damped_oscillator(__ζ)
+terms = ["u_x", "u_y", "u_z"]
+str = string("```math\n\\mathbf{grad}\\, u = [", join(terms[1:N], "\\quad "), "]^\\mathrm{T}~.\n```")
+Markdown.parse(str)
 end
 
-# ╔═╡ 11f41834-6688-4cfb-aa70-56c46db4a63d
+# ╔═╡ 41ad8ec5-0fb2-459c-93b4-121331a4c2f2
 md"""
-At `ζ = 2`, the system is **critically damped**. This damping maximises the asymptotic exponential decay rate of the waves, ensuring fast convergence.
+Where it is nonzero, ``\mathbf{grad}\,u`` points in the direction of steepest increase of ``u``, and its magnitude corresponds to the rate of this increase.
+
+The [**divergence**](https://en.wikipedia.org/wiki/Divergence) of a vector field is a scalar field obtained by summing the partial derivatives of each vector component with respect to its corresponding spatial coordinate:
 """
 
-# ╔═╡ e3f5c992-b76f-11f1-b33c-3b9472606fe3
-md"""
-### Implementing the damped wave equation
+# ╔═╡ 12795455-66e2-436a-b993-46957783cc0f
+let
+terms = ["v^1_x", "v^2_y", "v^3_z"]
+str = string("```math\n\\mathrm{div}\\, \\boldsymbol{v} =", join(terms[1:N], " + "), "~.\n```")
+Markdown.parse(str)
+end
 
-Let's implement a simple numerical solver for the damped wave equation in 1D:
+# ╔═╡ d2560b51-155e-411e-a414-093f9694273a
+md"""
+Physically, the divergence indicates the rate at which the vector field alters an infinitesimally small volume located at the point. Positive divergence means that the point is a source, negative divergence indicates a sink, and zero divergence means that the volume doesn't change. Divergence-free velocity fields thus describe the motion of an incompressible fluid such as water.
+
+The [**Laplacian**](https://en.wikipedia.org/wiki/Laplace_operator) is a second-order differential operator. Applied to a scalar field, it is the divergence of the gradient:
 
 ```math
-u_{\tau\tau} + \zeta u_\tau = \nabla^2 u
+\mathrm{lap}\, u = \mathrm{div}(\mathbf{grad}\,u)~.
 ```
 
-First, we introduce another variable ``v`` for the rate of change of ``u``:
+👉 Here's a little exercise: write the Laplacian in terms of partial derivatives. Use pen and paper 😉.
+"""
+
+# ╔═╡ 85e2f8fa-f284-4e6e-ae8c-1cd203643f64
+let
+terms = ["u_{xx}", "u_{yy}", "u_{zz}"]
+str = string("```math\n\\mathrm{lap}\\, u =", join(terms[1:N], " + "), "~.\n```")
+answer_box(Markdown.parse(str))
+end
+
+# ╔═╡ 3704f55f-96e1-415a-902d-159314818f12
+md"""
+!!! note "Actually..."
+	These component formulas apply in a [Cartesian coordinate system](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). For a general curvilinear coordinate system, the [metric tensor](https://en.wikipedia.org/wiki/Metric_tensor) needs to be taken into account. In this course, we will only work with Cartesian coordinates.
+
+It is convenient to express gradient and divergence using the **del** operator ``\boldsymbol{\nabla}``:
 
 ```math
-\begin{align}
-u_\tau           &= v~, \\[2pt]
-v_\tau + \zeta v &= \nabla^2 u~.
-\end{align}
+\begin{aligned}
+\mathbf{grad}\, u &\equiv \boldsymbol{\nabla} u~, \\
+\mathrm{div}\, \boldsymbol{v} &\equiv \boldsymbol{\nabla}\cdot\boldsymbol{v}~, \\
+\mathrm{lap}\, u &\equiv \boldsymbol{\nabla}\cdot\boldsymbol{\nabla} u \equiv \nabla^2 u~.
+\end{aligned}
+```
+"""
+
+# ╔═╡ 316505fa-14d6-4f22-876c-e6e1dabbe4d9
+md"""
+## Classification of PDEs
+
+There are several ways to classify PDEs. We will look at a few of them.
+
+The **order** of a PDE is the highest order among its partial derivatives. In this course, we will mostly look at first-order and second-order PDEs.
+
+Besides order, PDEs can be classified as **linear** or **nonlinear**. Linear PDEs are linear **with respect to the unknown function and its derivatives**.
+
+👉 Here are a few PDEs. Select the order of each equation and indicate whether it is linear:
+"""
+
+# ╔═╡ 238dbc0b-c70a-472b-8d9a-a9027e323f74
+md"""
+|Equation                                |Order                          |Is it linear?             |
+|---------------------------------------:|-------------------------------|:-------------------------|
+|``u_t + u_x = u``                       |$(@bind __o_1 NumberField(1:2))|$(@bind __l_1 CheckBox(; default=true))|
+|``u_t + u u_x = 0``                     |$(@bind __o_2 NumberField(1:2))|$(@bind __l_2 CheckBox())|
+|``u_t - x^2 \nabla^2 u = x``            |$(@bind __o_3 NumberField(1:2; default=2))|$(@bind __l_3 CheckBox(; default=true))|
+|``u_{tt} + \alpha u_t - u_{xx} = -u^2`` |$(@bind __o_4 NumberField(1:2; default=2))|$(@bind __l_4 CheckBox())|
+"""
+
+# ╔═╡ fc1a07dc-8540-4b08-aec6-7fca73cf5b94
+let
+correct_orders = [1, 1, 2, 2]
+correct_linear = [true, false, true, false]
+
+orders = [__o_1, __o_2, __o_3, __o_4]
+linear = [__l_1, __l_2, __l_3, __l_4]
+
+if orders == correct_orders
+	if linear == correct_linear
+		correct()
+	else
+		almost(md"Almost there! Check your answers about linearity.")
+	end
+elseif linear == correct_linear
+	almost(md"Almost there! Check if the orders are correct.")
+else
+	keep_working()
+end
+end
+
+# ╔═╡ 6f66c134-6060-4f78-9c16-51bf3b1311d1
+md"""
+## Second-order PDEs
+
+For second-order PDEs, another useful classification exists. By analogy with the classification of [conic sections](https://en.wikipedia.org/wiki/Conic_section), it is convenient to classify second-order PDEs into **hyperbolic**, **parabolic** and **elliptic** types:
+
+|     Type     |         Equation         |Physical process|
+|:-------------|:------------------------:|---------------:|
+|**Parabolic** | ``u_t = λ\nabla^2 u``    |       Diffusion|
+|**Hyperbolic**|``u_{tt} = c^2\nabla^2 u``|Wave propagation|
+|**Elliptic**  |  ``\nabla^2 u = 0``      |Steady diffusion|
+
+This classification is important because solutions to different kinds of PDEs show different behaviours, and obtaining these solutions numerically requires different approaches.
+"""
+
+# ╔═╡ 4e464867-020a-4143-a027-2c968c30a960
+md"""
+## Initial and boundary conditions
+
+Just knowing the equation is not enough to solve it. If the equation is first order in time, we also need [**initial conditions**](https://en.wikipedia.org/wiki/Initial_value_problem) (ICs), i.e. the distribution of the unknown at the initial time ``t=0``. If the equation is second order in time, in addition to the initial distribution of ``u`` we need the initial distribution of ``u_t`` at ``t=0``. For higher-order derivatives, more initial conditions are needed.
+
+If the equation contains spatial derivatives, we need to specify [**boundary conditions**](https://en.wikipedia.org/wiki/Boundary_value_problem) (BCs) that constrain the unknown quantity ``u`` or its derivatives at the boundary of the domain. There are many possibilities for specifying the BCs. In this course, we will only consider two types of BCs: [**Dirichlet**](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition) and [**Neumann**](https://en.wikipedia.org/wiki/Neumann_boundary_condition) boundary conditions.
+
+A **Dirichlet** boundary condition prescribes the value of the unknown quantity ``u`` on the boundary.
+
+**Neumann** boundary conditions prescribe the derivative of ``u`` in the direction normal to the boundary. In 1D, this amounts to prescribing ``u_x`` at the ends of the domain, with a sign change at the left endpoint when using the outward normal.
+"""
+
+# ╔═╡ 2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+md"""
+## Why do we need numerical methods?
+
+Once we have specified a PDE and its initial and boundary conditions, we want to solve it. Ideally, we would find an exact solution. Several methods can help us do this:
+
+1. [**Separation of variables**](https://en.wikipedia.org/wiki/Separable_partial_differential_equation) (Fourier's method) can reduce a PDE to ordinary differential equations (ODEs), one for each independent variable, when the problem admits a separable form.
+2. [**Method of characteristics**](https://en.wikipedia.org/wiki/Method_of_characteristics) is often used for first-order PDEs. It identifies characteristic curves along which the PDE can be reduced to ODEs.
+3. [**Self-similar solutions**](https://en.wikipedia.org/wiki/Self-similar_solution) can reduce PDEs to ODEs by expressing the solution in terms of a single similarity variable.
+
+Exact solutions help us understand the equations and the physical processes they describe. However, for many problems of practical importance, such solutions are unavailable or very difficult to obtain.
+
+For example, many analytical techniques rely on simple domain geometries. If we want to simulate the Antarctic ice sheet in 3D using realistic bed topography, an exact analytical solution is generally unavailable. We therefore turn to **numerical methods**. These compute approximate solutions to PDEs while allowing much more flexibility in the domain geometry, coefficients, and initial and boundary conditions, which can be specified using observational data.
+"""
+
+# ╔═╡ b1ca295f-a305-467b-a57d-7075b1aef5af
+let
+fold = Foldable("Words of caution", md"""
+!!! warning
+	*"With great power comes great responsibility."* — Uncle Ben
+
+	Numerical methods **are approximate by design**, so a numerical solution can deviate significantly from the exact solution to the PDE. Theoretical results provide error bounds for some numerical methods and classes of problems, but we must still check that the approximation error is acceptable for each problem we solve.
+
+	When the exact solution to our problem is unknown (otherwise we wouldn't need the numerical solution), we must rely on indirect checks to help us assess the numerical method and its results:
+
+	- [**Mesh convergence studies**](https://www.grc.nasa.gov/www/wind/valid/tutorial/spatconv.html): check that reducing the grid spacing produces progressively smaller changes in the solution.
+	- [**Conservation laws**](https://en.wikipedia.org/wiki/Conservation_law) and [**laws of thermodynamics**](https://en.wikipedia.org/wiki/Laws_of_thermodynamics): changes in the total mass, momentum, and energy of the system must be balanced by fluxes of these quantities through the domain boundaries and by any external forces or energy inputs. [**The second law of thermodynamics**](https://en.wikipedia.org/wiki/Second_law_of_thermodynamics) states that the total entropy of an isolated system cannot decrease and must increase during irreversible processes.
+	- Method of manufactured solutions: choose a synthetic solution, substitute it into the PDE, and derive a source term and initial and boundary conditions consistent with that solution. Then check whether the numerical solver converges to the manufactured solution at the expected rate.
+	- Exact solutions are especially relevant when the PDEs are nonlinear and solutions exhibit [**discontinuities**](https://en.wikipedia.org/wiki/Shock_wave), [**singularities**](https://openai.com/index/navier-stokes-solution/), or [**instabilities**](https://en.wikipedia.org/wiki/Rayleigh–Taylor_instability).
+	- **Theoretical proofs of convergence**: select a numerical scheme whose convergence conditions have been established for the problem under consideration, then verify that your implementation satisfies those conditions. For example, for linear problems, the [**Lax–Richtmyer theorem**](https://en.wikipedia.org/wiki/Lax_equivalence_theorem) links convergence to the consistency and stability of the finite-difference scheme.
+
+	Complex solutions can be difficult to interpret: an observed pattern may reflect a physical mechanism or a numerical artefact. In such cases, take a step back, simplify the setup, and systematically investigate the regimes and characteristic patterns produced by your code. Make sure you understand their physical significance.
+""")
+
+md"""
+$(fold)
+
+With these cautions in mind, numerical simulations can still be fun, which is why we will proceed with the rest of the course! 🙃
+"""
+end
+
+# ╔═╡ 985a7cbd-185a-4129-9ef1-98463f991745
+md"""
+## Finite-difference approximation
+
+In the [**finite-difference method**](https://en.wikipedia.org/wiki/Finite_difference_method), we approximate derivatives by differences between values at grid points. These approximations can be derived using truncated [Taylor series](https://en.wikipedia.org/wiki/Taylor_series).
+
+For example, we can approximate the first derivative ``c_x`` at the point ``x`` using the **central difference** rule:
+
+```math
+c_x(t, x) \approx \frac{c(t, x+dx/2) - c(t, x-dx/2)}{dx}~,
+```
+
+where ``dx`` is a *finite* parameter which controls the accuracy of the approximation. For a sufficiently smooth function, as ``dx \rightarrow 0``, the approximation converges to the true value of the derivative.
+
+To compute differences between neighbouring values in Julia, we can use the built-in `diff` function:
+"""
+
+# ╔═╡ 0411bd65-d3db-4b1f-a58e-a88cbccfacd7
+diff([1, 2, 2, 6, 3])
+
+# ╔═╡ 129996e6-739c-4745-929e-583a15842fca
+md"""
+For a vector `C`, calling `diff(C)` is equivalent to computing `C[2:end] - C[1:end-1]`. Divide by `dx` to approximate the derivative at the midpoints between neighbouring grid points.
+
+!!! hint
+	The size of the array returned by `diff` is not the same as the size of the inpit array. Check the difference using the `size` function.
+
+## Explicit Euler time integration
+
+The [Euler method](https://en.wikipedia.org/wiki/Euler_method) is a simple first-order method for integrating initial value problems in time. It consists of approximating the time derivative using the **forward finite difference rule**:
+
+```math
+u_t(t, x) \approx \frac{u(t + dt, x) - u(t, x)}{dt}~,
+```
+
+where ``dt`` is the **time step**. Assume that our PDE has the following form:
+
+```math
+u_t = R(t, x, u, u_x, u_{xx}, ...)~,
+```
+
+where ``R`` denotes the right-hand side, which does not contain time derivatives of ``u``. If we want to numerically integrate this equation from ``t=0`` to ``t=T``, we can discretise the time interval `[0, T]` by selecting `nt+1` equally spaced points ``t^0 < t^1 < \dots < t^\mathrm{nt}`` such that ``t^0 = 0`` and ``t^\mathrm{nt} = T``. We denote the distributions of ``u`` and ``R`` at ``t=t^n`` as ``u^n`` and ``R^n``, respectively. The initial condition specifies ``u^0``. Then, according to the Euler method, we can compute [``u^1``, ``u^2``, ... ] by evaluating the right-hand side at the current time step:
+
+```math
+u^{n+1} = u^n + d t\, R^n
+```
+
+"""
+
+# ╔═╡ 3ed7e2de-7a0f-46bb-95d7-e6b6f4149585
+md"""
+## Parabolic equations — diffusion
+
+The [diffusion equation](https://en.wikipedia.org/wiki/Diffusion_equation) was presented in Fourier’s 1822 treatise in the form of the [heat equation](https://en.wikipedia.org/wiki/Heat_equation) to understand heat distribution in various materials.
+
+Fick formulated laws of diffusion in 1855 to describe the transport of dissolved substances ([Fick's laws](https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion)).
+
+For a positive diffusion coefficient ``λ``, the diffusion equation is a second-order parabolic PDE:
+
+```math
+c_t = λ c_{xx}~.
+```
+
+The quantity ``c`` could represent the temperature of a material or the concentration of a substance in a fluid. The parameter ``\lambda`` is the **diffusion coefficient** (thermal diffusivity when ``c`` is temperature): higher values of ``\lambda`` result in faster diffusion.
+
+Alternatively, we can write this equation as a conservation law for ``c``:
+
+```math
+c_t = -q_x~,
+```
+
+where ``q`` is the diffusive flux:
+
+```math
+q = -\lambda c_x~.
 ```
 
 !!! note
-	In the previous lecture, we converted the wave equation to a first-order system. This is another way to integrate hyperbolic equations in time using the semi-implicit Euler method.
+	These two forms are equivalent only when the diffusion coefficient ``\lambda`` is not a function of ``x`` or ``c``. If this is not the case, the conservation form should be used.
 
-Now, we can discretise the pseudo-time derivatives:
-
-```math
-u_\tau \approx \frac{u^{n+1} - u^n}{\Delta\tau}~.
-```
-
-As before, the superscript ``n`` indicates the time level, not a power. We can discretise ``v_\tau`` similarly.
-
-In the `# physics` section, use `lx = π`:
-
-```julia
-# physics
-# lx   = ...
-```
-
-In the `# preprocessing` section, we select the pseudo-time step `dτ` as `0.95dx`. This is below the undamped wave-equation limit for wave speed `1`:
-
-```julia
-# preprocessing
-dx = lx / nx
-dτ = 0.95dx
-xc = LinRange(dx/2, lx-dx/2, nx)
-```
-
-Use a sine wave as the initial condition for `u`. Initialise the rate-of-change vector `v` as a zero vector:
-
-```julia
-# initialisation
-u = ...
-v = zeros(...)
-```
-
-!!! hint
-	The size of `v` should be smaller than the size of `u`.
-
-We also track the maximum amplitude of the wave. With this initial condition, the maximum is in the middle of the domain:
-
-```julia
-# τ and u_max history
-τs  = [0.0]
-us  = [u[end÷2]]
-```
-
-In the time loop, we first update the solution `u`, and then the rate-of-change `v`:
-
-```julia
-# update solution
-# u[2:end-1] .= ...
-# update rate of change
-# v .= ...
-```
-
-!!! hint
-	- To discretise the second derivative, either use the nested call `diff(diff(...)./dx)./dx` or introduce a flux vector `q`, as in the previous exercises.
-	- In the term `ζ v`, you can use `v` from either the previous pseudo-time iteration or the next one. Choose either version, or implement both and compare them.
-
-In the visualisation section, we need to update the pseudo-time history vector `τs` and the amplitude history vector `us`, then update the plots:
-
-```julia
-if iter % nvis == 0
-	# push!(τs, ...)
-	# push!(us, ...)
-	plt[1][2] = u
-	plt[2][1] = τs
-	plt[2][2] = us
-end
-```
-
-👉 Your turn. Finish the implementation of the damped wave equation:
+In the following, we will approximate the spatial derivatives in the diffusion equation using [finite differences](https://en.wikipedia.org/wiki/Finite_difference), and integrate this discretised equation in time using the explicit [Euler method](https://en.wikipedia.org/wiki/Euler_method).
 """
 
-# ╔═╡ 56f4af2b-06f0-4aa2-b4f9-e2342f614c40
+# ╔═╡ 1230392d-eff2-4c96-9e5c-c95f790a5004
 md"""
-If your code is correct, you should see this animation at `ζ = 0.5`:
-"""
+### Numerical solver
 
-# ╔═╡ 56cde71c-1926-4628-bcd5-2467b6009f77
-md"""
-Try different values of `ζ` in the range 0–10 and compare the evolution of the amplitude with the solution to the damped oscillator equation above. Verify that at `ζ = 2` the behaviour corresponds to the critically damped oscillator.
-"""
+We are ready to solve the diffusion equation in 1D. In this section, we will discuss the ingredients of a solver, and then ask you to write it yourself.
 
-# ╔═╡ 025f2984-bc92-4576-8cc8-8559f5c0e327
-# Uncomment when finished the implementation
-# damped_wave_equation_1d(0.5)
+We discretise the computational domain `[0, lx]` by dividing it into `nx` non-overlapping intervals of length `lx/nx` each. We will call these intervals **grid cells**.
 
-# ╔═╡ c6d8a983-b4c6-48bf-a0e3-f7cf945a0edb
-answer_box(
-md"""
-```julia
-function damped_wave_equation_1d(ζ)
-	# physics
-	lx   = π
-	# numerics
-	nx   = 200
-	nt   = 10nx
-	nvis = 20
-	# preprocessing
-	dx   = lx / nx
-	dτ   = 0.95dx
-	xc   = LinRange(dx/2, lx-dx/2, nx)
-	# initialisation
-	u    = @. sin(xc)
-	v    = zeros(nx-2)
-	# τ and u(max) history
-	τs  = [0.0]
-	us  = [u[end÷2]]
-	# figure
-	fig = Figure(size=(600, 400))
-	ax  = (Axis(fig[1, 1]; xlabel="x", ylabel="u"),
-           Axis(fig[2, 1]; xlabel="τ", ylabel="uᵐ", limits=(0, nt*dτ, -0.5, 1)))
-	ylims!(ax[1], -1.1, 1.1)
-	lines!(ax[1], xc, u; color=:blue)
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], τs, us; color=:red))
-	# time loop
-	@animate fig nvis for iter in 1:nt
-		# update solution
-		u[2:end-1] .= u[2:end-1] .+ dτ .* v
-		# update rate of change
-		v .= v .* (1 - dτ * ζ) .+ dτ .* diff(diff(u)./dx)./dx
-		if iter % nvis == 0
-			push!(τs, iter * dτ)
-			push!(us, u[end÷2])
-			plt[1][2] = u
-			plt[2][1] = τs
-			plt[2][2] = us
-		end
-	end
-end
-```
-""")
-
-# ╔═╡ 67dd1075-e9d8-4644-8ea5-cbaeea8c1916
-md"""
-You've implemented a damped wave equation solver, which is almost a full second-order pseudo-transient solver! Here, our aim was to build intuition for the physical analogy between relaxation solvers and transient physical processes.
-
-The idea of accelerating convergence by increasing the order of the PDE dates back to the work of [Frankel (1950)](https://doi.org/10.2307/2002770), who studied the convergence rates of different iterative methods. Frankel noted the analogy between the iteration process and transient physics. In his work, the accelerated method was called the **second-order Richardson method**.
-
-👀 If you are interested in deriving the optimal damping parameter analytically for different equations, including elliptic and Stokes equations, the paper by [Räss et al. (2022)](https://gmd.copernicus.org/articles/15/5757/2022/) is a good starting point.
-"""
-
-# ╔═╡ 51b15738-f473-40a4-b76a-3ea5ccc20e4a
-md"""
-!!! warning
-	We should be careful when introducing new pseudo-physical terms into the governing equations. We need to make sure that when iterations converge, i.e. when the pseudo-time derivatives are set to 0, the system of equations is identical to the original steady-state formulation.
-
-For example, consider the acoustic problem from the previous lecture:
-
-```math
-\begin{align}
-\rho v_\tau  &= -p_x ~, \\[2pt]
-\beta p_\tau &= -v_x ~.
-\end{align}
-```
-
-We can introduce damping into this system in several ways. For example, let's add a damping term to the second equation:
-
-```math
-\begin{align}
-\rho v_\tau  &= -p_x ~, \\[2pt]
-\beta p_\tau + p/\eta &= -v_x ~.
-\end{align}
-```
-
-Here, we added a term ``p/\eta``, where the parameter ``\eta`` can be interpreted as a bulk viscosity. Eliminating ``v`` shows that this is indeed a damped wave equation. At steady state, the second equation reads:
-
-```math
-p / \eta = -v_x~.
-```
-
-The velocity divergence is proportional to the pressure. If we wanted to solve the incompressible problem (i.e. the velocity divergence = 0), and were interested in the velocity distribution, this approach would lead to incorrect results. If we only want to solve the Laplace problem ``p_{xx} = 0``, we could consider ``v`` purely as a numerical variable.
-
-In other words: **only add those new terms to the governing equations that vanish when the iterations converge!**
-"""
-
-# ╔═╡ 9ea2a20e-2c44-41f7-9806-512831ec519c
-md"""
-## Accelerated pseudo-transient solver: implementation
-
-Now that we understand the physical analogy between solving the elliptic equation and the damped wave equation, we can implement the full steady diffusion solver with a spatially variable diffusion coefficient ``\lambda``:
-
-```math
-\boldsymbol{\nabla}\cdot(\lambda \boldsymbol{\nabla} u) = 0~.
-```
-
-Before we proceed, we need to define how we measure convergence.
-"""
-
-# ╔═╡ 05a2e73a-3433-44f6-b14a-345778e54655
-md"""
-### Measuring convergence
-
-To measure how closely the current iterate satisfies the equation, we introduce the residual:
-
-```math
-r = \boldsymbol{\nabla}\cdot(\lambda \boldsymbol{\nabla} u)~.
-```
-
-We use a norm of the discrete residual as a convergence indicator. Common choices are the ``L_1``, ``L_2``, and ``L_\infty`` norms. We will use the ``L_\infty`` norm here:
-
-```math
-\|\boldsymbol{r}\|_\infty = \max_i(|r_i|)
-```
-
-In Julia, this can be computed by calling `maximum(abs, r)`.
-
-!!! warning
-	The residual norm is not the solution-error norm. For a discrete linear system ``Au = b`` with exact solution ``u_*``, the residual ``r = b - Au`` and the algebraic error ``e = u - u_*`` are related by:
-	```math
-	e = -A^{-1}r~.
-	```
-
-For the model diffusion problem with suitably tuned damping, the number of iterations required for convergence scales approximately linearly with increasing resolution. This means that the number of iterations divided by the number of grid cells should stay approximately constant. We therefore track convergence by saving the iteration count divided by the number of grid cells and the ``L_\infty`` norm of the residual. We stop iterating when ``\|r\|_\infty < \varepsilon_\mathrm{tol}``.
-"""
-
-# ╔═╡ c5151cee-5ce3-4baf-8e51-d64c448763f8
-md"""
-### Preconditioning
-
-In many problems, material properties such as the diffusion coefficient can vary significantly in space, slowing the convergence of iterative solvers. Large material contrasts can produce **ill-conditioned** systems, with a large [condition number](https://en.wikipedia.org/wiki/Condition_number). The condition number measures the sensitivity of the solution to perturbations in the system's data. Transforming the equations into an equivalent system with more favourable properties for an iterative solver is called [preconditioning](https://en.wikipedia.org/wiki/Preconditioner).
-
-In our case, assume that the discretised elliptic equation is equivalent to the linear system:
-
-```math
-A u = b~.
-```
-
-Here, ``u`` contains the interior unknowns, the vector ``b`` collects the contributions from the prescribed boundary values. This sign convention gives the residual ``r = b - Au`` and a positive diagonal for ``A``.
-
-Solving this system is equivalent to solving:
-
-```math
-Q(b - A u) = 0~,
-```
-
-where ``Q`` is a known nonsingular matrix. If ``Q`` approximates ``A^{-1}`` well, the condition number of this transformed system will be lower.
-
-In this course, we will only consider the simplest possible kind of preconditioner --- the [Jacobi](https://en.wikipedia.org/wiki/Preconditioner#Jacobi_(or_diagonal)_preconditioner), or diagonal, preconditioner:
-
-```math
-Q = \mathrm{diag}\,(A)^{-1}~.
-```
-"""
-
-# ╔═╡ f065b525-5dc4-46a1-8df0-c1a29d751159
-md"""
-### Accelerated PT solver
-
-The PT solver has the following structure:
-
-1. Initialise the step size ``\alpha`` and the damping parameter ``\beta``.
-2. Initialise the solution vector ``u``, search direction vector ``d``, residual vector ``r``, preconditioner ``Q``, and preconditioned residual vector ``z``.
-3. At each iteration:
-   - ``u^{n+1} = u^{n} + \alpha d^n``.
-   - ``r^{n+1} = r(u^{n+1})``.
-   - if ``\|r^{n+1}\|_\infty < \varepsilon_\mathrm{tol}``, break.
-   - ``z^{n+1} = Q r^{n+1}``
-   - ``d^{n+1} = d^{n} \beta + z^{n+1}``
-
-If you compare the updates of the solution vector ``u`` and the search direction vector ``d`` with the updates of ``u`` and the rate-of-change vector ``v`` in the damped wave equation solver, you will notice that the accelerated PT solver is a damped wave equation solver with some variables renamed.
-
-With this information, we can implement the PT solver.
-
-We will solve the steady diffusion problem with a spatially variable diffusivity field `λ`, parameterised by the background diffusivity `λbg = 1.0` and the perturbation amplitude `λamp = 10.0`. We impose Dirichlet boundary conditions: `u = 0` at `x = 0` and `u = 1` at `x = lx`.
-
-The physics section will now contain the new diffusivity parameters:
+First, we introduce the physical parameters that are relevant to this problem, i.e., the domain length `lx` and the diffusion coefficient `dc`:
 
 ```julia
 # physics
 lx   = 20.0
-λbg  = 1.0
-λamp = 10.0
+dc   = 1.0
 ```
 
-In the `# numerics` section, we introduce the solver parameters: the PT solver tolerance `εtol  = 1e-6`, the maximum number of iterations `niter = 15nx`, and the convergence check interval `nchck = ceil(Int, 0.1nx)`:
+Then we declare the numerical parameters: the number of grid cells `nx` and the number of time steps between visualisation updates `nvis`:
 
 ```julia
 # numerics
-nx    = 200
-εtol  = 1e-6
-niter = 15nx
-nchck = ceil(Int, 0.1nx)
+nx   = 200
+nvis = 5
 ```
 
-In the `# preprocessing` section, we introduce the grid point coordinates `xv` needed to initialise the `λ` field, which is located at grid points rather than cell centres. We also introduce the damping parameter `β` and the step size `α`:
+We introduce additional numerical parameters: the grid spacing `dx` and the coordinates of cell centres `xc`:
 
 ```julia
 # preprocessing
-dx   = lx / nx
+dx   = lx/nx
 xc   = LinRange(dx/2,lx-dx/2,nx)
-xv   = LinRange(dx,lx-dx,nx-1)
-β    = 1 - 1.3π / nx
-α 	 = 0.99 * (1 + β)
 ```
 
-!!! note
-    - The parameters `α` and `β` are closely related to the pseudo-time step `dτ` and the damping `ζ` from the damped wave equation solver. We won't derive them in detail in this course, but if you're interested, you can try to convert the damped wave formulation to the PT formulation using pen and paper (or ask an LLM).
-    - The value `β = 1 - 1.3π / nx` is manually tuned for this problem setup. For constant diffusivity, `β ≈ 1 - 2π / nx` results in critical damping of the slowest mode.
+Then we compute the time step and set the number of time steps in the simulation:
 
-In the array initialisation section, we initialise the solution `u` with zeros as an initial guess. For this problem, the steady solution is unique and independent of the initial guess, provided the iteration converges. It depends on the diffusivity, domain geometry, boundary conditions, and any source terms. Initialise `λ` as the sum of the constant background value `λbg` and a Gaussian profile centred at `lx/2` with amplitude `λamp`. Initialise the flux vector as in the previous exercises. Finally, introduce the search direction vector `d`, the residual vector `r`, and the preconditioned residual vector `z`, all initialised with zeros:
+```julia
+dt   = dx^2 / dc / 2
+nt   = 500
+```
+
+!!! note "🤔 Why is the time step computed like this?"
+	The reason for this is numerical stability. The explicit Euler scheme cannot be used with arbitrarily large time steps. If `dt` is larger than some threshold, the small errors in the numerical solution grow unboundedly, which looks like a "sawtooth" pattern. The detailed derivation is outside the scope of this course, unfortunately. If you're interested, check the literature in the [Extras](https://pde-on-gpu.vaw.ethz.ch/cheatsheets/). In short, this stability bound can be derived using the [von Neumann stability analysis](https://en.wikipedia.org/wiki/Von_Neumann_stability_analysis) procedure.
+
+	If interested, you can also ask an LLM to explain the time step selection to you for this and subsequent problems. Remember that LLMs [hallucinate](https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)) sometimes, so never trust their output blindly!
+
+In the `# array initialisation` section, we initialise two arrays: `C` for the concentration field and `qx` for the diffusive flux in the x direction:
 
 ```julia
 # array initialisation
-# u    = ...
-# λ    = @. ...
-# qx   = ...
-# d    = ...
-# r    = ...
-# z    = ...
+C    = @. exp(-(xc-lx/2)^2)
+qx   = zeros(nx) # 😉
 ```
 
-!!! hint
-    The sizes of the search direction vector, residual vector, and preconditioned residual vector differ from the size of the solution vector because the value of `u` at the boundaries is specified by the Dirichlet boundary conditions.
-
-Then we initialise the Jacobi preconditioner:
-
-```julia
-# preconditioner
-Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-```
-
-!!! note
-    Verify that this formula for `Q` is the inverse of the diagonal of ``A``. Write down the discretised residual at a grid cell `i` and collect the coefficient of `u[i]`. Since ``r = b - Au``, this coefficient is ``-A_{ii}``; negate it before taking its inverse.
-
-Then we initialise the convergence history and the residual norm `err`, which will be updated when we check convergence:
-
-```julia
-# convergence history
-itr_h = Float64[]
-res_h = Float64[]
-```
-
-We will save the number of iterations per `nx` and the ``L_\infty`` norm of the residual every `nchck` iterations.
-
-In the iteration loop, we update the solution first:
-
-```julia
-for iter = 1:niter
-    # update solution
-    # @. u[2:end-1] += ...
-    ...
-end
-```
-
-Then we specify the boundary conditions `u = 0` at `x = 0` and `u = 1` at `x = lx`:
-
-```julia
-# boundary conditions
-# u[1]   = ...
-# u[end] = ...
-```
-
-Then we compute the residual `r = ∇ ⋅ (λ∇u)` by first computing the diffusive flux `qx = -λ∇u` and then the residual `r = -∇⋅q`:
-
-```julia
-# compute residual
-# @. qx = ...
-# @. r  = ...
-```
-
-!!! hint
-    Use `u[2:end] - u[1:end-1]` instead of `diff(u)` for better performance.
-
-Then we check convergence every `nchck` iterations by comparing the ``L_\infty`` norm of the residual with the tolerance `εtol`. At the same time, we append the iteration count divided by `nx` and the residual norm to the convergence history vectors:
-
-```julia
-# check convergence
-if iter % nchck == 0
-    # err = ...
-    push!(itr_h, ...)
-    push!(res_h, ...)
-    if err < εtol
-        println(" solver converged in $(iter/nx) × N iterations! 🚀")
-        break
-    end
-end
-```
-
-Then we compute the preconditioned residual `z` and update the search direction vector `d` using the new `z` and the damping parameter `β`:
-
-```julia
-# compute preconditioned residual
-# @. z = ...
-# update search direction
-# @. d = ...
-```
-
-After the iteration loop, we visualise the current solution and the convergence history:
+Then we create objects needed to visualise the results with CairoMakie.jl:
 
 ```julia
 # create plot
-fig = Figure(size=(600, 450))
-ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-       Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                          yscale=log10,
-                          title="convergence history",
-                          limits=(0, niter/nx, 0.1εtol, 1e2)))
-# plt = (lines!(ax[1], ..., ...; color=:red),
-#        lines!(ax[2], ..., ...; color=:black))
+fig = Figure(size=(600, 200))
+ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+lines!(xc, C; color=:blue)
+plt = lines!(xc, C; color=:red)
 ```
 
+Note that we plot `C` twice: the first line plot will stay unchanged and will show the initial condition, while the second plot will be updated every `nvis` steps.
 
-👉 Your turn. Finish the implementation of the elliptic PT solver:
-"""
+Finally, implement the time loop:
 
-# ╔═╡ b5d5c28a-7b83-4f48-b6a0-ec617ae1ccb7
-@views function elliptic_1d()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 1.3π / nx
-	α 	 = 0.99 * (1 + β)
-	# array initialisation
-	# u    = ...
-	# λ    = ...
-	# qx   = ...
-	# d    = ...
-	# r    = ...
-	# z    = ...
-	# preconditioner
-	Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		#. @. u[2:end-1] += ...
-		# boundary conditions
-		# u[1]   = ...
-		# u[end] = ...
-		# compute residual
-	    # @. qx = ...
-		# @. r  = ...
-		# check convergence
-		if iter % nchck == 0
-			# err = ...
-			# push!(itr_h, ...)
-			# push!(res_h, ...)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# compute preconditioned residual
-		# @. z = ...
-		# update search direction
-		# @. d = ...
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	# plt = (lines!(ax[1], ..., ...; color=:red),
-    #        lines!(ax[2], ..., ...; color=:black))
-	return fig
-end
-
-# ╔═╡ a28bdaa2-82f9-4949-b3af-34a0bf4c18ab
-md"""
-If you have implemented the solver correctly, you should see the following figure:
-"""
-
-# ╔═╡ e2a22f7c-34a0-4d67-b9a3-1c76213921a9
-answer_box(
-md"""
 ```julia
-@views function elliptic_1d()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 1.3π / nx
-	α 	 = 0.99 * (1 + β)
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	# preconditioner
-	Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update search direction
-		@. d = d * β + z
+# time loop
+@animate fig nvis for it = 1:nt
+	# qx          .=
+	# C[2:end-1] .-=
+	if it % nvis == 0
+		plt[2] = C
 	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
+end
 ```
-"""
-)
 
-# ╔═╡ 015de44b-aeb8-407e-b9f5-5e8086ef0689
-md"""
-Congrats, you have implemented a full iterative solver!
+!!! note "Animating the plots"
+	[Animating plots](https://docs.makie.org/dev/explanations/animation) with Makie.jl in Pluto notebooks is complicated because the result of running the cell is only displayed when the computation is finished. We implemented a macro `@animate` that will create a video stream of the animated result. This macro requires a figure, an update frequency, and a for loop over time steps. This macro is based on [this trick](https://discourse.julialang.org/t/real-time-animations-with-makie-in-pluto/63684) from the community.
 
-Now you can experiment with the solver. Try varying the damping parameter `β` slightly. You will see that the iterations quickly stop converging if `β` is far from the optimal value.
-
-Set the diffusivity perturbation amplitude `λamp` to `0`, then explore values of `β` near the estimate `1 - 2π/nx`. As you increase the number of grid cells `nx` and retune `β`, the number of iterations divided by `nx` should stay approximately constant.
-
-Changing the centre or amplitude of the diffusivity perturbation changes the system matrix and can require retuning `β`. A source that depends on `u`, such as the reaction term introduced below, also changes the operator. For larger material contrasts, even a well-tuned constant `β` can give slow convergence. We can avoid manual parameter searches by estimating the damping automatically and updating it during the iterations.
+👉 Your turn. Implement your first diffusion solver:
 """
 
-# ╔═╡ 53ead820-57da-4430-9e62-3bab0aca81f2
+# ╔═╡ 8534ddd3-6097-4a53-a403-429397b0df61
 md"""
-### Dynamic relaxation
+!!! hint
+	We actually deceived you before! 😈 The size of the array `qx` cannot be `nx`. To figure out what the actual size is, check how the sizes of arrays `C` and `diff(C)` are related.
 
-Damped pseudo-transient methods are also known as **dynamic relaxation (DR)** methods. Estimating and updating the damping parameter during the iterations gives an **adaptive dynamic relaxation** method, as studied by [Papadrakakis (1981)](https://doi.org/10.1016/0045-7825(81)90066-9). We use this adaptive variant below and refer to it as our DR solver.
+Well done! You can experiment with the solver, changing physical and numerical parameters to see how the solution will change.
 
-!!! note
-	Read [Duretz et al. (2026)](https://doi.org/10.5194/gmd-19-5343-2026) to learn how dynamic relaxation can be applied to large-scale nonlinear problems in geodynamics.
+!!! note "Tip"
+	Check what the numerical instability looks like: multiply the time step `dt` in the definition by a small factor, say `1.1`, and see the 💥!
 
-We estimate `β` from the current search direction and the change in the preconditioned residual:
+### What about BCs?
+
+You probably noticed that we never explicitly implemented any boundary conditions, despite the claim that the BCs are needed for a well-posed problem. Actually, there is a BC implemented in the solver, but you need to look carefully at the code to find it.
+
+👉 Figure out what boundary condition is imposed at the left and right domain boundaries. Change its value to something else and see what happens. Then think about how to implement a different type of boundary condition (Dirichlet or Neumann).
+
+Now let's move to a different kind of second-order PDE.
+"""
+
+# ╔═╡ e9c4fcc1-09f8-4a00-8368-2d5b67e11e5f
+md"""
+## Hyperbolic equations — wave propagation
+
+A prototypical hyperbolic PDE is the [wave equation](https://en.wikipedia.org/wiki/Wave_equation), which describes the propagation of waves in many natural processes, such as sound waves, waves on the water surface, seismic waves, or electromagnetic waves.
+
+The wave equation in 1D reads:
 
 ```math
-\begin{align}
-\gamma^{n+1} &= \frac{|\boldsymbol{d}^n \cdot (\boldsymbol{z}^{n+1} - \boldsymbol{z}^n)|}{\boldsymbol{d}^n\cdot\boldsymbol{d}^n}~, \\[5pt]
-\beta^{n+1} &= \left(1 - \sqrt{\gamma^{n+1}}\right)^2~.
-\end{align}
+p_{tt} = c^2 p_{xx}~,
 ```
 
-Updating `β` doesn't need to happen at every iteration, which is useful because dot products involve global reductions and are therefore quite expensive, especially on GPUs. Updating `β` approximately every 10 iterations is usually a good balance between efficiency and accuracy.
+where
 
-Let's implement this DR strategy in our elliptic solver.
+- ``p`` is pressure (or displacement, or another quantity...)
+- ``c`` is a positive constant representing the wave speed (for example, the speed of sound)
 
-Introduce a vector to store the preconditioned residual from the previous iteration, ``z^n``:
+Alternatively, the wave equation can be written as a first-order system of PDEs:
 
-```julia
-# array initialisaition
-# ...
-# z    = ...
-# z0   = ... # new array
-# ...
+```math
+\begin{aligned}
+v_t &= -\frac{1}{\rho}p_x~, \\[0.5em]
+p_t &= -\frac{1}{\beta}v_x~.
+\end{aligned}
 ```
 
-Then, in the `# numerics` section, we add a new parameter `ndrel` controlling the interval between `β` updates:
+Here, ``v`` is the fluid velocity, ``\rho`` is the density, and ``\beta`` is the compressibility. We assume that ``\rho`` and ``\beta`` are positive constants.
 
-```julia
-# numerics
-# ...
-nchck = ceil(Int, 0.1nx)
-ndrel = 10
-# ...
-```
-
-In the iteration loop, we now need to compute `α` before updating the solution:
-
-```julia
-α = 0.99 * (1 + β)
-# u[2:end-1] += ...
-```
-
-Before computing the preconditioned residual `z`, we need to save its old value. Before updating the search direction vector `d`, we need to recompute `β` (but only every `ndrel` iterations):
-
-```julia
-# save old z
-if iter % ndrel == 0
-	@. ...
-end
-# compute preconditioned residual
-@. z = Q * r
-# update β
-if iter % ndrel == 0
-	# A = ...
-	# β = ...
-end
-# update search direction
-@. d = ...
-```
+👉 Demonstrate that these two forms are equivalent. Derive how the parameter ``c`` is related to parameters ``\rho`` and ``\beta``.
 
 !!! hint
-	Use the `dot` function from the `LinearAlgebra` standard library to compute dot products of vectors.
-
-👉 Your turn. Starting from the previous script, implement the DR elliptic solver:
+	Eliminate ``v`` by differentiating the first equation with respect to ``x`` and the second with respect to ``t``, then substituting the expression for ``v_{tx}`` into the second equation.
 """
 
-# ╔═╡ d5726aa5-dd9e-4cc8-8c67-7160bba9c133
-function elliptic_1d_dr()
-	# Enter your code here
-end
-
-# ╔═╡ 25181dae-3eac-4a21-8f8a-2b1d95fd6c36
-md"""
-If the code is implemented correctly, you will see the following figure:
-"""
-
-# ╔═╡ bd7bbd44-95e5-4f9d-bed7-81c8c6dbd0f6
+# ╔═╡ 563965f8-ef6c-4b12-91dd-1e3a25f65248
 answer_box(
 md"""
-```julia
-@views function elliptic_1d_dr()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	ndrel = 10
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 2π / nx
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	z0   = zeros(nx-2)
-	# preconditioner
-	Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		α = 0.99 * (1 + β)
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# save old z
-		if iter % ndrel == 0
-			@. z0 = z
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update β
-		if iter % ndrel == 0
-			A = abs(dot(d, z .- z0)) / dot(d, d)
-			β = (1 - sqrt(A))^2
-		end
-		# update search direction
-		@. d = d * β + z
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
-```
-"""
-)
-
-# ╔═╡ ae8fc6a2-84f6-41f9-92bd-a02cce10a8b6
-md"""
-You can see that the number of iterations with the DR solver is lower than with any manually specified constant value of `β`. If you increase the material contrast `λamp` to larger values, e.g. 1000, the DR solver will still converge but will require many more iterations per `nx` (and increasing the maximum iteration count `niter`). The manually tuned PT solver will converge impractically slowly.
-"""
-
-# ╔═╡ 7c955efd-edd3-4dc9-9ccf-8508d48872ed
-md"""
-### Multi-physics: steady diffusion-reaction
-
-Let's implement our first multi-physics DR solver by adding a chemical reaction:
-
 ```math
-\boldsymbol{\nabla}\cdot(\lambda\boldsymbol{\nabla} u) = \frac{u - u_{eq}}{\xi}
+c = \sqrt{\frac{1}{\rho\beta}}
 ```
+""")
 
+# ╔═╡ d6d9d531-4a2f-4e44-a018-04e2e4046041
+md"""
+The objective is to implement the wave equation in 1D using an explicit time integration (forward Euler) as for the diffusion physics.
 
-👉 Let's add the new physical parameters, modify the Jacobi preconditioner and the residual computation:
+### Numerical solver
+
+We can start by modifying the diffusion code, adding `ρ` and `β` in the `# physics` section, and using a Gaussian (centred at `lx/4`) as the initial condition for the pressure `Pr`:
 
 ```julia
-function steady_diffusion_reaction_1d()
-	# physics
-	...
-	u_eq    = 0.1
-	ξ       = 50.0
-	...
-	# preconditioner
-	Q    = @. inv((λ[1:end-1] + λ[2:end]) / dx^2 + 1 / ξ)
-	# iteration loop
-	for iter in 1:niter
-	    ...
-	    @. r = ... - ...
-	    ...
-	end
-	...
-end
+# physics
+lx   = 20.0
+ρ,β  = 1.0,1.0
+
+# array initialisation
+Pr   =  exp.(...)
 ```
-
-👉 Your turn. Finish the implementation of the steady diffusion-reaction solver:
-"""
-
-# ╔═╡ cc32ced0-d154-46a7-847a-824521bfb044
-function steady_diffusion_reaction_1d()
-	# Enter your implementation here
-end
-
-# ╔═╡ d3268cd5-3be9-4568-abba-dcce3b51ae92
-md"""
-If your implementation is correct, you will see this figure:
-"""
-
-# ╔═╡ 42a19502-7936-4ae6-96db-049c8bab3596
-answer_box(
-md"""
-```julia
-@views function steady_diffusion_reaction_1d()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	u_eq = 0.1
-	ξ    = 50.0
-	# numerics
-	nx    = 1000
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	ndrel = 10
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 2π / nx
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	z0   = zeros(nx-2)
-	# preconditioner
-	Q    = @. inv((λ[1:end-1] + λ[2:end]) / dx^2 + 1 / ξ)
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		α = 0.99 * (1 + β)
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx - (u[2:end-1] - u_eq) / ξ
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# save old z
-		if iter % ndrel == 0
-			@. z0 = z
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update β
-		if iter % ndrel == 0
-			A = abs(dot(d, z .- z0)) / dot(d, d)
-			β = (1 - sqrt(A))^2
-		end
-		# update search direction
-		@. d = d * β + z
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
-```
-"""
-)
-
-# ╔═╡ 72fa4fde-0300-4abe-8f72-9f9b85a7c70c
-md"""
-Interestingly, convergence becomes faster for smaller reaction timescales `ξ`. This is because the term `1/ξ` on the diagonal of the matrix associated with the discretised equation makes the matrix better conditioned.
-"""
-
-# ╔═╡ f574be7f-945d-45d6-a16e-00bd9d85581b
-md"""
-## Wrapping up
-
-- For the model diffusion problem, using a damped wave equation with suitably tuned parameters reduces the iteration count from quadratic to linear in the number of grid points per direction.
-- The pseudo-transient (PT) method is a matrix-free iterative method for solving elliptic PDEs using an analogy with transient physics.
-- Choosing optimal iteration parameters is essential for fast convergence of the PT method.
-"""
-
-# ╔═╡ 413647f6-7a93-49e3-a517-b8ef158f670f
-md"""
-# Julia's REPL, the package manager (Pkg.jl), and essential packages
-
-## Julia package manager
-
-Documentation:
-- [short](https://docs.julialang.org/en/v1/stdlib/Pkg/)
-- [detailed](https://pkgdocs.julialang.org/v1/)
-
-The package manager supports:
-- installing, updating and removing packages
-  - this also includes dependencies such as C/Fortran libraries and Python/Conda environments
-- separate environments for separate projects
-
-## Essential packages for your global environment
-
-With Julia's default load path, packages installed in your global environment are available for interactive use across projects, making it a useful place for utility packages.
-
-I have the following packages installed in my global environment:
-- [Revise.jl](https://github.com/timholy/Revise.jl) --
-  To load it at startup: `mkdir -p ~/.julia/config/ && echo "using Revise" >> ~/.julia/config/startup.jl`
-- [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) --
-  Accurate timers for benchmarking, even for functions with very short runtimes
-- [IJulia.jl](https://github.com/JuliaLang/IJulia.jl) --
-  The Julia Jupyter kernel. Installing it in the global environment is recommended.
-- [Makie.jl](https://github.com/MakieOrg/Makie.jl)
-- [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl) --
-  A basic debugger that works well without slowing down program execution (unlike Debugger.jl, which has more features).
-- [StatProfilerHTML.jl](https://github.com/tkluck/StatProfilerHTML.jl) or [ProfileView.jl](https://github.com/timholy/ProfileView.jl/) --
-  Tools for displaying flame graphs from the built-in `Profile` module (probably do not work on the GPU)
-
-## Julia project environments: usage in this course
-
-You will use Julia environments to submit your homework:
-
-- In your project folder, which you push to GitHub, create a new folder for each week's exercises.
-- Each week's folder should be a Julia project, i.e. it should contain a `Project.toml` file.
-
-## How to do this
-
-Start Julia in the target folder, enter Pkg mode by pressing `]`, activate the project, and add at least one package:
-
-```julia-repl
-julia> ]
-
-(@v1.12) pkg> activate .
-
-(lectureXX) pkg> add CairoMakie
-```
-
-In addition, it is recommended to have the following structure and content:
-- lectureXX
-  - `README.md`
-  - `Project.toml`
-  - `Manifest.toml`
-  - docs/
-  - scripts/
-
-Code can be placed in the `scripts/` folder. Output material to be displayed in the `README.md` can be placed in the `docs/` folder.
 
 !!! note
-    The `Manifest.toml` file should be kept local. To exclude it from version control, add it as an entry to a `.gitignore` file in the root of your repository. Mac users may also add `.DS_Store` to their **global** `.gitignore`.
+	The time step needs a new definition: `dt = dx/sqrt(1/ρ/β)`
+
+The diffusion update:
+
+```julia
+qx          .= .-dc.*diff(C )./dx
+C[2:end-1] .-=   dt.*diff(qx)./dx
+```
+
+should be modified to use pressure `Pr` instead of concentration `C`. Add an update for the velocity `Vx` and adjust the coefficients:
+
+```julia
+Vx          .-= ...
+Pr[2:end-1] .-= ...
+```
+
+!!! warning "Use the new velocity in the pressure update"
+	When updating pressure `Pr`, use the freshly computed values of `Vx`, instead of saving somewhere the old array. This method is called [semi-implicit Euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method) and it works specifically well for the wave equation: it preserves the stored acoustic energy, so the waves never attenuate.
+
+👉 Your turn. Finish the implementation of acoustic wave propagation:
 """
 
-# ╔═╡ 9ec2acf5-850d-4d7b-b185-f65965a19250
+# ╔═╡ c48327ce-2829-441b-a2eb-ff5397d17d09
+md"""
+## First-order PDEs
+
+
+The simplest first-order PDE is the so-called [advection equation](https://en.wikipedia.org/wiki/Advection):
+
+```math
+c_t + \boldsymbol{v} \cdot \boldsymbol{\nabla}c = 0~.
+```
+
+It represents the transport of some scalar quantity ``c``, defined per unit mass of the fluid, due to the bulk motion of a fluid flowing with velocity ``\boldsymbol{v}``.
+"""
+
+# ╔═╡ 37362ad9-3383-4171-bc37-bc85acf642fc
+Foldable(md"Want to know the derivation?",
+md"""
+Assume that the fluid has density ``\rho``. We start from a [mass conservation equation](https://en.wikipedia.org/wiki/Continuity_equation) for the quantity ``\rho c``:
+
+```math
+(\rho c)_t + \boldsymbol{\nabla}\cdot(\rho c\boldsymbol{v}) = 0
+```
+
+Using the product rule gives:
+
+```math
+c\,[\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})] + \rho\,[c_t + \boldsymbol{v}\cdot\boldsymbol{\nabla}c] = 0
+```
+
+In the first term, the quantity in brackets, ``\rho_t + \boldsymbol{\nabla}\cdot(\rho \boldsymbol{v})``, is always equal to ``0``: this is the mass conservation equation for the bulk flow. Dividing both sides of the remaining equation by ``\rho``, which is always positive, we get the advection equation.
+""")
+
+# ╔═╡ c3fb9efa-0728-448c-a992-79926dea6f7c
+md"""
+### Exact solution
+
+For constant velocity ``\boldsymbol{v}``, the advection equation has a simple exact solution: it simply translates the initial shape of the field ``c`` in space.
+
+For example, in 1D, if initially (at ``t = 0``) the shape of ``c`` was given by ``f(x)``, then the solution at time ``t`` is simply:
+
+```math
+c(t, x) = f(x - vt)
+```
+
+Let's visualise it. Here's the function for the initial condition (it's a Gaussian, but feel free to try something else):
+"""
+
+# ╔═╡ 197f44d5-76e1-4aee-b576-811d6923310f
+function initial_condition(x)
+	return exp(-x^2)
+end
+
+# ╔═╡ 770c08ce-bce5-4542-8ca7-92179d43a45d
+md"""
+Adjust the velocity and time and see what happens:
+"""
+
+# ╔═╡ f1a20d7e-4069-4a5d-a77b-56a07b6ea2fc
+md"""
+velocity: $(@bind __vel NumberField(default=5.0)) \
+time: $(@bind __time PlutoUI.Slider(0:0.01:1; default=1, show_value=true))
+"""
+
+# ╔═╡ 4c843ddf-bc16-4a33-8683-41cfa88762de
+let
+lx = 20.0 # domain length
+xs = LinRange(-lx/2, lx/2, 201)
+fs = initial_condition.(xs .- __vel * __time)
+lines(xs, initial_condition.(xs);
+	  figure=(size=(600, 200),),
+	  color=:blue,
+	  label="t = 0")
+lines!(xs, fs; color=:red, label="t = $(round(__time; digits=2))")
+axislegend(current_axis())
+current_figure()
+end
+
+# ╔═╡ 31129331-fbd5-4d66-8108-d84e43b14747
+md"""
+!!! note "What about the boundary conditions?"
+	This solution is only valid in an unbounded region. If the domain has finite extent, we will need to specify the values of ``c`` at the inflow parts of the boundary.
+
+### Numerical solver
+
+Let's solve the advection equation numerically, following the same code structure as for diffusion and acoustic wave propagation.
+
+The only physical parameter besides the domain extent now is the advection velocity:
+
+```julia
+# physics
+lx   = 20.0
+vx   = 1.0
+```
+
+In the `# array initialisation` section, initialise the quantity `C` as a Gaussian profile of amplitude 1, centred at `lx / 4`.
+
+```julia
+C = @. exp( ... )
+```
+
+The only change in the `# preprocessing` section is the numerical time step definition to comply with the [CFL condition](https://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition) for explicit time integration.
+
+```julia
+# preprocessing
+dt   = dx / abs(vx)
+```
+
+Update `C` in the time loop as follows:
+
+```julia
+C .-= dt .* vx .* diff(C) ./ dx # won't work
+```
+
+As with the diffusion and wave equations, this assignment doesn't work because of the mismatching array sizes. But unlike the second-order equations, we don't have two derivatives to make sure that we can update the inner points of `C`.
+
+There are at least three (naive) ways to solve the problem: update `C[1:end-1]`, `C[2:end]`, or one could even update `C[2:end-1]` with the spatial average of the increment `dt .* vx .* diff(C) ./ dx`.
+
+To make things more interesting, let's also flip the sign of the velocity when reaching `it=nt÷2`. Recall the conditional statements and short-circuit operators from Lecture 1 for a hint on how to implement this.
+
+👉 Your turn. Implement all three options for updating `C` and see what works best:
+"""
+
+# ╔═╡ 6bd96e91-83be-4f19-b2dd-267187521fdf
+md"""
+!!! hint
+	Depending on the sign of velocity, you need a different scheme. One of the choices (where to store `dt .* vx .* diff(C) ./ dx`) will only work for `vx >= 0`, while the other will only work for `vx <= 0`. We suggest implementing both these schemes in the same code, but in one case use `max(vx, 0)` and in other use `min(vx, 0)` for velocity.
+"""
+
+# ╔═╡ 9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+Foldable("Why does only one scheme work?",
+md"""
+The reason is again numerical stability. It turns out that both the time step and the spatial discretisation affect stability. The scheme that is stable for the explicit Euler time integration is the so-called [upwind scheme](https://en.wikipedia.org/wiki/Upwind_scheme). Interestingly, the other two choices, the "downwind" scheme and the [central scheme](https://en.wikipedia.org/wiki/FTCS_scheme) are **unconditionally unstable**, i.e. the solution explodes for any time step.
+""")
+
+# ╔═╡ f6270619-d412-465b-a3af-e6c3c6f8e257
+md"""
+!!! warning "Numerical diffusion"
+	Interestingly, the numerical solution looks just just like the exact one. But this is possible only when the velocity is constant and in 1D. In general case, the finite-difference schemes for advection suffer from the **numerical diffusion**. Try multiplying the time step `dt` by `0.5` and see how the Gaussian starts diffusing while advecting. To reduce numerical diffusion, high-order methods such as [WENO](https://en.wikipedia.org/wiki/WENO_methods) can be used.
+"""
+
+# ╔═╡ 5c9b9479-d89e-44d6-9081-ddae9a6291ba
+md"""
+## First steps towards solving elliptic problems
+
+We have considered numerical solutions to hyperbolic and parabolic PDEs. In both cases, we used explicit time integration.
+
+An elliptic PDE is different:
+
+```math
+c_{xx} = 0
+```
+
+It doesn't depend on time! How do we solve it numerically then?
+
+There are many ways, but in this course we will focus on **relaxation solvers**. The idea is that the solution to the elliptic PDE can be obtained as a **steady state** of a corresponding **time-dependent** parabolic equation:
+
+```math
+c_t = \lambda c_{xx}~.
+```
+
+The steady state is approached as ``t \rightarrow \infty`` when ``c_t \rightarrow 0``.
+
+!!! note 
+	The existence of such a steady state is not guaranteed for all PDEs, but it is the case for many parabolic equations.
+
+We already know how to solve parabolic equations, so solving elliptic equations should be easy then, right?
+
+👉 Increase the number of time steps `nt` in our diffusion code to see whether the solution converges, and decrease the frequency of plotting:
+
+```julia
+nt   = 5000
+nvis = 50
+```
+
+Observe how the solution approaches the steady state. It looks a bit trivial though, as it approaches 0 everywhere:
+
+👉 Change the boundary conditions so that ``c = 1`` at ``x = \mathrm{lx}`` and run the simulation again.
+
+Now, the solution should converge to a linear profile. However, the number of time steps required to converge to a solution is proportional to `nx^2`:
+
+- For simulations in 1D and low resolutions in 2D, the quadratic scaling is acceptable;
+- For high-resolution simulations in 2D and 3D, the `nx^2` factor becomes prohibitively expensive!
+
+So, solving elliptic equations efficiently is not that simple. We'll tackle this challenge in the next lecture, **stay tuned!** 🚀
+
+!!! note
+	The described routine is far from being the only way to solve these PDEs numerically. In this course, we will stick to those concepts as they will allow for efficient parallel implementations on GPUs and are relatively easy to implement.
+"""
+
+# ╔═╡ 50cb4141-1cb1-428b-938b-fd81f8102a91
+md"""
+# Software and numeric engineering skills
+
+We try to make this course "wholesome" by not just teaching you numerics but also the skills to actually work with numerical (and other) code.
+Just like with the numerics we take a hands-on approach to these topics. We will cover:
+
+- Version control with Git to keep track of the code and to allow collaboration.
+- Package and environment management to make your software stack reproducible.
+- Running software on super computers.
+- Etc.
+
+
+# Introduction to Git
+
+Git is version control software. It helps you to:
+
+- Keep track of changes to code (and other files)
+- Collaborate on code
+- Share code across your computers and with others
+
+!!! note
+	Avoid committing large files, especially binary files, to Git. For this course, consider storing files larger than 1 MB elsewhere.
+
+**Some questions for you:**
+
+- How often do you use Git?
+- Who has Git installed on their laptop?
+- Do you use: `commit`, `push`, `pull`, `clone`?
+- Do you use: `branch`, `merge`, `rebase`?
+- Do you use GitHub, GitLab, or similar platforms?
+
+Here are a few online resources about Git:
+
+- [git - the simple guide](https://rogerdudler.github.io/git-guide/)
+- [Git cheatsheet](https://git-scm.com/cheat-sheet)
+- [Using Git in VS Code](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
+- [Official tutorial videos (~24 min)](https://git-scm.com/videos)
+
+## A brief Git demo
+
+👉 If you don't have Git on your computer, [install it](https://git-scm.com/install/)!
+
+The Git demo is available on video and as transcript:
+- [demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-demo-cords-comp.mp4)
+- [merge demo-video](https://people.ee.ethz.ch/~werderm/PDEonGPU-439duii923hd983/git-merge-demo-cords-comp.mp4)
+- [transcript](https://github.com/mauro3/CORDS/blob/master/Workshop-Reproducible-Research/lectures/L02_git.md)
+
+- Git setup:
+
+```sh
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+```
+
+- Make a repo (`init`)
+- Add some files (`add`, `commit`)
+- Make some changes (`commit` some more)
+- Make a feature branch (`branch`, `diff`, `difftool`)
+- Merge the branch (`merge`)
+- Tag (`tag`)
+
+## Other tools for Git
+
+Many tools let you interact with Git, including graphical clients, command-line tools, and VS Code. Feel free to use them.
+
+But we will only be able to help you with standard command-line Git.
+
+## Getting started on GitHub (similar on GitLab, or elsewhere)
+
+GitHub and GitLab are collaborative software development platforms:
+
+- They host code
+- They help developers collaborate
+- They provide infrastructure for software testing, deployment, etc
+
+!!! note
+	ETH has a GitLab instance which you can use with your NETHZ credentials [https://gitlab.ethz.ch/](https://gitlab.ethz.ch/).
+
+If you don't have a GitHub account, make one (most of Julia development happens on GitHub)
+
+[https://github.com/](https://github.com/) → "Sign up"
+
+### GitHub setup
+
+Set up authentication so that you can push and pull without repeatedly entering your credentials.
+
+![GitHub navigation bar](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_github-bar.png)
+
+- Local terminal: tell Git to cache credentials: `git config --global credential.helper cache`
+  (this may not be needed on all operating systems, potentially a built-in password/credential
+   manager will do this automatically)
+- [github.com](https://github.com/):
+  - "Settings" → "Developer settings" → "Personal access tokens" → "Generate new token"
+    - Give the token a description/name and select the scope of the token
+    - I selected "repo only" to facilitate pull, push, clone, and commit actions
+  - → "Generate token" and copy it (keep that website open for now)
+
+## Let's get our repo onto GitHub
+
+- Create a repository on github.com: click the "+"
+- Local terminal: follow the setup instructions on the website for "…or push an existing repository from the command line"
+  - with the `git push` it will send it to github, which will prompt you to:
+  - enter your username here + the **token** generated before
+
+## Work with other people: pull request (PR)
+
+When contributing to a shared repository, you typically make changes on a separate branch and submit a **pull request (PR)**. A pull request provides a web interface for reviewing changes, requesting revisions, and merging the code.
+
+In a repository where you have write permission, use the following workflow:
+
+- Make a branch `git branch some-branch-name` and switch to it: `git switch -c some-branch-name`
+- Make changes, add files, etc. and commit to the branch.  You can have several commits on the branch.
+- Push the branch to GitHub
+- On the GitHub web page, a bar with an "Open pull request" option should appear: click it
+- If you have more changes, just commit and push them to that branch
+- When the changes are ready and reviewed, merge the PR
+
+You will use this workflow to submit homework for the course.
+
+## Work with other people's code: fork
+
+To contribute to a repository where you do not have write access:
+
+- Fork a repository on github.com (top right)
+- Make a branch on that fork and work on it
+- Push the branch to your fork on GitHub and open a PR against the original repository
+- (not needed in this lecture course)
+"""
+
+# ╔═╡ 3125ddfe-2a52-4c92-989c-6d26c21e3c93
+Foldable("Got any questions?",
+md"""
+Write to us on Element. We will also work through more exercises and answer questions in class.
+		 
+![Git comic](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/78b7d0f9ea3577e81f8469ac22f7ccf445a2c931/lectures/part1_introduction/assets/l2_git-me.png)
+""")
+
+# ╔═╡ c02bc7a1-2b6b-4453-bee7-9bb2735fc402
 # helper function to animate the loop in Pluto live
 macro animate(fig, nvis, loop)
 	loop.head == :for || error("`@animate` can only be used with `for` loops")
@@ -1307,7 +862,7 @@ macro animate(fig, nvis, loop)
 	body = loop.args[2]
 	return quote
 		iframe = first($(esc(iter_range)))
-		CairoMakie.Makie.Record($(esc(fig)), $(esc(iter_range))[1:$(esc(nvis)):end]; framerate=30, compression=35) do _
+		CairoMakie.Makie.Record($(esc(fig)), $(esc(iter_range))[1:$(esc(nvis)):end]; format="mp4", framerate=30, compression=35, profile = "high444") do _
 			for i in 1:$(esc(nvis))
 				$(esc(iter_var)) = iframe
 				$(esc(body))
@@ -1317,334 +872,119 @@ macro animate(fig, nvis, loop)
 	end
 end;
 
-# ╔═╡ 422426d3-cad1-4e18-a73b-aa02cfe4422d
-function damped_wave_equation_1d(ζ)
+# ╔═╡ 3e833c61-5f94-413e-ab57-5e1669da380e
+function diffusion_1d()
 	# physics
-	# lx   = ...
+	lx   = 20.0
+	dc   = 1.0
 	# numerics
 	nx   = 200
-	nt   = 10nx
-	nvis = 20
+	nvis = 5
 	# preprocessing
 	dx   = lx / nx
-	dτ   = 0.95dx
-	xc   = LinRange(dx/2, lx-dx/2, nx)
-	# initialisation
-	# u    = ...
-	# v    = zeros(...)
-	# τ and u(max) history
-	τs  = [0.0]
-	us  = [u[end÷2]]
-	# figure
-	fig = Figure(size=(600, 400))
-	ax  = (Axis(fig[1, 1]; xlabel="x", ylabel="u"),
-           Axis(fig[2, 1]; xlabel="τ", ylabel="uᵐ", limits=(0, nt*dτ, -0.5, 1)))
-	ylims!(ax[1], -1.1, 1.1)
-	lines!(ax[1], xc, u; color=:blue)
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], τs, us; color=:red))
+	xc   = LinRange(dx/2,lx-dx/2,nx)
+	dt   = dx^2 / dc / 2
+	nt   = 500
+	# array initialisation
+	C    = @. exp(-(xc-lx/2)^2)
+	qx   = zeros(nx-1) # deception is resolved in the solution
+	# create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Concentration")
+	lines!(xc, C; color=:blue)
+	plt = lines!(xc, C; color=:red)
 	# time loop
-	@animate fig nvis for iter in 1:nt
-		# update solution
-		# u[2:end-1] .= ...
-		# update rate of change
-		# v .= ...
-		if iter % nvis == 0
-			# push!(τs, ...)
-			# push!(us, ...)
-			plt[1][2] = u
-			plt[2][1] = τs
-			plt[2][2] = us
+	@animate fig nvis for it = 1:nt
+	    qx          .= .-dc.*diff(C )./dx
+		# take a forward Euler time step
+		C[2:end-1] .-=   dt.*diff(qx)./dx
+		if it % nvis == 0
+			plt[2] = C
 		end
 	end
 end
 
-# ╔═╡ 1b168a45-12ad-4ef6-bd4c-347c2d0737a7
-function __damped_wave_equation_1d(ζ)
-	# physics
-	lx   = π
-	# numerics
-	nx   = 200
-	nt   = 10nx
-	nvis = 20
-	# preprocessing
-	dx   = lx / nx
-	dτ   = 0.95dx
-	xc   = LinRange(dx/2, lx-dx/2, nx)
-	# initialisation
-	u    = @. sin(xc)
-	v    = zeros(nx-2)
-	# τ and u(max) history
-	τs  = [0.0]
-	us  = [u[end÷2]]
-	# figure
-	fig = Figure(size=(600, 400))
-	ax  = (Axis(fig[1, 1]; xlabel="x", ylabel="u"),
-           Axis(fig[2, 1]; xlabel="τ", ylabel="uᵐ", limits=(0, nt*dτ, -0.5, 1)))
-	ylims!(ax[1], -1.1, 1.1)
-	lines!(ax[1], xc, u; color=:blue)
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], τs, us; color=:red))
-	# time loop
-	@animate fig nvis for iter in 1:nt
-		# update solution
-		u[2:end-1] .= u[2:end-1] .+ dτ .* v
-		# update rate of change
-		v .= v .* (1 - dτ * ζ) .+ dτ .* diff(diff(u)./dx)./dx
-		if iter % nvis == 0
-			push!(τs, iter * dτ)
-			push!(us, u[end÷2])
-			plt[1][2] = u
-			plt[2][1] = τs
-			plt[2][2] = us
-		end
-	end
-end;
+# ╔═╡ b3843e23-b9cf-4192-ba9c-496ba1695711
+diffusion_1d()
 
-# ╔═╡ 9ac461dc-f268-4e36-ad24-c0b783913eb0
-Foldable("Show animation", __damped_wave_equation_1d(0.5))
+# ╔═╡ cff2c4c6-1008-4a2c-b13a-83618f00b6fd
+function acoustic_1D()
+    # physics
+    lx   = 20.0
+    ρ, β = 1.0, 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # preprocessing
+    dx   = lx / nx
+    xc   = LinRange(dx/2,lx-dx/2,nx)
+    dt   = dx / sqrt(1/ρ/β)
+    nt   = 2nx
+    # array initialisation
+    Pr   = @. exp(-(xc-lx/4)^2)
+    Vx   = zeros(nx-1)
+    # create plot
+	fig = Figure(size=(600, 200))
+	ax  = Axis(fig[1,1]; xlabel="x", ylabel="Pressure")
+    ylims!(ax, -0.6, 1.1)
+	lines!(xc, Pr; color=:blue)
+	plt = lines!(xc, Pr; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        # take a forward Euler time step
+        Vx          .-= dt./ρ.*diff(Pr)./dx
+        # now use the freshly updated Vx
+        Pr[2:end-1] .-= dt./β.*diff(Vx)./dx
+        if it % nvis == 0
+            plt[2] = Pr
+        end
+    end
+end
 
-# ╔═╡ 2a99ad7e-bf27-4201-ad9f-937465f39983
-@views function __elliptic_1d()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 1.3π / nx
-	α 	 = 0.99 * (1 + β)
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	# preconditioner
-	Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update search direction
-		@. d = d * β + z
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
+# ╔═╡ 6fb78164-19e2-48f8-957d-bb6681ebcb54
+acoustic_1D()
 
-# ╔═╡ 52f8350d-69ab-4ae7-a7a5-f9ba73af3558
-Foldable("See the result", __elliptic_1d())
+# ╔═╡ 76c2a2f8-53ac-4820-97ed-1683209b9353
+function advection_1D()
+    # physics
+    lx   = 20.0
+    vx   = 1.0
+    # numerics
+    nx   = 200
+    nvis = 2
+    # derived numerics
+    dx   = lx / nx
+    xc   = LinRange(dx / 2, lx - dx / 2, nx)
+    dt   = dx / abs(vx)
+    nt   = nx
+    # array initialisation
+    C    = @. exp(-(xc - lx / 4)^2)
+    # make visualisation
+    fig = Figure(size=(600, 200))
+    ax = Axis(fig[1, 1], xlabel="lx", ylabel="Concentration")
+    lines!(ax, xc, C; color=:blue)
+    plt = lines!(ax, xc, C; color=:red)
+    # time loop
+    @animate fig nvis for it = 1:nt
+        C[2:end]   .-= dt .* max(vx, 0.0) .* diff(C) ./ dx
+        C[1:end-1] .-= dt .* min(vx, 0.0) .* diff(C) ./ dx
+        (it % (nt ÷ 2) == 0) && (vx = -vx)
+        plt[2] = C
+    end
+end
 
-# ╔═╡ cfbead9d-3f84-4d2f-8b5b-a537a428f9ab
-@views function __elliptic_1d_dr()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	ndrel = 10
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 2π / nx
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	z0   = zeros(nx-2)
-	# preconditioner
-	Q    = @. dx^2 / (λ[1:end-1] + λ[2:end])
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		α = 0.99 * (1 + β)
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# save old z
-		if iter % ndrel == 0
-			@. z0 = z
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update β
-		if iter % ndrel == 0
-			A = abs(dot(d, z .- z0)) / dot(d, d)
-			β = (1 - sqrt(A))^2
-		end
-		# update search direction
-		@. d = d * β + z
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
-
-# ╔═╡ c476cec3-a5b3-4941-b8d3-3325f58407dc
-Foldable("See the result", __elliptic_1d_dr())
-
-# ╔═╡ 26f5dba7-41cd-492c-a9e8-918231979d4f
-@views function __steady_diffusion_reaction_1d()
-	# physics
-	lx   = 20.0
-	λbg  = 1.0
-	λamp = 10.0
-	u_eq = 0.1
-	ξ    = 50.0
-	# numerics
-	nx    = 200
-	εtol  = 1e-6
-	niter = 15nx
-	nchck = ceil(Int, 0.1nx)
-	ndrel = 10
-	# preprocessing
-	dx   = lx / nx
-	xc   = LinRange(dx/2,lx-dx/2,nx)
-	xv   = LinRange(dx,lx-dx,nx-1)
-	β    = 1 - 2π / nx
-	# array initialisation
-	u    = zeros(nx)
-	λ    = @. λbg + λamp * exp(-(xv-lx/2)^2)
-	qx   = zeros(nx-1)
-	d    = zeros(nx-2)
-	r    = zeros(nx-2)
-	z    = zeros(nx-2)
-	z0   = zeros(nx-2)
-	# preconditioner
-	Q    = @. inv((λ[1:end-1] + λ[2:end]) / dx^2 + 1 / ξ)
-	# convergence history
-	itr_h = Float64[]
-	res_h = Float64[]
-	# time loop
-	for iter = 1:niter
-		# update solution
-		α = 0.99 * (1 + β)
-		@. u[2:end-1] += α * d
-		# boundary conditions
-		u[1]   = 0
-		u[end] = 1
-		# compute residual
-	    @. qx = -λ * (u[2:end] - u[1:end-1]) / dx
-		@. r  = -(qx[2:end] - qx[1:end-1]) / dx - (u[2:end-1] - u_eq) / ξ
-		# check convergence
-		if iter % nchck == 0
-			err = maximum(abs, r)
-			push!(itr_h, iter / nx)
-			push!(res_h, err)
-			if err < εtol
-				println(" solver converged in $(iter/nx) × N iterations! 🚀")
-				break
-			end
-		end
-		# save old z
-		if iter % ndrel == 0
-			@. z0 = z
-		end
-		# compute preconditioned residual
-		@. z = Q * r
-		# update β
-		if iter % ndrel == 0
-			A = abs(dot(d, z .- z0)) / dot(d, d)
-			β = (1 - sqrt(A))^2
-		end
-		# update search direction
-		@. d = d * β + z
-	end
-	# create plot
-	fig = Figure(size=(600, 450))
-	ax  = (Axis(fig[1,1]; xlabel="x", ylabel="u", title="solution"),
-           Axis(fig[2,1]; xlabel="iter/nx", ylabel="|r|",
-                              yscale=log10,
-                              title="convergence history",
-                              limits=(0, niter/nx, 0.1εtol, 1e2)))
-	plt = (lines!(ax[1], xc, u; color=:red),
-           lines!(ax[2], itr_h, res_h; color=:black))
-	return fig
-end;
-
-# ╔═╡ c0d1d48f-29ae-4d41-817d-1a15f03b0c92
-Foldable("See the result", __steady_diffusion_reaction_1d())
+# ╔═╡ a84ea677-fee3-42be-a194-24e50c4859e4
+advection_1D()
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
-LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
-CairoMakie = "~0.15.15"
+CairoMakie = "~0.15.14"
 PlutoTeachingTools = "~0.4.7"
 PlutoUI = "~0.7.83"
 """
@@ -1655,7 +995,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.12.7"
 manifest_format = "2.0"
-project_hash = "57635ee8d043dbf27643e69fb54e55bd5840356a"
+project_hash = "2f0e84c679cd198d8e9caacefe1556f69a34c941"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -1800,9 +1140,9 @@ version = "1.1.1"
 
 [[deps.CairoMakie]]
 deps = ["CRC32c", "Cairo", "Cairo_jll", "Colors", "FileIO", "FreeType", "GeometryBasics", "LinearAlgebra", "Makie", "PrecompileTools"]
-git-tree-sha1 = "1cda0b7d5abfc95357dae18aca934d401f7869ad"
+git-tree-sha1 = "3495bfc164949714579501b825b8e5e2cce7c56f"
 uuid = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
-version = "0.15.15"
+version = "0.15.14"
 
 [[deps.Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "Libdl", "Pixman_jll", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
@@ -2013,9 +1353,9 @@ version = "2.8.4+0"
 
 [[deps.FFMPEG_jll]]
 deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers", "LAME_jll", "Libdl", "Ogg_jll", "OpenSSL_jll", "Opus_jll", "PCRE2_jll", "Zlib_jll", "libaom_jll", "libass_jll", "libfdk_aac_jll", "libva_jll", "libvorbis_jll", "x264_jll", "x265_jll"]
-git-tree-sha1 = "e3c081ec777297fb8fc433012d15a6eaf806b4d2"
+git-tree-sha1 = "7a58e45171b63ed4782f2d36fdee8713a469e6e0"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
-version = "9.0.1+0"
+version = "8.1.2+0"
 
 [[deps.FFTA]]
 deps = ["AbstractFFTs", "DocStringExtensions", "LinearAlgebra", "MuladdMacro", "Primes", "Random", "Reexport"]
@@ -2068,9 +1408,9 @@ version = "1.11.0"
 
 [[deps.FillArrays]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "086b5fbd032baf544678cc15b52b015e4c4aceb8"
+git-tree-sha1 = "5bad39456d9f0166184fce2248783dd9862645c1"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "1.17.1"
+version = "1.17.0"
 weakdeps = ["PDMats", "SparseArrays", "StaticArrays", "Statistics"]
 
     [deps.FillArrays.extensions]
@@ -2128,9 +1468,9 @@ version = "1.2.0"
 
 [[deps.GeometryBasics]]
 deps = ["EarCut_jll", "LinearAlgebra", "PrecompileTools", "Random", "StaticArrays"]
-git-tree-sha1 = "ec46c5825710fa1a15d468acb2d93cc939a7a5fe"
+git-tree-sha1 = "592cfb5ed8b02804f6a9c04091571c393081f73a"
 uuid = "5c1252a2-5f33-56bf-86c9-59e7332b4326"
-version = "0.5.13"
+version = "0.5.12"
 
     [deps.GeometryBasics.extensions]
     ExtentsExt = "Extents"
@@ -2156,9 +1496,9 @@ version = "9.55.1+0"
 
 [[deps.Giflib_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "a3efbbc027441271444dcd0c0a46f2d119dc4329"
+git-tree-sha1 = "6570366d757b50fabae9f4315ad74d2e40c0560a"
 uuid = "59f7168a-df46-5410-90c8-f2779963d0ec"
-version = "6.1.3+0"
+version = "5.2.3+0"
 
 [[deps.Glib_jll]]
 deps = ["Artifacts", "GettextRuntime_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Zlib_jll"]
@@ -2366,9 +1706,9 @@ version = "1.8.0"
 
 [[deps.JSON]]
 deps = ["Dates", "Logging", "Parsers", "PrecompileTools", "StructUtils", "UUIDs", "Unicode"]
-git-tree-sha1 = "633b5a34494e711f694ccbc88a6e00102f10238c"
+git-tree-sha1 = "88352712893ec50bee3680605891eaf0e9ed6368"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
-version = "1.9.0"
+version = "1.8.0"
 
     [deps.JSON.extensions]
     JSONArrowExt = ["ArrowTypes"]
@@ -2547,9 +1887,9 @@ version = "0.5.16"
 
 [[deps.Makie]]
 deps = ["Animations", "Base64", "CRC32c", "ColorBrewer", "ColorSchemes", "ColorTypes", "Colors", "ComputePipeline", "Contour", "Dates", "DelaunayTriangulation", "Distributions", "DocStringExtensions", "Downloads", "FFMPEG_jll", "FileIO", "FilePaths", "FixedPointNumbers", "Format", "FreeType", "FreeTypeAbstraction", "GeometryBasics", "GridLayoutBase", "ImageBase", "ImageIO", "InteractiveUtils", "Interpolations", "IntervalSets", "InverseFunctions", "Isoband", "KernelDensity", "LaTeXStrings", "LinearAlgebra", "MacroTools", "Markdown", "MathTeXEngine", "Observables", "OffsetArrays", "PNGFiles", "Packing", "Pkg", "PlotUtils", "PolygonOps", "PrecompileTools", "Printf", "REPL", "Random", "RelocatableFolders", "Scratch", "ShaderAbstractions", "SignedDistanceFields", "SparseArrays", "Statistics", "StatsBase", "StatsFuns", "StructArrays", "TriplotBase", "UnicodeFun", "Unitful"]
-git-tree-sha1 = "5f6f5d1b1fb7ff98c9a083bbfd4c661a9808e758"
+git-tree-sha1 = "37b10d17f74f54dc5fa7d3c6c20fd75613c71d80"
 uuid = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
-version = "0.24.15"
+version = "0.24.14"
 
     [deps.Makie.extensions]
     MakieDynamicQuantitiesExt = "DynamicQuantities"
@@ -2752,10 +2092,10 @@ uuid = "eebad327-c553-4316-9ea0-9fa01ccd7688"
 version = "0.3.3"
 
 [[deps.PlotUtils]]
-deps = ["ColorSchemes", "Colors", "Dates", "PrecompileTools", "Printf", "Reexport", "Statistics"]
-git-tree-sha1 = "f20e945b895d2009c6c28d8bbf40a5cd846f7c2f"
+deps = ["ColorSchemes", "Colors", "Dates", "PrecompileTools", "Printf", "Random", "Reexport", "StableRNGs", "Statistics"]
+git-tree-sha1 = "26ca162858917496748aad52bb5d3be4d26a228a"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
-version = "1.5.0"
+version = "1.4.4"
 
 [[deps.PlutoTeachingTools]]
 deps = ["Downloads", "HypertextLiteral", "Latexify", "Markdown", "PlutoUI"]
@@ -2929,9 +2269,9 @@ version = "1.11.0"
 
 [[deps.ShaderAbstractions]]
 deps = ["ColorTypes", "FixedPointNumbers", "GeometryBasics", "LinearAlgebra", "Observables", "StaticArrays"]
-git-tree-sha1 = "57aa595158717ef165e6f5ab639fe2e3178c0a2b"
+git-tree-sha1 = "818554664a2e01fc3784becb2eb3a82326a604b6"
 uuid = "65257c39-d410-5151-9873-9b3e5be5013e"
-version = "0.5.1"
+version = "0.5.0"
 
 [[deps.SharedArrays]]
 deps = ["Distributed", "Mmap", "Random", "Serialization"]
@@ -2981,6 +2321,12 @@ weakdeps = ["ChainRulesCore"]
     [deps.SpecialFunctions.extensions]
     SpecialFunctionsChainRulesCoreExt = "ChainRulesCore"
 
+[[deps.StableRNGs]]
+deps = ["Random"]
+git-tree-sha1 = "4f96c596b8c8258cc7d3b19797854d368f243ddc"
+uuid = "860ef19b-820b-49d6-a774-d7a799459cd3"
+version = "1.0.4"
+
 [[deps.StackViews]]
 deps = ["OffsetArrays"]
 git-tree-sha1 = "be1cf4eb0ac528d96f5115b4ed80c26a8d8ae621"
@@ -2989,9 +2335,9 @@ version = "0.1.2"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "PrecompileTools", "Random", "StaticArraysCore"]
-git-tree-sha1 = "39e70e0ab5d7f89833a62ab7c79df15d4fc417c1"
+git-tree-sha1 = "e206cf4850fd7ac4255ffd2b98922f563e18ac53"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.9.22"
+version = "1.9.20"
 weakdeps = ["ChainRulesCore", "Statistics"]
 
     [deps.StaticArrays.extensions]
@@ -3059,18 +2405,16 @@ version = "0.7.3"
 
 [[deps.StructUtils]]
 deps = ["Dates", "UUIDs"]
-git-tree-sha1 = "b814d5005d6a529d740ffe06f8a86396f6501138"
+git-tree-sha1 = "2d0fc55c61321ba245c47be599570d11bac50303"
 uuid = "ec057cc2-7a8d-4b58-b3b3-92acb9f63b42"
-version = "2.9.2"
+version = "2.8.5"
 
     [deps.StructUtils.extensions]
-    StructUtilsLazilyInitializedFieldsExt = ["LazilyInitializedFields"]
     StructUtilsMeasurementsExt = ["Measurements"]
     StructUtilsStaticArraysCoreExt = ["StaticArraysCore"]
     StructUtilsTablesExt = ["Tables"]
 
     [deps.StructUtils.weakdeps]
-    LazilyInitializedFields = "0e77f7df-68c5-4e49-93ce-4cd80f5598bf"
     Measurements = "eff96d63-e80a-5855-80a2-b1b0885c5ab7"
     StaticArraysCore = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
     Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
@@ -3276,9 +2620,9 @@ version = "0.2.3+0"
 
 [[deps.libaom_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
-git-tree-sha1 = "1210ba774d3427387d307bf1f416d699b7c39417"
+git-tree-sha1 = "ef17c47d22224aaecc76e597ab21a072e025cf7b"
 uuid = "a4ae2306-e953-59d6-aa16-d00cac43593b"
-version = "3.15.1+0"
+version = "3.14.1+0"
 
 [[deps.libass_jll]]
 deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "HarfBuzz_jll", "JLLWrappers", "Libdl", "Zlib_jll"]
@@ -3329,9 +2673,9 @@ version = "1.3.8+0"
 
 [[deps.libwebp_jll]]
 deps = ["Artifacts", "Giflib_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libglvnd_jll", "Libtiff_jll", "libpng_jll"]
-git-tree-sha1 = "52d3b9475133c3bc8c0a7f90f18bfc8cdb5a443a"
+git-tree-sha1 = "4e4282c4d846e11dce56d74fa8040130b7a95cb3"
 uuid = "c5f90fcd-3b7e-5836-afba-fc50a0988cb2"
-version = "1.6.1+0"
+version = "1.6.0+0"
 
 [[deps.nghttp2_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -3357,54 +2701,53 @@ version = "4.1.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─63841d7d-2520-433e-b09a-630c73c084c0
-# ╟─0b357917-fc2c-48d1-93bd-7591cffc7238
-# ╟─f11d07aa-ab22-4c8a-83dc-31e984244cec
-# ╟─cc685fe8-db51-471d-a2a4-6acec55e3c5a
-# ╟─94ec3349-294e-40f5-8501-4d7fe5510452
-# ╟─c351741d-347e-4fc3-bce1-d8dd84a3a992
-# ╟─79e201d7-0183-4861-ad30-993f1308f39f
-# ╟─c24d6699-1e22-40a6-a469-3ef6b249f8be
-# ╟─9e910f47-59ad-4591-bd17-064acf1f31fa
-# ╟─11f41834-6688-4cfb-aa70-56c46db4a63d
-# ╟─e3f5c992-b76f-11f1-b33c-3b9472606fe3
-# ╠═422426d3-cad1-4e18-a73b-aa02cfe4422d
-# ╟─56f4af2b-06f0-4aa2-b4f9-e2342f614c40
-# ╟─9ac461dc-f268-4e36-ad24-c0b783913eb0
-# ╟─56cde71c-1926-4628-bcd5-2467b6009f77
-# ╠═025f2984-bc92-4576-8cc8-8559f5c0e327
-# ╟─c6d8a983-b4c6-48bf-a0e3-f7cf945a0edb
-# ╟─67dd1075-e9d8-4644-8ea5-cbaeea8c1916
-# ╟─51b15738-f473-40a4-b76a-3ea5ccc20e4a
-# ╟─9ea2a20e-2c44-41f7-9806-512831ec519c
-# ╟─05a2e73a-3433-44f6-b14a-345778e54655
-# ╟─c5151cee-5ce3-4baf-8e51-d64c448763f8
-# ╟─f065b525-5dc4-46a1-8df0-c1a29d751159
-# ╠═b5d5c28a-7b83-4f48-b6a0-ec617ae1ccb7
-# ╟─a28bdaa2-82f9-4949-b3af-34a0bf4c18ab
-# ╟─52f8350d-69ab-4ae7-a7a5-f9ba73af3558
-# ╟─e2a22f7c-34a0-4d67-b9a3-1c76213921a9
-# ╟─015de44b-aeb8-407e-b9f5-5e8086ef0689
-# ╟─53ead820-57da-4430-9e62-3bab0aca81f2
-# ╠═14f1b80f-1518-4016-87a1-5b6139e96680
-# ╠═d5726aa5-dd9e-4cc8-8c67-7160bba9c133
-# ╟─25181dae-3eac-4a21-8f8a-2b1d95fd6c36
-# ╟─c476cec3-a5b3-4941-b8d3-3325f58407dc
-# ╟─bd7bbd44-95e5-4f9d-bed7-81c8c6dbd0f6
-# ╟─ae8fc6a2-84f6-41f9-92bd-a02cce10a8b6
-# ╟─7c955efd-edd3-4dc9-9ccf-8508d48872ed
-# ╠═cc32ced0-d154-46a7-847a-824521bfb044
-# ╟─d3268cd5-3be9-4568-abba-dcce3b51ae92
-# ╟─c0d1d48f-29ae-4d41-817d-1a15f03b0c92
-# ╟─42a19502-7936-4ae6-96db-049c8bab3596
-# ╟─72fa4fde-0300-4abe-8f72-9f9b85a7c70c
-# ╟─f574be7f-945d-45d6-a16e-00bd9d85581b
-# ╟─413647f6-7a93-49e3-a517-b8ef158f670f
-# ╟─2ddec1a4-f9ae-4518-bd2e-7ffc0eee8490
-# ╟─9ec2acf5-850d-4d7b-b185-f65965a19250
-# ╟─1b168a45-12ad-4ef6-bd4c-347c2d0737a7
-# ╟─2a99ad7e-bf27-4201-ad9f-937465f39983
-# ╟─cfbead9d-3f84-4d2f-8b5b-a537a428f9ab
-# ╟─26f5dba7-41cd-492c-a9e8-918231979d4f
+# ╟─646b24fe-f47b-4554-86fd-a4f8bf2099ff
+# ╟─ee6dedf2-b105-11f1-9ab4-b5e3b10de8fa
+# ╟─0f85d4f3-8e27-478d-a7b3-c8a5f902adec
+# ╟─24c0921c-ac89-4987-82d5-c209f7f131d1
+# ╟─a1960792-dfe9-426b-8dc5-7746b3190da4
+# ╟─41ad8ec5-0fb2-459c-93b4-121331a4c2f2
+# ╟─12795455-66e2-436a-b993-46957783cc0f
+# ╟─d2560b51-155e-411e-a414-093f9694273a
+# ╟─85e2f8fa-f284-4e6e-ae8c-1cd203643f64
+# ╟─3704f55f-96e1-415a-902d-159314818f12
+# ╟─316505fa-14d6-4f22-876c-e6e1dabbe4d9
+# ╟─238dbc0b-c70a-472b-8d9a-a9027e323f74
+# ╟─fc1a07dc-8540-4b08-aec6-7fca73cf5b94
+# ╟─6f66c134-6060-4f78-9c16-51bf3b1311d1
+# ╟─4e464867-020a-4143-a027-2c968c30a960
+# ╟─2f67e33e-b4b3-4a2e-8d80-fc58da564dc0
+# ╟─b1ca295f-a305-467b-a57d-7075b1aef5af
+# ╟─985a7cbd-185a-4129-9ef1-98463f991745
+# ╠═0411bd65-d3db-4b1f-a58e-a88cbccfacd7
+# ╟─129996e6-739c-4745-929e-583a15842fca
+# ╟─3ed7e2de-7a0f-46bb-95d7-e6b6f4149585
+# ╟─1230392d-eff2-4c96-9e5c-c95f790a5004
+# ╠═3e833c61-5f94-413e-ab57-5e1669da380e
+# ╠═b3843e23-b9cf-4192-ba9c-496ba1695711
+# ╟─8534ddd3-6097-4a53-a403-429397b0df61
+# ╟─e9c4fcc1-09f8-4a00-8368-2d5b67e11e5f
+# ╟─563965f8-ef6c-4b12-91dd-1e3a25f65248
+# ╟─d6d9d531-4a2f-4e44-a018-04e2e4046041
+# ╠═cff2c4c6-1008-4a2c-b13a-83618f00b6fd
+# ╠═6fb78164-19e2-48f8-957d-bb6681ebcb54
+# ╟─c48327ce-2829-441b-a2eb-ff5397d17d09
+# ╟─37362ad9-3383-4171-bc37-bc85acf642fc
+# ╟─c3fb9efa-0728-448c-a992-79926dea6f7c
+# ╠═197f44d5-76e1-4aee-b576-811d6923310f
+# ╟─4c843ddf-bc16-4a33-8683-41cfa88762de
+# ╟─770c08ce-bce5-4542-8ca7-92179d43a45d
+# ╟─f1a20d7e-4069-4a5d-a77b-56a07b6ea2fc
+# ╟─31129331-fbd5-4d66-8108-d84e43b14747
+# ╠═76c2a2f8-53ac-4820-97ed-1683209b9353
+# ╠═a84ea677-fee3-42be-a194-24e50c4859e4
+# ╟─6bd96e91-83be-4f19-b2dd-267187521fdf
+# ╟─9f3ecb1f-0a0c-4c6a-bed8-b6aff27fb625
+# ╟─f6270619-d412-465b-a3af-e6c3c6f8e257
+# ╟─5c9b9479-d89e-44d6-9081-ddae9a6291ba
+# ╟─50cb4141-1cb1-428b-938b-fd81f8102a91
+# ╟─3125ddfe-2a52-4c92-989c-6d26c21e3c93
+# ╟─8c2afa19-cd8e-4f7c-a7d5-fe5a8313f684
+# ╟─c02bc7a1-2b6b-4453-bee7-9bb2735fc402
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
