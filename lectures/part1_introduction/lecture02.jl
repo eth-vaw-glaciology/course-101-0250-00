@@ -226,10 +226,7 @@ For example, many analytical techniques rely on simple domain geometries. If we 
 let
 fold = Foldable("Words of caution", md"""
 !!! warning
-	$(blockquote(
-    "With great power comes great responsibility.",
-    md"-- Uncle Ben",
-	))
+	*"With great power comes great responsibility."* — Uncle Ben
 
 	Numerical methods **are approximate by design**, so a numerical solution can deviate significantly from the exact solution to the PDE. Theoretical results provide error bounds for some numerical methods and classes of problems, but we must still check that the approximation error is acceptable for each problem we solve.
 

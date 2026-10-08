@@ -28,11 +28,11 @@ Follow the instructions from the [Julia Download page](https://julialang.org/dow
 !!! warning "Julia 1.13 is not yet supported"
     Pluto doesn't support Julia 1.13 [yet](https://github.com/JuliaPluto/Pluto.jl/issues/3389). Please install Julia 1.12 for the time being.
     After installing juliaup, type the following commmand in the terminal:
-    ```
+    ```sh
     \$ juliaup add 1.12
     ```
     and after the installation completes, switch default Julia to 1.12 using this command:
-    ```
+    ```sh
     \$ juliaup default 1.12
     ```
 
@@ -261,9 +261,10 @@ The terminal tells us to go to `http://localhost:1234/` (or a similar URL). Let'
 
 ![image](https://user-images.githubusercontent.com/6933510/199279574-4b1d0494-2783-49a0-acca-7b6284bede44.png)
 
-> If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming.
->
-> If you want to hear the story behind Pluto, have a look a the [JuliaCon presentation](https://www.youtube.com/watch?v=IAF8DjrQSSk).
+!!! info "Getting to know Pluto"
+    If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming.
+
+    If you want to hear the story behind Pluto, have a look at the [JuliaCon presentation](https://www.youtube.com/watch?v=IAF8DjrQSSk).
 
 If nothing happens in the browser the first time, close Julia and try again. And please let us know!
 
