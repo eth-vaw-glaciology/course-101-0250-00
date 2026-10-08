@@ -3,6 +3,7 @@ title: "Software installation"
 tags: ["welcome"]
 order: 3
 layout: "md.jlmd"
+toc: true
 ---
 
 # Software installation
@@ -27,11 +28,11 @@ Follow the instructions from the [Julia Download page](https://julialang.org/dow
 !!! warning "Julia 1.13 is not yet supported"
     Pluto doesn't support Julia 1.13 [yet](https://github.com/JuliaPluto/Pluto.jl/issues/3389). Please install Julia 1.12 for the time being.
     After installing juliaup, type the following commmand in the terminal:
-    ```
+    ```sh
     \$ juliaup add 1.12
     ```
     and after the installation completes, switch default Julia to 1.12 using this command:
-    ```
+    ```sh
     \$ juliaup default 1.12
     ```
 
@@ -62,9 +63,9 @@ VS Code's [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vs
 
 1. To get started, follow [the install steps](https://code.visualstudio.com/docs/remote/ssh#_installation).
 2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
-3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#running_julia_interactively_on_alps).
+3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#running-julia-interactively-on-alps).
 
-!!! note
+!!! note "Plots in remote VS Code"
     This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.
 
 ## Running Julia
@@ -260,9 +261,10 @@ The terminal tells us to go to `http://localhost:1234/` (or a similar URL). Let'
 
 ![image](https://user-images.githubusercontent.com/6933510/199279574-4b1d0494-2783-49a0-acca-7b6284bede44.png)
 
-> If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming. 
-> 
-> If you want to hear the story behind Pluto, have a look a the [JuliaCon presentation](https://www.youtube.com/watch?v=IAF8DjrQSSk).
+!!! info "Getting to know Pluto"
+    If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming.
+
+    If you want to hear the story behind Pluto, have a look at the [JuliaCon presentation](https://www.youtube.com/watch?v=IAF8DjrQSSk).
 
 If nothing happens in the browser the first time, close Julia and try again. And please let us know!
 
@@ -274,7 +276,7 @@ For example, lecture 1 is available [here](/part1_introduction/lecture01/). Go t
 
 ![image](https://user-images.githubusercontent.com/6933510/91441968-6b750100-e871-11ea-974e-3a6dfd80234a.png)
 
-**The first thing we will want to do is to save the notebook somewhere on our own computer; see below.** 
+**The first thing we will want to do is to save the notebook somewhere on our own computer; see below.**
 
 ### Step 2b: Opening an existing notebook file
 
@@ -284,7 +286,7 @@ If you want to run a local notebook file that you have not opened before, then y
 
 ### Step 3: Saving a notebook
 
-We first need a folder to save our homework in. Open your file explorer and create one. 
+We first need a folder to save our homework in. Open your file explorer and create one.
 
 Next, we need to know the _absolute path_ of that folder. Here's how you do that in [Windows](https://www.top-password.com/blog/copy-full-path-of-a-folder-file-in-windows/) and [MacOS](https://www.josharcher.uk/code/find-path-to-folder-on-mac/).
 
@@ -324,67 +326,24 @@ which will launch Julia with as many threads are there are cores on your machine
 
 The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch compute kernels on Nvidia GPUs natively from within Julia. [JuliaGPU](https://juliagpu.org) provides further reading and [introductory material](https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/) about GPU ecosystems within Julia.
 
-<!--
-## Julia MPI
-
-The following steps permit you to install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your machine and test it:
-
-1. If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the `instantiate` command from within the package manager [see here](#package_manager). If not, MPI.jl can be added from within the package manager (typing `add MPI` in package mode).
-2. Install `mpiexecjl`:
-
-```julia-repl
-julia> using MPI
-
-julia> MPI.install_mpiexecjl()
-[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
-[ Info: Done!
-```
-
-3. Then, one should add `HOME/.julia/bin` to PATH in order to launch the Julia MPI wrapper `mpiexecjl`.
-4. Running a Julia MPI code `<my_script.jl>` on `np` MPI processes:
-
-```sh
-\$ mpiexecjl -n np julia --project <my_script.jl>
-```
-
-5. To test the Julia MPI installation, launch the [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/l9_scripts) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
-
-```sh
-\$ mpiexecjl -n 4 julia --project ./l9_hello_mpi.jl
-\$ Hello world, I am 0 of 3
-\$ Hello world, I am 1 of 3
-\$ Hello world, I am 2 of 3
-\$ Hello world, I am 3 of 3
-```
-
-!!! note
-    On macOS, you may encounter [this issue](https://github.com/JuliaParallel/MPI.jl/issues/407). To fix it, define following `ENV` variable:
-    ```sh
-    \$ export MPICH_INTERFACE_HOSTNAME=localhost
-    ```
-    and add `-host localhost` to the execution script:
-    ```sh
-    \$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
-    ```
-
 ## GPU computing on Alps
 
 GPU computing on [Alps](https://www.cscs.ch/computers/alps) at [CSCS](https://www.cscs.ch). The supercomputer Alps is composed of 2688 compute nodes, each hosting 4 Nvidia GH200 96GB GPUs. We have a 4000 node hour allocation for our course on the HPC Platform **Daint**, a versatile cluster (vCluster) within the Alps infrastructure.
 
-!!! warn
+!!! warning "Ask us, not CSCS"
     Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue _exclusively_ to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.
 
 The login procedure is as follow. First a login to the front-end (or login) machine Ela (hereafter referred to as "ela") is needed before one can log into Daint. Login is performed using `ssh`. We will set-up a proxy-jump in order to simplify the procedure and directly access Daint (hereafter referred to as "daint")
 
 Both daint and ela share a `home` folder. However, the `scratch` folder is only accessible on daint. We can use VS code in combination with the proxy-jump to conveniently edit files on daint's scratch directly. We will use a Julia "uenv" to have all Julia-related tools ready.
 
-Make sure to have the Remote-SSH extension installed in VS code [(see here for details on how-to)](#vs_code_remote_-_ssh_setup).
+Make sure to have the Remote-SSH extension installed in VS code [(see here for details on how-to)](#vs-code-remote---ssh-setup).
 
 Please follow the steps listed hereafter to get ready and set-up on daint.
 
 ### Account setup
 
-!!! warn
+!!! warning "Special course accounts"
     The course accounts somewhat differ from regular account and do not require MFA. The connection procedure from CSCS' user doc does thus not apply.
 
 1. Fetch your personal username and password credentials from Moodle.
@@ -430,7 +389,8 @@ Host daint.alps
 ssh daint.alps
 ```
 
-> At this stage, you are logged into daint, but still on a login node and not a compute node.
+!!! warning
+    At this stage, you are logged into daint, but still on a login node and not a compute node.
 
 You can reach your home folder upon typing `cd \$HOME`, and your scratch space upon typing `cd \$SCRATCH`. Always make sure to run and save files from scratch folder.
 
@@ -457,7 +417,7 @@ ssh daint.alps
 2. Download the Julia uenv image:
 
 ```sh
-uenv image pull julia/25.5:v1
+uenv image pull julia/26.3:v1
 ```
 
 3. Work-around a current limitations of Juliaup on Alps
@@ -471,7 +431,7 @@ export TMPDIR="\$SCRATCH/tmp"
 4. Once the download complete, start the uenv:
 
 ```sh
-uenv start --view=juliaup,modules julia/25.5:v1
+uenv start --view=juliaup,modules julia/26.3:v1
 ```
 
 Adding a view (`--view=juliaup,modules`) gives you explicit access to Juliaup and to modules.
@@ -491,14 +451,14 @@ At this point, you should be able to launch Julia by typing `julia` in the termi
 
 Once the initial setup is completed, you can simply use Julia on daint by starting the Julia uenv, accessing a compute node (using SLURM), and launching Julia to add CUDA.jl package:
 
-!!! warn
+!!! warning
     To perform any computation, you need to access a compute node using the SLURM scheduler.
 
 1. SSH into daint and start the Julia uenv
 ```sh
 ssh daint.alps
 
-uenv start --view=juliaup,modules julia/25.5:v1
+uenv start --view=juliaup,modules julia/26.3:v1
 ```
 
 2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
@@ -510,7 +470,7 @@ salloc -C'gpu' -Aclass04 -N1 --time=01:00:00
 !!! note
     You can check the status of the allocation typing `squeue --me`.
 
-👉 Running a **remote job** instead? [Jump right there](#running_a_remote_job_on_alps)
+👉 Running a **remote job** instead? [Jump right there](#running-a-remote-job-on-alps)
 
 3. Once you have your allocation (`salloc`) and the node, you can access the compute node by using the following `srun` command:
 
@@ -572,7 +532,7 @@ julia> c .= a .+ b
 
 If you made it to here, you're most likely all set 🚀
 
-!!! warn
+!!! warning "No display on daint"
     There is no interactive visualisation on daint. Make sure to save `png` figures or `mp4` animations to disk instead of displaying them. `CairoMakie.jl` renders headless, so no further setup is needed. Build the figure once, collect the frames within the time loop and save the animation after it, such as
     ```julia
     fig, ax, plt = heatmap(xc, yc, C; axis=(; aspect=DataAspect()), colormap=:turbo)
@@ -591,9 +551,57 @@ If you made it to here, you're most likely all set 🚀
 
 You can use the `nvidia-smi` command to monitor GPU usage on a compute node on daint. Just type in the terminal or with Julia's REPL (in shell mode).
 
-#### Using VS code on Alps
+### Using VS Code on Alps
 
-VS code support to remote connect to daint is getting better and better. If feeling adventurous, try out the [Connecting with VS Code](https://docs.cscs.ch/access/vscode/) procedure. Any feedback welcome.
+VS Code can run on a compute node of daint through a [tunnel](https://docs.cscs.ch/access/vscode/): the VS Code server runs on the compute node, and VS Code on your computer connects to it. You can then edit files, and use the Julia REPL and the plot pane on the compute node as on your computer. You need a GitHub account to authenticate the tunnel.
+
+**Only the first time**, install the [Remote - Tunnels](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-server) extension in VS Code on your computer, and the VS Code command line interface on daint:
+
+```sh
+ssh daint.alps
+
+wget https://jfrog.svc.cscs.ch/artifactory/uenv-sources/vscode/vscode_cli_alpine_arm64_cli.tar.gz
+tar -xf vscode_cli_alpine_arm64_cli.tar.gz
+mkdir -p \$HOME/.local/bin
+mv code \$HOME/.local/bin/
+echo 'export PATH=\$HOME/.local/bin:\$PATH' >> \$HOME/.bashrc
+```
+
+Log out and in again. Then, **every time**, start the tunnel on a compute node with the Julia uenv (here for 3 hours):
+
+```sh
+ssh daint.alps
+
+srun --uenv=julia/26.3:v1 --view=juliaup -C'gpu' -Aclass04 -N1 -t180 --pty code tunnel --name=daint-tunnel
+```
+
+The first time, `code tunnel` asks you to log in with GitHub: open [github.com/login/device](https://github.com/login/device) and enter the code shown in the terminal. When the tunnel is ready, the terminal shows a link to `https://vscode.dev/tunnel/daint-tunnel`.
+
+In VS Code on your computer, open the *Remote Explorer* pane, and select *Tunnels*. The tunnels are listed separately from the Remote - SSH hosts, and only with the Remote - Tunnels extension installed. Sign in with the same GitHub account, and connect to `daint-tunnel`. Alternatively, run *Remote-Tunnels: Connect to Tunnel...* from the Command Palette. Install the Julia extension in the remote window, if needed.
+
+!!! note "Troubleshooting the tunnel"
+    If the tunnel doesn't appear in VS Code, check in a second terminal on daint whether it is running with `code tunnel status`, and with which account it is registered with `code tunnel user show`.
+
+!!! warning "Release the compute node"
+    The tunnel, and thus the allocation of the compute node, ends when you close the terminal in which `srun` runs, or after the requested time. Stop the tunnel with `Ctrl+C` when you are done, so that the node is released.
+
+If the tunnel doesn't work for you, edit your files with the [Remote - SSH](#vs-code-remote---ssh-setup) extension on the login node, and run your scripts in a terminal on a compute node, as described in [Running Julia interactively on Alps](#running-julia-interactively-on-alps).
+
+### Using Git on Alps
+
+To clone your private course repository on daint and push your changes from there, add an SSH key of daint to your GitHub account:
+
+```sh
+ssh daint.alps
+
+ssh-keygen -t ed25519   # leave the passphrase empty
+cat \$HOME/.ssh/id_ed25519.pub
+```
+
+Copy the printed public key to GitHub (*Settings > SSH and GPG keys > New SSH key*). Then, clone your repository in your scratch folder, e.g. `cd \$SCRATCH; git clone git@github.com:pdes-on-gpus-julia-course/pde-on-gpu-<moodleprofilename>.git`.
+
+!!! note "Scratch cleaning policy"
+    Files on scratch that have not been accessed for 30 days are deleted automatically, and scratch has no backup. Commit and push your work to GitHub regularly.
 
 ### Running a remote job on Alps
 
@@ -610,11 +618,54 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-task=1
 
-srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_gpu_script.jl>
+srun --uenv julia/26.3:v1 --view=juliaup julia --project <my_julia_gpu_script.jl>
 ```
 
-!!! warn
-    Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/25.5:v1 --view=juliaup` in the `srun` command.
+!!! warning "Start the uenv first"
+    Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/26.3:v1 --view=juliaup` in the `srun` command.
+
+<!--
+## Julia MPI
+
+The following steps permit you to install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your machine and test it:
+
+1. If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the `instantiate` command from within the package manager [see here](#package_manager). If not, MPI.jl can be added from within the package manager (typing `add MPI` in package mode).
+2. Install `mpiexecjl`:
+
+```julia-repl
+julia> using MPI
+
+julia> MPI.install_mpiexecjl()
+[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
+[ Info: Done!
+```
+
+3. Then, one should add `HOME/.julia/bin` to PATH in order to launch the Julia MPI wrapper `mpiexecjl`.
+4. Running a Julia MPI code `<my_script.jl>` on `np` MPI processes:
+
+```sh
+\$ mpiexecjl -n np julia --project <my_script.jl>
+```
+
+5. To test the Julia MPI installation, launch the [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/l9_scripts) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
+
+```sh
+\$ mpiexecjl -n 4 julia --project ./l9_hello_mpi.jl
+\$ Hello world, I am 0 of 3
+\$ Hello world, I am 1 of 3
+\$ Hello world, I am 2 of 3
+\$ Hello world, I am 3 of 3
+```
+
+!!! note
+    On macOS, you may encounter [this issue](https://github.com/JuliaParallel/MPI.jl/issues/407). To fix it, define following `ENV` variable:
+    ```sh
+    \$ export MPICH_INTERFACE_HOSTNAME=localhost
+    ```
+    and add `-host localhost` to the execution script:
+    ```sh
+    \$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
+    ```
 
 ### JupyterLab access on Alps
 
@@ -627,9 +678,9 @@ ln -s \$SCRATCH scratch
 ```
 
 2. Head to [https://jupyter-daint.cscs.ch/](https://jupyter-daint.cscs.ch/).
-3. Login with your username and password you've set for in the [Account setup](#account_setup) step.
+3. Login with your username and password you've set for in the [Account setup](#account-setup) step.
 4. Follow the [additional procedure to set up the Julia kernel in Jupyter](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
-    - In the `Advanced options`, provide as uenv `julia/25.5:v1` and `jupyter` as view.
+    - In the `Advanced options`, provide as uenv `julia/26.3:v1` and `jupyter` as view.
     - Select the duration you want and **Launch JupyterLab**.
     - _Only the first time_ -- open the console from the JupyterLab launcher and run `install_ijulia`
 5. From within JupyterLab, upload the notebook to work on and get started!
@@ -638,9 +689,9 @@ ln -s \$SCRATCH scratch
 
 Given that daint's `scratch` is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.
 
-To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs_code_remote_-_ssh_setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
+To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs-code-remote---ssh-setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
 
-The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `/capstor/scratch/cscs/<username>/`. Just drag and drop files in there to transfer them.
+The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `\$SCRATCH`. Just drag and drop files in there to transfer them.
 
 ### Julia MPI GPU on Alps
 
@@ -649,7 +700,7 @@ The following step should allow you to run distributed memory parallelisation ap
 1. Make sure to have the Julia GPU environment loaded
 
 ```sh
-uenv start --view=juliaup,modules julia/25.5:v1
+uenv start --view=juliaup,modules julia/26.3:v1
 ```
 
 2. Then, you would need to allocate more than one node, let's say 2 nodes for 1 hours, using `salloc`
@@ -664,7 +715,7 @@ salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
 MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 julia --project <my_julia_mpi_script.jl>
 ```
 
-If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/l9_sbatch_mpi_daint.sh):
+If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/2025/scripts/l9_scripts/l9_sbatch_mpi_daint.sh):
 
 ```sh
 #!/bin/bash -l
@@ -682,13 +733,13 @@ export MPICH_GPU_SUPPORT_ENABLED=1
 export IGG_CUDAAWARE_MPI=1 # IGG
 export JULIA_CUDA_USE_COMPAT=false # IGG
 
-srun --uenv julia/25.5:v1 --view=juliaup julia --project <my_julia_mpi_gpu_script.jl>
+srun --uenv julia/26.3:v1 --view=juliaup julia --project <my_julia_mpi_gpu_script.jl>
 ```
 
 **Make sure that the total number of tasks set with `--ntasks` is equal to `--nodes` times `--ntasks-per-node`.**
 
 !!! note
-    The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l9_scripts/) folder.
+    The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/2025/scripts/l9_scripts/) folder.
 
 You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables:
 
@@ -700,7 +751,7 @@ export IGG_CUDAAWARE_MPI=1
 !!! note
     On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection ([more about this the in CSCS doc](https://docs.cscs.ch/running/slurm/#one-rank-per-gpu)).
 
-!!! warn
+!!! warning
     Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set `select_device = false` in the `init_global_grid` kwarg:
     ```julia
     init_global_grid(...; select_device = false)
@@ -713,7 +764,7 @@ Profiling using the [NVIDIA Nsight Systems](https://docs.cscs.ch/software/devtoo
 The profiler is triggered by using the `nsys profile` command, available upon loading the CUDA module. On daint prepare the working environment as following
 
 ```sh
-uenv start --view=juliaup,modules julia/25.5:v1
+uenv start --view=juliaup,modules julia/26.3:v1
 
 ml cuda
 ```
@@ -724,7 +775,7 @@ Then, for example, request an allocation for 2 nodes in order to have access to 
 salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
 ```
 
-To then profile an application (e.g. the [3D diffusion code](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/main/scripts/l10_diff_3d_hidecomm.jl)), launch `srun` with the following parameters:
+To then profile an application (e.g. the [3D diffusion code](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/2025/scripts/l10_diff_3d_hidecomm.jl)), launch `srun` with the following parameters:
 
 ```sh
 MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 \

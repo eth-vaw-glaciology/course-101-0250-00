@@ -3,6 +3,7 @@ title: "Class logistics"
 tags: ["welcome"]
 order: 1
 layout: "md.jlmd"
+toc: true
 ---
 
 <style>
@@ -17,7 +18,7 @@ main a img {
 [![Element chat](../assets/element_chat.svg)](https://chat.ethz.ch)
 [![ETHZ Moodle](../assets/moodle.png)]($(course_info["moodle_url"]))
 
-!!! tip "Suggestion"
+!!! note "Suggestion"
     Bookmark this page for easy access to all the information you need for the course.
 
 ## Course structure
@@ -72,10 +73,10 @@ Once you have your GitHub account ready (see lecture 2 [how-to](https://pde-on-g
     - copy **the single Git commit hash (SHA) after the final push and the link to the PR** and submit **both** on [Moodle]($(course_info["moodle_url"])) as the assignment hand-in (this will allow us to verify that the material was pushed on time). **Use the same PR for the end-of-class submissions and for the final submissions.**;
     - (do not merge the PR yet).
 
-!!! warn
+!!! warning
     Keep the repository lightweight: include the homework folders, `README.md`, license, and required configuration files; exclude large outputs.
 
-!!! note
+!!! note "Julia projects for homework"
     For homework 3 and later, the respective folders on GitHub should be Julia projects and thus must contain a `Project.toml` file. The `Manifest.toml` file should be excluded from version control. To do so, add it as an entry to a `.gitignore` file in the root of your repo. Mac users may also add `.DS_Store` to their [global `.gitignore`](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-all-repositories-on-your-computer). Code could be placed in a `scripts/` folder. Output material to be displayed in the `README.md` could be placed in a `docs/` folder.
 
 ### Feedback
@@ -135,7 +136,7 @@ Enrolled ETHZ students will have to hand in on [Moodle]($(course_info["moodle_ur
 - We require that you understand all the numerical code that you write and hand in as homework. You are fully responsible for your code and results.
 - Your final project repository **must** include a section in the README stating which AI tools were used, for which tasks, and how they contributed to the project.
 
-!!! tip
+!!! note "Tip"
     Read these materials if you're interested in responsible use of LLMs:
     - [Using LLMs at Oxide](https://rfd.shared.oxide.computer/rfd/0576)
     - [LLVM AI tool policy: human in the loop](https://discourse.llvm.org/t/rfc-llvm-ai-tool-policy-human-in-the-loop/89159)

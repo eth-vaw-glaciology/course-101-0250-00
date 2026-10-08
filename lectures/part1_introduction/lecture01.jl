@@ -222,7 +222,7 @@ We will now look at
 - Functions
 - Modules and packages
 
-!!! tip
+!!! note "Tip"
     Make sure you have working installation of Julia and Pluto. Follow the [software installation](https://pde-on-gpu.vaw.ethz.ch/previews/PR57/installation/) instructions.
 
 The Julia documentation is good and can be found at [https://docs.julialang.org](https://docs.julialang.org); although for learning it might be a bit terse...
@@ -235,7 +235,7 @@ Furthermore, documentation can be accessed with `?xyz`
 > ?cos
 ```
 
-!!! tip
+!!! note "Tip"
 	To get started, click "**Edit** or **run** this notebook" in the top-right corner of this web page, then find the "**Copy the notebook URL**" section, copy the link to the notebook, and paste it into the "Open the notebook" field on your local Pluto main page.
 
 ## Variables, assignments, and types
@@ -514,7 +514,7 @@ c[1, 1]
 md"""
 By looking at linear indices of `c`, answer the question:
 
-!!! question
+!!! info "Question"
 	Are arrays in Julia row-major or column-major?
 """
 
@@ -661,7 +661,7 @@ md"""
 
 All values have types, as we saw above. An array’s type includes its element type.
 
-!!! tip
+!!! note "Tip"
 	Arrays which have concrete element types are more performant!
 
 The type can be specified at creation:

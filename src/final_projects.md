@@ -11,7 +11,7 @@ You will work on the final project in a group of two.
 
 Each project must be handed in as a single GitHub repository containing the scripts, documentation, unit and reference tests, Continuous Integration (CI) setup, instructions to run the code and reproduce the results, and references.
 
-!!! warn
+!!! warning
     Keep your final project GitHub repository **private** until submission, unless it needs to be public to deploy the documentation.
 
 ## Topics

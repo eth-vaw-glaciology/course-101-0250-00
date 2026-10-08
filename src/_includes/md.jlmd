@@ -2,7 +2,7 @@
 layout: "layout.jlhtml"
 ---
 
-```{=html}
+````{=html}
 <pluto-editor skip-custom-element class="disable_ui static_preview">
 <main>
 <preamble></preamble>
@@ -19,4 +19,10 @@ $(content)
 </pluto-notebook>
 </main>
 </pluto-editor>
-```
+$(if get(page.output.frontmatter, "toc", false) == true
+    @htl("""
+    <link rel="stylesheet" href="$(root_url)/assets/styles/toc.css" type="text/css" />
+    <script src="$(root_url)/assets/scripts/toc.js" type="module"></script>
+    """)
+end)
+````
