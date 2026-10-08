@@ -380,21 +380,21 @@ On a GH200 of daint, we measured (in GB/s):
 
 | Array size `n` | `copyto!` |
 | :------------- | :-------: |
-| `2^16`         | TBD       |
-| `2^20`         | TBD       |
-| `2^24`         | TBD       |
-| `2^28`         | TBD       |
+| `2^16`         | 139       |
+| `2^20`         | 1754      |
+| `2^24`         | 3281      |
+| `2^28`         | 3605      |
 
 | Implementation, `n = 2^28`             | ``T_\mathrm{peak}`` |
 | :------------------------------------- | :-----------------: |
-| `B .= A`                               | TBD                 |
-| `memcopy_kp!`, 1 thread per block      | TBD                 |
-| `memcopy_kp!`, 32 threads per block    | TBD                 |
-| `memcopy_kp!`, 64 threads per block    | TBD                 |
-| `memcopy_kp!`, 128 threads per block   | TBD                 |
-| `memcopy_kp!`, 256 threads per block   | TBD                 |
-| `memcopy_kp!`, 1024 threads per block  | TBD                 |
-| `triad_kp!`, 256 threads per block     | TBD                 |
+| `B .= A`                               | 3091                |
+| `memcopy_kp!`, 1 thread per block      | 27                  |
+| `memcopy_kp!`, 32 threads per block    | 847                 |
+| `memcopy_kp!`, 64 threads per block    | 1689                |
+| `memcopy_kp!`, 128 threads per block   | 3310                |
+| `memcopy_kp!`, 256 threads per block   | 3349                |
+| `memcopy_kp!`, 1024 threads per block  | 3141                |
+| `triad_kp!`, 256 threads per block     | 3685                |
 
 What do you observe? How do the results depend on the array size and on the number of threads per block?
 """
@@ -402,9 +402,9 @@ What do you observe? How do the results depend on the array size and on the numb
 # ╔═╡ 033f12da-8325-5ad8-8e03-26d32497ee0f
 Foldable(md"Discussion",
 md"""
-- For small arrays, the execution time is dominated by the overhead of launching the kernel, a few microseconds, and the measured throughput is low. The GPU reaches ``T_\mathrm{peak}`` only for arrays of hundreds of megabytes, much larger than the L2 cache.
-- With 1 thread per block, every warp has a single active thread out of 32, and the memory accesses are not coalesced: the throughput is far below ``T_\mathrm{peak}``. From about 64–128 threads per block, the kernel is as fast as `copyto!`.
-- The measured ``T_\mathrm{peak}`` is about TBD % of the theoretical peak memory bandwidth of 4000 GB/s.
+- For small arrays, the execution time is dominated by the overhead of launching the kernel, a few microseconds, and the measured throughput is low. The GPU approaches ``T_\mathrm{peak}`` only for arrays of about 100 MB and more.
+- With 1 thread per block, every warp has a single active thread out of 32, and the memory accesses are not coalesced: the throughput is far below ``T_\mathrm{peak}``. With 128 to 256 threads per block, the kernel reaches more than 90 % of the throughput of `copyto!`.
+- The measured ``T_\mathrm{peak}``, about 3600 GB/s with `copyto!`, is 90 % of the theoretical peak memory bandwidth of 4000 GB/s.
 """)
 
 # ╔═╡ b84b1cdf-e77d-5e07-8084-19bfb67ea468
@@ -716,11 +716,11 @@ On a GH200, we measured for `nx = 2^26` (in GB/s):
 
 | Version                               | ``T_\mathrm{eff}`` |
 | :------------------------------------ | :----------------: |
-| `elliptic_1d_dr_gpu.jl`, manual timer | TBD                |
-| `elliptic_1d_dr_gpu.jl`, `@belapsed compute!(...)` | TBD   |
-| memcopy (``T_\mathrm{peak}``)         | TBD                |
+| `elliptic_1d_dr_gpu.jl`, manual timer | 1478               |
+| `elliptic_1d_dr_gpu.jl`, `@belapsed compute!(...)` | 1544  |
+| `copyto!`, `n = 2^28` (``T_\mathrm{peak}``) | 3605 |
 
-That's about TBD times faster than the multi-threaded solver on the M2 Max laptop from lecture 4 (64 GB/s). Yet, ``T_\mathrm{eff}`` is still far below ``T_\mathrm{peak}``.
+That's about 23 times faster than the multi-threaded solver on the M2 Max laptop from lecture 4 (64 GB/s). Yet, ``T_\mathrm{eff}`` is only about 43 % of ``T_\mathrm{peak}``.
 """
 
 # ╔═╡ db660ad6-ddb8-581b-832e-c8f812d591c2
@@ -758,7 +758,7 @@ end
 
 Every flux is now computed twice, by two neighbouring threads, but floating-point operations are "for free" in memory-bound codes. The fused kernel reads `u` and `λ`, and writes `r`: 3 arrays instead of 5, i.e. 12 arrays per iteration, and an upper bound of 6/12 = 50% of ``T_\mathrm{peak}``.
 
-👉 Duplicate `elliptic_1d_dr_gpu.jl`, rename the copy to `elliptic_1d_dr_gpu_fused.jl`, replace `compute_q!` and `compute_r!` with the fused kernel, and remove the array `qx`. Check that the solver still converges, and measure ``T_\mathrm{eff}`` for `nx = 2^26`. On a GH200, we measured ``T_\mathrm{eff}`` = TBD GB/s with the manual timer, and TBD GB/s with `@belapsed`.
+👉 Duplicate `elliptic_1d_dr_gpu.jl`, rename the copy to `elliptic_1d_dr_gpu_fused.jl`, replace `compute_q!` and `compute_r!` with the fused kernel, and remove the array `qx`. Check that the solver still converges, and measure ``T_\mathrm{eff}`` for `nx = 2^26`. On a GH200, we measured ``T_\mathrm{eff}`` = 1737 GB/s with the manual timer, and 1830 GB/s with `@belapsed`, i.e. about 50 % of ``T_\mathrm{peak}``. Both versions of the solver reach the upper bound given by the number of arrays that they read and write.
 
 Why not fuse all kernels into one? The residual at the grid point `ix + 1` depends on the updated values of `u` at the neighbouring points, which are computed by other threads, possibly in other blocks. Kernels that need results of other threads can't be fused: they need the synchronisation between two kernel launches. On the other hand, `precondition!` only uses the residual at the same grid point, and could be fused with `compute_r!`.
 """
