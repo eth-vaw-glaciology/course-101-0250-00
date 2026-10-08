@@ -441,9 +441,15 @@ end
 
 👉 Rewrite the functions `update_u!`, without the boundary conditions, and `precondition!` in the same way.
 
+!!! hint
+    In `update_u!`, the thread `ix` updates `u[ix+1]` from `d[ix]`: the bounds check must skip the threads with `ix > length(d)`, i.e. `ix > nx-2`.
+
 The function `compute_r!` contains two loops: the second one computes `r[ix]` from `qx[ix]` and `qx[ix+1]`. In a kernel, `qx[ix+1]` is computed by another thread, possibly in another block, and we can't make sure that it is already computed. We therefore split `compute_r!` into two kernels: `compute_q!` computes the flux, and `compute_r!` the residual. The second kernel starts only when the first one has completed.
 
 👉 Implement the kernels `compute_q!(qx, u, λ, _dx)` and `compute_r!(r, qx, _dx)`.
+
+!!! hint
+    As in lecture 4, the flux `qx` has `nx-1` elements and the residual `r` has `nx-2` elements, with `r[ix]` located at `u[ix+1]`. Check the bounds against the length of the array that each kernel writes.
 """
 
 # ╔═╡ a8afb68c-d38d-50ee-932d-3e9685633195
