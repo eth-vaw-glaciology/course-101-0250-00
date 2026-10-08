@@ -107,7 +107,7 @@ iz = (blockIdx().z - 1) * blockDim().z + threadIdx().z # 3D
 
 The figure below shows a 2D example with blocks of 4 × 3 threads and a grid of 2 × 2 blocks. In our codes, we map one thread to every cell of the grid. For example, the thread `(4, 3)` of the block `(2, 2)` computes the cell `ix = (2 - 1) * 4 + 4 = 8`, `iy = (2 - 1) * 3 + 3 = 6`.
 
-![Relation between the CUDA grid and the finite-difference grid](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/main/lectures/part2_solving_pdes_on_gpus/assets/l5_cuda_grid.png)
+![Relation between the CUDA grid and the finite-difference grid](https://raw.githubusercontent.com/eth-vaw-glaciology/course-101-0250-00/7856f387a3ef0656bc872878e24b12cb907f438a/lectures/part2_solving_pdes_on_gpus/assets/l5_cuda_grid.png)
 """
 
 # ╔═╡ 01399db9-7b24-5da5-adba-a1950e670413
