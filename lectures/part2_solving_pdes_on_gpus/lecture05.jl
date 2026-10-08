@@ -504,7 +504,9 @@ u[end:end] .= 1
 
 ### 4. The ``\beta`` update
 
-CUDA.jl implements `mapreduce` on the GPU. 👉 In the function `compute_β`, replace `AcceleratedKernels.mapreduce` with `mapreduce`. Saving `z` to `z0` (`@. z0 = z`) and the convergence check (`maximum(abs, r)`) work on GPU arrays without changes.
+CUDA.jl implements `mapreduce` on the GPU.
+
+👉 In the function `compute_β`, replace `AcceleratedKernels.mapreduce` with `mapreduce`. Saving `z` to `z0` (`@. z0 = z`) and the convergence check (`maximum(abs, r)`) work on GPU arrays without changes.
 
 ### 5. Launching the kernels
 
@@ -1176,7 +1178,7 @@ version = "1.64.0+1"
 # ╟─dd789305-614c-5d15-a510-7ff31949c906
 # ╠═f1b09f77-a344-5352-9907-a400a7b11580
 # ╠═254fe2be-58a8-5d65-af10-0de681d65280
-# ╠═611426dd-325d-5205-8865-51bbe9fb560b
+# ╟─611426dd-325d-5205-8865-51bbe9fb560b
 # ╟─27cc085d-8380-5db3-854e-e50e984b4f31
 # ╟─2a63c2d8-834b-5358-b342-e055c5281f71
 # ╟─18644e96-732f-58fb-af00-94304aed4912
