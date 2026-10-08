@@ -3,6 +3,7 @@ title: "Software installation"
 tags: ["welcome"]
 order: 3
 layout: "md.jlmd"
+toc: true
 ---
 
 # Software installation
@@ -260,8 +261,8 @@ The terminal tells us to go to `http://localhost:1234/` (or a similar URL). Let'
 
 ![image](https://user-images.githubusercontent.com/6933510/199279574-4b1d0494-2783-49a0-acca-7b6284bede44.png)
 
-> If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming. 
-> 
+> If you're curious about what a _Pluto notebook_ looks like, have a look at the **Featured Notebooks**. These notebooks are useful for learning some basics of Julia programming.
+>
 > If you want to hear the story behind Pluto, have a look a the [JuliaCon presentation](https://www.youtube.com/watch?v=IAF8DjrQSSk).
 
 If nothing happens in the browser the first time, close Julia and try again. And please let us know!
@@ -274,7 +275,7 @@ For example, lecture 1 is available [here](/part1_introduction/lecture01/). Go t
 
 ![image](https://user-images.githubusercontent.com/6933510/91441968-6b750100-e871-11ea-974e-3a6dfd80234a.png)
 
-**The first thing we will want to do is to save the notebook somewhere on our own computer; see below.** 
+**The first thing we will want to do is to save the notebook somewhere on our own computer; see below.**
 
 ### Step 2b: Opening an existing notebook file
 
@@ -284,7 +285,7 @@ If you want to run a local notebook file that you have not opened before, then y
 
 ### Step 3: Saving a notebook
 
-We first need a folder to save our homework in. Open your file explorer and create one. 
+We first need a folder to save our homework in. Open your file explorer and create one.
 
 Next, we need to know the _absolute path_ of that folder. Here's how you do that in [Windows](https://www.top-password.com/blog/copy-full-path-of-a-folder-file-in-windows/) and [MacOS](https://www.josharcher.uk/code/find-path-to-folder-on-mac/).
 
@@ -387,7 +388,8 @@ Host daint.alps
 ssh daint.alps
 ```
 
-> At this stage, you are logged into daint, but still on a login node and not a compute node.
+!!! warn
+    At this stage, you are logged into daint, but still on a login node and not a compute node.
 
 You can reach your home folder upon typing `cd \$HOME`, and your scratch space upon typing `cd \$SCRATCH`. Always make sure to run and save files from scratch folder.
 
@@ -552,7 +554,7 @@ You can use the `nvidia-smi` command to monitor GPU usage on a compute node on d
 
 VS Code can run on a compute node of daint through a [tunnel](https://docs.cscs.ch/access/vscode/): the VS Code server runs on the compute node, and VS Code on your computer connects to it. You can then edit files, and use the Julia REPL and the plot pane on the compute node as on your computer. You need a GitHub account to authenticate the tunnel.
 
-**Only the first time**, install the VS Code command line interface on daint:
+**Only the first time**, install the [Remote - Tunnels](https://marketplace.visualstudio.com/items?itemName=ms-vscode.remote-server) extension in VS Code on your computer, and the VS Code command line interface on daint:
 
 ```sh
 ssh daint.alps
@@ -572,7 +574,12 @@ ssh daint.alps
 srun --uenv=julia/26.3:v1 --view=juliaup -C'gpu' -Aclass04 -N1 -t180 --pty code tunnel --name=daint-tunnel
 ```
 
-The first time, `code tunnel` asks you to log in with GitHub: open [github.com/login/device](https://github.com/login/device) and enter the code shown in the terminal. In VS Code on your computer, open the *Remote Explorer* pane, select *Tunnels*, sign in with the same GitHub account, and connect to `daint-tunnel`. Install the Julia extension in the remote window, if needed.
+The first time, `code tunnel` asks you to log in with GitHub: open [github.com/login/device](https://github.com/login/device) and enter the code shown in the terminal. When the tunnel is ready, the terminal shows a link to `https://vscode.dev/tunnel/daint-tunnel`.
+
+In VS Code on your computer, open the *Remote Explorer* pane, and select *Tunnels*. The tunnels are listed separately from the Remote - SSH hosts, and only with the Remote - Tunnels extension installed. Sign in with the same GitHub account, and connect to `daint-tunnel`. Alternatively, run *Remote-Tunnels: Connect to Tunnel...* from the Command Palette. Install the Julia extension in the remote window, if needed.
+
+!!! tip
+    If the tunnel doesn't appear in VS Code, check in a second terminal on daint whether it is running with `code tunnel status`, and with which account it is registered with `code tunnel user show`.
 
 !!! warn
     The tunnel, and thus the allocation of the compute node, ends when you close the terminal in which `srun` runs, or after the requested time. Stop the tunnel with `Ctrl+C` when you are done, so that the node is released.
