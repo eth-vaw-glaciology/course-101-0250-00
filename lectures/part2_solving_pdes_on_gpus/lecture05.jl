@@ -201,7 +201,7 @@ srun -n1 --pty /bin/bash -l                  # shell on the compute node
 julia --project                              # Julia on the compute node
 ```
 
-!!! warning
+!!! warning "Exclusive nodes"
     On daint, compute nodes are allocated exclusively: the node with its 4 GPUs is reserved for you until the allocation ends. Release it as soon as you are done: exit the shell on the compute node and the allocation with `exit`, or cancel the job with `scancel <jobid>`. List your jobs with `squeue --me`.
 
 ### Batch jobs
@@ -217,7 +217,7 @@ We recommend one of two workflows:
 
 There is no display on the compute nodes: save figures to files with `save("figure.png", fig)`, and open them in VS Code. Use the command `nvidia-smi` to see the GPUs of the node and their usage.
 
-!!! tip
+!!! note "Tip"
     Use Git to move your code between your computer, daint, and GitHub: clone your private course repository on daint, and push your changes from there.
 """
 
@@ -244,7 +244,7 @@ C = CuArray(rand(nx))       # copy an array from the CPU to the GPU
 c = Array(C)                # copy an array from the GPU to the CPU
 ```
 
-!!! warning
+!!! warning "Float32 by default"
     Without an explicit type, `CUDA.zeros(nx)` and `CUDA.rand(nx)` create arrays of `Float32` numbers. In this course, always specify the type: `CUDA.zeros(Float64, nx)`.
 
 ### Array programming
@@ -295,7 +295,7 @@ t_it = @belapsed CUDA.@sync @cuda threads=$nthreads blocks=$nblocks memcopy_kp!(
 
 Copying an array to the CPU with `Array`, and reductions, which return their result to the CPU, synchronise implicitly.
 
-!!! warning
+!!! warning "Benchmarking with CUDA.@sync"
     To pass options to `@belapsed`, e.g. `seconds=1`, put the expression after `CUDA.@sync` in parentheses: `@belapsed CUDA.@sync(f(...)) seconds=1`. Without the parentheses, `CUDA.@sync` takes the option as its own argument, and fails.
 """
 
@@ -709,7 +709,7 @@ elliptic_1d_dr(; nx=2^26, do_check=false, do_visu=false, do_bench=true)
 
 # ╔═╡ 9911120a-5067-5337-acd6-abe95bb06d9e
 md"""
-!!! note
+!!! note "Comparing GPU and CPU results"
     The GPU and the CPU solvers compute the same solution, but not exactly: the reductions in `compute_β` and in the convergence check sum the numbers in a different order on the GPU, which changes the rounding errors. As in the reference tests of lecture 4, compare the results approximately, with `≈`.
 
 On a GH200, we measured for `nx = 2^26` (in GB/s):
@@ -784,7 +784,7 @@ A, A2 = A2, A # swaps the names of the arrays, without copying them
 
 In our DR solver, `update_u!` writes `u`, but every thread reads only its own element `u[ix+1]`, and `compute_q!` reads the neighbouring values of `u`, but writes `qx`: there is no data race.
 
-!!! note
+!!! note "Array programming and aliasing"
     With array programming, the in-place update `@. A[2:end-1] = A[1:end-2] - 2 * A[2:end-1] + A[3:end]` is correct: Julia detects that the arrays on both sides of the assignment overlap, and makes a temporary copy of the right-hand side. In kernels, avoiding data races is our responsibility.
 
 To see what can happen, let's emulate a kernel on the CPU, executing the "threads" one after another, in different orders. The function `smooth!` writes the result to a second array, the function `smooth_inplace!` updates the array in place:

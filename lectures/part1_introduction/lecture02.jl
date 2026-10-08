@@ -468,7 +468,7 @@ md"""
 
 Well done! You can experiment with the solver, changing physical and numerical parameters to see how the solution will change.
 
-!!! tip
+!!! note "Tip"
 	Check what the numerical instability looks like: multiply the time step `dt` in the definition by a small factor, say `1.1`, and see the 💥!
 
 ### What about BCs?
@@ -556,7 +556,7 @@ Vx          .-= ...
 Pr[2:end-1] .-= ...
 ```
 
-!!! warn "Use the new velocity in the pressure update"
+!!! warning "Use the new velocity in the pressure update"
 	When updating pressure `Pr`, use the freshly computed values of `Vx`, instead of saving somewhere the old array. This method is called [semi-implicit Euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method) and it works specifically well for the wave equation: it preserves the stored acoustic energy, so the waves never attenuate.
 
 👉 Your turn. Finish the implementation of acoustic wave propagation:
@@ -785,7 +785,7 @@ The reason is again numerical stability. It turns out that both the time step an
 
 # ╔═╡ f6270619-d412-465b-a3af-e6c3c6f8e257
 md"""
-!!! warn "Numerical diffusion"
+!!! warning "Numerical diffusion"
 	Interestingly, the numerical solution looks just just like the exact one. But this is possible only when the velocity is constant and in 1D. In general case, the finite-difference schemes for advection suffer from the **numerical diffusion**. Try multiplying the time step `dt` by `0.5` and see how the Gaussian starts diffusing while advecting. To reduce numerical diffusion, high-order methods such as [WENO](https://en.wikipedia.org/wiki/WENO_methods) can be used.
 """
 

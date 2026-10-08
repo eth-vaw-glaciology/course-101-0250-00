@@ -65,7 +65,7 @@ VS Code's [Remote-SSH](https://marketplace.visualstudio.com/items?itemName=ms-vs
 2. Then, you can [connect to a remote host](https://code.visualstudio.com/docs/remote/ssh#_connect-to-a-remote-host), using `ssh user@hostname` and your password (selecting `Remote-SSH: Connect to Host...` from the Command Palette).
 3. [Advanced options](https://code.visualstudio.com/docs/remote/ssh#_remember-hosts-and-advanced-settings) permit you to [access a remote compute node from within VS Code](#running-julia-interactively-on-alps).
 
-!!! note
+!!! note "Plots in remote VS Code"
     This remote configuration supports Julia graphics to render within VS Code's plot pane. However, this "remote" visualisation option is only functional when plotting from a Julia instance launched as `Julia: Start REPL` from the Command Palette. Displaying a plot from a Julia instance launched from the remote terminal (which allows, e.g., to include custom options such as `ENV` variables or load modules) will fail. To work around this limitation, select `Julia: Connect external REPL` from the Command Palette and follow the prompted instructions.
 
 ## Running Julia
@@ -329,7 +329,7 @@ The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch comp
 
 GPU computing on [Alps](https://www.cscs.ch/computers/alps) at [CSCS](https://www.cscs.ch). The supercomputer Alps is composed of 2688 compute nodes, each hosting 4 Nvidia GH200 96GB GPUs. We have a 4000 node hour allocation for our course on the HPC Platform **Daint**, a versatile cluster (vCluster) within the Alps infrastructure.
 
-!!! warn
+!!! warning "Ask us, not CSCS"
     Since the course allocation is exceptional, make sure not to open any help tickets directly at CSCS help, but report questions and issue _exclusively_ to our **helpdesk** room on Element. Also, better ask about good practice before launching anything you are unsure in order to avoid any disturbance on the machine.
 
 The login procedure is as follow. First a login to the front-end (or login) machine Ela (hereafter referred to as "ela") is needed before one can log into Daint. Login is performed using `ssh`. We will set-up a proxy-jump in order to simplify the procedure and directly access Daint (hereafter referred to as "daint")
@@ -342,7 +342,7 @@ Please follow the steps listed hereafter to get ready and set-up on daint.
 
 ### Account setup
 
-!!! warn
+!!! warning "Special course accounts"
     The course accounts somewhat differ from regular account and do not require MFA. The connection procedure from CSCS' user doc does thus not apply.
 
 1. Fetch your personal username and password credentials from Moodle.
@@ -388,7 +388,7 @@ Host daint.alps
 ssh daint.alps
 ```
 
-!!! warn
+!!! warning
     At this stage, you are logged into daint, but still on a login node and not a compute node.
 
 You can reach your home folder upon typing `cd \$HOME`, and your scratch space upon typing `cd \$SCRATCH`. Always make sure to run and save files from scratch folder.
@@ -450,7 +450,7 @@ At this point, you should be able to launch Julia by typing `julia` in the termi
 
 Once the initial setup is completed, you can simply use Julia on daint by starting the Julia uenv, accessing a compute node (using SLURM), and launching Julia to add CUDA.jl package:
 
-!!! warn
+!!! warning
     To perform any computation, you need to access a compute node using the SLURM scheduler.
 
 1. SSH into daint and start the Julia uenv
@@ -531,7 +531,7 @@ julia> c .= a .+ b
 
 If you made it to here, you're most likely all set 🚀
 
-!!! warn
+!!! warning "No display on daint"
     There is no interactive visualisation on daint. Make sure to save `png` figures or `mp4` animations to disk instead of displaying them. `CairoMakie.jl` renders headless, so no further setup is needed. Build the figure once, collect the frames within the time loop and save the animation after it, such as
     ```julia
     fig, ax, plt = heatmap(xc, yc, C; axis=(; aspect=DataAspect()), colormap=:turbo)
@@ -578,10 +578,10 @@ The first time, `code tunnel` asks you to log in with GitHub: open [github.com/l
 
 In VS Code on your computer, open the *Remote Explorer* pane, and select *Tunnels*. The tunnels are listed separately from the Remote - SSH hosts, and only with the Remote - Tunnels extension installed. Sign in with the same GitHub account, and connect to `daint-tunnel`. Alternatively, run *Remote-Tunnels: Connect to Tunnel...* from the Command Palette. Install the Julia extension in the remote window, if needed.
 
-!!! tip
+!!! note "Troubleshooting the tunnel"
     If the tunnel doesn't appear in VS Code, check in a second terminal on daint whether it is running with `code tunnel status`, and with which account it is registered with `code tunnel user show`.
 
-!!! warn
+!!! warning "Release the compute node"
     The tunnel, and thus the allocation of the compute node, ends when you close the terminal in which `srun` runs, or after the requested time. Stop the tunnel with `Ctrl+C` when you are done, so that the node is released.
 
 If the tunnel doesn't work for you, edit your files with the [Remote - SSH](#vs-code-remote---ssh-setup) extension on the login node, and run your scripts in a terminal on a compute node, as described in [Running Julia interactively on Alps](#running-julia-interactively-on-alps).
@@ -599,7 +599,7 @@ cat \$HOME/.ssh/id_ed25519.pub
 
 Copy the printed public key to GitHub (*Settings > SSH and GPG keys > New SSH key*). Then, clone your repository in your scratch folder, e.g. `cd \$SCRATCH; git clone git@github.com:pdes-on-gpus-julia-course/pde-on-gpu-<moodleprofilename>.git`.
 
-!!! note
+!!! note "Scratch cleaning policy"
     Files on scratch that have not been accessed for 30 days are deleted automatically, and scratch has no backup. Commit and push your work to GitHub regularly.
 
 ### Running a remote job on Alps
@@ -620,7 +620,7 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 srun --uenv julia/26.3:v1 --view=juliaup julia --project <my_julia_gpu_script.jl>
 ```
 
-!!! warn
+!!! warning "Start the uenv first"
     Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/26.3:v1 --view=juliaup` in the `srun` command.
 
 <!--
@@ -750,7 +750,7 @@ export IGG_CUDAAWARE_MPI=1
 !!! note
     On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection ([more about this the in CSCS doc](https://docs.cscs.ch/running/slurm/#one-rank-per-gpu)).
 
-!!! warn
+!!! warning
     Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set `select_device = false` in the `init_global_grid` kwarg:
     ```julia
     init_global_grid(...; select_device = false)

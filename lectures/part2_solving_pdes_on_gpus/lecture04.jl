@@ -86,7 +86,7 @@ A typical workflow looks like this:
 !!! note "Running scripts from the terminal"
     You can also run a script from the terminal with `julia --project elliptic_1d_dr.jl`. In this case, CairoMakie opens the figures passed to `display` in your default image viewer.
 
-!!! tip
+!!! note "Tip"
     Keep your code inside functions, as we did in the previous lectures. Code at the top level of a script works with global variables, which is slow in Julia (see the [performance tips](https://docs.julialang.org/en/v1/manual/performance-tips/#Avoid-untyped-global-variables)).
 """
 
@@ -289,7 +289,7 @@ What do you see on the plot? Try to explain the observed trend. Does the measure
 
 # ╔═╡ 20fc4edd-ce95-4bf5-9e96-5cf01e72cdad
 md"""
-!!! note
+!!! note "Interpreting the benchmark"
     - Small arrays fit into the caches, so for small array sizes, we measure the bandwidth of the caches rather than of the main memory. To measure ``T_\mathrm{peak}``, the arrays must be much larger than the caches.
     - The measured throughput is lower than the theoretical peak memory bandwidth ``B_\mathrm{peak}``. On many CPUs, a single core cannot saturate the memory bandwidth: compare the results obtained with 1 thread and with all available threads.
     - For very small arrays, the overhead of starting the threads dominates, and the multi-threaded copy is slower than the single-threaded one.
@@ -985,10 +985,10 @@ The number of threads can be queried within a Julia session with `Threads.nthrea
 
 `Threads.@threads` splits the iterations of the loop into chunks and executes them on the available threads. The execution waits until all iterations are completed, so the next loop can safely use the results of the previous one.
 
-!!! note
+!!! note "Number of threads"
     For optimal performance, the number of threads should usually not exceed the number of physical cores of the CPU. Many CPUs run two hardware threads per physical core (simultaneous multithreading, also known as hyper-threading), which usually doesn't improve the performance of memory-bound codes.
 
-!!! warning
+!!! warning "@inbounds and Threads.@threads"
     `Threads.@threads` turns the loop body into a separate function (a closure). Therefore, writing `@inbounds Threads.@threads for ...` doesn't deactivate the bounds checks inside the loop: place `@inbounds` inside the loop body, as in the example above.
 """
 

@@ -564,7 +564,7 @@ We use a norm of the discrete residual as a convergence indicator. Common choice
 
 In Julia, this can be computed by calling `maximum(abs, r)`.
 
-!!! warning
+!!! warning "Residual vs. error"
 	The residual norm is not the solution-error norm. For a discrete linear system ``Au = b`` with exact solution ``u_*``, the residual ``r = b - Au`` and the algebraic error ``e = u - u_*`` are related by:
 	```math
 	e = -A^{-1}r~.
@@ -653,7 +653,7 @@ xv   = LinRange(dx,lx-dx,nx-1)
 α 	 = 0.99 * (1 + β)
 ```
 
-!!! note
+!!! note "Iteration parameters"
     - The parameters `α` and `β` are closely related to the pseudo-time step `dτ` and the damping `ζ` from the damped wave equation solver. We won't derive them in detail in this course, but if you're interested, you can try to convert the damped wave formulation to the PT formulation using pen and paper (or ask an LLM).
     - The value `β = 1 - 1.3π / nx` is manually tuned for this problem setup. For constant diffusivity, `β ≈ 1 - 2π / nx` results in critical damping of the slowest mode.
 
