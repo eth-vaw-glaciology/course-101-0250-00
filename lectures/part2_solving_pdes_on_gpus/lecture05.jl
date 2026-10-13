@@ -196,7 +196,7 @@ uenv start --view=juliaup,modules julia/26.3:v1
 To work interactively, request a compute node with `salloc`, open a shell on it with `srun`, and start Julia:
 
 ```sh
-salloc -C'gpu' -Aclass04 -N1 --time=01:00:00 # one node for one hour
+salloc -C'gpu' -Apde-on-gpu-2026 -N1 --time=01:00:00 # one node for one hour
 srun -n1 --pty /bin/bash -l                  # shell on the compute node
 julia --project                              # Julia on the compute node
 ```

@@ -343,35 +343,9 @@ Please follow the steps listed hereafter to get ready and set-up on daint.
 
 ### Account setup
 
-!!! warning "Special course accounts"
-    The course accounts somewhat differ from regular account and do not require MFA. The connection procedure from CSCS' user doc does thus not apply.
+You will receive the invitation from CSCS to create a temporary course account via email. Follow the link from this email. For the account and access setup, follow the [instructions from CSCS](https://docs.cscs.ch/guides/course-account/).
 
-1. Fetch your personal username and password credentials from Moodle.
-
-2. Open a terminal (in Windows, use a tool as e.g. [PuTTY]() or [OpenSSH](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui)) and `ssh` to ela and enter the password:
-
-```sh
-ssh <username>@ela.cscs.ch
-```
-
-3. Generate a `ed25519` keypair. On your local machine (not ela), do `ssh-keygen` leaving the passphrase empty. Then copy your public key to the remote server (ela) using `ssh-copy-id`.
-
-```sh
-ssh-keygen -t ed25519
-ssh-copy-id -i ~/.ssh/id_ed25519.pub <username>@ela.cscs.ch
-```
-
-Alternatively, you can copy the keys manually.
-
-4. Once your key is added to ela, manually connect to daint to authorize your key for the first time, while making sure you are logged-in in ela. Execute:
-
-```sh
-[classXXX@ela2 ~]\$ ssh daint
-```
-
-This step shall prompt you to accept the daint server’s SSH key and enter the password you got from Moodle again.
-
-5. Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
+Edit your ssh config file located in `~/.ssh/config` and add following entries to it, making sure to replace `<username>` and key file with correct names, if needed:
 
 ```sh
 Host daint.alps
@@ -383,7 +357,7 @@ Host daint.alps
   ForwardAgent yes
 ```
 
-6. Now you should be able to perform password-less login to daint as following
+Now you should be able to perform password-less login to daint as following
 
 ```sh
 ssh daint.alps
@@ -455,16 +429,17 @@ Once the initial setup is completed, you can simply use Julia on daint by starti
     To perform any computation, you need to access a compute node using the SLURM scheduler.
 
 1. SSH into daint and start the Julia uenv
+
 ```sh
 ssh daint.alps
 
 uenv start --view=juliaup,modules julia/26.3:v1
 ```
 
-2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) on the GPU partition `-C'gpu'` on the project `class04` for 1 hour:
+2. The next step is to secure an allocation using `salloc`, a functionality provided by the SLURM scheduler. Use `salloc` command to allocate one node (`N1`) on the GPU partition `-C'gpu'` on the project `pde-on-gpu-2026` for 1 hour:
 
 ```sh
-salloc -C'gpu' -Aclass04 -N1 --time=01:00:00
+salloc -C'gpu' -Apde-on-gpu-2026 -N1 --time=01:00:00
 ```
 
 !!! note
@@ -572,7 +547,7 @@ Log out and in again. Then, **every time**, start the tunnel on a compute node w
 ```sh
 ssh daint.alps
 
-srun --uenv=julia/26.3:v1 --view=juliaup -C'gpu' -Aclass04 -N1 -t180 --pty code tunnel --name=daint-tunnel
+srun --uenv=julia/26.3:v1 --view=juliaup -C'gpu' -Apde-on-gpu-2026 -N1 -t180 --pty code tunnel --name=daint-tunnel
 ```
 
 The first time, `code tunnel` asks you to log in with GitHub: open [github.com/login/device](https://github.com/login/device) and enter the code shown in the terminal. When the tunnel is ready, the terminal shows a link to `https://vscode.dev/tunnel/daint-tunnel`.
@@ -609,7 +584,7 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 
 ```sh
 #!/bin/bash -l
-#SBATCH --account=class04
+#SBATCH --account=pde-on-gpu-2026
 #SBATCH --job-name="my_gpu_run"
 #SBATCH --output=my_gpu_run.%j.o
 #SBATCH --error=my_gpu_run.%j.e
@@ -706,7 +681,7 @@ uenv start --view=juliaup,modules julia/26.3:v1
 2. Then, you would need to allocate more than one node, let's say 2 nodes for 1 hours, using `salloc`
 
 ```sh
-salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
+salloc -C'gpu' -Apde-on-gpu-2026 -N2 --time=01:00:00
 ```
 
 3. To launch a Julia (GPU) MPI script on 2 nodes (and e.g. 8 GPUs) using MPI, you can simply use `srun`
@@ -719,7 +694,7 @@ If you do not want to use an interactive session you can use the `sbatch` comman
 
 ```sh
 #!/bin/bash -l
-#SBATCH --account=class04
+#SBATCH --account=pde-on-gpu-2026
 #SBATCH --job-name="diff2D"
 #SBATCH --output=diff2D.%j.o
 #SBATCH --error=diff2D.%j.e
@@ -772,7 +747,7 @@ ml cuda
 Then, for example, request an allocation for 2 nodes in order to have access to 8 GH200 GPUs:
 
 ```sh
-salloc -C'gpu' -Aclass04 -N2 --time=01:00:00
+salloc -C'gpu' -Apde-on-gpu-2026 -N2 --time=01:00:00
 ```
 
 To then profile an application (e.g. the [3D diffusion code](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/2025/scripts/l10_diff_3d_hidecomm.jl)), launch `srun` with the following parameters:
