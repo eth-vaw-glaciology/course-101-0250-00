@@ -3,9 +3,8 @@
 // As in the lecture notebooks, we typeset these elements with MathJax.
 
 const content = document.querySelector("pluto-editor pluto-output.pages-markdown")
-const tex_elements = content ? Array.from(content.querySelectorAll(".tex")) : []
 
-if (tex_elements.length > 0) {
+if (content?.querySelector(".tex") != null) {
     window.MathJax = {
         tex: {
             inlineMath: [["\\(", "\\)"]],
@@ -16,7 +15,9 @@ if (tex_elements.length > 0) {
             typeset: false,
             ready: () => {
                 window.MathJax.startup.defaultReady()
-                window.MathJax.typesetPromise(tex_elements)
+                // the math in the page, and in the headers copied to the table of contents (see `toc.js`)
+                const tex_elements = document.querySelectorAll("pluto-output.pages-markdown .tex, nav.plutoui-toc .tex")
+                window.MathJax.typesetPromise(Array.from(tex_elements))
             },
         },
     }

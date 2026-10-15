@@ -20,6 +20,7 @@ $(content)
 </main>
 </pluto-editor>
 <script src="$(root_url)/assets/scripts/math.js" type="module"></script>
+<script src="$(root_url)/assets/scripts/highlight.js" type="module"></script>
 $(if get(page.output.frontmatter, "toc", false) == true
     @htl("""
     <link rel="stylesheet" href="$(root_url)/assets/styles/toc.css" type="text/css" />

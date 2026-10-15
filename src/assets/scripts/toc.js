@@ -25,8 +25,12 @@ if (content) {
         const a = document.createElement("a")
         a.className = h.nodeName
         a.setAttribute("href", `#${h.id}`)
-        a.textContent = h.textContent.trim()
-        a.title = a.textContent
+        // copy the content of the header, including math, without its links
+        const label = h.cloneNode(true)
+        label.querySelectorAll("a.anchor").forEach((el) => el.remove())
+        label.querySelectorAll("a").forEach((el) => el.replaceWith(...el.childNodes))
+        a.append(...label.childNodes)
+        a.title = h.textContent.replace(/\\[()]/g, "").trim()
         a.addEventListener("click", (event) => {
             event.preventDefault()
             history.replaceState(null, "", `#${h.id}`)
@@ -69,4 +73,7 @@ if (content) {
     update_in_view()
 
     editor.append(toc)
+
+    // typeset the math in the headers, if MathJax has already been loaded by `math.js`
+    window.MathJax?.startup?.promise?.then(() => window.MathJax.typesetPromise([toc]))
 }
