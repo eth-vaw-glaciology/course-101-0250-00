@@ -1042,7 +1042,7 @@ Our count of the memory accesses assumes that neighbouring array elements are lo
 👉 Measure ``T_\\mathrm{eff}`` of both 3D versions on a GH200 of daint with `nx = 2^9`, i.e. 512 × 512 × 512 grid cells.
 
 !!! note "Memory usage in 3D"
-    With 512 × 512 × 512 grid cells, every array occupies about 1.1 GB of memory. The math-close version allocates 10 arrays, i.e. about 11 GB, which fits into the 96 GB of the GH200. With three arrays for `λ`, one at the location of each flux component, the solver would need two more arrays. Keep the memory usage in mind when increasing the resolution: doubling the number of grid cells in every direction increases the memory usage by a factor of 8.
+    With 512 × 512 × 512 grid cells, every array occupies about 1.1 GB of memory. The math-close version allocates 10 arrays, i.e. about 11 GB, which fits into the 96 GB of the GH200. Keep the memory usage in mind when increasing the resolution: doubling the number of grid cells in every direction increases the memory usage by a factor of 8.
 
 ## Towards multi-xPU
 
