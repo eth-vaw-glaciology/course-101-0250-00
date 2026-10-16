@@ -1055,7 +1055,6 @@ ParallelStencil is seamlessly interoperable with [ImplicitGlobalGrid.jl](https:/
 
 - With ParallelStencil.jl, a single code runs on CPUs and GPUs: the backend is selected in `@init_parallel_stencil`, and the arrays are allocated with `@zeros` or copied to the backend with `Data.Array`.
 - `@parallel` kernels with math-close notation are concise, and are easy to extend from 2D to 3D. `@parallel_indices` kernels give full control over the computations of every thread, e.g. for kernel fusion.
-- AcceleratedKernels.jl provides backend-agnostic reductions for the ``\\beta`` update.
 - We extended the DR solver to 2D and 3D: the number of iterations still scales linearly with the number of grid cells in each direction. Defining `λ` at the cell centres, and averaging it to the cell faces, reduces the memory footprint of the solver.
 
 # Testing and continuous integration
