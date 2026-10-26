@@ -322,6 +322,79 @@ julia --project -t auto
 
 which will launch Julia with as many threads are there are cores on your machine (including hyper-threaded cores). Alternatively set the environment variable `JULIA_NUM_THREADS`, e.g. `export JULIA_NUM_THREADS=2` to enable 2 threads.
 
+## Julia MPI
+
+The following steps install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your computer and test it. By default, MPI.jl downloads its own MPI library, so you don't need to install MPI separately.
+
+1. Add MPI.jl to your project: type `add MPI` in the [package manager](#package-manager). If MPI.jl is already a dependency of the project, `instantiate` installs it.
+2. Install `mpiexecjl`, the Julia wrapper of the MPI launcher `mpiexec`:
+
+```julia-repl
+julia> using MPI
+
+julia> MPI.install_mpiexecjl()
+[ Info: Installing `mpiexecjl` to `~/.julia/bin`...
+[ Info: Done!
+```
+
+3. Add `~/.julia/bin` to the `PATH` environment variable, so that your shell finds `mpiexecjl`. For example, add the following line to the file `~/.zshrc` (zsh, the default shell on macOS) or `~/.bashrc` (bash), and open a new terminal:
+
+```sh
+export PATH="\$HOME/.julia/bin:\$PATH"
+```
+
+4. Run a Julia MPI script `<my_script.jl>` on `<np>` MPI processes from the project folder:
+
+```sh
+mpiexecjl -n <np> julia --project <my_script.jl>
+```
+
+5. To test the installation, save the following "Hello world" script to a file `hello_mpi.jl`:
+
+```julia
+using MPI
+MPI.Init()
+
+comm = MPI.COMM_WORLD
+me   = MPI.Comm_rank(comm)
+sleep(0.1me)
+println("Hello world, I am \$(me) of \$(MPI.Comm_size(comm))")
+MPI.Barrier(comm)
+```
+
+and run it on 4 processes:
+
+```sh
+mpiexecjl -n 4 julia --project hello_mpi.jl
+```
+
+Every process prints its rank. The processes wait for different times before printing, so the lines usually appear in order:
+
+```
+Hello world, I am 0 of 4
+Hello world, I am 1 of 4
+Hello world, I am 2 of 4
+Hello world, I am 3 of 4
+```
+
+!!! note "Windows"
+    `mpiexecjl` is a shell script, which works on macOS and Linux. On Windows, start Julia in the project folder with `julia --project`, and launch MPI programs from the REPL with the MPI launcher that MPI.jl provides:
+    ```julia-repl
+    julia> using MPI
+
+    julia> run(`\$(mpiexec()) -n 4 \$(Base.julia_cmd()) --project hello_mpi.jl`)
+    ```
+
+!!! note "macOS"
+    On macOS, MPI may fail to resolve the hostname of your computer, with the error `gethostbyname failed` ([MPI.jl issue #407](https://github.com/JuliaParallel/MPI.jl/issues/407)). In this case, define the following environment variable:
+    ```sh
+    export MPICH_INTERFACE_HOSTNAME=localhost
+    ```
+    and add `-host localhost` to the command:
+    ```sh
+    mpiexecjl -n 4 -host localhost julia --project hello_mpi.jl
+    ```
+
 ## Julia on GPUs
 
 The [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl) module permits to launch compute kernels on Nvidia GPUs natively from within Julia. [JuliaGPU](https://juliagpu.org) provides further reading and [introductory material](https://juliagpu.gitlab.io/CUDA.jl/tutorials/introduction/) about GPU ecosystems within Julia.
@@ -600,48 +673,6 @@ srun --uenv julia/26.3:v1 --view=juliaup julia --project <my_julia_gpu_script.jl
     Make sure to have started the Julia uenv **before** executing the `sbatch` command or to include ` --uenv julia/26.3:v1 --view=juliaup` in the `srun` command.
 
 <!--
-## Julia MPI
-
-The following steps permit you to install [MPI.jl](https://github.com/JuliaParallel/MPI.jl) on your machine and test it:
-
-1. If Julia MPI is a dependency of a Julia project MPI.jl should have been added upon executing the `instantiate` command from within the package manager [see here](#package_manager). If not, MPI.jl can be added from within the package manager (typing `add MPI` in package mode).
-2. Install `mpiexecjl`:
-
-```julia-repl
-julia> using MPI
-
-julia> MPI.install_mpiexecjl()
-[ Info: Installing `mpiexecjl` to `HOME/.julia/bin`...
-[ Info: Done!
-```
-
-3. Then, one should add `HOME/.julia/bin` to PATH in order to launch the Julia MPI wrapper `mpiexecjl`.
-4. Running a Julia MPI code `<my_script.jl>` on `np` MPI processes:
-
-```sh
-\$ mpiexecjl -n np julia --project <my_script.jl>
-```
-
-5. To test the Julia MPI installation, launch the [`l9_hello_mpi.jl`](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/main/scripts/l9_scripts) using the Julia MPI wrapper `mpiexecjl` (located in `~/.julia/bin`) on, e.g., 4 processes:
-
-```sh
-\$ mpiexecjl -n 4 julia --project ./l9_hello_mpi.jl
-\$ Hello world, I am 0 of 3
-\$ Hello world, I am 1 of 3
-\$ Hello world, I am 2 of 3
-\$ Hello world, I am 3 of 3
-```
-
-!!! note
-    On macOS, you may encounter [this issue](https://github.com/JuliaParallel/MPI.jl/issues/407). To fix it, define following `ENV` variable:
-    ```sh
-    \$ export MPICH_INTERFACE_HOSTNAME=localhost
-    ```
-    and add `-host localhost` to the execution script:
-    ```sh
-    \$ mpiexecjl -n 4 -host localhost julia --project ./hello_mpi.jl
-    ```
-
 ### JupyterLab access on Alps
 
 Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
