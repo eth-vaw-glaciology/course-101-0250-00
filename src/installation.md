@@ -385,15 +385,8 @@ Hello world, I am 3 of 4
     julia> run(`\$(mpiexec()) -n 4 \$(Base.julia_cmd()) --project hello_mpi.jl`)
     ```
 
-!!! note "macOS"
-    On macOS, MPI may fail to resolve the hostname of your computer, with the error `gethostbyname failed` ([MPI.jl issue #407](https://github.com/JuliaParallel/MPI.jl/issues/407)). In this case, define the following environment variable:
-    ```sh
-    export MPICH_INTERFACE_HOSTNAME=localhost
-    ```
-    and add `-host localhost` to the command:
-    ```sh
-    mpiexecjl -n 4 -host localhost julia --project hello_mpi.jl
-    ```
+!!! note "Troubleshooting"
+    If MPI fails to start with an error containing `gethostbyname failed`, the hostname of your computer doesn't resolve to a local address. Follow the workaround in the [known issues](https://juliaparallel.org/MPI.jl/stable/knownissues/#gethostbyname-failure-in-internal_Init_thread) of MPI.jl.
 
 ## Julia on GPUs
 
