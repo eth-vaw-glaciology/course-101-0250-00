@@ -624,97 +624,59 @@ srun --uenv julia/26.3:v1 --view=juliaup julia --project &lt;my_julia_gpu_script
 <div class="admonition warning"><p class="admonition-title">Start the uenv first</p>
 <p>Make sure to have started the Julia uenv <strong>before</strong> executing the <code>sbatch</code> command or to include <code> --uenv julia/26.3:v1 --view=juliaup</code> in the <code>srun</code> command.</p>
 </div>
-<!--
-### JupyterLab access on Alps
-
-Some tasks and homework, are prepared as Jupyter notebook and can easily be executed within a JupyterLab environment. CSCS offers a convenient [JupyterLab access](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
-
-1. First, create a soft link from your `$HOME` pointing to `$SCRATCH` (do this on daint):
-
-```sh
-ln -s $SCRATCH scratch
-```
-
-2. Head to [https://jupyter-daint.cscs.ch/](https://jupyter-daint.cscs.ch/).
-3. Login with your username and password you've set for in the [Account setup](#account-setup) step.
-4. Follow the [additional procedure to set up the Julia kernel in Jupyter](https://docs.cscs.ch/access/jupyterlab/#using-julia-in-jupyter).
-    - In the `Advanced options`, provide as uenv `julia/26.3:v1` and `jupyter` as view.
-    - Select the duration you want and **Launch JupyterLab**.
-    - _Only the first time_ -- open the console from the JupyterLab launcher and run `install_ijulia`
-5. From within JupyterLab, upload the notebook to work on and get started!
-
-### Transferring files on Alps
-
-Given that daint's `scratch` is not mounted on ela, it is unfortunately impossible to transfer files from/to daint using common sftp tools as they do not support the proxy-jump. Various solutions exist to workaround this, including manually handling transfers over terminal, using a tool which supports proxy-jump, or VS code.
-
-To use VS code as development tool, make sure to have installed the `Remote-SSH` extension as described in the [VS Code Remote - SSH setup](#vs-code-remote---ssh-setup) section. Then, in VS code Remote-SSH settings, make sure the `Remote Server Listen On Socket` is set to `true`.
-
-The next step should work out of the box. You should be able to select `daint` from within the Remote Explorer side-pane. You should get logged into daint. You now can browse your files, change directory to, e.g., your scratch at `$SCRATCH`. Just drag and drop files in there to transfer them.
-
-### Julia MPI GPU on Alps
-
-The following step should allow you to run distributed memory parallelisation application on multiple GPU nodes on Alps.
-
-1. Make sure to have the Julia GPU environment loaded
-
-```sh
-uenv start --view=juliaup,modules julia/26.3:v1
-```
-
-2. Then, you would need to allocate more than one node, let's say 2 nodes for 1 hours, using `salloc`
-
-```sh
-salloc -C'gpu' -Apde-on-gpu-2026 -N2 --time=01:00:00
-```
-
-3. To launch a Julia (GPU) MPI script on 2 nodes (and e.g. 8 GPUs) using MPI, you can simply use `srun`
-
-```sh
-MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 julia --project <my_julia_mpi_script.jl>
-```
-
-If you do not want to use an interactive session you can use the `sbatch` command to launch an MPI job remotely on daint. Example of a `sbatch_mpi_daint.sh` you can launch (without need of an allocation) as [`sbatch sbatch_mpi_daint.sh`](https://github.com/eth-vaw-glaciology/course-101-0250-00/blob/2025/scripts/l9_scripts/l9_sbatch_mpi_daint.sh):
-
-```sh
-#!/bin/bash -l
+<h3 id="transferring-files-on-alps"><a href="#transferring-files-on-alps" class="anchor"></a>Transferring files on Alps</h3>
+<p>The <code>scratch</code> folder of daint is not mounted on ela, and graphical sftp tools usually don’t support the proxy-jump. However, <code>scp</code> works with the proxy-jump configured in <code>~/.ssh/config</code>, e.g. to copy a figure from daint to the current folder on your computer, with the absolute path of your scratch folder printed by <code>echo $SCRATCH</code> on daint:</p>
+<pre><code class="language-sh">scp daint.alps:/path/to/scratch/homework-7/figure.png .
+</code></pre>
+<p>Alternatively, with the Remote - SSH extension of VS Code, open your scratch folder on daint in the Remote Explorer, and drag and drop files to transfer them.</p>
+<h3 id="julia-mpi-gpu-on-alps"><a href="#julia-mpi-gpu-on-alps" class="anchor"></a>Julia MPI GPU on Alps</h3>
+<p>The following steps allow you to run a distributed-memory parallel application on several GPUs of daint, with one MPI process per GPU.</p>
+<p>MPI.jl in the Julia uenv uses the Cray MPICH library of daint, and is configured automatically: <code>MPI.identify_implementation()</code> returns <code>(&quot;CrayMPICH&quot;, v&quot;8.1.32&quot;)</code>. Don’t install <code>mpiexecjl</code> on daint: MPI programs are launched with <code>srun</code> by the SLURM scheduler.</p>
+<ol>
+<li>Make sure to have the Julia uenv started</li>
+</ol>
+<pre><code class="language-sh">uenv start --view=juliaup,modules julia/26.3:v1
+</code></pre>
+<ol start="2">
+<li>Allocate the nodes using <code>salloc</code>, e.g. 1 node, i.e. 4 GPUs, for 1 hour (use <code>-N2</code> for 2 nodes and 8 GPUs)</li>
+</ol>
+<pre><code class="language-sh">salloc -C'gpu' -Apde-on-gpu-2026 -N1 --time=01:00:00
+</code></pre>
+<ol start="3">
+<li>Launch the Julia MPI script with <code>srun</code>, with one task per GPU, e.g. on the 4 GPUs of one node</li>
+</ol>
+<pre><code class="language-sh">MPICH_GPU_SUPPORT_ENABLED=1 srun -N1 -n4 --ntasks-per-node=4 --gpus-per-task=1 julia --project &lt;my_julia_mpi_script.jl&gt;
+</code></pre>
+<p>or on the 8 GPUs of 2 nodes with <code>srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1</code>.</p>
+<p>If you do not want to use an interactive session you can use the <code>sbatch</code> command to launch an MPI job remotely on daint. Example of a job script <code>sbatch_mpi_gpu.sh</code> you can launch (without need of an allocation) as <code>sbatch sbatch_mpi_gpu.sh &lt;my_julia_mpi_script.jl&gt;</code>:</p>
+<pre><code class="language-sh">#!/bin/bash -l
 #SBATCH --account=pde-on-gpu-2026
-#SBATCH --job-name="diff2D"
-#SBATCH --output=diff2D.%j.o
-#SBATCH --error=diff2D.%j.e
+#SBATCH --job-name=&quot;mpi_gpu&quot;
+#SBATCH --output=mpi_gpu.%j.o
+#SBATCH --error=mpi_gpu.%j.e
 #SBATCH --time=00:05:00
 #SBATCH --nodes=1
-#SBATCH --ntasks=4
 #SBATCH --ntasks-per-node=4
 #SBATCH --gpus-per-task=1
 
-export MPICH_GPU_SUPPORT_ENABLED=1
-export IGG_CUDAAWARE_MPI=1 # IGG
-export JULIA_CUDA_USE_COMPAT=false # IGG
+# usage: sbatch sbatch_mpi_gpu.sh &lt;script.jl&gt;
+# the number of GPUs can be changed on the command line: sbatch --ntasks-per-node=1 sbatch_mpi_gpu.sh &lt;script.jl&gt;
 
-srun --uenv julia/26.3:v1 --view=juliaup julia --project <my_julia_mpi_gpu_script.jl>
-```
+export MPICH_GPU_SUPPORT_ENABLED=1 # CUDA-aware MPI
 
-**Make sure that the total number of tasks set with `--ntasks` is equal to `--nodes` times `--ntasks-per-node`.**
-
-!!! note
-    The scripts above can be found in the [scripts](https://github.com/eth-vaw-glaciology/course-101-0250-00/tree/2025/scripts/l9_scripts/) folder.
-
-You may want to leverage CUDA-aware MPI, i.e., passing GPU pointers directly through the MPI-based update halo functions, then make sure to export the following `ENV` variables:
-
-```sh
-export MPICH_RDMA_ENABLED_CUDA=1
-export IGG_CUDAAWARE_MPI=1
-```
-
-!!! note
-    On daint, each MPI process (SLURM task) sees a single GPU with `ID = 0` as we request `--gpus-per-task=1`. This implies that there is no need to rely on other mechanisms such as using shared memory MPI communicator to convert global to local MPI ranks for GPU selection ([more about this the in CSCS doc](https://docs.cscs.ch/running/slurm/#one-rank-per-gpu)).
-
-!!! warning
-    Using ImplicitGlobalGrid.jl on daint, one needs to ensure to set `select_device = false` in the `init_global_grid` kwarg:
-    ```julia
-    init_global_grid(...; select_device = false)
-    ```
-
+srun --uenv julia/26.3:v1 --view=juliaup julia --project $1
+</code></pre>
+<p>The options given on the command line override the <code>#SBATCH</code> lines of the script: <code>sbatch --ntasks-per-node=1 sbatch_mpi_gpu.sh &lt;my_julia_mpi_script.jl&gt;</code> runs the script on a single GPU, and <code>sbatch --nodes=2 sbatch_mpi_gpu.sh &lt;my_julia_mpi_script.jl&gt;</code> on 8 GPUs. Check the state of your jobs with <code>squeue --me</code>.</p>
+<div class="admonition note"><p class="admonition-title">One GPU per MPI process</p>
+<p>With <code>--gpus-per-task=1</code>, every MPI process (SLURM task) sees a single GPU, <code>CuDevice(0)</code>, which is a different GPU for every process of the node, as <code>CUDA.uuid(CUDA.device())</code> shows. There is no need to select a GPU in the script, e.g. with a shared memory communicator that converts global to local MPI ranks (<a href="https://docs.cscs.ch/running/slurm/#one-rank-per-gpu">more about this in the CSCS docs</a>).</p>
+</div><div class="admonition note"><p class="admonition-title">CUDA-aware MPI</p>
+<p>With <code>MPICH_GPU_SUPPORT_ENABLED=1</code>, Cray MPICH is CUDA-aware: <code>CuArray</code>s can be passed directly to the MPI functions, e.g. <code>MPI.Send</code> and <code>MPI.Recv!</code>, which transfer the data from GPU to GPU without a detour through the host memory. Without this variable, passing a <code>CuArray</code> to MPI crashes the program with a segmentation fault in <code>MPI.Send</code>. Note that <code>MPI.has_cuda()</code> returns <code>false</code> on daint even though CUDA-aware MPI works: MPI.jl can only query Open MPI for CUDA support, and returns <code>false</code> for other libraries unless the environment variable <code>JULIA_MPI_HAS_CUDA=true</code> is set.</p>
+</div><div class="admonition warning"><p class="admonition-title">ImplicitGlobalGrid.jl</p>
+<p>When using ImplicitGlobalGrid.jl (lecture 8) on daint, export <code>IGG_CUDAAWARE_MPI=1</code> in addition to <code>MPICH_GPU_SUPPORT_ENABLED=1</code>, and set <code>select_device = false</code> in <code>init_global_grid</code>:</p>
+<pre><code class="language-julia">init_global_grid(...; select_device = false)
+</code></pre>
+</div>
+<!--
 ### Profiling on Alps
 
 Profiling using the [NVIDIA Nsight Systems](https://docs.cscs.ch/software/devtools/nvidia-nsight/) is available with any uenv that comes with a CUDA compiler, including the Julia uenv. As a sampling profiler, it can be used to profile applications written in Julia by wrapping the application with the Nsight Systems profiler executable.
