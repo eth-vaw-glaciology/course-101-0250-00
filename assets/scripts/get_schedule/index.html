@@ -1,0 +1,52 @@
+<!DOCTYPE html><pre class="language-julia"><code># taken from Valentin Churavy&apos;s course repo: https://github.com/vchuravy/rse-course/blob/main/src/assets/scripts/get_schedule.jl
+
+import Dates
+
+let
+    # Zurich time (EU DST rule), avoids a TimeZones.jl dependency
+    utc = Dates.now(Dates.UTC)
+    dst_switch(month) = Dates.DateTime(Dates.tolast(Dates.Date(Dates.year(utc), month), Dates.Sunday)) + Dates.Hour(1)
+    now = utc + Dates.Hour(dst_switch(3) &lt;= utc &lt; dst_switch(10) ? 2 : 1)
+    today = Dates.Date(now)
+
+    sections = sidebar
+    section_htmls = map(sections) do (section_id, _)
+        map(collections[section_id].pages) do other_page
+            output = other_page.output
+
+            name = get(output.frontmatter, &quot;title&quot;, basename(other_page.input.relative_path))
+            desc = get(output.frontmatter, &quot;description&quot;, nothing)
+            tags = get(output.frontmatter, &quot;tags&quot;, String[])
+            date_str = get(output.frontmatter, &quot;date&quot;, nothing)
+
+            date_str === nothing &amp;&amp; return nothing
+
+            date = try
+                Dates.Date(string(date_str))
+            catch
+                nothing
+            end
+            upcoming = date !== nothing &amp;&amp; date > today
+            # reading material is out from 9:00 on the Thursday before
+            reading = upcoming &amp;&amp; now >= Dates.DateTime(Dates.toprev(date, Dates.Thursday)) + Dates.Hour(9)
+            label = reading ? &quot;Reading material for $(Dates.format(date, &quot;dd.mm.yyyy&quot;))&quot; : &quot;Upcoming&quot;
+
+            class = [
+                &quot;no-decoration&quot;,
+                upcoming &amp;&amp; !reading ? &quot;upcoming-entry&quot; : nothing,
+                (&quot;tag_$(replace(x, &quot; &quot;=>&quot;_&quot;))&quot; for x in tags)...,
+            ]
+
+            # NOTE: keep each entry on a single line with no blank/whitespace-only
+            # lines. This output is interpolated into a Markdown (`.jlmd`) file, and
+            # the CommonMark processor ends a raw-HTML block on the first blank line,
+            # which would otherwise wrap the remaining cards in `&lt;p>` and mis-nest the
+            # anchors (titles get hoisted out of their cards).
+            # `data-date` lets `schedule_upcoming.js` refresh this in the browser.
+            @htl(&quot;&quot;&quot;&lt;a title=$(desc) class=$(class) data-date=$(string(date_str)) href=$(root_url * &quot;/&quot; * other_page.url)>&lt;h3>$(name)&lt;/h3>&lt;span class=&quot;schedule-date $(upcoming ? &quot;upcoming-badge&quot; : &quot;&quot;)&quot;>$(date_str)&lt;/span>$(upcoming ? @htl(&quot;&quot;&quot;&lt;span class=$([&quot;upcoming-label&quot;, reading ? &quot;reading-label&quot; : nothing])>$(label)&lt;/span>&quot;&quot;&quot;) : nothing)&lt;/a>&quot;&quot;&quot;)
+        end
+    end
+
+    isempty(section_htmls) ? nothing : @htl(&quot;&quot;&quot;&lt;div class=&quot;wide subjectscontainer&quot;>&lt;h1>Schedule&lt;/h1>&lt;div class=&quot;subjects&quot;>$(section_htmls)&lt;/div>&lt;/div>&quot;&quot;&quot;)
+end
+</code></pre>
