@@ -1,0 +1,655 @@
+<!DOCTYPE html><html lang="en">
+<head>
+
+<title>Julia MPI — Solving partial differential equations in parallel on GPUs </title>
+
+
+<link rel="root" href="../.." />
+
+<link rel="icon" href="../../assets/favicon.ico" />
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="../../assets/styles/index.css" type="text/css" />
+<link rel="stylesheet" href="../../assets/styles/layout.css" type="text/css" />
+<script src="../../assets/scripts/sidebar.js" type="module"></script>
+
+<link rel="pp-search-data" href="../../pp_search_data.json" />
+<script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" integrity="sha256-DFDZACuFeAqEKv/7Vnu1Tt5ALa58bcWZegGGFNgET8g=" crossorigin="anonymous" defer></script>
+<script src="../../assets/scripts/search.js" type="module" defer></script>
+
+<script src="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.js" integrity="sha256-sDRYYtDc+jNi2rrJPUS5kGxXXMlmnOSCq5ek5tYAk/M=" crossorigin="anonymous" defer></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.0/src/lite-yt-embed.css" integrity="sha256-lv6SEl7Dhri7d86yiHCTuSWFb9CYROQFewxZ7Je0n5k=" crossorigin="anonymous">
+
+<script type="importmap">{"imports":{"aVc6E":"./firebase-firestore.7f842f36.js","bEDS4":"./firebase-app.b603aaa4.js"}}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.c7bb3e0f.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.a7d04aac.css"><script type="module" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/frontend.fde26c1f.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8">
+
+    
+<meta name="pluto-insertion-spot-meta">
+
+
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2a2928">
+    <meta name="color-scheme" content="light dark">
+
+    
+    
+    
+    <link rel="pluto-external-source" id="pluto-logo-big" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/logo.103597bc.svg">
+    <link rel="pluto-external-source" id="pluto-logo-small" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/favicon_unsaturated.9ed3a6f6.svg">
+
+    <script defer="">console.log("Pluto.jl, by Fons van der Plas (https://github.com/fonsp), Mikołaj Bochenski (https://github.com/malyvsen), Michiel Dral (https://github.com/dralletje), Παναγιώτης (Panagiotis) Γεωργακόπουλος (https://github.com/pankgeorg), Paul Berg (https://github.com/Pangoraw) and friends 🌈");</script>
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.2f9fc277.js" defer=""></script>
+
+    <!-- This doesn't do anything unless activated, and it makes sure parcel bundles this -->
+    <script id="iframe-resizer-content-window-script" src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.7a04a462.js" crossorigin="anonymous" defer=""></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.f6933b66.css" type="text/css">
+
+    <meta rel="pluto-cdn-root" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/">
+    <script data-pluto-file="launch-parameters">
+window.pluto_notebook_id = undefined;
+window.pluto_isolated_cell_ids = undefined;
+window.pluto_notebookfile = undefined;
+window.pluto_disable_ui = true;
+window.pluto_slider_server_url = undefined;
+window.pluto_binder_url = "https://mybinder.org/v2/gh/fonsp/pluto-on-binder/v1.0.4";
+window.pluto_statefile = undefined;
+window.pluto_preamble_html = undefined;
+window.pluto_recording_url = undefined;
+window.pluto_recording_audio_url = undefined;
+</script>
+
+<meta name="pluto-insertion-spot-parameters">
+
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/editor.11d85482.js" type="module" defer=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/frontend.ae6e0116.js"></script>
+
+    <link rel="pluto-external-source" id="vmsg-wasm" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/vmsg.56bb9389.wasm">
+    <!-- This script will be enabled by JS after the notebook has initialized to prevent taking up bandwidth during the initial load. -->
+    <link rel="pluto-external-source" id="MathJax-script" href="https://cdn.jsdelivr.net/gh/JuliaPluto/Pluto.jl@1.0.4/frontend-dist/tex-svg-full.b78c0ac1.js" type="text/javascript">
+    
+    
+<meta name="pluto-insertion-spot-preload">
+
+
+
+</head>
+<body>
+    <div id="pages-layout">
+        <button id="toggle-nav" title="Open navigation"></button>
+        <nav id="pages-sidebar">
+        <div>
+        <ul>
+            <li class="sidebar-about">
+                <div class="course-title">
+                    <h1><a href="../.."><span>Solving partial differential equations in parallel on GPUs</span></a></h1>
+                    <h2><span></span></h2>
+                </div>
+                <div class="authors">
+                    by <a href="https://github.com/utkinis">Ivan Utkin</a>, <a href="https://github.com/luraess">Ludovic Räss</a>, <a href="https://github.com/mauro3">Mauro Werder</a>, <a href="https://github.com/omlins">Samuel Omlin</a>
+                </div>
+            </li>
+            <li>
+                <div class="search-bar">
+                    <form action="../../search" method="GET">
+                        <input type="search" name="q" placeholder="Search...">
+                        <input type=submit value="🔎">
+                    </form>
+                </div>
+            </li>
+        <li>
+<h3>Welcome</h3>
+<ul>
+<li class=' lecture tag_welcome'><a href='../../logistics/'><span class="entry-number"></span> Class logistics</a></li><li class=' lecture tag_welcome'><a href='../../final_projects/'><span class="entry-number"></span> Final projects</a></li><li class=' lecture tag_welcome'><a href='../../installation/'><span class="entry-number"></span> Software installation</a></li><li class=' lecture tag_welcome'><a href='../../cheatsheets/'><span class="entry-number"></span> Extras</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 1: Introduction</h3>
+<ul>
+<li class=' lecture tag_module1'><a href='../../part1_introduction/lecture01/'><span class="entry-number">1.1</span> Introduction to Julia</a></li><li class=' lecture tag_module1'><a href='../../part1_introduction/lecture02/'><span class="entry-number">1.2</span> PDEs and physical processes</a></li><li class=' lecture tag_module1'><a href='../../part1_introduction/lecture03/'><span class="entry-number">1.3</span> Solving elliptic PDEs</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 2: Solving PDEs on GPUs</h3>
+<ul>
+<li class=' lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture04/'><span class="entry-number">2.1</span> Parallel computing</a></li><li class=' lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture05/'><span class="entry-number">2.2</span> GPU computing</a></li><li class=' lecture tag_module2'><a href='../../part2_solving_pdes_on_gpus/lecture06/'><span class="entry-number">2.3</span> xPU computing</a></li>
+</ul>
+</li>
+<li>
+<h3>Part 3: Multi-GPU computing</h3>
+<ul>
+<li class='active lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture07/'><span class="entry-number">3.1</span> Julia MPI</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture08/'><span class="entry-number">3.2</span> ImplicitGlobalGrid.jl</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture09/'><span class="entry-number">3.3</span> Multi-xPU</a></li><li class=' lecture tag_module3'><a href='../../part3_multi_gpu_computing/lecture10/'><span class="entry-number">3.4</span> Advanced optimisations</a></li>
+</ul>
+</li>
+
+                <li><hr></li>
+            <li class="sidebar-about">
+                <div class="semester-details">
+                    <span>Fall 2026</span>
+                    <div class="course-numbers"><span><div class="markdown"><p><a href="https://www.vorlesungen.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?semkez&#61;2026W&amp;ansicht&#61;KATALOGDATEN&amp;lerneinheitId&#61;203503&amp;lang&#61;en">ETHZ 101-0250-01L</a></p>
+</div></span></div>
+                </div>
+                <div class="logos">
+                    <picture title="ETH Zürich">
+                        <source srcset="../../assets/vaw_logo_dark.png" media="(prefers-color-scheme: dark)" />
+                        <img src="../../assets/vaw_logo_color.png">
+                    </picture>
+                    <picture title="Julia Programming Language">
+                        <source srcset="../../assets/julia-logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                        <img src="../../assets/julia-logo-color.svg">
+                    </picture>
+                </div>
+            </li>
+        </ul>
+        </div>
+        </nav>
+        <div id="pages-content">
+           <div class="lecture-header" >
+    <p class="number">Section 3.1</p>
+    <h1>Julia MPI</h1>
+    
+    
+</div>
+        <pluto-editor skip-custom-element class="disable_ui static_preview">
+<main>
+<preamble></preamble>
+<pluto-notebook>
+<pluto-cell>
+<pluto-output class="pages-markdown rich_output">
+<div class="raw-html-wrapper ">
+<div class="markdown">
+<!--
+Note for editors: PlutoPages interpolates this page as a HypertextLiteral (@htl) string, and then parses it as Markdown with CommonMark.jl. Therefore:
+- write \ for a backslash, e.g. \mathrm in LaTeX or \n in strings;
+- write $ for a dollar sign;
+- a less-than sign that is not followed by a letter, e.g. in comparisons in code, breaks HypertextLiteral: write it as $(HTML("<")) without the backslash.
+-->
+<h1 id="julia-mpi"><a href="#julia-mpi" class="anchor"></a>Julia MPI</h1>
+<p>The goal of this lecture is to become familiar with:</p>
+<ul>
+<li>Distributed-memory parallelisation: domain decomposition, halo updates and parallel scaling.</li>
+<li>Fake parallelisation: a proof of concept of the halo update, which runs on a single process.</li>
+<li>Distributed computing with MPI.jl: a 1D diffusion solver that runs on several processes.</li>
+</ul>
+<p>In lectures 4–6, we parallelised our solvers on a single CPU with multi-threading, and on a single GPU. In this lecture, we take the next step: we distribute the computations across several processes, each with its own memory, which communicate by exchanging messages.</p>
+<h2 id="distributed-computing"><a href="#distributed-computing" class="anchor"></a>Distributed computing</h2>
+<p>Distributed computing adds one more layer of parallelisation. We need it when the global problem no longer fits on a single compute node or GPU. The resources of a single device, mainly its memory, are finite:</p>
+<ul>
+<li>on CPUs, distributed computing increases the number of cores beyond what a single CPU, or a single compute node, can offer;</li>
+<li>on GPUs, it overcomes the limited size of the device memory.</li>
+</ul>
+<p>Simply put: <em>if one CPU or GPU is not sufficient to solve a problem, use several of them, and solve a part of the global problem on each.</em></p>
+<p>Distributed-memory computing lets us take advantage of computing clusters: many similar compute nodes, interconnected by a high-throughput network. Supercomputers, such as Alps, which we use in this course, are clusters of this kind.</p>
+<h3 id="parallel-scaling"><a href="#parallel-scaling" class="anchor"></a>Parallel scaling</h3>
+<p>Let’s assume that we want to solve a certain problem, which we will call the <strong>global problem</strong>. We split it into several <strong>local problems</strong>, which are solved concurrently. There are two approaches to scaling a parallel application to more computing resources: strong scaling and weak scaling.</p>
+<p>Using more computing resources to solve the same global problem increases parallelism, and may reduce the execution time (wall time). This is called <strong>strong scaling</strong>: the resources increase, but the size of the global problem doesn’t change, so the global problem is split into more, and smaller, local problems that are solved in parallel.</p>
+<p>The strong scaling approach is often used when parallelising legacy CPU codes: increasing the number of local problems can lead to some speed-up, up to an optimum beyond which additional processes are no longer beneficial.</p>
+<p>However, we won’t follow that path when developing multi-GPU applications from scratch. The reason is that the performance of GPUs is very sensitive to the size of the local problem, as we experienced in lecture 5 when tuning the kernel launch parameters, i.e. the numbers of threads and blocks.</p>
+<p>When developing multi-GPU applications from scratch, it is more suitable to approach distributed parallelism from a <strong>weak scaling</strong> perspective: first, find the optimal size of the local problem for a single GPU, and then increase the number of local problems, and thus the number of GPUs, until the global problem reaches the size that we originally wanted to solve.</p>
+<h3 id="implicit-global-grid"><a href="#implicit-global-grid" class="anchor"></a>Implicit global grid</h3>
+<p>We can thus replicate a local problem several times in each dimension of the Cartesian space to obtain a global grid, which is therefore defined implicitly. The local problems define each other’s local boundary conditions by exchanging the values at their internal boundaries with inter-process communication, e.g. with the Message Passing Interface (<a href="https://en.wikipedia.org/wiki/Message_Passing_Interface">MPI</a>), as depicted in the following figure from <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>:</p>
+<p><img src="../assets/l7_igg.png" alt="A global grid split into four local grids P1 to P4, which define each other’s local boundary conditions" /></p>
+<h3 id="parallel-efficiency"><a href="#parallel-efficiency" class="anchor"></a>Parallel efficiency</h3>
+<p>Many things can go wrong in distributed computing. However, our ultimate goal is to maintain a high <strong>parallel efficiency</strong>.</p>
+<p>The speed-up <span class="math tex">\(S\)</span> is the ratio of the execution time on a single processor, <span class="math tex">\(T_1\)</span>, to the execution time on <span class="math tex">\(n\)</span> processors, <span class="math tex">\(T_n\)</span>. The parallel efficiency <span class="math tex">\(E\)</span> is the speed-up divided by the number of processors:</p>
+<div class="display-math tex">\[S = \frac{T_1}{T_n}~, \qquad E = \frac{S}{n}~.\]</div>
+<p>These definitions apply to strong scaling, where the size of the global problem is fixed. We will use the parallel efficiency in a weak scaling configuration, in which the size of the global problem grows proportionally to <span class="math tex">\(n\)</span>. In this case, the ideal execution time stays constant, and the parallel efficiency is <span class="math tex">\(E = T_1 / T_n\)</span>, where <span class="math tex">\(T_1\)</span> is the execution time of one local problem on one processor, and <span class="math tex">\(T_n\)</span> the execution time of <span class="math tex">\(n\)</span> local problems on <span class="math tex">\(n\)</span> processors.</p>
+<p>Ideally, the parallel efficiency should stay close to 1 while we increase the number of processors proportionally to the size of the global problem, i.e. at a constant size of the local problems. This means that no time is lost to overheads, e.g. to inter-process communication, network congestion or congestion of the shared file system. The following figure from ImplicitGlobalGrid.jl shows the parallel efficiency of a 3D hydro-mechanical solver, written in CUDA C and in Julia, on up to 5120 GPUs of Piz Daint, the predecessor of Alps at CSCS:</p>
+<p><img src="../assets/l7_par_eff.png" alt="Weak scaling on Piz Daint: the parallel efficiency stays above 0.93 on up to 5120 GPUs" /></p>
+<h3 id="lets-get-started"><a href="#lets-get-started" class="anchor"></a>Let’s get started</h3>
+<p>We will explore distributed computing with <a href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a>, the Julia wrapper of MPI. It enables our codes to run on multiple CPUs and GPUs, and thus to scale on modern multi-CPU and multi-GPU nodes, clusters and supercomputers. In our approach, each MPI process handles one CPU or one GPU.</p>
+<p>We will tackle distributed parallelisation in three steps:</p>
+<ol>
+<li><a href="#fake-parallelisation">fake parallelisation</a> with 2 fake processes, as a proof of concept;</li>
+<li>fake parallelisation with <code>np</code> fake processes;</li>
+<li>a 1D diffusion solver with <a href="#julia-and-mpi">Julia and MPI</a>.</li>
+</ol>
+<p>👉 On your computer, create a folder for this lecture, make it a Julia project, and add the packages <code>CairoMakie</code>, <code>JLD2</code> and <code>MPI</code>.</p>
+<h2 id="fake-parallelisation"><a href="#fake-parallelisation" class="anchor"></a>Fake parallelisation</h2>
+<p>As a first step, we will look at the 1D diffusion solver from <a href="https://pde-on-gpu.vaw.ethz.ch/part1_introduction/lecture02/#Numerical-solver">lecture 2</a>, parallelised with a “fake parallelisation” approach. We split the computational domain into two parts, the left and the right domain, and store the concentration in two arrays, <code>CL</code> and <code>CR</code>, respectively.</p>
+<p>In this fake parallelisation, the computations for the left and the right domain are performed sequentially by a single process. However, they could be performed by two distinct processes, if the boundary update, often called <strong>halo update</strong> in the literature, were done with MPI.</p>
+<p><img src="../assets/l7_1D_global_grid.png" alt="A global grid of three local grids with 6 cells each, which overlap by 2 cells" /></p>
+<p>The figure shows a global grid made of <code>np = 3</code> local grids with <code>nx = 6</code> cells each. The first and the last cell of each local grid are its boundary cells. At the ends of the global domain, they are global boundaries, where the boundary conditions apply. Inside the domain, they are local boundaries, also called <strong>halo cells</strong>: they hold copies of the values computed by the neighbouring process. Neighbouring local grids thus overlap by 2 cells, and the global grid has <code>nx_g = (nx - 2) * np + 2</code> cells.</p>
+<p>The idea of the fake parallelisation is the following:</p>
+<pre><code class="language-julia"># compute physics locally
+qxL         .= .-dc.*diff(CL)./dx
+qxR         .= .-dc.*diff(CR)./dx
+CL[2:end-1] .-= dt.*diff(qxL)./dx
+CR[2:end-1] .-= dt.*diff(qxR)./dx
+# update boundaries (MPI)
+# CL[end] = ...
+# CR[1]   = ...
+# global picture
+C .= [CL[1:end-1]; CR[2:end]]
+</code></pre>
+<p>Each domain computes its fluxes and updates its inner cells, as the solver of lecture 2 does for the whole domain. The boundary cells <code>CL[end]</code> and <code>CR[1]</code> are not updated: their values must come from the neighbouring domain. A correct boundary update is therefore the critical part of a successful implementation. In our approach, <code>CL</code> and <code>CR</code> overlap by 2 cells, which avoids any wrong computations at the transition between the left and the right domain.</p>
+<h3 id="step-1-2-fake-processes"><a href="#step-1-2-fake-processes" class="anchor"></a>Step 1: 2 fake processes</h3>
+<p>👉 Copy the following “fake parallel” 1D diffusion script to a file <code>diffusion_1D_2procs.jl</code>. The script is missing the boundary updates of the 2 fake processes. Run it, and describe what you see in the animation <code>diffusion_1D_2procs.mp4</code>, which the script saves in the current folder.</p>
+<p>The script also solves the diffusion equation on the global grid, <code>C_g</code>, as a reference, which it plots with markers. At the end, it prints the maximum difference between the solution of the 2 fake processes and the reference.</p>
+<pre><code class="language-julia"># Linear 1D diffusion with 2 fake MPI processes
+using CairoMakie
+
+function diffusion_1D_2procs(; do_visu=true)
+    # physics
+    lx   = 20.0
+    dc   = 1.0
+    # numerics
+    nx   = 32                 # local number of grid cells
+    nvis = 5
+    # preprocessing
+    nx_g = 2 * (nx - 2) + 2   # global number of grid cells
+    dx   = lx / nx_g
+    xc_g = LinRange(dx/2, lx-dx/2, nx_g)
+    dt   = dx^2 / dc / 2
+    nt   = 200
+    # array initialisation
+    C_g  = @. exp(-(xc_g - lx/2)^2) # global reference
+    qx_g = zeros(nx_g-1)
+    CL   = C_g[1:nx]                # left local domain
+    CR   = C_g[nx-1:end]            # right local domain
+    qxL  = zeros(nx-1)
+    qxR  = zeros(nx-1)
+    C    = [CL[1:end-1]; CR[2:end]] # global picture
+    # create plot
+    if do_visu
+        fig = Figure(size=(600, 300))
+        ax  = Axis(fig[1,1]; xlabel=&quot;x&quot;, ylabel=&quot;Concentration&quot;)
+        ylims!(ax, -0.05, 1.05)
+        plt = (scatter!(ax, xc_g, C_g; color=:blue, markersize=6, label=&quot;global reference&quot;),
+               lines!(ax, xc_g, C; color=:red, linewidth=2, label=&quot;2 fake processes&quot;))
+        axislegend(ax)
+        io  = VideoStream(fig; framerate=10)
+    end
+    # time loop
+    for it = 1:nt
+        # compute physics locally
+        qxL         .= .-dc.*diff(CL)./dx
+        qxR         .= .-dc.*diff(CR)./dx
+        CL[2:end-1] .-= dt.*diff(qxL)./dx
+        CR[2:end-1] .-= dt.*diff(qxR)./dx
+        # update boundaries (MPI)
+        # CL[end] = ...
+        # CR[1]   = ...
+        # global picture
+        C .= [CL[1:end-1]; CR[2:end]]
+        # compute physics globally (check)
+        qx_g         .= .-dc.*diff(C_g)./dx
+        C_g[2:end-1] .-= dt.*diff(qx_g)./dx
+        # visualisation
+        if do_visu &amp;&amp; it % nvis == 0
+            plt[1][2] = C_g
+            plt[2][2] = C
+            recordframe!(io)
+        end
+    end
+    println(&quot;max. difference to the global reference: &quot;, maximum(abs.(C .- C_g)))
+    do_visu &amp;&amp; save(&quot;diffusion_1D_2procs.mp4&quot;, io)
+    return
+end
+
+diffusion_1D_2procs()
+</code></pre>
+<p>👉 Then, add the required boundary updates to make the code work properly, and run it again. What has changed in the animation?</p>
+<details>
+<summary>Want to see the answer?</summary>
+<div class="admonition answer"><p class="admonition-title">Answer</p>
+<p>The last cell of <code>CL</code> overlaps with the second cell of <code>CR</code>, and the first cell of <code>CR</code> overlaps with the second-to-last cell of <code>CL</code>:</p>
+<pre><code class="language-julia"># update boundaries (MPI)
+CL[end] = CR[2]
+CR[1]   = CL[end-1]
+</code></pre>
+<p>Without the boundary updates, the overlapping cells <code>CL[end]</code> and <code>CR[1]</code> keep their initial values, and act as fixed boundary conditions in the middle of the domain: the peak of the Gaussian stays at its initial value instead of diffusing. With the boundary updates, the solution of the 2 fake processes matches the global reference, and the script prints a maximum difference of 0:</p>
+<p><video src="../assets/l7_diff_1D_2procs.mp4" width="600" style="max-width: 100%;" autoplay loop muted controls></video></p>
+</div>
+</details>
+<h3 id="from-2-to-np-fake-processes"><a href="#from-2-to-np-fake-processes" class="anchor"></a>From 2 to <code>np</code> fake processes</h3>
+<p>The next step is to generalise the fake parallelisation from 2 to <code>np</code> fake processes. The idea of this generalised approach is the following:</p>
+<pre><code class="language-julia">for ip = 1:np # compute physics locally
+    qx[:, ip]      .= .-dc.*diff(C[:, ip])./dx
+    C[2:end-1, ip] .-= dt.*diff(qx[:, ip])./dx
+end
+for ip = 1:np-1 # update boundaries
+    # ...
+end
+</code></pre>
+<p>The array <code>C</code> now contains <code>np</code> local domains: each column of <code>C</code> belongs to one fake process, namely the process indicated by the second index of <code>C</code>, <code>ip</code>. The boundary updates have to be adapted accordingly. All physical calculations happen on the local chunks of the arrays. We only need “global” knowledge to define the initial condition.</p>
+<p>Simple initial conditions, e.g. constant values, can be defined without computing any coordinates. To define other initial conditions, such as our Gaussian anomaly, we usually need the global coordinates of the cells. In the code below, the global coordinates of the cell centres can be computed from the process index <code>ip</code>, the cell index <code>ix</code>, the local array size <code>nx</code>, the overlap of the local domains (2 cells) and the grid spacing of the global grid <code>dx</code>. Along the way, we assemble the global coordinates <code>xc_g</code> and the global initial condition <code>C_g</code>, which we use for plotting:</p>
+<pre><code class="language-julia"># initial condition
+for ip = 1:np
+    for ix = 1:nx
+        # xc[ix, ip] = ...
+        C[ix, ip]  = exp(-(xc[ix, ip] - lx/2)^2)
+    end
+    i1 = 1 + (ip - 1) * (nx - 2)
+    xc_g[i1:i1+nx-2] .= xc[1:end-1, ip]; if (ip == np) xc_g[i1+nx-1] = xc[end, ip] end
+    C_g[i1:i1+nx-2]  .= C[1:end-1, ip];  if (ip == np) C_g[i1+nx-1]  = C[end, ip]  end
+end
+</code></pre>
+<h3 id="step-2-np-fake-processes"><a href="#step-2-np-fake-processes" class="anchor"></a>Step 2: <code>np</code> fake processes</h3>
+<p>👉 Copy the following 1D diffusion script to a file <code>diffusion_1D_nprocs.jl</code>. Complete the initial condition: compute the global coordinates <code>xc[ix, ip]</code> of the cell centres, so that the Gaussian anomaly is centred in the domain, at <span class="math tex">\(x = l_x/2\)</span>.</p>
+<div class="admonition hint"><p class="admonition-title">Hint</p>
+<p>As in lecture 2, the cell centres of the global grid are located at <code>dx/2</code>, <code>3dx/2</code>, …, <code>lx-dx/2</code>. Each local domain is shifted by <code>nx-2</code> cells with respect to the previous one.</p>
+</div>
+<p>👉 Then, run the script, which is missing the boundary updates of the <code>np</code> fake processes, and describe what you see in the animation <code>diffusion_1D_nprocs.mp4</code>. Each local domain is plotted with a different colour, and the initial condition with markers. Finally, add the required boundary updates to make the code work properly, and run it again. What has changed in the animation?</p>
+<pre><code class="language-julia"># Linear 1D diffusion with n fake MPI processes
+using CairoMakie
+
+function diffusion_1D_nprocs(; do_visu=true)
+    # physics
+    lx   = 20.0
+    dc   = 1.0
+    # numerics
+    np   = 4                  # number of fake processes
+    nx   = 32                 # local number of grid cells
+    nvis = 5
+    # preprocessing
+    nx_g = (nx - 2) * np + 2  # global number of grid cells
+    dx   = lx / nx_g
+    dt   = dx^2 / dc / 2
+    nt   = 200
+    # array initialisation
+    xc   = zeros(nx, np)      # local coordinates
+    C    = zeros(nx, np)      # local concentrations
+    qx   = zeros(nx-1, np)    # local fluxes
+    xc_g = zeros(nx_g)        # global coordinates
+    C_g  = zeros(nx_g)        # global initial condition
+    # initial condition
+    for ip = 1:np
+        for ix = 1:nx
+            # xc[ix, ip] = ...
+            C[ix, ip]  = exp(-(xc[ix, ip] - lx/2)^2)
+        end
+        i1 = 1 + (ip - 1) * (nx - 2)
+        xc_g[i1:i1+nx-2] .= xc[1:end-1, ip]; if (ip == np) xc_g[i1+nx-1] = xc[end, ip] end
+        C_g[i1:i1+nx-2]  .= C[1:end-1, ip];  if (ip == np) C_g[i1+nx-1]  = C[end, ip]  end
+    end
+    # create plot
+    if do_visu
+        fig = Figure(size=(600, 300))
+        ax  = Axis(fig[1,1]; xlabel=&quot;x&quot;, ylabel=&quot;Concentration&quot;)
+        ylims!(ax, -0.05, 1.05)
+        scatter!(ax, xc_g, C_g; color=:blue, markersize=4)
+        plt = [lines!(ax, xc[:, ip], C[:, ip]; linewidth=3) for ip = 1:np]
+        io  = VideoStream(fig; framerate=10)
+    end
+    # time loop
+    for it = 1:nt
+        for ip = 1:np # compute physics locally
+            qx[:, ip]      .= .-dc.*diff(C[:, ip])./dx
+            C[2:end-1, ip] .-= dt.*diff(qx[:, ip])./dx
+        end
+        for ip = 1:np-1 # update boundaries
+            # ...
+        end
+        # visualisation
+        if do_visu &amp;&amp; it % nvis == 0
+            for ip = 1:np
+                plt[ip][2] = C[:, ip]
+            end
+            recordframe!(io)
+        end
+    end
+    do_visu &amp;&amp; save(&quot;diffusion_1D_nprocs.mp4&quot;, io)
+    return
+end
+
+diffusion_1D_nprocs()
+</code></pre>
+<details>
+<summary>Want to see the answer?</summary>
+<div class="admonition answer"><p class="admonition-title">Answer</p>
+<p>The global index of the cell <code>ix</code> of the process <code>ip</code> is <code>(ip - 1) * (nx - 2) + ix</code>, and the centre of the global cell <code>i</code> is located at <code>(i - 0.5) * dx</code>:</p>
+<pre><code class="language-julia">xc[ix, ip] = ((ip - 1) * (nx - 2) + ix - 0.5) * dx
+</code></pre>
+<p>Each pair of neighbouring processes <code>ip</code> and <code>ip+1</code> exchanges its boundary values as in step 1:</p>
+<pre><code class="language-julia">for ip = 1:np-1 # update boundaries
+    C[end, ip  ] = C[    2, ip+1]
+    C[  1, ip+1] = C[end-1, ip  ]
+end
+</code></pre>
+<p>Without the boundary updates, each local domain evolves independently, with fixed values in its halo cells: the peak of the Gaussian anomaly, located at the boundary between the processes 2 and 3, stays at its initial value, and the anomaly doesn’t spread into the domains of the processes 1 and 4. With the boundary updates, the local solutions join smoothly:</p>
+<p><video src="../assets/l7_diff_1D_nprocs.mp4" width="600" style="max-width: 100%;" autoplay loop muted controls></video></p>
+</div>
+</details>
+<h2 id="julia-and-mpi"><a href="#julia-and-mpi" class="anchor"></a>Julia and MPI</h2>
+<p>We are now ready to write a code that truly distributes the calculations across several processes, using <a href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a> for the inter-process communication.</p>
+<div class="admonition note"><p class="admonition-title">MPI setup</p>
+<p>Make sure that you have a working Julia MPI environment: follow the steps in the section <a href="https://pde-on-gpu.vaw.ethz.ch/installation/#julia-mpi">Julia MPI</a> of the Software installation page, and run the “Hello world” test with 4 processes.</p>
+</div>
+<p>Let us look at the minimal requirements for writing a distributed code in Julia with MPI.jl. We will solve the linear diffusion equation with the time loop of lecture 2:</p>
+<pre><code class="language-julia">for it = 1:nt
+    qx         .= .-dc.*diff(C)./dx
+    C[2:end-1] .-= dt.*diff(qx)./dx
+end
+</code></pre>
+<p>To distribute the computations, we take the following steps:</p>
+<ol>
+<li>initialise MPI and set up a Cartesian communicator;</li>
+<li>implement a boundary update routine;</li>
+<li>create a “global” initial condition;</li>
+<li>finalise MPI.</li>
+</ol>
+<h3 id="initialising-mpi"><a href="#initialising-mpi" class="anchor"></a>1. Initialising MPI</h3>
+<p>To initialise MPI and to set up the Cartesian communicator, we write:</p>
+<pre><code class="language-julia">import MPI
+
+MPI.Init()
+comm        = MPI.COMM_WORLD
+nprocs      = MPI.Comm_size(comm)
+dims        = MPI.Dims_create(nprocs, [0])
+comm_cart   = MPI.Cart_create(comm, dims)
+me          = MPI.Comm_rank(comm_cart)
+coords      = MPI.Cart_coords(comm_cart)
+neighbors_x = MPI.Cart_shift(comm_cart, 0, 1)
+</code></pre>
+<ul>
+<li>The communicator <code>MPI.COMM_WORLD</code> contains all MPI processes, and <code>MPI.Comm_size</code> returns their number, <code>nprocs</code>.</li>
+<li><code>MPI.Dims_create</code> distributes the processes over the dimensions of a Cartesian grid of processes. The zeros mark the dimensions in which MPI is free to choose the number of processes: in 1D, <code>dims = [nprocs]</code>.</li>
+<li><code>MPI.Cart_create</code> creates a new communicator, <code>comm_cart</code>, in which the processes are arranged on this Cartesian grid. By default, the grid is not periodic.</li>
+<li><code>me</code> is the <strong>rank</strong> of the process, a unique ID of each MPI process, starting at 0. It is the analogue of <code>ip</code> in the fake parallelisation.</li>
+<li><code>coords</code> contains the coordinates of the process in the grid of processes, also starting at 0.</li>
+<li><code>MPI.Cart_shift</code> returns the ranks of the left and the right neighbour, <code>neighbors_x[1]</code> and <code>neighbors_x[2]</code>. At the ends of the global domain, a process has no neighbour on one side, and the corresponding rank is <code>MPI.PROC_NULL</code>.</li>
+</ul>
+<h3 id="boundary-update-routine"><a href="#boundary-update-routine" class="anchor"></a>2. Boundary update routine</h3>
+<p>Then, we implement a boundary update routine, which can have the following structure:</p>
+<pre><code class="language-julia">function update_halo!(A, neighbors_x, comm)
+    # send to / receive from neighbour 1 (&quot;left neighbour&quot;)
+    if neighbors_x[1] != MPI.PROC_NULL
+        sendbuf = ??
+        recvbuf = ??
+        MPI.Send(??, comm; dest=neighbors_x[?], tag=0)
+        MPI.Recv!(??, comm; source=neighbors_x[?], tag=1)
+        A[1] = ??
+    end
+    # send to / receive from neighbour 2 (&quot;right neighbour&quot;)
+    if neighbors_x[2] != MPI.PROC_NULL
+        sendbuf = ??
+        recvbuf = ??
+        MPI.Recv!(??, comm; source=neighbors_x[?], tag=0)
+        MPI.Send(??, comm; dest=neighbors_x[?], tag=1)
+        A[end] = ??
+    end
+    return
+end
+</code></pre>
+<p><code>MPI.Send</code> sends the data in a buffer to the process with the rank <code>dest</code>, and <code>MPI.Recv!</code> receives data from the process with the rank <code>source</code> into a pre-allocated buffer. The <code>tag</code> identifies the message: each <code>MPI.Send</code> is matched by an <code>MPI.Recv!</code> with the same tag on the receiving process.</p>
+<div class="admonition note"><p class="admonition-title">Blocking communication</p>
+<p><code>MPI.Send</code> and <code>MPI.Recv!</code> are <strong>blocking</strong>: <code>MPI.Recv!</code> returns only once the message has been received, and <code>MPI.Send</code> may wait until the receiving process is ready. Therefore, the order of the calls matters. Every process first exchanges data with its left neighbour, sending first, and then with its right neighbour, receiving first. This way, the <code>MPI.Send</code> of a process to its left neighbour always meets the <code>MPI.Recv!</code> of that neighbour from its right neighbour. If both processes started with <code>MPI.Send</code>, they could wait for each other forever, which is called a <strong>deadlock</strong>.</p>
+</div>
+<h3 id="global-initial-condition"><a href="#global-initial-condition" class="anchor"></a>3. Global initial condition</h3>
+<p>Then, we initialise <code>C</code> with a “global” Gaussian anomaly that spans correctly over all local domains. This can be achieved, e.g., as follows:</p>
+<pre><code class="language-julia">x0 = coords[1] * (nx - 2) * dx
+xc = [x0 + ix*dx - dx/2 for ix = 1:nx]
+C  = @. exp(-(xc - lx/2)^2)
+</code></pre>
+<p>Here, <code>x0</code> is the global coordinate of the left edge of the local domain, which depends on the coordinates of the process <code>coords</code>, and <code>xc</code> contains the global coordinates of the local cell centres, as in the fake parallelisation. As before, the grid spacing <code>dx = lx / nx_g</code> follows from the global number of grid cells, <code>nx_g = dims[1] * (nx - 2) + 2</code>.</p>
+<h3 id="finalising-mpi"><a href="#finalising-mpi" class="anchor"></a>4. Finalising MPI</h3>
+<p>Last, we need to finalise MPI before returning from the main function:</p>
+<pre><code class="language-julia">MPI.Finalize()
+</code></pre>
+<h3 id="step-3-1d-parallelisation-with-mpi"><a href="#step-3-1d-parallelisation-with-mpi" class="anchor"></a>Step 3: 1D parallelisation with MPI</h3>
+<p>The following script contains all the steps described above, except for the boundary updates (step 2). At the end, every process saves its local arrays <code>C</code> and <code>xc</code> to the file <code>mpi1D_out_&lt;rank&gt;.jld2</code> for visualisation.</p>
+<p>👉 Copy the script to a file <code>diffusion_1D_mpi.jl</code>. Run it, still without the boundary updates, three times: with 1, 2 and 4 processes, replacing <code>&lt;np&gt;</code> with the number of processes:</p>
+<pre><code class="language-sh">mpiexecjl -n &lt;np&gt; julia --project diffusion_1D_mpi.jl
+</code></pre>
+<pre><code class="language-julia"># Linear 1D diffusion with MPI
+# run: mpiexecjl -n 4 julia --project diffusion_1D_mpi.jl
+using Printf, JLD2
+import MPI
+
+# MPI functions
+function update_halo!(A, neighbors_x, comm)
+    # send to / receive from neighbour 1 (&quot;left neighbour&quot;)
+    if neighbors_x[1] != MPI.PROC_NULL
+        # ...
+    end
+    # send to / receive from neighbour 2 (&quot;right neighbour&quot;)
+    if neighbors_x[2] != MPI.PROC_NULL
+        # ...
+    end
+    return
+end
+
+function diffusion_1D_mpi(; do_save=false)
+    # MPI
+    MPI.Init()
+    comm        = MPI.COMM_WORLD
+    nprocs      = MPI.Comm_size(comm)
+    dims        = MPI.Dims_create(nprocs, [0])
+    comm_cart   = MPI.Cart_create(comm, dims)
+    me          = MPI.Comm_rank(comm_cart)
+    coords      = MPI.Cart_coords(comm_cart)
+    neighbors_x = MPI.Cart_shift(comm_cart, 0, 1)
+    if (me == 0) println(&quot;nprocs = $(nprocs), dims[1] = $(dims[1])&quot;) end
+    # physics
+    lx   = 20.0
+    dc   = 1.0
+    # numerics
+    nx   = 32                     # local number of grid cells
+    # preprocessing
+    nx_g = dims[1] * (nx - 2) + 2 # global number of grid cells
+    dx   = lx / nx_g
+    dt   = dx^2 / dc / 2
+    nt   = 100
+    # array initialisation
+    x0   = coords[1] * (nx - 2) * dx
+    xc   = [x0 + ix*dx - dx/2 for ix = 1:nx]
+    C    = @. exp(-(xc - lx/2)^2)
+    qx   = zeros(nx-1)
+    # time loop
+    t_tic = 0.0
+    for it = 1:nt
+        # start the timer after 10 warm-up iterations
+        if (it == 11) t_tic = Base.time() end
+        qx         .= .-dc.*diff(C)./dx
+        C[2:end-1] .-= dt.*diff(qx)./dx
+        update_halo!(C, neighbors_x, comm_cart)
+    end
+    # performance
+    t_toc = Base.time() - t_tic
+    t_it  = t_toc / (nt - 10)              # execution time per iteration [s]
+    A_eff = 2 * nx * sizeof(Float64) / 1e9 # effective main memory access per iteration [GB]
+    T_eff = A_eff / t_it                   # effective memory throughput [GB/s]
+    if (me == 0) @printf(&quot;Time = %1.3e s, T_eff = %1.2f GB/s\n&quot;, t_toc, T_eff) end
+    # save the local arrays for visualisation
+    if do_save
+        jldsave(joinpath(@__DIR__, &quot;mpi1D_out_$(me).jld2&quot;); C, xc)
+    end
+    MPI.Finalize()
+    return
+end
+
+diffusion_1D_mpi(; do_save=true)
+</code></pre>
+<p>👉 After each run, visualise the results with the following script <code>vizme1D_mpi.jl</code> (<strong>adapt the variable <code>nprocs</code>!</strong>), and describe what you see in the figure <code>diffusion_1D_mpi.png</code>. Then, add the required boundary updates to make the code work properly, and run it again. What has changed in the figure?</p>
+<pre><code class="language-julia"># Visualisation script for the 1D MPI solver
+using CairoMakie, JLD2
+
+nprocs = 4
+
+function vizme1D_mpi(nprocs)
+    fig = Figure(size=(600, 300))
+    ax  = Axis(fig[1,1]; xlabel=&quot;x&quot;, ylabel=&quot;Concentration&quot;, title=&quot;diffusion 1D MPI, nprocs = $(nprocs)&quot;)
+    ylims!(ax, -0.05, 1.05)
+    for ip = 1:nprocs
+        C, xc = load(joinpath(@__DIR__, &quot;mpi1D_out_$(ip-1).jld2&quot;), &quot;C&quot;, &quot;xc&quot;)
+        # plot the inner cells only: the halo cells are copies of the neighbours' inner cells
+        lines!(ax, xc[2:end-1], C[2:end-1]; linewidth=3)
+    end
+    save(joinpath(@__DIR__, &quot;diffusion_1D_mpi.png&quot;), fig)
+    return
+end
+
+vizme1D_mpi(nprocs)
+</code></pre>
+<div class="admonition hint"><p class="admonition-title">Hint</p>
+<p>For the boundary updates, proceed as follows for the communication with each neighbour:</p>
+<ol>
+<li>create a send buffer and a receive buffer, and store the right value in the send buffer;</li>
+<li>send and receive the data with <code>MPI.Send</code> and <code>MPI.Recv!</code>;</li>
+<li>store the received data at the right position in the array.</li>
+</ol>
+</div><div class="admonition note"><p class="admonition-title">Weak scaling</p>
+<p>The local number of grid cells <code>nx</code> doesn’t change with the number of processes: every process solves a local problem of the same size. With more processes, the global grid has more cells, the grid spacing <code>dx</code> and the time step <code>dt</code> are smaller, and the solution after <code>nt</code> time steps corresponds to an earlier physical time. Therefore, only compare the results of runs with the same number of processes.</p>
+</div>
+<details>
+<summary>Want to see the answer?</summary>
+<div class="admonition answer"><p class="admonition-title">Answer</p>
+<pre><code class="language-julia">function update_halo!(A, neighbors_x, comm)
+    # send to / receive from neighbour 1 (&quot;left neighbour&quot;)
+    if neighbors_x[1] != MPI.PROC_NULL
+        sendbuf = A[2]
+        recvbuf = zeros(1)
+        MPI.Send(sendbuf, comm; dest=neighbors_x[1], tag=0)
+        MPI.Recv!(recvbuf, comm; source=neighbors_x[1], tag=1)
+        A[1] = recvbuf[1]
+    end
+    # send to / receive from neighbour 2 (&quot;right neighbour&quot;)
+    if neighbors_x[2] != MPI.PROC_NULL
+        sendbuf = A[end-1]
+        recvbuf = zeros(1)
+        MPI.Recv!(recvbuf, comm; source=neighbors_x[2], tag=0)
+        MPI.Send(sendbuf, comm; dest=neighbors_x[2], tag=1)
+        A[end] = recvbuf[1]
+    end
+    return
+end
+</code></pre>
+<p>As in the fake parallelisation, every process sends its first inner cell <code>A[2]</code> to its left neighbour, where it becomes the halo cell <code>A[end]</code>, and its last inner cell <code>A[end-1]</code> to its right neighbour, where it becomes the halo cell <code>A[1]</code>. Without the boundary updates, the halo cells keep their initial values, and the local domains evolve independently, as in step 2. With the boundary updates and 4 processes, the result looks as follows:</p>
+<p><img src="../assets/l7_diff_1D_mpi.png" alt="Solution of the 1D MPI solver with 4 processes" /></p>
+</div>
+</details>
+<p>Congratulations! You have just written a distributed-memory diffusion solver in about 75 lines of code.</p>
+<p>This completes the introduction to distributed parallelisation with Julia. High-level Julia packages, such as <a href="https://github.com/eth-cscs/ImplicitGlobalGrid.jl">ImplicitGlobalGrid.jl</a>, make distributed parallelisation on CPUs and GPUs a very simple task. We will explore it in the next lecture.</p>
+<h2 id="wrapping-up"><a href="#wrapping-up" class="anchor"></a>Wrapping up</h2>
+<ul>
+<li>Distributed computing splits a global problem into local problems, which are solved by several processes, each with its own memory. For multi-GPU applications, we follow the weak scaling approach: we keep the size of the local problems optimal for a single GPU, and increase the number of GPUs with the size of the global problem.</li>
+<li>Neighbouring local domains overlap, and exchange the values in their halo cells in halo updates. Fake parallelisation on a single process helped us work out the correct halo update.</li>
+<li>We implemented a 1D diffusion solver with MPI.jl, which distributes the computations across several processes with blocking point-to-point communication.</li>
+</ul>
+
+</div>
+</div>
+</pluto-output>
+</pluto-cell>
+</pluto-notebook>
+</main>
+</pluto-editor>
+<script src="../../assets/scripts/math.js" type="module"></script>
+<script src="../../assets/scripts/highlight.js" type="module"></script>
+<link rel="stylesheet" href="../../assets/styles/toc.css" type="text/css" />
+<script src="../../assets/scripts/toc.js" type="module"></script>
+
+
+        <div class="page-foot">
+            <div class="copyright">
+                <a href="https://github.com/eth-vaw-glaciology/course-101-0250-00"><b>Edit this page on <img class="github-logo" src="https://unpkg.com/ionicons@5.1.2/dist/svg/logo-github.svg"></b></a><br>
+                Website based on the MIT course <a href="https://computationalthinking.mit.edu"><em><b>Computational Thinking</b>, a live online Julia/Pluto textbook</em></a> and built with <a href="https://plutojl.org/">Pluto.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
