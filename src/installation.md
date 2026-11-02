@@ -736,7 +736,6 @@ The options given on the command line override the `#SBATCH` lines of the script
     init_global_grid(...; select_device = false)
     ```
 
-<!--
 ### Profiling on Alps
 
 Profiling using the [NVIDIA Nsight Systems](https://docs.cscs.ch/software/devtools/nvidia-nsight/) is available with any uenv that comes with a CUDA compiler, including the Julia uenv. As a sampling profiler, it can be used to profile applications written in Julia by wrapping the application with the Nsight Systems profiler executable.
@@ -760,10 +759,9 @@ To then profile an application (e.g. the [3D diffusion code](https://github.com/
 ```sh
 MPICH_GPU_SUPPORT_ENABLED=1 IGG_CUDAAWARE_MPI=1 JULIA_CUDA_USE_COMPAT=false srun -N2 -n8 --ntasks-per-node=4 --gpus-per-task=1 \
 nsys profile --force-overwrite=true --start-later=true --capture-range=cudaProfilerApi --capture-range-end=stop -t nvtx,cuda,mpi --mpi-impl=mpich -o prof_hidecomm.%q{SLURM_PROCID}.%q{SLURM_JOBID} \
-julia --project diff_3d_hidecomm.jl
+julia --project <script.jl>
 ```
 
 This will launch the code on 2 nodes, 8 GPUs (4 tasks per node). `srun` will call into `nsys profile` to profile a specific portion of the code and report NVTX, CUDA and MPI traces for the MPICH MPI implementation. The produced output files are named after each global MPI rank. This procedure wraps the `julia --project` call by the profiler.
 
 The produced output files (`.nsys-rep` extension) can be analysed using the [NVIDIA Nsight Systems GUI application](https://developer.nvidia.com/nsight-systems) that you can download from NVIDIA website and run locally.
--->
