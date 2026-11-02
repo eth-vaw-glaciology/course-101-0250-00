@@ -476,7 +476,9 @@ In this part, we will learn about:
   - [Literate.jl](https://github.com/fredrikekre/Literate.jl);
   - [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl).
 
-![A comic about documentation](https://pcweenies.com/wp-content/uploads/2012/01/2012-01-12_pcw.jpg)
+![xkcd comic "Future Self"](https://imgs.xkcd.com/comics/future_self.png)
+
+_Comic: [xkcd 1421, "Future Self"](https://xkcd.com/1421/) by Randall Munroe, [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/)._
 
 ## Why should I document my code?
 
