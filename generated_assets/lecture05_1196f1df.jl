@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v1.0.4
+# v1.1.0
 
 #> [frontmatter]
 #> chapter = "2"
