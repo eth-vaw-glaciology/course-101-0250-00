@@ -1,0 +1,159 @@
+/* Table of contents for Markdown pages with `toc: true` in their frontmatter, see `assets/scripts/toc.js`.
+   Adapted from the TableOfContents of PlutoUI.jl (MIT license, https://github.com/JuliaPluto/PlutoUI.jl),
+   so that it looks like the table of contents of the lecture notebooks. */
+
+@media not print {
+    .plutoui-toc {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Cantarell, "Apple Color Emoji",
+            "Segoe UI Emoji", "Segoe UI Symbol", system-ui, sans-serif;
+        --main-bg-color: #fafafa;
+        --pluto-output-color: hsl(0, 0%, 36%);
+        --pluto-output-h-color: hsl(0, 0%, 21%);
+        --sidebar-li-active-bg: rgb(235, 235, 235);
+        --icon-filter: unset;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .plutoui-toc {
+            --main-bg-color: #303030;
+            --pluto-output-color: hsl(0, 0%, 90%);
+            --pluto-output-h-color: hsl(0, 0%, 97%);
+            --sidebar-li-active-bg: rgb(82, 82, 82);
+            --icon-filter: invert(1);
+        }
+    }
+
+    .plutoui-toc.aside {
+        color: var(--pluto-output-color);
+        position: fixed;
+        right: 1rem;
+        top: 5rem;
+        width: min(80vw, 300px);
+        padding: 0.5rem;
+        padding-top: 0em;
+        border-radius: 10px;
+        max-height: calc(100vh - 5rem - 90px);
+        overflow: auto;
+        z-index: 40;
+        background-color: var(--main-bg-color);
+        transition: transform 300ms cubic-bezier(0.18, 0.89, 0.45, 1.12);
+    }
+
+    .plutoui-toc.smallscreen:not(.hide) {
+        box-shadow: 0 0 11px 0px #00000010;
+    }
+
+    .plutoui-toc.aside.hide {
+        transform: translateX(calc(100% - 28px));
+        color: transparent;
+    }
+    .plutoui-toc.aside.hide section {
+        display: none;
+    }
+    .plutoui-toc.aside.hide header {
+        margin-bottom: 0em;
+        padding-bottom: 0em;
+        border-bottom: none;
+    }
+}
+
+@media print {
+    .plutoui-toc {
+        display: none;
+    }
+}
+
+.plutoui-toc.aside.hide .open-toc,
+.plutoui-toc.aside:not(.hide) .closed-toc,
+.plutoui-toc:not(.aside) .closed-toc {
+    display: none;
+}
+
+@media (prefers-reduced-motion) {
+    .plutoui-toc.aside {
+        transition-duration: 0s;
+    }
+}
+
+.toc-toggle {
+    cursor: pointer;
+    padding: 1em;
+    margin: -1em;
+    margin-right: -0.7em;
+    line-height: 1em;
+    display: flex;
+}
+
+.toc-toggle::before {
+    content: "";
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHRpdGxlPmlvbmljb25zLXY1LW88L3RpdGxlPjxsaW5lIHgxPSIxNjAiIHkxPSIxNDQiIHgyPSI0NDgiIHkyPSIxNDQiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDozMnB4Ii8+PGxpbmUgeDE9IjE2MCIgeTE9IjI1NiIgeDI9IjQ0OCIgeTI9IjI1NiIgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzAwMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLXdpZHRoOjMycHgiLz48bGluZSB4MT0iMTYwIiB5MT0iMzY4IiB4Mj0iNDQ4IiB5Mj0iMzY4IiBzdHlsZT0iZmlsbDpub25lO3N0cm9rZTojMDAwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6MzJweCIvPjxjaXJjbGUgY3g9IjgwIiBjeT0iMTQ0IiByPSIxNiIgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzAwMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLXdpZHRoOjMycHgiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjI1NiIgcj0iMTYiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDozMnB4Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSIyNTYiIHI9IjE2IiBzdHlsZT0iZmlsbDpub25lO3N0cm9rZTojMDAwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6MzJweCIvPjxjaXJjbGUgY3g9IjgwIiBjeT0iMzY4IiByPSIxNiIgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzAwMDtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLXdpZHRoOjMycHgiLz48L3N2Zz4=");
+    background-size: 1em;
+    filter: var(--icon-filter);
+}
+
+.aside .toc-toggle.open-toc:hover::before {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHRpdGxlPmlvbmljb25zLXY1LWE8L3RpdGxlPjxwb2x5bGluZSBwb2ludHM9IjI2OCAxMTIgNDEyIDI1NiAyNjggNDAwIiBzdHlsZT0iZmlsbDpub25lO3N0cm9rZTojMDAwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NDhweCIvPjxsaW5lIHgxPSIzOTIiIHkxPSIyNTYiIHgyPSIxMDAiIHkyPSIyNTYiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDo0OHB4Ii8+PC9zdmc+");
+}
+.aside .toc-toggle.closed-toc:hover::before {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHRpdGxlPmlvbmljb25zLXY1LWE8L3RpdGxlPjxwb2x5bGluZSBwb2ludHM9IjI0NCA0MDAgMTAwIDI1NiAyNDQgMTEyIiBzdHlsZT0iZmlsbDpub25lO3N0cm9rZTojMDAwO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NDhweCIvPjxsaW5lIHgxPSIxMjAiIHkxPSIyNTYiIHgyPSI0MTIiIHkyPSIyNTYiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiMwMDA7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDo0OHB4Ii8+PC9zdmc+");
+}
+
+.plutoui-toc header {
+    display: flex;
+    align-items: center;
+    gap: .3em;
+    font-size: 1.5em;
+    margin-bottom: 0.4em;
+    padding: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+    position: sticky;
+    top: 0px;
+    background: var(--main-bg-color);
+    z-index: 41;
+}
+.plutoui-toc.aside header {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.plutoui-toc section .toc-row {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: .1em;
+    border-radius: .2em;
+}
+
+.plutoui-toc section .toc-row.H1 {
+    margin-top: 1em;
+}
+
+.plutoui-toc.aside section .toc-row.in-view {
+    background: var(--sidebar-li-active-bg);
+}
+
+.plutoui-toc section a {
+    text-decoration: none;
+    font-weight: normal;
+    color: var(--pluto-output-color);
+}
+.plutoui-toc section a:hover {
+    color: var(--pluto-output-h-color);
+}
+
+.plutoui-toc.indent section a.H1 {
+    font-weight: 700;
+    line-height: 1em;
+}
+
+.plutoui-toc.indent section .after-H2 a { padding-left: 10px; }
+.plutoui-toc.indent section .after-H3 a { padding-left: 20px; }
+
+.plutoui-toc.indent section a.H1 { padding-left: 0px; }
+.plutoui-toc.indent section a.H2 { padding-left: 10px; }
+.plutoui-toc.indent section a.H3 { padding-left: 20px; }
