@@ -160,7 +160,81 @@ window.pluto_recording_audio_url = undefined;
 <pluto-output class="pages-markdown rich_output">
 <div class="raw-html-wrapper ">
 <div class="markdown">
-<h1 id="under-construction"><a href="#under-construction" class="anchor"></a>🚧 Under construction</h1>
+<!--
+Note for editors: PlutoPages interpolates this page as a HypertextLiteral (@htl) string, and then parses it as Markdown with CommonMark.jl. Therefore:
+- write \ for a backslash, e.g. \mathrm in LaTeX or \n in strings;
+- write $ for a dollar sign;
+- a less-than sign that is not followed by a letter, e.g. in comparisons in code, breaks HypertextLiteral: write it as $(HTML("<")) without the backslash.
+- a triple quote, e.g. around a docstring, ends the HypertextLiteral string: write it as """.
+-->
+<h1 id="advanced-optimisations"><a href="#advanced-optimisations" class="anchor"></a>Advanced optimisations</h1>
+<p>The goal of this lecture is to:</p>
+<ul>
+<li>learn how to use shared memory (on-chip) to avoid main memory accesses and to communicate between threads;</li>
+<li>learn how to control registers for storing intermediate results on-chip; and</li>
+<li>learn how the threads of a warp can communicate directly through their registers with warp-level functions.</li>
+</ul>
+<h2 id="recap-on-the-performance-of-pde-solvers"><a href="#recap-on-the-performance-of-pde-solvers" class="anchor"></a>Recap on the performance of PDE solvers</h2>
+<p>In <a href="https://pde-on-gpu.vaw.ethz.ch/part2_solving_pdes_on_gpus/lecture04/#Performance-limiters">lecture 4</a>, we saw that the performance of most scientific applications nowadays is bound by memory access speed (<em>memory-bound</em>) rather than by the speed at which computations can be done (<em>compute-bound</em>). For example, the Nvidia GH200 GPU on daint can perform about 68 floating-point operations per number read from or written to main memory. Therefore, we can consider floating-point operations to be “for free” in the memory-bound regime of iterative stencil-based PDE solvers.</p>
+<p>To evaluate the performance of such solvers, we defined the effective memory throughput <span class="math tex">\(T_\mathrm{eff}\)</span> in <a href="https://pde-on-gpu.vaw.ethz.ch/part2_solving_pdes_on_gpus/lecture04/">lecture 4</a>. Unlike the total memory throughput, it does not count redundant memory accesses. Its upper bound is the peak memory throughput <span class="math tex">\(T_\mathrm{peak}\)</span>, which we measured on the GPU with a memory copy in <a href="https://pde-on-gpu.vaw.ethz.ch/part2_solving_pdes_on_gpus/lecture05/#Peak-memory-throughput-of-the-GPU">lecture 5</a>.</p>
+<p>Recall that the effective memory access <span class="math tex">\(A_\mathrm{eff}\)</span> only includes the fields that depend on their own history and the known fields. All other fields, e.g. fluxes, can be recomputed on the fly or stored on-chip. In this lecture, we will learn how to use on-chip memory to bring <span class="math tex">\(T_\mathrm{eff}\)</span> closer to <span class="math tex">\(T_\mathrm{peak}\)</span>.</p>
+<h2 id="on-chip-memory-usage"><a href="#on-chip-memory-usage" class="anchor"></a>On-chip memory usage</h2>
+<p>We now want to get a high-level overview of how we can control on-chip memory in order to reduce redundant main memory accesses. In essence, we want to store values that are accessed multiple times by the same thread or thread block in on-chip memory, in order to avoid accessing them multiple times in main memory.</p>
+<p>Let us first look at the different kinds of memory. There is memory private to each thread (“local memory”), memory shared between the threads of a block (“shared memory”), and memory shared between all threads of the grid (“global memory” or “main memory”).</p>
+<div class="admonition note"><p class="admonition-title">Terminology on AMD GPUs</p>
+<p>The terms introduced in this lecture are the CUDA terms. For AMD GPUs, different terms are used, originating from the standards of the <a href="https://www.khronos.org/">Khronos consortium</a> (OpenCL, Vulkan) and the <a href="https://www.hsafoundation.com/">HSA foundation</a>. For example, threads are called <em>work-items</em>, and their groups <em>work-groups</em> (see the <a href="https://amdgpu.juliagpu.org/stable/tutorials/quickstart#Naming-conventions">AMDGPU.jl quick start</a> for a mapping of the terms). For simplicity, we stick to the CUDA terms in this course.</p>
+</div>
+<p><img src="../assets/l9_cuda_mem.png" alt="CUDA memory hierarchy: registers and local memory private to each thread, shared memory per block, and global memory shared by the grid" /></p>
+<h3 id="shared-memory"><a href="#shared-memory" class="anchor"></a>Shared memory</h3>
+<p>To use shared memory in our PDE solvers, we can use the strategy depicted in the following image:</p>
+<p><img src="../assets/l9_cuda_domain.png" alt="A thread block with its cells in shared memory, surrounded by a halo of neighbouring cells" /></p>
+<p>In this approach, we allocate a cell in shared memory for each thread of the block, <strong>plus a halo on all sides</strong>. The threads at the boundaries of the block read from the halo when computing finite differences. As a result, we need to read the data corresponding to a thread block (see image) only once into shared memory, and we can then compute all the required finite differences reading only from there.</p>
+<h3 id="registers"><a href="#registers" class="anchor"></a>Registers</h3>
+<p>Making basic use of “local memory” is very simple: it is enough to define a variable inside a kernel, and it will be allocated privately for each thread. Scalars (and possibly small arrays) are stored in registers if the kernel does not use too many resources; otherwise, they are stored in global memory.</p>
+<p>This “control” of register usage often becomes particularly useful when each thread computes the results not only for one cell, but for multiple cells, e.g. adjacent in the last dimension. In that case, the registers can store, e.g., intermediate results. The following image shows the scenario where each thread computes the results for a column of cells in the z dimension, which can be achieved by simply looping over the z dimension:</p>
+<p><img src="../assets/l9_cuda_column.png" alt="Each thread of a 2D block computes a column of cells along the z dimension" /></p>
+<h1 id="warp-level-programming"><a href="#warp-level-programming" class="anchor"></a>Warp-level programming</h1>
+<p>In the previous part, we learned how to control the on-chip memory that is shared between the threads of a block (shared memory) or owned by a single thread (registers).</p>
+<p>Similarly to how processes communicate with each other using MPI, threads on the GPU can communicate with each other within the same warp, using warp-level functions. With these functions, the threads of a warp communicate directly through their registers: without shared memory, and without main memory.</p>
+<h2 id="the-warp"><a href="#the-warp" class="anchor"></a>The warp</h2>
+<p>As we saw in <a href="https://pde-on-gpu.vaw.ethz.ch/part2_solving_pdes_on_gpus/lecture05/#Choosing-the-launch-parameters">lecture 5</a>, current Nvidia GPUs organise the threads of a block into groups of 32 threads, called <strong>warps</strong> (cf. the function <code>warpsize()</code>). The 32 threads of a warp execute their instructions together. Each thread occupies one position in its warp, called its <strong>lane</strong> (cf. the function <code>laneid()</code>).</p>
+<p>The lane of a thread follows from its position among the threads of its block: the first 32 threads of a block form the first warp, the next 32 the second warp, and so on (in a 1D block, these are simply the threads with consecutive <code>threadIdx().x</code>). All threads of a warp reside in the same block.</p>
+<div class="admonition note"><p class="admonition-title">Wavefronts on AMD GPUs</p>
+<p>On AMD GPUs, warps are called <em>wavefronts</em>. They traditionally consist of 64 threads; newer AMD architectures use wavefronts of 32 or 64 threads.</p>
+</div>
+<p><img src="../assets/l9_warp_model.png" alt="Threads of a block grouped into warps of 32 lanes" /></p>
+<h2 id="one-collective-call-the-mask-and-sync"><a href="#one-collective-call-the-mask-and-sync" class="anchor"></a>One collective call: the mask and <code>_sync</code></h2>
+<p>Warp-level functions are called by all participating lanes together, just like collectives in MPI are called by all ranks of a communicator.</p>
+<p>Each of these functions takes a <strong>mask</strong>: a 32-bit value holding one bit per lane, where a set bit means “this lane participates”. The constant <code>CUDA.FULL_MASK</code> selects all 32 lanes of the warp.</p>
+<p>All functions ending in <code>_sync</code> synchronise the participating lanes themselves: no separate synchronisation is needed around them.</p>
+<div class="admonition note"><p class="admonition-title">Lanes are 1-based</p>
+<p>In CUDA.jl, lanes are 1-based: both the assignment of the threads to the lanes (<code>laneid()</code>) and the lane arguments of the functions. In CUDA C, they are 0-based.</p>
+</div>
+<h2 id="the-warp-level-functions-at-a-glance"><a href="#the-warp-level-functions-at-a-glance" class="anchor"></a>The warp-level functions at a glance</h2>
+<p><img src="../assets/l9_warp_functions.png" alt="Overview of the warp-level shuffle and vote functions" /></p>
+<h3 id="warp-level-functions-reference"><a href="#warp-level-functions-reference" class="anchor"></a>Warp-level functions (reference)</h3>
+<table><thead><tr><th align="left"></th><th align="left">Function</th><th align="left">What it does</th><th align="left">Result</th></tr></thead><tbody><tr><td align="left">indexing</td><td align="left"><code>warpsize()</code></td><td align="left">warp size (in lanes)</td><td align="left">32</td></tr><tr><td align="left"></td><td align="left"><code>laneid()</code></td><td align="left">this thread’s position in its warp (the warp-level counterpart of <code>threadIdx()</code>)</td><td align="left"><code>1…32</code></td></tr><tr><td align="left"></td><td align="left"><code>active_mask()</code></td><td align="left">lanes currently executing together with this thread</td><td align="left">32-bit mask</td></tr><tr><td align="left">shuffle</td><td align="left"><code>shfl_sync(mask, val, lane, width=32)</code></td><td align="left">value from the directly indexed lane (within subchunks of <code>width</code> lanes)</td><td align="left"><code>val</code> of the lane</td></tr><tr><td align="left"></td><td align="left"><code>shfl_up_sync(mask, val, delta, width=32)</code></td><td align="left">value from the lane <code>delta</code> positions towards lower lane IDs</td><td align="left"><code>val</code> of the lane</td></tr><tr><td align="left"></td><td align="left"><code>shfl_down_sync(mask, val, delta, width=32)</code></td><td align="left">value from the lane <code>delta</code> positions towards higher lane IDs</td><td align="left"><code>val</code> of the lane</td></tr><tr><td align="left"></td><td align="left"><code>shfl_xor_sync(mask, val, laneMask, width=32)</code></td><td align="left">value from the lane whose ID is obtained by inverting bits of the own ID (<code>xor</code>)</td><td align="left"><code>val</code> of the lane</td></tr><tr><td align="left">vote</td><td align="left"><code>vote_any_sync(mask, pred)</code></td><td align="left">whether <code>pred</code> is true for any participating lane</td><td align="left"><code>Bool</code></td></tr><tr><td align="left"></td><td align="left"><code>vote_all_sync(mask, pred)</code></td><td align="left">whether <code>pred</code> is true for all participating lanes</td><td align="left"><code>Bool</code></td></tr><tr><td align="left"></td><td align="left"><code>vote_ballot_sync(mask, pred)</code></td><td align="left">one bit per participating lane, set if <code>pred</code> is true for it</td><td align="left">32-bit mask</td></tr></tbody></table>
+<p>Here, <code>pred</code> is a predicate, i.e. a true/false value computed by each lane.</p>
+<div class="admonition note"><p class="admonition-title">Other communication within a warp</p>
+<p>For other communication within a warp, e.g. to separate shared-memory reads and writes, use <code>sync_warp()</code>. It is not needed around the <code>_sync</code> functions above, which already synchronise the participating lanes themselves.</p>
+</div>
+<h3 id="an-analogy-warp-level-functions-and-mpi"><a href="#an-analogy-warp-level-functions-and-mpi" class="anchor"></a>An analogy: warp-level functions and MPI</h3>
+<p>Warp-level functions are always called by all participating lanes together, i.e. they are collective in invocation; the mask plays the role of the MPI communicator. The data movement of each function resembles MPI communication patterns that you know from earlier in the course:</p>
+<table><thead><tr><th align="left">Warp-level function</th><th align="left">MPI communication pattern</th></tr></thead><tbody><tr><td align="left"><code>FULL_MASK</code></td><td align="left">the communicator</td></tr><tr><td align="left"><code>laneid()</code></td><td align="left">the rank of a process</td></tr><tr><td align="left"><code>shfl_sync</code> (same source lane)</td><td align="left">broadcast (<code>MPI_Bcast</code>)</td></tr><tr><td align="left"><code>shfl_up_sync</code> / <code>shfl_down_sync</code></td><td align="left">sending to the left / right neighbour processes (<code>MPI_Send</code> / <code>MPI_Recv</code>; used, e.g., for the halo updates in ImplicitGlobalGrid.jl)</td></tr><tr><td align="left"><code>vote_any_sync</code> / <code>vote_all_sync</code></td><td align="left"><code>MPI_Allreduce</code> with a logical reduction operation</td></tr></tbody></table>
+<p>The analogy lies in the <em>communication pattern</em>, not in the API.</p>
+<h3 id="warp-level-functions-in-practice-task-9-of-exercise-3"><a href="#warp-level-functions-in-practice-task-9-of-exercise-3" class="anchor"></a>Warp-level functions in practice: Task 9 of exercise 3</h3>
+<p>In Task 9, you will implement a partly parallel summation in a cumsum kernel, which uses a <strong>butterfly</strong> communication pattern: in each step, values travel across a distance that doubles (<code>1, 2, 4, …</code> lanes), and every lane combines the value it receives with its own. The pattern is implemented with <code>shfl_sync</code> calls:</p>
+<pre><code class="language-julia">shfl_sync(CUDA.FULL_MASK, cumsum_tx, pos, width) # pos: the lane to read from
+</code></pre>
+<p>The running total is carried over between the chunks in the x dimension by broadcasting the total of the last thread to all threads, also using <code>shfl_sync</code>.</p>
+<p>This is just a teaser: in the instructions of Task 9, you will find a schema that explains the details.</p>
+<h3 id="references"><a href="#references" class="anchor"></a>References</h3>
+<ul>
+<li><a href="https://cuda.juliagpu.org/stable/development/kernel/#Warp-intrinsics">CUDA.jl documentation: Warp intrinsics (development)</a></li>
+<li><a href="https://cuda.juliagpu.org/stable/api/kernel/#Warp-level-functions">CUDA.jl documentation: Warp-level functions (API)</a></li>
+<li><a href="https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/">NVIDIA: Using CUDA Warp-Level Primitives</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/05-appendices/cpp-language-extensions.html#warp-functions">CUDA C++ Programming Guide: Warp functions</a></li>
+</ul>
 
 </div>
 </div>
@@ -171,6 +245,8 @@ window.pluto_recording_audio_url = undefined;
 </pluto-editor>
 <script src="../../assets/scripts/math.js" type="module"></script>
 <script src="../../assets/scripts/highlight.js" type="module"></script>
+<link rel="stylesheet" href="../../assets/styles/toc.css" type="text/css" />
+<script src="../../assets/scripts/toc.js" type="module"></script>
 
 
         <div class="page-foot">
